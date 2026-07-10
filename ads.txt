@@ -1,2 +1,0 @@
-# Trage hier die Zeile ein, die dir dein Anzeigennetzwerk gibt, z. B.:
-# google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
