@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOADOUT — Gaming News, neu erzählt</title>
+<meta name="description" content="Die neuesten Gaming- und Tech-News zu GTA, Minecraft, Fortnite, Call of Duty, Valorant, FIFA und mehr — kuratiert und verständlich aufbereitet.">
+<meta property="og:title" content="LOADOUT — Gaming News, neu erzählt">
+<meta property="og:description" content="Immer up to date bei allem rund um Gaming: große Franchise-Hubs, aktuelle Patch Notes und Branchen-News.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0A0C16">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230A0C16'/%3E%3Ctext x='50' y='68' font-size='58' font-family='sans-serif' font-weight='700' fill='%23FF4D8D' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E">
+<!-- Bewusst KEINE Google Fonts eingebunden: externe Font-Requests übertragen die
+     IP-Adresse der Besucher:innen an Google, ohne vorherige Einwilligung ein
+     bekanntes DSGVO-Abmahnrisiko (u. a. LG München I, Urteil zu Google Fonts).
+     Stattdessen: performante, lizenzfreie System-Schriftarten. -->
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="ticker-wrap">
+  <div class="ticker-label mono"><span class="live-dot"></span> LIVE</div>
+  <div class="ticker-track mono">
+    <span>🎮 <b>Palworld</b> verlässt am 10. Juli den Early Access</span>
+    <span>🕹️ <b>Halo: Campaign Evolved</b> erscheint am 28. Juli</span>
+    <span>💼 Microsoft baut Xbox-Studios um — ca. 3.200 Stellen betroffen</span>
+    <span>⚔️ <b>DOOM: The Dark Ages</b> bekommt Erweiterung „Revelations"</span>
+    <span>🏝️ <b>Splatoon Raiders</b> exklusiv für Switch 2 angekündigt</span>
+    <span>🎮 <b>Palworld</b> verlässt am 10. Juli den Early Access</span>
+    <span>🕹️ <b>Halo: Campaign Evolved</b> erscheint am 28. Juli</span>
+  </div>
+</div>
+
+<div class="nav-wrap">
+  <nav>
+    <div class="logo display" onclick="showFeed()">LOAD<span>OUT</span></div>
+    <div class="searchbox">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8D90AC" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="searchInput" type="text" placeholder="Artikel durchsuchen…" oninput="renderGrid()">
+    </div>
+    <div class="nav-right">
+      <button class="xp-badge" id="savedToggle" onclick="toggleSavedView()" title="Gemerkte Artikel anzeigen">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span id="savedCount">0 gemerkt</span>
+      </button>
+      <div class="xp-badge" id="xpBadge" title="Gelesene Artikel in dieser Sitzung">
+        <span>⚡</span><span id="xpCount">0 XP</span>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<main>
+
+  <div class="ad-slot ad-header"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
+
+  <div class="page-layout">
+  <div class="content-col">
+
+  <!-- FEED VIEW -->
+  <div id="feedView">
+
+    <div style="position:relative;">
+      <a href="artikel/halo.html" class="hero" onclick="return handleCardClick(event, 'halo')">
+        <div class="hero-art"></div>
+        <div class="hero-content">
+          <span class="badge konsole">Konsolen</span>
+          <h1 class="display">Halo kehrt zu seinen Wurzeln zurück — aber komplett neu gebaut</h1>
+          <p>Mit „Campaign Evolved" bringt 343 Industries den Ursprung der Reihe zurück: Der Master-Chief-Klassiker von 2001 wird von Grund auf neu aufgebaut, samt zusätzlicher Missionen. Wer es physisch mag, bekommt zum Start am 28. Juli sogar wieder eine Box mit echten Discs.</p>
+          <div class="hype">
+            <span class="hype-label mono">Hype-Meter</span>
+            <div class="hype-bar"><div class="hype-fill" style="width:88%"></div></div>
+            <span class="hype-pct mono">88%</span>
+          </div>
+        </div>
+      </a>
+      <button class="save-btn" onclick="toggleSave(event, 'halo')" id="save-hero-halo" title="Für später merken">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E9E8F5" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      </button>
+    </div>
+
+    <div class="section-head">
+      <h2 class="mono">Frisch reingekommen</h2>
+      <div class="rule"></div>
+    </div>
+
+    <div class="chips" id="chips"></div>
+
+    <div class="section-head" style="margin: 4px 0 12px;">
+      <h2 class="mono" style="font-size:11px; color:var(--muted);">Große Titel</h2>
+    </div>
+    <div class="chips" id="gameChips" style="margin-bottom:26px;"></div>
+
+    <div class="grid" id="grid"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">Keine Artikel gefunden. Versuch's mit einem anderen Suchbegriff oder Filter.</div>
+
+    <div class="section-head" style="margin-top:44px;">
+      <h2 class="mono">Wie das hier funktioniert</h2>
+      <div class="rule"></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+      <div class="card" style="padding:20px; cursor:default;">
+        <span class="mono" style="color:var(--violet); font-size:12px;">01 · SAMMELN</span>
+        <p style="color:var(--muted); font-size:13px; margin-top:10px; line-height:1.6;">RSS-Feeds und News-APIs von Gaming-Portalen werden laufend nach neuen Meldungen durchsucht.</p>
+      </div>
+      <div class="card" style="padding:20px; cursor:default;">
+        <span class="mono" style="color:var(--magenta); font-size:12px;">02 · SCHREIBEN</span>
+        <p style="color:var(--muted); font-size:13px; margin-top:10px; line-height:1.6;">Ein Sprachmodell fasst mehrere Quellen zusammen und schreibt daraus einen eigenständigen Artikel — mit Verweis auf die Originalquellen.</p>
+      </div>
+      <div class="card" style="padding:20px; cursor:default;">
+        <span class="mono" style="color:var(--cyan); font-size:12px;">03 · VERÖFFENTLICHEN</span>
+        <p style="color:var(--muted); font-size:13px; margin-top:10px; line-height:1.6;">Neue Artikel landen automatisch kategorisiert im Feed — bereit für Werbung, Affiliate-Links oder ein Abo-Modell.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div class="detail" id="detailView">
+    <div class="detail-top">
+      <button class="back-btn mono" onclick="showFeed()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        ZURÜCK ZUM FEED
+      </button>
+      <button class="detail-save" id="detailSaveBtn" onclick="toggleSaveFromDetail()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span id="detailSaveLabel">Merken</span>
+      </button>
+    </div>
+    <div class="detail-art" id="detailArt"></div>
+    <span class="badge" id="detailBadge"></span>
+    <h1 class="display" id="detailTitle"></h1>
+    <div class="byline">
+      <div class="avatar"></div>
+      <span>Redaktion LOADOUT · KI-unterstützt recherchiert, Fakten gegengeprüft</span>
+    </div>
+    <div class="detail-meta">
+      <div class="hype">
+        <span class="hype-label mono">Hype-Meter</span>
+        <div class="hype-bar"><div class="hype-fill" id="detailHypeFill"></div></div>
+        <span class="hype-pct mono" id="detailHypePct"></span>
+      </div>
+      <span class="mono" id="detailMeta" style="color:var(--muted); font-size:12px;"></span>
+    </div>
+    <div id="detailBody"></div>
+    <a id="detailSource" class="source-link" target="_blank" rel="noopener">Zur Originalquelle →</a>
+  </div>
+
+  </div>
+
+  <aside class="sidebar">
+    <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×250</div>
+    <div class="widget">
+      <h3 class="mono">Trending jetzt</h3>
+      <div id="trendingList"></div>
+    </div>
+    <div class="newsletter-box">
+      <h3 class="display">Nie wieder News verpassen</h3>
+      <p>Die wichtigsten Gaming-Updates jede Woche direkt ins Postfach.</p>
+      <input type="email" placeholder="deine@email.de" id="newsletterEmail">
+      <button onclick="subscribeNewsletter()">Kostenlos anmelden</button>
+    </div>
+    <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×600</div>
+  </aside>
+
+  </div>
+
+  <div class="ad-slot ad-footer"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
+
+</main>
+
+<div id="toast-container"></div>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <b>LOADOUT</b> ist redaktionell unabhängig und nicht offiziell verbunden mit oder
+      autorisiert von Rockstar Games / Take-Two, Mojang Studios / Microsoft, Epic Games,
+      Activision Blizzard, Riot Games oder Electronic Arts. Alle genannten Marken-, Produkt-
+      und Firmennamen sind Eigentum ihrer jeweiligen Rechteinhaber und werden hier nur zur
+      redaktionellen Identifikation der jeweiligen Meldung verwendet.
+    </div>
+    <div style="margin-top:10px;">
+      Dies ist ein <b>interaktiver Prototyp</b> mit teils von Hand geschriebenen Beispielartikeln
+      auf Basis realer Juli-2026-Gaming-News. Die Artikel wurden bewusst neu formuliert, nicht
+      kopiert. Für den produktiven Betrieb fehlen noch: automatisches Nachrichten-Sammeln,
+      Datenbank-Anbindung und echtes Hosting.
+    </div>
+  </div>
+  <div class="footer-links mono">
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+    <a href="#" onclick="openCookieSettings(); return false;">Cookie-Einstellungen</a>
+    <span>© 2026 LOADOUT</span>
+  </div>
+</footer>
+
+<!-- Cookie-Consent-Banner: erscheint beim ersten Besuch, keine nicht-notwendigen
+     Cookies/Skripte werden vor einer aktiven Einwilligung geladen (Opt-in,
+     DSGVO-konform; erfüllt auch die lockereren Schweizer revDSG-Anforderungen). -->
+<div id="cookieBanner" class="cookie-banner">
+  <div class="cookie-text">
+    <b>Wir verwenden Cookies.</b> Notwendige Cookies sind für den Betrieb der Seite
+    erforderlich. Mit deiner Einwilligung nutzen wir zusätzlich Cookies für Reichweitenmessung
+    und personalisierte Werbung. Mehr dazu in unserer
+    <a href="datenschutz.html">Datenschutzerklärung</a>.
+  </div>
+  <div class="cookie-actions">
+    <button class="cookie-btn ghost" onclick="setCookieConsent(false)">Nur Notwendige</button>
+    <button class="cookie-btn ghost" onclick="showCookieDetails()">Einstellungen</button>
+    <button class="cookie-btn primary" onclick="setCookieConsent(true)">Alle akzeptieren</button>
+  </div>
+</div>
+
+<div id="cookieDetailModal" class="cookie-modal">
+  <div class="cookie-modal-box">
+    <h3 class="display">Cookie-Einstellungen</h3>
+    <div class="cookie-category">
+      <div class="cookie-category-head">
+        <span>Notwendig</span><span class="mono" style="color:var(--muted); font-size:11px;">Immer aktiv</span>
+      </div>
+      <p>Erforderlich für Grundfunktionen wie Navigation und Merkliste. Kann nicht deaktiviert werden.</p>
+    </div>
+    <div class="cookie-category">
+      <div class="cookie-category-head">
+        <span>Reichweitenmessung</span>
+        <label class="toggle"><input type="checkbox" id="consentAnalytics"><span class="toggle-slider"></span></label>
+      </div>
+      <p>Hilft zu verstehen, welche Artikel gelesen werden, um das Angebot zu verbessern.</p>
+    </div>
+    <div class="cookie-category">
+      <div class="cookie-category-head">
+        <span>Werbung / Personalisierung</span>
+        <label class="toggle"><input type="checkbox" id="consentMarketing"><span class="toggle-slider"></span></label>
+      </div>
+      <p>Wird für die Anzeigenplätze auf dieser Seite verwendet, sobald diese aktiv geschaltet sind.</p>
+    </div>
+    <div class="cookie-actions" style="margin-top:18px;">
+      <button class="cookie-btn ghost" onclick="closeCookieDetails()">Abbrechen</button>
+      <button class="cookie-btn primary" onclick="saveCookieDetails()">Auswahl speichern</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATS = {
+  pc: { label: "PC", color: "pc" },
+  konsole: { label: "Konsolen", color: "konsole" },
+  hardware: { label: "Hardware", color: "hardware" },
+  industrie: { label: "Industrie", color: "industrie" },
+};
+
+const GAMES = {
+  gta: { label: "GTA" },
+  minecraft: { label: "Minecraft" },
+  fortnite: { label: "Fortnite" },
+  cod: { label: "Call of Duty" },
+  valorant: { label: "Valorant / LoL" },
+  fifa: { label: "FIFA / EA Sports FC" },
+};
+
+let articles = [
+  {
+    id: "palworld",
+    game: null,
+    cat: "pc",
+    title: "Palworld verlässt nach Jahren im Early Access endlich die Werkstatt",
+    teaser: "Mit der Version 1.0 wächst das Kreaturensammel-Survival-Spiel über sich hinaus: Ein neues Flügelpaket erlaubt Ausflüge in die Luft, dazu kommen jede Menge neue Waffen und ein stärker ausgebauter Story-Strang.",
+    body: [
+      "Fast zweieinhalb Jahre nach dem viralen Early-Access-Start verlässt Palworld offiziell die Werkstatt. Pocketpair hat für den 10. Juli die Version 1.0 angekündigt, und laut eigenen Angaben umfasst der Patch rund 27 Seiten an Änderungen und Ergänzungen.",
+      "Auffälligstes neues Feature ist ein Flügelpaket, mit dem Spieler erstmals gezielt in die Luft können — bislang war Fliegen nur über bestimmte Pals möglich. Dazu kommen laut Ankündigung deutlich mehr Waffen und Ausrüstung sowie ein spürbar ausgebauter Story-Strang, der dem Spiel mehr erzählerisches Rückgrat geben soll.",
+      "Für ein Spiel, das ursprünglich als Meme-Phänomen mit dem Spitznamen „Pokémon mit Gewehren\" durch die Timelines ging, ist die 1.0-Version ein bemerkenswert erwachsener Schritt — und ein Test, ob der anfängliche Hype auch langfristig trägt."
+    ],
+    date: "10. Juli 2026",
+    platform: "PC · Steam",
+    hype: 74,
+    source: "https://www.pcgamer.com/games/pc-game-release-dates-july-2026/",
+    sourceLabel: "PC Gamer"
+  },
+  {
+    id: "halo",
+    game: null,
+    cat: "konsole",
+    title: "Halo kehrt zu seinen Wurzeln zurück — aber komplett neu gebaut",
+    teaser: "Mit „Campaign Evolved\" bringt 343 Industries den Ursprung der Reihe zurück, samt zusätzlicher Missionen, die es im Original nie gab.",
+    body: [
+      "Der Klassiker von 2001, der seinerzeit die Xbox als ernstzunehmende Konsole etablierte, bekommt am 28. Juli sein bisher radikalstes Remake. „Halo: Campaign Evolved\" ist laut Ankündigung keine bloße HD-Auffrischung, sondern ein von Grund auf neu gebautes Spiel, das die komplette Original-Kampagne umfasst.",
+      "Zusätzlich verspricht 343 Industries neue Missionen, die es im Original von 2001 nie gab — eine Erweiterung der Master-Chief-Geschichte für ein Publikum, das die Story teils seit über zwei Jahrzehnten kennt.",
+      "Bemerkenswert: Zum Launch gibt es wieder eine physische Box mit echten Discs. In einer Zeit, in der viele große Titel rein digital erscheinen, ist das ein bewusstes Zugeständnis an Sammler und an die Nostalgie rund um die Marke."
+    ],
+    date: "28. Juli 2026",
+    platform: "PS5 · Xbox · PC",
+    hype: 88,
+    source: "https://www.videogameschronicle.com/guide/upcoming-game-release-dates-schedule/",
+    sourceLabel: "Video Games Chronicle"
+  },
+  {
+    id: "acblackflag",
+    game: null,
+    cat: "konsole",
+    title: "Edward Kenway kehrt zurück: Black Flag bekommt die Resynced-Behandlung",
+    teaser: "Ubisofts gefeiertes Piratenabenteuer von 2013 wird technisch und spielerisch für heutige Hardware überarbeitet.",
+    body: [
+      "Mit „Assassin's Creed Black Flag: Resynced\" holt Ubisoft eines der beliebtesten Kapitel der Reihe zurück auf die Bildschirme. Das 2013 erschienene Piratenabenteuer um Edward Kenway gilt bis heute als Fanliebling — nicht zuletzt wegen seines ungewöhnlich freien Seefahrt-Gameplays abseits der sonst eher linearen Assassin's-Creed-Formel.",
+      "Die Neuauflage soll die Karibik-Welt technisch auf den Stand heutiger Konsolen und PCs bringen, inklusive überarbeiteter Flottenmechanik rund um Kenways Schiff, die Jackdaw. Für Spieler, die damals mitgesegelt sind, verspricht das ein vertrautes, aber spürbar moderneres Erlebnis.",
+      "Der Titel erscheint im Juli 2026 für PC, PlayStation 5 und Xbox Series X/S und reiht sich damit in eine wachsende Liste von Remakes ein, mit denen Ubisoft ältere Erfolge für ein neues Publikum zugänglich macht."
+    ],
+    date: "Juli 2026",
+    platform: "PS5 · Xbox · PC",
+    hype: 79,
+    source: "https://www.videogameschronicle.com/guide/upcoming-game-release-dates-schedule/",
+    sourceLabel: "Video Games Chronicle"
+  },
+  {
+    id: "xboxjobs",
+    game: null,
+    cat: "industrie",
+    title: "Xbox baut um: Rund 3.200 Stellen fallen weg, id Software besonders betroffen",
+    teaser: "Microsoft ordnet seine Studiolandschaft neu — mehrere Teams werden verkleinert oder enger an bestehende Marken angebunden.",
+    body: [
+      "Microsoft hat eine weitere Umstrukturierung seiner Xbox-Studios angekündigt, von der laut Berichten rund 3.200 Stellen betroffen sind. Mehrere interne Teams werden verkleinert, umgebaut oder enger an bestehende Marken angebunden — id Software soll dabei laut Berichten besonders hart getroffen worden sein.",
+      "Pikant ist das Timing: Die Ankündigung fällt in dieselbe Woche, in der id Software mit „Revelations\" die erste große Erweiterung für DOOM: The Dark Ages veröffentlicht. Für viele in der Community wirkt der Kontrast zwischen kommerziellem Erfolg und internem Stellenabbau schwer nachvollziehbar.",
+      "Es ist nicht die erste Umstrukturierungsrunde bei Xbox Game Studios in den letzten Jahren. Wie sich die Portfolio-Umbauten langfristig auf einzelne Marken und laufende Projekte auswirken, bleibt vorerst offen."
+    ],
+    date: "Juli 2026",
+    platform: "Branche",
+    hype: 41,
+    source: "https://www.purexbox.com/news/2026/07/heres-the-new-lineup-of-xbox-game-studios-for-july-2026-onwards",
+    sourceLabel: "Pure Xbox"
+  },
+  {
+    id: "splatoonraiders",
+    game: null,
+    cat: "konsole",
+    title: "Splatoon Raiders: Nintendo schickt Deep Cut auf Schatzsuche statt in die Arena",
+    teaser: "Statt der gewohnten Team-Shooter-Formel setzt der neue Ableger auf Erkundung, Crafting und Koop für bis zu vier Spieler.",
+    body: [
+      "Vier Jahre nach dem letzten großen Splatoon-Auftritt kündigt Nintendo mit „Splatoon Raiders\" einen deutlichen Kurswechsel für die Marke an. Statt kompetitiver Tintenschlachten steht diesmal ein Einzelspieler-Abenteuer mit optionalem Koop für bis zu vier Personen im Mittelpunkt.",
+      "Schauplatz ist die Inselgruppe Spirhalite, ein neues Setting abseits der bekannten Splatoon-Metropole. Gemeinsam mit der beliebten Band Deep Cut begeben sich Spieler auf Schatzsuche — mit Fokus auf Erkundung und Crafting statt auf Ranglisten und Wertungskämpfe.",
+      "Der Titel erscheint exklusiv für Nintendo Switch 2 und richtet sich damit erkennbar auch an Spieler, die mit den kompetitiven Hauptspielen bisher wenig anfangen konnten."
+    ],
+    date: "2026",
+    platform: "Switch 2 exklusiv",
+    hype: 68,
+    source: "https://www.gamespot.com/articles/the-biggest-new-game-releases-of-july-2026/",
+    sourceLabel: "GameSpot"
+  },
+  {
+    id: "doomrevelations",
+    game: null,
+    cat: "pc",
+    title: "DOOM: The Dark Ages bekommt mit „Revelations\" mehr Vergangenheit des Slayers",
+    teaser: "Die neue Erweiterung setzt direkt nach dem Hauptspiel an und vertieft die Vorgeschichte des Doom Slayers.",
+    body: [
+      "id Software erweitert sein mittelalterlich angehauchtes DOOM-Kapitel um die erste große inhaltliche Erweiterung: „Revelations\" knüpft direkt an das Ende von DOOM: The Dark Ages an und vertieft die Vorgeschichte des Doom Slayers weiter.",
+      "Laut Ankündigung bringt der DLC neue Schauplätze, zusätzliche Dämonentypen und weitere Waffen mit, die das ohnehin schon brutale Kampfsystem des Hauptspiels ergänzen sollen. Für Fans der Reihe ist es die erste Gelegenheit seit dem Release, tiefer in die Hintergrundgeschichte einzutauchen.",
+      "Die Erweiterung erscheint für PC, PlayStation 5 und Xbox Series X/S — zeitgleich mit einer Ankündigung, die für deutlich weniger Begeisterung bei id Software selbst gesorgt haben dürfte: der Umstrukturierung der Xbox-Studiolandschaft."
+    ],
+    date: "Juli 2026",
+    platform: "PC · PS5 · Xbox",
+    hype: 71,
+    source: "https://www.purexbox.com/news/2026/07/heres-the-new-lineup-of-xbox-game-studios-for-july-2026-onwards",
+    sourceLabel: "Pure Xbox"
+  },
+  {
+    id: "steamdeck",
+    game: null,
+    cat: "hardware",
+    title: "Ruhiger Monat für große Releases — aber Steam-Deck-Besitzer kommen trotzdem auf ihre Kosten",
+    teaser: "Verglichen mit den Vormonaten fällt der Juli bei den ganz großen Blockbustern eher schmal aus.",
+    body: [
+      "Wer im Juli auf den nächsten großen Blockbuster gewartet hat, wird laut aktuellen Einschätzungen aus der Community eher enttäuscht sein — verglichen mit den Vormonaten ist die Liste großer Neuerscheinungen diesmal überschaubar.",
+      "Dafür füllt sich die Lücke mit einer auffälligen Häufung an Koop-Horror-Indies und kleineren Genre-Perlen, die laut ersten Einschätzungen durchweg gut auf Handheld-PCs wie dem Steam Deck laufen sollen. Für Besitzer eines Handhelds könnte der eigentlich ruhige Monat also trotzdem unterhaltsam werden.",
+      "Der große Ausblick bleibt ohnehin auf den Rest des Jahres gerichtet: Mit dem Konsolen-Release von Grand Theft Auto 6 im November steht der bislang mit Abstand am meisten erwartete Titel des Jahres noch aus."
+    ],
+    date: "Juli 2026",
+    platform: "Steam Deck & Co.",
+    hype: 52,
+    source: "https://steamdeckhq.com/news/july-2026-biggest-upcoming-games-on-steam-deck/",
+    sourceLabel: "Steam Deck HQ"
+  },
+  {
+    id: "gta6price",
+    cat: "konsole",
+    game: "gta",
+    title: "GTA 6 hat jetzt einen Preis — und der dürfte die ganze Branche unter Druck setzen",
+    teaser: "79,99 Dollar für die Standard-, 99,99 Dollar für die Ultimate Edition. Analysten erwarten, dass sich andere Publisher daran orientieren werden.",
+    body: [
+      "Nach Monaten der Spekulation steht es fest: Grand Theft Auto VI erscheint am 19. November 2026 für PS5 und Xbox Series X/S, zum Preis von 79,99 Dollar in der Standard- und 99,99 Dollar in der Ultimate Edition. Take-Two-Chef Strauss Zelnick bestätigte den Termin fest genug, dass er ihn direkt in die Umsatzprognose für das Geschäftsjahr 2027 einrechnete — 8 bis 8,2 Milliarden Dollar, ein Sprung von rund 20 Prozent.",
+      "Eine PC-Version wurde bislang nicht angekündigt; Rockstar folgt damit demselben Muster wie bei GTA V, das erst rund anderthalb Jahre nach dem Konsolenstart auf den PC kam. Parallel sorgt eine physische Edition ohne Disc — nur ein Downloadcode in der Hülle — für Diskussionen unter Sammlern.",
+      "Weniger rund läuft es hinter den Kulissen: Entwickler:innen bei Rockstar bereiten sich in der finalen Crunch-Phase auf mögliche Streikmaßnahmen vor und wollen sich gewerkschaftlich organisieren. Sollte es tatsächlich zum Ausstand kommen, wäre selbst der fest kommunizierte November-Termin nicht mehr sicher."
+    ],
+    date: "Juli 2026",
+    platform: "PS5 · Xbox Series X/S",
+    hype: 96,
+    source: "https://www.techtimes.com/articles/317156/20260525/gta-6-release-date-locked-pre-orders-trailer-3-expected-late-june.htm",
+    sourceLabel: "Tech Times"
+  },
+  {
+    id: "minecraftmovie",
+    cat: "pc",
+    game: "minecraft",
+    title: "Minecraft bekommt sein nächstes Update — und einen zweiten Kinofilm gleich mit",
+    teaser: "Nach dem Sulfur-Update \"Chaos Cubed\" nimmt Mojang schon die nächste Jahreszeit ins Visier. Und Hollywood legt nach.",
+    body: [
+      "Mojang hält weiter an seinem Rhythmus von vier kleineren \"Game Drops\" pro Jahr fest. Nach \"Chaos Cubed\" im Juni, das unter anderem die Sulfur-Höhlen und einen neuen Mob mit Vorliebe fürs Blöcke-Fressen brachte, ist der nächste Drop rund um einen neuen \"Dappled Forest\"-Biom für Ende September angepeilt — mit rötlich schimmernden Sträuchern und einer neuen Pappel-Holzart.",
+      "Technisch bekommt das Spiel mit Snapshot 26.3 zudem ein neues Transparenz-Rendering-System, das lange bestehende Darstellungsprobleme bei durchsichtigen Blöcken wie Glas oder Wasser beheben soll.",
+      "Für die Kinoleinwand gibt es ebenfalls Neuigkeiten: Der Nachfolger von \"A Minecraft Movie\" trägt den Titel \"A Minecraft Movie Squared\" und soll unter anderem Kirsten Dunst als Alex ins Franchise holen. Details zur Story hält Mojang noch zurück."
+    ],
+    date: "Juli 2026",
+    platform: "Java · Bedrock",
+    hype: 63,
+    source: "https://www.minecraft.net/en-us/article/minecraft-live-twitchcon-rotterdam-recap",
+    sourceLabel: "Minecraft.net"
+  },
+  {
+    id: "fortniteroadmap",
+    cat: "konsole",
+    game: "fortnite",
+    title: "Fortnite legt seine komplette Jahresplanung offen — inklusive Termin für die Weltmeisterschaft",
+    teaser: "Update 41.20, FNCS-Finals und die Global Championship in Antwerpen: Epic zeigt den kompletten restlichen Fahrplan für 2026.",
+    body: [
+      "Ungewöhnlich transparent für Epic Games: Über die öffentlich einsehbare Creator-Trello-Roadmap lässt sich der komplette Update-Fahrplan von Fortnite Chapter 7 Season 3 bis weit in den Winter nachvollziehen. Das nächste große Update, Patch 41.20, ist für den 16. Juli angesetzt.",
+      "Für die kompetitive Szene wird es im Sommer eng getaktet: Die FNCS Major 2 wurde auf den 18. Juli vorgezogen, das Finale findet am 1. und 2. August statt. Die Global Championship selbst zieht von ihrem ursprünglichen Termin vor und findet nun am 26. und 27. September in Antwerpen statt, wo die besten 50 Duos der Welt um die erste Weltmeisterschafts-Trophäe der Saison kämpfen.",
+      "Dazu kommt noch das Pro-Am Creator Series 2026 in Dallas: 20 Duos aus je einem Profi und einem Content Creator treten dort um ein Preisgeld von 50.000 Dollar an — ein Format, das zunehmend zur Bühne für die größten Namen der Fortnite-Community wird."
+    ],
+    date: "Juli 2026",
+    platform: "PC · Konsolen · Mobile",
+    hype: 70,
+    source: "https://beebom.com/fortnite-roadmap-2026/",
+    sourceLabel: "Beebom"
+  },
+  {
+    id: "codmw4",
+    cat: "konsole",
+    game: "cod",
+    title: "Call of Duty schaut gleichzeitig zurück und nach vorn — Retro-Ports treffen auf Modern Warfare 4",
+    teaser: "Während die Originale Black Ops und Black Ops 2 endlich auf PS5 aufschlagen, steht mit Modern Warfare 4 schon der nächste Vollpreistitel in den Startlöchern.",
+    body: [
+      "Auffälliger Doppelschlag bei Activision: Auf der einen Seite bereiten sich die PS5-Ports der Originale Call of Duty: Black Ops (2010) und Black Ops 2 (2012) auf ihren Release vor — jüngste Versions-Updates deuten laut Community-Beobachtungen auf einen baldigen, aber noch nicht offiziell terminierten Launch im Juli hin.",
+      "Auf der anderen Seite steht mit Call of Duty: Modern Warfare 4 bereits der nächste große Vollpreis-Titel der Reihe fest: Release ist der 23. Oktober 2026, für PC, PlayStation 5, Xbox Series X/S und erstmals auch für Nintendo Switch 2. Ein erster Trailer zeigte bereits Szenen aus dem neuen DMZ-Modus.",
+      "Parallel dazu liefert Warzone mit Season 04 Reloaded frischen Content für die Free-to-Play-Basis: neue Multiplayer-Karten, ein Koop-Zombies-Modus und die Rückkehr der AN-94 als Community-Highlight."
+    ],
+    date: "Juli 2026",
+    platform: "PC · PS5 · Xbox · Switch 2",
+    hype: 66,
+    source: "https://vgtimes.com/games/call-of-duty-modern-warfare-4/news/",
+    sourceLabel: "VGTimes"
+  },
+  {
+    id: "valorantewc",
+    cat: "pc",
+    game: "valorant",
+    title: "Valorant eröffnet die größte Esports-Woche des Jahres — mit 2 Millionen Dollar Preisgeld allein für ein Turnier",
+    teaser: "Der Esports World Cup 2026 in Paris startet mit Valorant als Zugpferd. Die Titelverteidiger aus dem Vorjahr sind noch im Rennen.",
+    body: [
+      "Der Esports World Cup 2026 ist mit einem Gesamtpreisgeld von über 75 Millionen Dollar über 25 Turniere und 24 Spiele das größte Einzelevent im Esports-Kalender — und Valorant eröffnet als eines der Aushängeschilder direkt die erste Turnierwoche in Paris, vom 2. bis 12. Juli, mit einem eigenen Preisgeld von 2 Millionen Dollar für 16 der besten Teams weltweit.",
+      "Nach der Gruppenphase stehen inzwischen die letzten acht Teams für die Playoffs fest. Team Heretics, Titelverteidiger aus dem Vorjahr mit einem legendären Reverse-Sweep-Finale, eröffnet die K.o.-Phase gegen BBL Esports — ein reines EMEA-Duell direkt zum Auftakt.",
+      "Für viele Organisationen zählt beim Esports World Cup nicht nur der Turniersieg selbst: Über das ganze Event verteilt sammeln Teams Punkte für die sogenannte Club Championship, eine Zusatzwertung, die zusätzlichen finanziellen Anreiz über einzelne Spiele hinaus schafft."
+    ],
+    date: "Juli 2026",
+    platform: "PC · Esports",
+    hype: 77,
+    source: "https://www.sheepesports.com/us/all/articles/ewc-2026-valorant-playoffs-bracket-confirmed/en",
+    sourceLabel: "Sheep Esports"
+  },
+  {
+    id: "fc26worldsgame",
+    cat: "konsole",
+    game: "fifa",
+    title: "EA Sports FC 26 feiert den Sommer mit einem kompletten Weltturnier-Modus",
+    teaser: "\"The World's Game\" bringt 48 Nationalteams, neue Stadien und einen frischen Season Pass — pünktlich zur laufenden Fußball-Sommersaison.",
+    body: [
+      "Mit dem Update \"EA SPORTS FC 26: The World's Game\" bekommt der Karrieremodus einen komplett neuen internationalen Turniermodus mit 48 Nationalmannschaften sowie mehrere neu lizenzierte Stadien. Ergänzt wird das Ganze durch thematisch passende Manager-Live-Challenges rund um internationale Turnierszenarien.",
+      "In Football Ultimate Team startete parallel Season 9 des World Tour unter dem Motto Spanien, Portugal und Marokko '30 — die erste Ausgabe des Modus, die auch Nordafrika einbezieht. Die Season bringt unter anderem eine neue Belohnungsschiene mit individuell anpassbaren \"National Pride\"-Spielerkarten.",
+      "Auch das Kartengeschäft läuft: Die \"Phenoms\"-Promo bringt junge Ausnahmetalente wie Lamine Yamal oder Endrick als Sonderkarten ins Spiel, mit einem zweiten Team-Drop Mitte Juli. Für Sammler:innen und Ultimate-Team-Spieler:innen bleibt damit auch im Sommerloch der anderen Ligen genug zu tun."
+    ],
+    date: "Juli 2026",
+    platform: "PC · PS5 · Xbox · Switch 2",
+    hype: 58,
+    source: "https://www.ea.com/en/games/ea-sports-fc/fc-26",
+    sourceLabel: "EA.com"
+  },
+];
+
+let activeCat = "alle";
+let activeGame = "alle";
+let showSavedOnly = false;
+const savedIds = new Set();
+const readIds = new Set();
+let currentDetailId = null;
+
+function renderChips(){
+  const chips = document.getElementById('chips');
+  const cats = [{key:"alle", label:"Alle"}, ...Object.entries(CATS).map(([key,v]) => ({key, label:v.label}))];
+  chips.innerHTML = cats.map(c =>
+    `<button class="chip ${activeCat===c.key?'active':''}" onclick="setCat('${c.key}')">${c.label}</button>`
+  ).join('');
+
+  const gameChips = document.getElementById('gameChips');
+  const games = [{key:"alle", label:"Alle Titel"}, ...Object.entries(GAMES).map(([key,v]) => ({key, label:v.label}))];
+  gameChips.innerHTML = games.map(g =>
+    `<button class="chip ${activeGame===g.key?'active':''}" onclick="setGame('${g.key}')">${g.label}</button>`
+  ).join('');
+}
+
+function setCat(cat){
+  activeCat = cat;
+  renderChips();
+  renderGrid();
+}
+
+function setGame(game){
+  activeGame = game;
+  renderChips();
+  renderGrid();
+}
+
+function toggleSavedView(){
+  showSavedOnly = !showSavedOnly;
+  document.getElementById('savedToggle').classList.toggle('has-saved', showSavedOnly);
+  renderGrid();
+  document.getElementById('grid').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function updateSavedCount(){
+  document.getElementById('savedCount').textContent = `${savedIds.size} gemerkt`;
+}
+
+function updateXpBadge(){
+  document.getElementById('xpCount').textContent = `${readIds.size * 15} XP`;
+}
+
+function showToast(msg){
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = msg;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 2000);
+}
+
+function toggleSave(event, id){
+  event.stopPropagation();
+  const wasSaved = savedIds.has(id);
+  if(wasSaved){ savedIds.delete(id); } else { savedIds.add(id); }
+  updateSavedCount();
+
+  // Alle Merken-Buttons für diesen Artikel synchron aktualisieren (Karte, Hero, Detail)
+  document.querySelectorAll(`[data-save-id="${id}"]`).forEach(btn => btn.classList.toggle('saved', !wasSaved));
+  const heroBtn = document.getElementById(`save-hero-${id}`);
+  if(heroBtn) heroBtn.classList.toggle('saved', !wasSaved);
+  if(currentDetailId === id) syncDetailSaveButton();
+
+  if(!wasSaved) showToast('⭐ Zur Merkliste hinzugefügt');
+  if(showSavedOnly) renderGrid();
+}
+
+function toggleSaveFromDetail(){
+  if(!currentDetailId) return;
+  toggleSave({ stopPropagation(){} }, currentDetailId);
+}
+
+function syncDetailSaveButton(){
+  const isSaved = savedIds.has(currentDetailId);
+  const btn = document.getElementById('detailSaveBtn');
+  btn.classList.toggle('saved', isSaved);
+  document.getElementById('detailSaveLabel').textContent = isSaved ? 'Gemerkt' : 'Merken';
+}
+
+// Bild-Priorität: 1) echtes, artikelspezifisches Bild (a.image, z. B. aus dem
+// RSS-Feed der Quelle oder manuell von einem Presse-Kit gesetzt), 2) als
+// Fallback ein lizenzfreies Stimmungsfoto von Lorem Picsum, damit nie ein
+// Artikel ganz ohne Bild dasteht.
+function articleImageUrl(a){
+  if(a.image) return a.image;
+  return `https://picsum.photos/seed/loadout-${a.id}/900/500`;
+}
+
+const CATEGORY_OVERLAYS = {
+  pc: "linear-gradient(160deg, rgba(18,48,40,0.78), rgba(13,31,36,0.88))",
+  konsole: "linear-gradient(160deg, rgba(42,16,48,0.78), rgba(23,11,38,0.88))",
+  hardware: "linear-gradient(160deg, rgba(15,26,48,0.78), rgba(10,18,38,0.88))",
+  industrie: "linear-gradient(160deg, rgba(15,42,58,0.78), rgba(10,26,38,0.88))"
+};
+
+function articleArtStyle(a){
+  return `background:${CATEGORY_OVERLAYS[a.cat]}, url('${articleImageUrl(a)}') center/cover`;
+}
+
+function renderTrendingWidget(){
+  const top3 = [...articles].sort((a,b) => b.hype - a.hype).slice(0, 3);
+  document.getElementById('trendingList').innerHTML = top3.map((a, i) => `
+    <div class="trending-item" onclick="openArticle('${a.id}')">
+      <span class="trending-rank mono">${i+1}</span>
+      <p>${a.title}</p>
+    </div>
+  `).join('');
+}
+
+function subscribeNewsletter(){
+  const input = document.getElementById('newsletterEmail');
+  const email = input.value.trim();
+  if(!email || !email.includes('@')){
+    showToast('Bitte eine gültige E-Mail-Adresse eingeben');
+    return;
+  }
+  showToast('✓ Fast geschafft — Anmeldung in diesem Prototyp simuliert');
+  input.value = '';
+}
+
+function renderGrid(){
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  const filtered = articles.filter(a => {
+    const matchesCat = activeCat === "alle" || a.cat === activeCat;
+    const matchesGame = activeGame === "alle" || a.game === activeGame;
+    const matchesQuery = !query || (a.title + " " + a.teaser).toLowerCase().includes(query);
+    const matchesSaved = !showSavedOnly || savedIds.has(a.id);
+    return matchesCat && matchesGame && matchesQuery && matchesSaved;
+  });
+
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('emptyState');
+
+  if(filtered.length === 0){
+    grid.innerHTML = "";
+    empty.style.display = "block";
+    empty.textContent = showSavedOnly
+      ? "Noch nichts gemerkt. Tippe auf das Lesezeichen-Symbol einer Karte, um Artikel für später zu sammeln."
+      : "Keine Artikel gefunden. Versuch's mit einem anderen Suchbegriff oder Filter.";
+    return;
+  }
+  empty.style.display = "none";
+
+  const cardsArr = filtered.map(a => `
+    <div style="position:relative;">
+      <a href="artikel/${a.id}.html" class="card" onclick="return handleCardClick(event, '${a.id}')">
+        <div class="card-art" style="${articleArtStyle(a)}">
+          ${a.hype >= 85 ? `<span class="trending-tag">🔥 Trending</span>` : ''}
+        </div>
+        <div class="card-body">
+          <span class="badge ${a.cat}">${CATS[a.cat].label}${a.game ? ' · ' + GAMES[a.game].label : ''}</span>
+          <h3>${a.title}</h3>
+          <p>${a.teaser}</p>
+          <div class="meta"><span class="mono">${a.date}</span><span class="mono">${a.platform}</span></div>
+        </div>
+      </a>
+      <button class="save-btn ${savedIds.has(a.id)?'saved':''}" data-save-id="${a.id}" onclick="toggleSave(event, '${a.id}')" title="Für später merken">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E9E8F5" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      </button>
+    </div>
+  `);
+
+  // Native In-Feed-Anzeige nach der 6. Karte einfügen (nur wenn genug Artikel da sind)
+  if(cardsArr.length > 5){
+    cardsArr.splice(6, 0, `<div class="ad-slot ad-infeed"><span class="ad-tag mono">Anzeige</span>Native Werbeplatz · volle Breite</div>`);
+  }
+
+  grid.innerHTML = cardsArr.join('');
+}
+
+// Klick-Handler für Karten/Hero: normaler Klick = smooth SPA-Wechsel,
+// Strg/Cmd/Mittelklick = Browser darf den echten Link ganz normal öffnen
+// (neuer Tab). So funktioniert "Link in neuem Tab öffnen" wie erwartet.
+function handleCardClick(event, id){
+  if(event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) return true;
+  event.preventDefault();
+  openArticle(id);
+  return false;
+}
+
+function openArticleView(id){
+  const a = articles.find(x => x.id === id);
+  if(!a) return false;
+  currentDetailId = id;
+  document.getElementById('feedView').style.display = 'none';
+  document.getElementById('detailView').classList.add('active');
+  window.scrollTo(0,0);
+
+  document.getElementById('detailArt').style.cssText = articleArtStyle(a) + '; background-size:cover; background-position:center;';
+  document.getElementById('detailBadge').className = `badge ${a.cat}`;
+  document.getElementById('detailBadge').textContent = CATS[a.cat].label + (a.game ? ' · ' + GAMES[a.game].label : '');
+  document.getElementById('detailTitle').textContent = a.title;
+  document.getElementById('detailHypeFill').style.width = a.hype + '%';
+  document.getElementById('detailHypePct').textContent = a.hype + '%';
+  document.getElementById('detailMeta').textContent = `${a.date} · ${a.platform}`;
+  document.getElementById('detailBody').innerHTML = a.body.map(p => `<p class="body">${p}</p>`).join('');
+  const srcLink = document.getElementById('detailSource');
+  srcLink.href = a.source;
+  srcLink.textContent = `Zur Originalquelle (${a.sourceLabel}) →`;
+  syncDetailSaveButton();
+  document.title = `${a.title} — LOADOUT`;
+
+  if(!readIds.has(id)){
+    readIds.add(id);
+    updateXpBadge();
+    showToast('⚡ +15 XP · Artikel gelesen');
+  }
+  return true;
+}
+
+function openArticle(id){
+  if(!openArticleView(id)) return;
+  // Echte, teilbare URL in der Adresszeile — passend zur statischen Seite,
+  // die build_pages.py für jeden Artikel erzeugt.
+  history.pushState({ articleId: id }, '', `artikel/${id}.html`);
+}
+
+function showFeedView(){
+  document.getElementById('feedView').style.display = 'block';
+  document.getElementById('detailView').classList.remove('active');
+  window.scrollTo(0,0);
+  document.title = 'LOADOUT — Gaming News, neu erzählt';
+}
+
+function showFeed(){
+  showFeedView();
+  history.pushState({}, '', 'index.html');
+}
+
+// Browser-Zurück/Vorwärts-Button korrekt unterstützen
+window.addEventListener('popstate', (event) => {
+  if(event.state && event.state.articleId){
+    openArticleView(event.state.articleId);
+  } else {
+    showFeedView();
+  }
+});
+
+// --- Cookie-Consent -----------------------------------------------------
+// Opt-in-Modell (DSGVO-konform, erfüllt auch die Schweizer revDSG-Vorgaben,
+// die selbst kein Opt-in verlangen). Nicht-notwendige Skripte (Analyse,
+// Werbe-Netzwerke) dürfen NIE vor einer aktiven Einwilligung geladen werden.
+//
+// Hinweis für den Live-Betrieb: Hier sollte der Consent zusätzlich in
+// localStorage gespeichert werden, damit die Wahl auch nach einem Neuladen
+// erhalten bleibt (in dieser Vorschau bewusst nur Session-Speicher, siehe
+// README Abschnitt "Cookie-Consent" für den Ein-Zeilen-Umbau).
+let cookieConsent = null; // null = noch nicht entschieden | 'all' | 'necessary' | 'custom'
+
+function initCookieBanner(){
+  if(cookieConsent === null){
+    document.getElementById('cookieBanner').classList.add('visible');
+  }
+}
+
+function setCookieConsent(acceptAll){
+  cookieConsent = acceptAll ? 'all' : 'necessary';
+  document.getElementById('cookieBanner').classList.remove('visible');
+  applyConsent();
+}
+
+function showCookieDetails(){
+  document.getElementById('consentAnalytics').checked = cookieConsent === 'all';
+  document.getElementById('consentMarketing').checked = cookieConsent === 'all';
+  document.getElementById('cookieDetailModal').classList.add('visible');
+}
+
+function closeCookieDetails(){
+  document.getElementById('cookieDetailModal').classList.remove('visible');
+}
+
+function saveCookieDetails(){
+  const analytics = document.getElementById('consentAnalytics').checked;
+  const marketing = document.getElementById('consentMarketing').checked;
+  cookieConsent = (analytics || marketing) ? 'custom' : 'necessary';
+  window.consentState = { analytics, marketing };
+  document.getElementById('cookieDetailModal').classList.remove('visible');
+  document.getElementById('cookieBanner').classList.remove('visible');
+  applyConsent();
+}
+
+function openCookieSettings(){
+  showCookieDetails();
+}
+
+function applyConsent(){
+  // Produktiv: Hier echte Skripte (z. B. Google AdSense, Analytics) erst
+  // NACH erteilter Einwilligung dynamisch per createElement('script')
+  // nachladen — siehe README Abschnitt "Cookie-Consent".
+  showToast(cookieConsent === 'necessary' ? '✓ Nur notwendige Cookies aktiv' : '✓ Cookie-Einstellungen gespeichert');
+}
+
+history.replaceState({}, '', 'index.html');
+renderChips();
+renderGrid();
+renderTrendingWidget();
+updateSavedCount();
+updateXpBadge();
+initCookieBanner();
+
+// Versucht, automatisch generierte Artikel aus articles.json nachzuladen.
+// Klappt das nicht (z. B. weil die Datei fehlt oder die Seite lokal per
+// Doppelklick geöffnet wurde statt über einen Server), bleiben die oben
+// eingebauten Beispielartikel als Fallback stehen.
+fetch('articles.json')
+  .then(res => { if (!res.ok) throw new Error('not found'); return res.json(); })
+  .then(data => {
+    if (Array.isArray(data) && data.length > 0) {
+      articles = data;
+      renderGrid();
+      renderTrendingWidget();
+      console.log(`✓ ${data.length} Artikel aus articles.json geladen`);
+    }
+  })
+  .catch(() => {
+    console.log('ℹ articles.json nicht gefunden — zeige eingebaute Beispielartikel');
+  });
+</script>
+
+</body>
+</html>
