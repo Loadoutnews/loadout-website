@@ -131,7 +131,14 @@ Original-Link: {entry['link']}"""
         messages=[{"role": "user", "content": user_prompt}],
     )
 
-    raw_text = response.content[0].text.strip()
+    # content[0] ist nicht immer der Text-Block — manche Modelle liefern
+    # zuerst einen internen "Thinking"-Block. Deshalb gezielt den Block
+    # mit type == "text" heraussuchen statt content[0] anzunehmen.
+    text_blocks = [block.text for block in response.content if block.type == "text"]
+    if not text_blocks:
+        print(f"  ! Keine Textantwort erhalten für: {entry['title']}", file=sys.stderr)
+        return None
+    raw_text = text_blocks[0].strip()
     raw_text = raw_text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
     try:
