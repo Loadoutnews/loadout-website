@@ -16,6 +16,10 @@ jobs:
       - run: python news_pipeline.py
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - run: python build_pages.py
+      - uses: peter-evans/create-pull-request@v6
         with:
-          commit_message: "Automatisches News-Update"
+          commit-message: "Automatisches News-Update"
+          title: "🆕 Neue Artikel zur Prüfung"
+          body: "Von der Pipeline automatisch generiert. Bitte vor dem Mergen kurz gegenlesen (Fakten, Ton, Kategorisierung)."
+          branch: "auto-news-update"
