@@ -1,0 +1,24 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="markGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C5CFC"/>
+      <stop offset="100%" stop-color="#FF4D8D"/>
+    </linearGradient>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A1F3C"/>
+      <stop offset="100%" stop-color="#0A0C16"/>
+    </linearGradient>
+  </defs>
+  <!-- Hintergrund: abgerundetes Quadrat, passend zu App-Icon-Konventionen -->
+  <rect width="120" height="120" rx="26" fill="url(#bgGradient)"/>
+
+  <!-- Marke: ein "L" (für LOADOUT), dessen Fuß in aufsteigende Balken
+       übergeht -- dieselbe Formsprache wie der Hype-Meter auf der Website.
+       Dadurch ist das Icon sofort mit der Marke verknüpft, nicht nur ein
+       generischer Buchstabe. -->
+  <rect x="24" y="24" width="14" height="68" rx="6" fill="url(#markGradient)"/>
+  <rect x="24" y="80" width="72" height="12" rx="6" fill="url(#markGradient)"/>
+  <rect x="44" y="62" width="12" height="18" rx="5" fill="url(#markGradient)"/>
+  <rect x="60" y="50" width="12" height="30" rx="5" fill="url(#markGradient)"/>
+  <rect x="76" y="36" width="12" height="44" rx="5" fill="url(#markGradient)"/>
+</svg>
