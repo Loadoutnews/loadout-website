@@ -1,7 +1,5 @@
 name: Update News
 on:
-  schedule:
-    - cron: "*/10 * * * *"   # alle 6 Stunden
   workflow_dispatch:         # manuell startbar über den "Run workflow"-Button
 
 jobs:
