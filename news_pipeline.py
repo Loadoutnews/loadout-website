@@ -1,4 +1,4 @@
-pipeline · PY
+
 """
 LOADOUT News-Pipeline
 ======================
