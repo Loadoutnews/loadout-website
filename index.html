@@ -737,7 +737,7 @@ window.addEventListener('popstate', (event) => {
 // localStorage gespeichert werden, damit die Wahl auch nach einem Neuladen
 // erhalten bleibt (in dieser Vorschau bewusst nur Session-Speicher, siehe
 // README Abschnitt "Cookie-Consent" für den Ein-Zeilen-Umbau).
-let cookieConsent = null; // null = noch nicht entschieden | 'all' | 'necessary' | 'custom'
+let cookieConsent = localStorage.getItem('cookieConsent'); // null = noch nicht entschieden | 'all' | 'necessary' | 'custom'
 
 function initCookieBanner(){
   if(cookieConsent === null){
@@ -747,6 +747,7 @@ function initCookieBanner(){
 
 function setCookieConsent(acceptAll){
   cookieConsent = acceptAll ? 'all' : 'necessary';
+     localStorage.setItem('cookieConsent', cookieConsent);
   document.getElementById('cookieBanner').classList.remove('visible');
   applyConsent();
 }
@@ -765,6 +766,7 @@ function saveCookieDetails(){
   const analytics = document.getElementById('consentAnalytics').checked;
   const marketing = document.getElementById('consentMarketing').checked;
   cookieConsent = (analytics || marketing) ? 'custom' : 'necessary';
+     localStorage.setItem('cookieConsent', cookieConsent);
   window.consentState = { analytics, marketing };
   document.getElementById('cookieDetailModal').classList.remove('visible');
   document.getElementById('cookieBanner').classList.remove('visible');
