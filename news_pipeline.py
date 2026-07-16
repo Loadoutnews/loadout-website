@@ -34,16 +34,30 @@ from anthropic import Anthropic
 # ---------------------------------------------------------------------------
  
 FEEDS = [
-    "https://www.ign.com/rss/articles/feed?tags=games",
-    "https://www.pcgamer.com/rss/",
-    "https://www.eurogamer.net/feed",
-    "https://www.nintendolife.com/feeds/latest",
-    "https://kotaku.com/rss",
-    # Optionale Feeds speziell für die großen Franchise-Hubs (GTA, Minecraft, ...) —
-    # URL vor dem produktiven Einsatz prüfen, RSS-Adressen ändern sich gelegentlich.
-    # "https://www.gtaboom.com/feed/",
-    # "https://www.minecraft.net/en-us/feeds/community-content-rss",
+    {"url": "https://www.ign.com/rss/articles/feed?tags=games", "priority": False},
+    {"url": "https://www.pcgamer.com/rss/", "priority": False},
+    {"url": "https://www.eurogamer.net/feed", "priority": False},
+    {"url": "https://www.nintendolife.com/feeds/latest", "priority": False},
+    {"url": "https://kotaku.com/rss", "priority": False},
+ 
+    # Spezialisierte Feeds für die 6 großen Franchise-Hubs (GTA, Minecraft,
+    # Fortnite, Call of Duty, Valorant/LoL, FIFA/EA Sports FC). Diese werden
+    # unten über PRIORITY_QUOTA bevorzugt behandelt, damit jeder Lauf
+    # gezielt Artikel für diese Hubs liefert statt zufällig darauf zu warten.
+    # URLs vor dem produktiven Einsatz gelegentlich prüfen — RSS-Adressen
+    # kleinerer Fan-Seiten ändern sich mit der Zeit.
+    {"url": "https://rockstarintel.com/feed/", "priority": True},           # GTA
+    {"url": "https://gamerant.com/feed/minecraft-news", "priority": True},  # Minecraft
+    {"url": "https://gamerant.com/feed/fortnite-news", "priority": True},   # Fortnite
+    {"url": "https://charlieintel.com/feed", "priority": True},            # Call of Duty
+    {"url": "https://dotesports.com/feed", "priority": True},              # Valorant/LoL
+    {"url": "https://realsport101.com/feed.xml", "priority": True},        # FIFA/EA Sports FC
 ]
+ 
+# Wie viele der pro Lauf geschriebenen Artikel mindestens aus den
+# Franchise-Feeds oben kommen sollen (der Rest wird mit allgemeinen
+# Gaming-News aufgefüllt).
+PRIORITY_QUOTA = 2
  
 MAX_ARTICLES_PER_RUN = 8          # wie viele neue Artikel pro Durchlauf geschrieben werden
 MAX_ARTICLES_TOTAL = 30           # wie viele insgesamt in articles.json bleiben (älteste fliegen raus)
@@ -60,7 +74,8 @@ client = Anthropic()  # liest ANTHROPIC_API_KEY automatisch aus der Umgebung
 def fetch_raw_entries():
     """Holt die neuesten Einträge aus allen konfigurierten Feeds."""
     entries = []
-    for feed_url in FEEDS:
+    for feed in FEEDS:
+        feed_url = feed["url"]
         try:
             parsed = feedparser.parse(
                 feed_url,
@@ -74,6 +89,7 @@ def fetch_raw_entries():
                     "link": entry.get("link", ""),
                     "source": source_name,
                     "image": extract_feed_image(entry),
+                    "priority": feed.get("priority", False),
                 })
         except Exception as e:
             print(f"  ! Feed konnte nicht geladen werden ({feed_url}): {e}", file=sys.stderr)
@@ -256,9 +272,32 @@ def main():
     existing = load_existing_articles()
     existing_ids = {a["id"] for a in existing}
  
-    new_entries = [e for e in raw_entries if article_id(e["link"]) not in existing_ids]
-    new_entries = new_entries[:MAX_ARTICLES_PER_RUN]
-    print(f"  {len(new_entries)} davon sind neu und werden geschrieben")
+    new_raw = [e for e in raw_entries if article_id(e["link"]) not in existing_ids]
+ 
+    # Auswahl mit garantierter Franchise-Quote: zuerst bis zu PRIORITY_QUOTA
+    # Artikel aus den 6 großen Franchise-Feeds (GTA, Minecraft, Fortnite,
+    # Call of Duty, Valorant/LoL, FIFA) reservieren, den Rest der
+    # verfügbaren Plätze mit allgemeinen Gaming-News auffüllen. So kommt
+    # jeder Lauf zuverlässig mit Inhalt für die Franchise-Hubs, statt
+    # darauf zu hoffen, dass zufällig genug davon in den allgemeinen
+    # Feeds auftaucht.
+    priority_entries = [e for e in new_raw if e.get("priority")]
+    normal_entries = [e for e in new_raw if not e.get("priority")]
+ 
+    selected = priority_entries[:PRIORITY_QUOTA]
+    remaining_slots = MAX_ARTICLES_PER_RUN - len(selected)
+    selected += normal_entries[:remaining_slots]
+ 
+    # Falls die Franchise-Feeds mehr als die Quote liefern und die
+    # allgemeinen Feeds die restlichen Plätze nicht auffüllen: mit
+    # weiteren Franchise-Artikeln auffüllen, statt Plätze verfallen zu lassen.
+    if len(selected) < MAX_ARTICLES_PER_RUN:
+        extra_priority = priority_entries[PRIORITY_QUOTA:]
+        selected += extra_priority[:MAX_ARTICLES_PER_RUN - len(selected)]
+ 
+    new_entries = selected
+    print(f"  {len(new_entries)} davon sind neu und werden geschrieben "
+          f"({sum(1 for e in new_entries if e.get('priority'))} aus Franchise-Feeds)")
  
     # Für Einträge ohne Bild aus dem Feed: og:image von der Original-Seite holen
     for entry in new_entries:
@@ -283,4 +322,5 @@ def main():
  
 if __name__ == "__main__":
     main()
+ 
  
