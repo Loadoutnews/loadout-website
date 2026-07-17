@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
- 
+
 <div class="ticker-wrap">
   <div class="ticker-label mono"><span class="live-dot"></span> LIVE</div>
   <div class="ticker-viewport">
@@ -28,7 +28,7 @@
     <div class="ticker-fade ticker-fade-right"></div>
   </div>
 </div>
- 
+
 <div class="nav-wrap">
   <nav>
     <div class="logo-lockup" onclick="showFeed()">
@@ -63,39 +63,39 @@
     </div>
   </nav>
 </div>
- 
+
 <main>
- 
+
   <div class="ad-slot ad-header"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
- 
+
   <div class="page-layout">
   <div class="content-col">
- 
+
   <!-- FEED VIEW -->
   <div id="feedView">
- 
+
     <div id="heroContainer"></div>
- 
+
     <div class="section-head">
       <h2 class="mono">Frisch reingekommen</h2>
       <div class="rule"></div>
     </div>
- 
+
     <div class="chips" id="chips"></div>
- 
+
     <div class="section-head" style="margin: 4px 0 12px;">
       <h2 class="mono" style="font-size:11px; color:var(--muted);">Große Titel</h2>
     </div>
     <div class="chips" id="gameChips" style="margin-bottom:26px;"></div>
- 
+
     <div class="grid" id="grid"></div>
     <div class="empty-state" id="emptyState" style="display:none;">Keine Artikel gefunden. Versuch's mit einem anderen Suchbegriff oder Filter.</div>
- 
+
     <div class="section-head" style="margin-top:44px;">
       <h2 class="mono">Wie das hier funktioniert</h2>
       <div class="rule"></div>
     </div>
- 
+
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
       <div class="card" style="padding:20px; cursor:default;">
         <span class="mono" style="color:var(--violet); font-size:12px;">01 · SAMMELN</span>
@@ -110,9 +110,9 @@
         <p style="color:var(--muted); font-size:13px; margin-top:10px; line-height:1.6;">Neue Artikel landen automatisch kategorisiert im Feed — bereit für Werbung, Affiliate-Links oder ein Abo-Modell.</p>
       </div>
     </div>
- 
+
   </div>
- 
+
   <!-- DETAIL VIEW -->
   <div class="detail" id="detailView">
     <div class="detail-top">
@@ -143,9 +143,9 @@
     <div id="detailBody"></div>
     <a id="detailSource" class="source-link" target="_blank" rel="noopener">Zur Originalquelle →</a>
   </div>
- 
+
   </div>
- 
+
   <aside class="sidebar">
     <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×250</div>
     <div class="widget">
@@ -160,29 +160,23 @@
     </div>
     <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×600</div>
   </aside>
- 
+
   </div>
- 
+
   <div class="ad-slot ad-footer"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
- 
+
 </main>
- 
+
 <div id="toast-container"></div>
- 
+
 <footer>
   <div class="footer-top">
     <div>
-      <b>LOADOUT</b> ist redaktionell unabhängig und nicht offiziell verbunden mit oder
+      <b>LOADOUT-NEWS</b> ist redaktionell unabhängig und nicht offiziell verbunden mit oder
       autorisiert von Rockstar Games / Take-Two, Mojang Studios / Microsoft, Epic Games,
       Activision Blizzard, Riot Games oder Electronic Arts. Alle genannten Marken-, Produkt-
       und Firmennamen sind Eigentum ihrer jeweiligen Rechteinhaber und werden hier nur zur
       redaktionellen Identifikation der jeweiligen Meldung verwendet.
-    </div>
-    <div style="margin-top:10px;">
-      Dies ist ein <b>interaktiver Prototyp</b> mit teils von Hand geschriebenen Beispielartikeln
-      auf Basis realer Juli-2026-Gaming-News. Die Artikel wurden bewusst neu formuliert, nicht
-      kopiert. Für den produktiven Betrieb fehlen noch: automatisches Nachrichten-Sammeln,
-      Datenbank-Anbindung und echtes Hosting.
     </div>
   </div>
   <div class="footer-links mono">
@@ -192,7 +186,7 @@
     <span>© 2026 LOADOUT</span>
   </div>
 </footer>
- 
+
 <!-- Cookie-Consent-Banner: erscheint beim ersten Besuch, keine nicht-notwendigen
      Cookies/Skripte werden vor einer aktiven Einwilligung geladen (Opt-in,
      DSGVO-konform; erfüllt auch die lockereren Schweizer revDSG-Anforderungen). -->
@@ -209,7 +203,7 @@
     <button class="cookie-btn primary" onclick="setCookieConsent(true)">Alle akzeptieren</button>
   </div>
 </div>
- 
+
 <div id="cookieDetailModal" class="cookie-modal">
   <div class="cookie-modal-box">
     <h3 class="display">Cookie-Einstellungen</h3>
@@ -239,7 +233,7 @@
     </div>
   </div>
 </div>
- 
+
 <script>
 const CATS = {
   pc: { label: "PC", color: "pc" },
@@ -247,7 +241,7 @@ const CATS = {
   hardware: { label: "Hardware", color: "hardware" },
   industrie: { label: "Industrie", color: "industrie" },
 };
- 
+
 const GAMES = {
   gta: { label: "GTA" },
   minecraft: { label: "Minecraft" },
@@ -256,7 +250,7 @@ const GAMES = {
   valorant: { label: "Valorant / LoL" },
   fifa: { label: "FIFA / EA Sports FC" },
 };
- 
+
 let articles = [
   {
     id: "palworld",
@@ -480,55 +474,55 @@ let articles = [
     sourceLabel: "EA.com"
   },
 ];
- 
+
 let activeCat = "alle";
 let activeGame = "alle";
 let showSavedOnly = false;
 const savedIds = new Set();
 const readIds = new Set();
 let currentDetailId = null;
- 
+
 function renderChips(){
   const chips = document.getElementById('chips');
   const cats = [{key:"alle", label:"Alle"}, ...Object.entries(CATS).map(([key,v]) => ({key, label:v.label}))];
   chips.innerHTML = cats.map(c =>
     `<button class="chip ${activeCat===c.key?'active':''}" onclick="setCat('${c.key}')">${c.label}</button>`
   ).join('');
- 
+
   const gameChips = document.getElementById('gameChips');
   const games = [{key:"alle", label:"Alle Titel"}, ...Object.entries(GAMES).map(([key,v]) => ({key, label:v.label}))];
   gameChips.innerHTML = games.map(g =>
     `<button class="chip ${activeGame===g.key?'active':''}" onclick="setGame('${g.key}')">${g.label}</button>`
   ).join('');
 }
- 
+
 function setCat(cat){
   activeCat = cat;
   renderChips();
   renderGrid();
 }
- 
+
 function setGame(game){
   activeGame = game;
   renderChips();
   renderGrid();
 }
- 
+
 function toggleSavedView(){
   showSavedOnly = !showSavedOnly;
   document.getElementById('savedToggle').classList.toggle('has-saved', showSavedOnly);
   renderGrid();
   document.getElementById('grid').scrollIntoView({ behavior:'smooth', block:'start' });
 }
- 
+
 function updateSavedCount(){
   document.getElementById('savedCount').textContent = `${savedIds.size} gemerkt`;
 }
- 
+
 function updateXpBadge(){
   document.getElementById('xpCount').textContent = `${readIds.size * 15} XP`;
 }
- 
+
 function showToast(msg){
   const container = document.getElementById('toast-container');
   const el = document.createElement('div');
@@ -537,33 +531,33 @@ function showToast(msg){
   container.appendChild(el);
   setTimeout(() => el.remove(), 2000);
 }
- 
+
 function toggleSave(event, id){
   event.stopPropagation();
   const wasSaved = savedIds.has(id);
   if(wasSaved){ savedIds.delete(id); } else { savedIds.add(id); }
   updateSavedCount();
- 
+
   // Alle Merken-Buttons für diesen Artikel synchron aktualisieren (Karte, Hero, Detail)
   document.querySelectorAll(`[data-save-id="${id}"]`).forEach(btn => btn.classList.toggle('saved', !wasSaved));
   if(currentDetailId === id) syncDetailSaveButton();
- 
+
   if(!wasSaved) showToast('⭐ Zur Merkliste hinzugefügt');
   if(showSavedOnly) renderGrid();
 }
- 
+
 function toggleSaveFromDetail(){
   if(!currentDetailId) return;
   toggleSave({ stopPropagation(){} }, currentDetailId);
 }
- 
+
 function syncDetailSaveButton(){
   const isSaved = savedIds.has(currentDetailId);
   const btn = document.getElementById('detailSaveBtn');
   btn.classList.toggle('saved', isSaved);
   document.getElementById('detailSaveLabel').textContent = isSaved ? 'Gemerkt' : 'Merken';
 }
- 
+
 // Bild-Priorität: 1) echtes, artikelspezifisches Bild (a.image, z. B. aus dem
 // RSS-Feed der Quelle oder manuell von einem Presse-Kit gesetzt), 2) als
 // Fallback ein lizenzfreies Stimmungsfoto von Lorem Picsum, damit nie ein
@@ -572,18 +566,18 @@ function articleImageUrl(a){
   if(a.image) return a.image;
   return `https://picsum.photos/seed/loadout-${a.id}/900/500`;
 }
- 
+
 const CATEGORY_OVERLAYS = {
   pc: "linear-gradient(160deg, rgba(18,48,40,0.78), rgba(13,31,36,0.88))",
   konsole: "linear-gradient(160deg, rgba(42,16,48,0.78), rgba(23,11,38,0.88))",
   hardware: "linear-gradient(160deg, rgba(15,26,48,0.78), rgba(10,18,38,0.88))",
   industrie: "linear-gradient(160deg, rgba(15,42,58,0.78), rgba(10,26,38,0.88))"
 };
- 
+
 function articleArtStyle(a){
   return `background:${CATEGORY_OVERLAYS[a.cat]}, url('${articleImageUrl(a)}') center/cover`;
 }
- 
+
 function renderTrendingWidget(){
   const top3 = [...articles].sort((a,b) => b.hype - a.hype).slice(0, 3);
   document.getElementById('trendingList').innerHTML = top3.map((a, i) => `
@@ -593,18 +587,18 @@ function renderTrendingWidget(){
     </div>
   `).join('');
 }
- 
+
 let heroArticleId = null;
- 
+
 function renderHero(){
   if(!articles.length){ heroArticleId = null; return; }
- 
+
   // Der Hero zeigt immer den aktuell angesagtesten Artikel (höchster
   // Hype-Wert) — aktualisiert sich also automatisch mit jedem neuen
   // Artikel, statt einen festen Artikel dauerhaft oben zu zeigen.
   const top = [...articles].sort((a, b) => b.hype - a.hype)[0];
   heroArticleId = top.id;
- 
+
   document.getElementById('heroContainer').innerHTML = `
     <div style="position:relative;">
       <a href="artikel/${top.id}.html" class="hero" onclick="return handleCardClick(event, '${top.id}')">
@@ -628,13 +622,13 @@ function renderHero(){
     </div>
   `;
 }
- 
+
 const TICKER_CATEGORY_EMOJI = { pc: "🖥️", konsole: "🎮", hardware: "🛠️", industrie: "💼" };
- 
+
 function renderTicker(){
   const track = document.getElementById('tickerTrack');
   if(!articles.length) return;
- 
+
   // Zeigt immer die zuletzt veröffentlichten Artikel (die Reihenfolge in
   // articles.json ist neueste zuerst) — aktualisiert sich also automatisch
   // mit jedem Pipeline-Lauf, statt feste Meldungen von früher zu zeigen.
@@ -644,21 +638,24 @@ function renderTicker(){
     const title = a.title.length > 80 ? a.title.slice(0, 77) + "…" : a.title;
     return `<span>${emoji} <b>${title}</b></span>`;
   }).join('');
- 
+
   // Für eine nahtlose Endlos-Schleife die Liste zweimal hintereinander
   track.innerHTML = itemHtml + itemHtml;
- 
+
   // Lesetempo an die tatsächliche Textmenge anpassen, statt einer festen
   // Sekundenzahl — so bleibt die Geschwindigkeit immer angenehm lesbar,
   // egal ob gerade 2 oder 6 Artikel im Ticker stehen.
   requestAnimationFrame(() => {
-    const singleSetWidth = track.scrollWidth / 2; // Breite einer der beiden identischen Hälften
-    const pixelsPerSecond = 28; // deutlich gemütlicheres Lesetempo
-    const duration = Math.max(40, singleSetWidth / pixelsPerSecond);
+    // Die Animation bewegt den Track über seine GESAMTE (doppelte) Breite,
+    // daher muss auch die komplette scrollWidth für die Geschwindigkeits-
+    // berechnung verwendet werden, nicht nur eine Hälfte.
+    const totalWidth = track.scrollWidth;
+    const pixelsPerSecond = 70; // gut lesbares, aber klar wahrnehmbares Tempo
+    const duration = Math.max(20, totalWidth / pixelsPerSecond);
     track.style.animationDuration = `${duration}s`;
   });
 }
- 
+
 function subscribeNewsletter(){
   const input = document.getElementById('newsletterEmail');
   const email = input.value.trim();
@@ -669,7 +666,7 @@ function subscribeNewsletter(){
   showToast('✓ Fast geschafft — Anmeldung in diesem Prototyp simuliert');
   input.value = '';
 }
- 
+
 function renderGrid(){
   const query = document.getElementById('searchInput').value.trim().toLowerCase();
   // Echte Stichwortsuche: die Eingabe wird in einzelne Wörter zerlegt, ein
@@ -688,10 +685,10 @@ function renderGrid(){
     const matchesSaved = !showSavedOnly || savedIds.has(a.id);
     return matchesCat && matchesGame && matchesQuery && matchesSaved;
   });
- 
+
   const grid = document.getElementById('grid');
   const empty = document.getElementById('emptyState');
- 
+
   if(filtered.length === 0){
     grid.innerHTML = "";
     empty.style.display = "block";
@@ -701,7 +698,7 @@ function renderGrid(){
     return;
   }
   empty.style.display = "none";
- 
+
   const cardsArr = filtered.map(a => `
     <div style="position:relative;">
       <a href="artikel/${a.id}.html" class="card" onclick="return handleCardClick(event, '${a.id}')">
@@ -720,15 +717,15 @@ function renderGrid(){
       </button>
     </div>
   `);
- 
+
   // Native In-Feed-Anzeige nach der 6. Karte einfügen (nur wenn genug Artikel da sind)
   if(cardsArr.length > 5){
     cardsArr.splice(6, 0, `<div class="ad-slot ad-infeed"><span class="ad-tag mono">Anzeige</span>Native Werbeplatz · volle Breite</div>`);
   }
- 
+
   grid.innerHTML = cardsArr.join('');
 }
- 
+
 // Klick-Handler für Karten/Hero: normaler Klick = smooth SPA-Wechsel,
 // Strg/Cmd/Mittelklick = Browser darf den echten Link ganz normal öffnen
 // (neuer Tab). So funktioniert "Link in neuem Tab öffnen" wie erwartet.
@@ -738,7 +735,7 @@ function handleCardClick(event, id){
   openArticle(id);
   return false;
 }
- 
+
 function openArticleView(id){
   const a = articles.find(x => x.id === id);
   if(!a) return false;
@@ -746,7 +743,7 @@ function openArticleView(id){
   document.getElementById('feedView').style.display = 'none';
   document.getElementById('detailView').classList.add('active');
   window.scrollTo(0,0);
- 
+
   document.getElementById('detailArt').style.cssText = articleArtStyle(a) + '; background-size:cover; background-position:center;';
   document.getElementById('detailBadge').className = `badge ${a.cat}`;
   document.getElementById('detailBadge').textContent = CATS[a.cat].label + (a.game ? ' · ' + GAMES[a.game].label : '');
@@ -760,7 +757,7 @@ function openArticleView(id){
   srcLink.textContent = `Zur Originalquelle (${a.sourceLabel}) →`;
   syncDetailSaveButton();
   document.title = `${a.title} — LOADOUT`;
- 
+
   if(!readIds.has(id)){
     readIds.add(id);
     updateXpBadge();
@@ -768,26 +765,26 @@ function openArticleView(id){
   }
   return true;
 }
- 
+
 function openArticle(id){
   if(!openArticleView(id)) return;
   // Echte, teilbare URL in der Adresszeile — passend zur statischen Seite,
   // die build_pages.py für jeden Artikel erzeugt.
   history.pushState({ articleId: id }, '', `artikel/${id}.html`);
 }
- 
+
 function showFeedView(){
   document.getElementById('feedView').style.display = 'block';
   document.getElementById('detailView').classList.remove('active');
   window.scrollTo(0,0);
   document.title = 'LOADOUT — Gaming News, neu erzählt';
 }
- 
+
 function showFeed(){
   showFeedView();
   history.pushState({}, '', 'index.html');
 }
- 
+
 // Browser-Zurück/Vorwärts-Button korrekt unterstützen
 window.addEventListener('popstate', (event) => {
   if(event.state && event.state.articleId){
@@ -796,7 +793,7 @@ window.addEventListener('popstate', (event) => {
     showFeedView();
   }
 });
- 
+
 // --- Cookie-Consent -----------------------------------------------------
 // Opt-in-Modell (DSGVO-konform, erfüllt auch die Schweizer revDSG-Vorgaben,
 // die selbst kein Opt-in verlangen). Nicht-notwendige Skripte (Analyse,
@@ -807,29 +804,29 @@ window.addEventListener('popstate', (event) => {
 // erhalten bleibt (in dieser Vorschau bewusst nur Session-Speicher, siehe
 // README Abschnitt "Cookie-Consent" für den Ein-Zeilen-Umbau).
 let cookieConsent = null; // null = noch nicht entschieden | 'all' | 'necessary' | 'custom'
- 
+
 function initCookieBanner(){
   if(cookieConsent === null){
     document.getElementById('cookieBanner').classList.add('visible');
   }
 }
- 
+
 function setCookieConsent(acceptAll){
   cookieConsent = acceptAll ? 'all' : 'necessary';
   document.getElementById('cookieBanner').classList.remove('visible');
   applyConsent();
 }
- 
+
 function showCookieDetails(){
   document.getElementById('consentAnalytics').checked = cookieConsent === 'all';
   document.getElementById('consentMarketing').checked = cookieConsent === 'all';
   document.getElementById('cookieDetailModal').classList.add('visible');
 }
- 
+
 function closeCookieDetails(){
   document.getElementById('cookieDetailModal').classList.remove('visible');
 }
- 
+
 function saveCookieDetails(){
   const analytics = document.getElementById('consentAnalytics').checked;
   const marketing = document.getElementById('consentMarketing').checked;
@@ -839,18 +836,18 @@ function saveCookieDetails(){
   document.getElementById('cookieBanner').classList.remove('visible');
   applyConsent();
 }
- 
+
 function openCookieSettings(){
   showCookieDetails();
 }
- 
+
 function applyConsent(){
   // Produktiv: Hier echte Skripte (z. B. Google AdSense, Analytics) erst
   // NACH erteilter Einwilligung dynamisch per createElement('script')
   // nachladen — siehe README Abschnitt "Cookie-Consent".
   showToast(cookieConsent === 'necessary' ? '✓ Nur notwendige Cookies aktiv' : '✓ Cookie-Einstellungen gespeichert');
 }
- 
+
 history.replaceState({}, '', 'index.html');
 renderChips();
 renderHero();
@@ -860,7 +857,7 @@ renderTrendingWidget();
 updateSavedCount();
 updateXpBadge();
 initCookieBanner();
- 
+
 // Versucht, automatisch generierte Artikel aus articles.json nachzuladen.
 // Klappt das nicht (z. B. weil die Datei fehlt oder die Seite lokal per
 // Doppelklick geöffnet wurde statt über einen Server), bleiben die oben
@@ -881,7 +878,6 @@ fetch('articles.json')
     console.log('ℹ articles.json nicht gefunden — zeige eingebaute Beispielartikel');
   });
 </script>
- 
+
 </body>
 </html>
- 
