@@ -3,15 +3,17 @@
 // Die Website lädt das beim Öffnen und bestimmt daraus den wirklich
 // meistgelesenen Artikel für Hero-Kachel und "Trending jetzt".
 
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+
+const redis = Redis.fromEnv();
 
 export default async function handler(request, response) {
   try {
-    const keys = await kv.keys('views:*');
+    const keys = await redis.keys('views:*');
     if (!keys.length) {
       return response.status(200).json({});
     }
-    const values = await kv.mget(...keys);
+    const values = await redis.mget(...keys);
     const result = {};
     keys.forEach((key, i) => {
       const articleId = key.replace('views:', '');
@@ -22,8 +24,8 @@ export default async function handler(request, response) {
     response.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=120');
     return response.status(200).json(result);
   } catch (err) {
-    // KV noch nicht eingerichtet — Website fällt dann automatisch auf die
-    // KI-Einschätzung (Hype-Wert) zurück, siehe index.html.
+    // Upstash noch nicht eingerichtet — Website fällt dann automatisch auf
+    // die KI-Einschätzung (Hype-Wert) zurück, siehe index.html.
     return response.status(200).json({});
   }
 }
