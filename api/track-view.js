@@ -3,11 +3,13 @@
 // öffnet — sowohl von der Hauptseite (index.html) als auch von den
 // einzelnen statischen Artikel-Seiten aus.
 //
-// Voraussetzung: Ein Vercel-KV-Store muss im Vercel-Dashboard erstellt und
-// mit diesem Projekt verbunden sein (Storage → Create Database → KV).
-// Vercel setzt die nötigen Umgebungsvariablen dann automatisch.
+// Voraussetzung: Die "Upstash"-Integration muss im Vercel-Dashboard unter
+// Storage → Create Database → Upstash mit diesem Projekt verbunden sein.
+// Vercel/Upstash setzen die nötigen Umgebungsvariablen dann automatisch.
 
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+
+const redis = Redis.fromEnv();
 
 export default async function handler(request, response) {
   if (request.method !== 'POST') {
@@ -20,12 +22,12 @@ export default async function handler(request, response) {
   }
 
   try {
-    const newCount = await kv.incr(`views:${articleId}`);
+    const newCount = await redis.incr(`views:${articleId}`);
     return response.status(200).json({ articleId, views: newCount });
   } catch (err) {
-    // KV noch nicht eingerichtet oder vorübergehend nicht erreichbar —
+    // Upstash noch nicht eingerichtet oder vorübergehend nicht erreichbar —
     // das darf die Website selbst nie kaputt machen, deshalb hier nur
     // ein stiller Fehler ohne Auswirkung auf das Nutzererlebnis.
-    return response.status(200).json({ articleId, views: null, note: 'KV nicht verfügbar' });
+    return response.status(200).json({ articleId, views: null, note: 'Redis nicht verfügbar' });
   }
 }
