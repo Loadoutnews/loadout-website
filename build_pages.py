@@ -4,33 +4,33 @@ LOADOUT — Statischer Seiten-Generator
 Erzeugt für jeden Artikel in articles.json eine eigene, echte HTML-Seite
 unter /artikel/{id}.html — mit korrekten Meta-Tags, Open-Graph-Daten und
 schema.org-Strukturdaten. Das ist die Voraussetzung dafür, dass:
- 
+
   - Google einzelne Artikel indexieren kann (nicht nur die Startseite)
   - Ein Artikel-Link in WhatsApp/Twitter/Discord eine echte Vorschau zeigt
   - Nutzer:innen einen Artikel direkt teilen/verlinken können
   - Der Zurück-Button im Browser korrekt funktioniert
- 
+
 Ausführen:
     python build_pages.py
- 
+
 Voraussetzung: articles.json muss im selben Ordner liegen (wird von
 news_pipeline.py erzeugt/aktualisiert).
- 
+
 Ergebnis:
     /artikel/<id>.html   (eine Datei pro Artikel)
     sitemap.xml
     robots.txt
     ads.txt (Platzhalter, siehe README)
 """
- 
+
 import json
 import os
 import html
- 
+
 SITE_URL = "https://loadout-news.com"  # bereits auf die gewählte Domain eingestellt
 OUTPUT_DIR = "artikel"
 ARTICLES_FILE = "articles.json"
- 
+
 CATS = {
     "pc": "PC",
     "konsole": "Konsolen",
@@ -45,14 +45,14 @@ GAMES = {
     "valorant": "Valorant / LoL",
     "fifa": "FIFA / EA Sports FC",
 }
- 
- 
+
+
 def article_image(article):
     if article.get("image"):
         return article["image"]
     return f"https://picsum.photos/seed/loadout-{article['id']}/900/500"
- 
- 
+
+
 def render_article_page(a):
     cat_label = CATS.get(a["cat"], a["cat"])
     game_label = GAMES.get(a.get("game"), "") if a.get("game") else ""
@@ -62,7 +62,7 @@ def render_article_page(a):
     canonical = f"{SITE_URL}/artikel/{a['id']}.html"
     title = html.escape(a["title"])
     teaser = html.escape(a["teaser"])
- 
+
     # schema.org NewsArticle — hilft Suchmaschinen, den Artikel korrekt
     # einzuordnen (Autor, Bild, Datum) und kann zu Rich-Snippets führen.
     json_ld = {
@@ -79,7 +79,7 @@ def render_article_page(a):
         },
         "mainEntityOfPage": {"@type": "WebPage", "@id": canonical},
     }
- 
+
     return f"""<!DOCTYPE html>
 <html lang="de">
 <head>
@@ -99,7 +99,7 @@ def render_article_page(a):
 <script type="application/ld+json">{json.dumps(json_ld, ensure_ascii=False)}</script>
 </head>
 <body>
- 
+
 <div class="nav-wrap">
   <nav>
     <div class="logo-lockup" onclick="location.href='../index.html'">
@@ -121,10 +121,10 @@ def render_article_page(a):
     </div>
   </nav>
 </div>
- 
+
 <main>
   <div class="ad-slot ad-header"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
- 
+
   <div class="page-layout">
     <div class="content-col">
       <div class="detail active" style="display:block;">
@@ -148,15 +148,15 @@ def render_article_page(a):
         <a href="{a['source']}" class="source-link" target="_blank" rel="noopener">Zur Originalquelle ({html.escape(a['sourceLabel'])}) →</a>
       </div>
     </div>
- 
+
     <aside class="sidebar">
       <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×250</div>
     </aside>
   </div>
- 
+
   <div class="ad-slot ad-footer"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
 </main>
- 
+
 <footer>
   <div class="footer-links mono">
     <a href="../index.html">Zur Startseite</a>
@@ -165,22 +165,33 @@ def render_article_page(a):
     <span>© 2026 LOADOUT</span>
   </div>
 </footer>
- 
+
+<script>
+  // Zählt einen echten Seitenaufruf für diesen Artikel — auch wenn jemand
+  // direkt über einen geteilten Link oder eine Google-Suche hierher kommt,
+  // nicht nur über die Startseite.
+  fetch('/api/track-view', {{
+    method: 'POST',
+    headers: {{ 'Content-Type': 'application/json' }},
+    body: JSON.stringify({{ articleId: '{a['id']}' }})
+  }}).catch(() => {{}});
+</script>
+
 </body>
 </html>
 """
- 
- 
+
+
 def build():
     if not os.path.exists(ARTICLES_FILE):
         print(f"! {ARTICLES_FILE} nicht gefunden — nichts zu bauen.")
         return
- 
+
     with open(ARTICLES_FILE, "r", encoding="utf-8") as f:
         articles = json.load(f)
- 
+
     os.makedirs(OUTPUT_DIR, exist_ok=True)
- 
+
     urls = [f"{SITE_URL}/index.html"]
     for a in articles:
         page = render_article_page(a)
@@ -188,7 +199,7 @@ def build():
         with open(path, "w", encoding="utf-8") as f:
             f.write(page)
         urls.append(f"{SITE_URL}/artikel/{a['id']}.html")
- 
+
     # sitemap.xml
     sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
@@ -197,16 +208,16 @@ def build():
     sitemap.append("</urlset>")
     with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write("\n".join(sitemap))
- 
+
     # robots.txt
     robots = f"""User-agent: *
 Allow: /
- 
+
 Sitemap: {SITE_URL}/sitemap.xml
 """
     with open("robots.txt", "w", encoding="utf-8") as f:
         f.write(robots)
- 
+
     # ads.txt — Platzhalter; die echte Zeile bekommst du von deinem
     # Anzeigennetzwerk (z. B. Google AdSense) nach der Kontoeröffnung.
     if not os.path.exists("ads.txt"):
@@ -215,13 +226,12 @@ Sitemap: {SITE_URL}/sitemap.xml
                 "# Trage hier die Zeile ein, die dir dein Anzeigennetzwerk gibt, z. B.:\n"
                 "# google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0\n"
             )
- 
+
     print(f"✓ {len(articles)} Artikel-Seiten in /{OUTPUT_DIR} erzeugt")
     print(f"✓ sitemap.xml mit {len(urls)} URLs erzeugt")
     print("✓ robots.txt erzeugt")
     print("✓ ads.txt geprüft (Platzhalter, falls noch keine vorhanden war)")
- 
- 
+
+
 if __name__ == "__main__":
     build()
- 
