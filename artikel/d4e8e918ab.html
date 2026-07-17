@@ -17,7 +17,7 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Forza Horizon 6: So findet ihr die Blütenpracht von Shikisai-no-Oka", "description": "Blühende Felder statt Asphalt: Forza Horizon 6 entführt Spieler:innen nach Japan – und dieser Ort ist einfach zum Dahinschmelzen schön.", "image": ["https://picsum.photos/seed/loadout-d4e8e918ab/900/500"], "author": {"@type": "Organization", "name": "LOADOUT Redaktion"}, "publisher": {"@type": "Organization", "name": "LOADOUT", "logo": {"@type": "ImageObject", "url": "https://loadout-news.com/favicon.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://loadout-news.com/artikel/d4e8e918ab.html"}}</script>
 </head>
 <body>
- 
+
 <div class="nav-wrap">
   <nav>
     <div class="logo-lockup" onclick="location.href='../index.html'">
@@ -39,10 +39,10 @@
     </div>
   </nav>
 </div>
- 
+
 <main>
   <div class="ad-slot ad-header"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
- 
+
   <div class="page-layout">
     <div class="content-col">
       <div class="detail active" style="display:block;">
@@ -60,7 +60,7 @@
             <div class="hype-bar"><div class="hype-fill" style="width:42%"></div></div>
             <span class="hype-pct mono">42%</span>
           </div>
-          <span class="mono" style="color:var(--muted); font-size:12px;">16. July 2026 · PCGamer latest</span>
+          <span class="mono" style="color:var(--muted); font-size:12px;">16. July 2026 · PCGamer latest · <span id="viewCount"></span></span>
         </div>
         <p class="body">Playground Games hat sich für Forza Horizon 6 einmal mehr etwas ganz Besonderes einfallen lassen: Statt nur Rennstrecken und Highways zu bauen, hat das Team wieder unzählige kleine Postkarten-Momente in die Spielwelt gepackt. Einer der schönsten Orte trägt den Namen Shikisai-no-Oka und liegt mitten im japanischen Streckenabschnitt des Spiels. Wer bislang nur durch die Städte gerast ist, hat definitiv etwas verpasst.</p>
 <p class="body">Shikisai-no-Oka ist ein weitläufiges Blumenfeld, das in echten Regenbogenfarben schimmert – Reihen aus Kosmeen, Sonnenblumen und anderen Blüten, die sich über sanfte Hügel ziehen. Statt Highspeed-Action steht hier ganz klar die Optik im Vordergrund. Wer einen offenen Sportwagen wie einen Ferrari besitzt, sollte unbedingt mal langsamer machen und durch die Felder cruisen, statt die Bestzeit zu jagen. Genau für solche Momente lieben viele Fans die Horizon-Reihe: Es geht nicht immer nur ums Gewinnen, sondern auch ums Entdecken und Genießen der Umgebung.</p>
@@ -68,15 +68,15 @@
         <a href="https://www.pcgamer.com/games/racing/forza-horizon-6-shikisai-no-oka-location/" class="source-link" target="_blank" rel="noopener">Zur Originalquelle (PCGamer latest) →</a>
       </div>
     </div>
- 
+
     <aside class="sidebar">
       <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×250</div>
     </aside>
   </div>
- 
+
   <div class="ad-slot ad-footer"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
 </main>
- 
+
 <footer>
   <div class="footer-links mono">
     <a href="../index.html">Zur Startseite</a>
@@ -85,6 +85,23 @@
     <span>© 2026 LOADOUT</span>
   </div>
 </footer>
- 
+
+<script>
+  // Zählt einen echten Seitenaufruf für diesen Artikel — auch wenn jemand
+  // direkt über einen geteilten Link oder eine Google-Suche hierher kommt,
+  // nicht nur über die Startseite.
+  fetch('/api/track-view', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ articleId: 'd4e8e918ab' })
+  })
+    .then(res => res.json())
+    .then(data => {
+      const el = document.getElementById('viewCount');
+      if(el && data.views) el.textContent = '👁 ' + data.views.toLocaleString('de-CH') + (data.views === 1 ? ' Aufruf' : ' Aufrufe');
+    })
+    .catch(() => {});
+</script>
+
 </body>
 </html>

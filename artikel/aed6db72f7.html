@@ -17,7 +17,7 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Game of Thrones: War for Westeros verschoben – Thron-Kampf erst 2027", "description": "Fans von Westeros müssen sich weiter gedulden: Das Echtzeitstrategiespiel zur HBO-Welt kommt statt 2026 erst Anfang 2027.", "image": ["https://assets-prd.ignimgs.com/2025/06/06/got-blog-1749245507046.jpg"], "author": {"@type": "Organization", "name": "LOADOUT Redaktion"}, "publisher": {"@type": "Organization", "name": "LOADOUT", "logo": {"@type": "ImageObject", "url": "https://loadout-news.com/favicon.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://loadout-news.com/artikel/aed6db72f7.html"}}</script>
 </head>
 <body>
- 
+
 <div class="nav-wrap">
   <nav>
     <div class="logo-lockup" onclick="location.href='../index.html'">
@@ -39,10 +39,10 @@
     </div>
   </nav>
 </div>
- 
+
 <main>
   <div class="ad-slot ad-header"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
- 
+
   <div class="page-layout">
     <div class="content-col">
       <div class="detail active" style="display:block;">
@@ -60,7 +60,7 @@
             <div class="hype-bar"><div class="hype-fill" style="width:42%"></div></div>
             <span class="hype-pct mono">42%</span>
           </div>
-          <span class="mono" style="color:var(--muted); font-size:12px;">17. July 2026 · IGN Articles</span>
+          <span class="mono" style="color:var(--muted); font-size:12px;">17. July 2026 · IGN Articles · <span id="viewCount"></span></span>
         </div>
         <p class="body">Wer schon sehnsüchtig auf die Rückkehr nach Westeros gewartet hat, braucht weiterhin starke Nerven. Entwickler PlaySide Studios hat bestätigt, dass Game of Thrones: War for Westeros nicht wie ursprünglich geplant erscheint, sondern auf Anfang 2027 verschoben wird. Ein genaues Datum gibt es bislang nicht, nur der grobe zeitliche Rahmen.</p>
 <p class="body">Das Spiel siedelt sich im bekannten Universum der HBO-Serie an und setzt auf klassische Echtzeitstrategie-Kost: Große Häuser, taktische Feldzüge und der ewige Kampf um den Eisernen Thron sollen hier in ein strategisches Gameplay-Korsett gepackt werden. Für Fans von Titeln wie Age of Empires oder Total War mit Fantasy-Anstrich könnte das durchaus interessant werden – vorausgesetzt, die zusätzliche Entwicklungszeit zahlt sich am Ende auch aus.</p>
@@ -68,15 +68,15 @@
         <a href="https://www.ign.com/articles/game-of-thrones-war-for-westeros-release-date-delayed-to-early-2027" class="source-link" target="_blank" rel="noopener">Zur Originalquelle (IGN Articles) →</a>
       </div>
     </div>
- 
+
     <aside class="sidebar">
       <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×250</div>
     </aside>
   </div>
- 
+
   <div class="ad-slot ad-footer"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
 </main>
- 
+
 <footer>
   <div class="footer-links mono">
     <a href="../index.html">Zur Startseite</a>
@@ -85,6 +85,23 @@
     <span>© 2026 LOADOUT</span>
   </div>
 </footer>
- 
+
+<script>
+  // Zählt einen echten Seitenaufruf für diesen Artikel — auch wenn jemand
+  // direkt über einen geteilten Link oder eine Google-Suche hierher kommt,
+  // nicht nur über die Startseite.
+  fetch('/api/track-view', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ articleId: 'aed6db72f7' })
+  })
+    .then(res => res.json())
+    .then(data => {
+      const el = document.getElementById('viewCount');
+      if(el && data.views) el.textContent = '👁 ' + data.views.toLocaleString('de-CH') + (data.views === 1 ? ' Aufruf' : ' Aufrufe');
+    })
+    .catch(() => {});
+</script>
+
 </body>
 </html>

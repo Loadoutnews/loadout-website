@@ -17,7 +17,7 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Castlevania: Belmont's Curse – Endlich wieder 2D-Gothic-Horror vom Feinsten?", "description": "Dead-Cells-Studio Evil Empire zeigt mit Belmont's Curse erste Spielszenen und weckt große Hoffnungen auf ein würdiges 2D-Castlevania-Comeback.", "image": ["https://assets-prd.ignimgs.com/2026/07/16/castlevania-belmontscurse-blogroll-02-1784244063646.jpg"], "author": {"@type": "Organization", "name": "LOADOUT Redaktion"}, "publisher": {"@type": "Organization", "name": "LOADOUT", "logo": {"@type": "ImageObject", "url": "https://loadout-news.com/favicon.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://loadout-news.com/artikel/d9035bfbef.html"}}</script>
 </head>
 <body>
- 
+
 <div class="nav-wrap">
   <nav>
     <div class="logo-lockup" onclick="location.href='../index.html'">
@@ -39,10 +39,10 @@
     </div>
   </nav>
 </div>
- 
+
 <main>
   <div class="ad-slot ad-header"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
- 
+
   <div class="page-layout">
     <div class="content-col">
       <div class="detail active" style="display:block;">
@@ -60,7 +60,7 @@
             <div class="hype-bar"><div class="hype-fill" style="width:74%"></div></div>
             <span class="hype-pct mono">74%</span>
           </div>
-          <span class="mono" style="color:var(--muted); font-size:12px;">17. July 2026 · IGN Articles</span>
+          <span class="mono" style="color:var(--muted); font-size:12px;">17. July 2026 · IGN Articles · <span id="viewCount"></span></span>
         </div>
         <p class="body">Seit Jahren warten Fans der legendären Castlevania-Reihe auf ein neues Kapitel im geliebten 2D-Gewand, wie es Klassiker wie Symphony of the Night oder die Rondo-Ableger einst geprägt haben. Jetzt könnte genau dieser Wunsch endlich in Erfüllung gehen: Evil Empire, das Studio hinter dem Roguelike-Hit Dead Cells, arbeitet an Belmont&#x27;s Curse – und laut ersten Eindrücken aus einer dreistündigen Anspielsession macht das Projekt bereits ordentlich Eindruck.</p>
 <p class="body">Das ist keine Überraschung, schließlich kennt sich Evil Empire mit knackigem 2D-Gameplay, präzisem Movement und stimmungsvollem Pixel-Art-Design bestens aus. Genau diese Stärken scheinen sich nahtlos auf die Castlevania-Formel zu übertragen: Gotische Atmosphäre, fordernde Peitschenhiebe gegen Monster der Nacht und das typische Erkunden verwinkelter Gemäuer sollen erhalten bleiben, während frische Ideen das Ganze zeitgemäß aufpolieren.</p>
@@ -68,15 +68,15 @@
         <a href="https://www.ign.com/articles/castlevania-belmonts-curse-might-make-the-long-wait-for-a-new-2d-castlevania-worth-it-ign-preview" class="source-link" target="_blank" rel="noopener">Zur Originalquelle (IGN Articles) →</a>
       </div>
     </div>
- 
+
     <aside class="sidebar">
       <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×250</div>
     </aside>
   </div>
- 
+
   <div class="ad-slot ad-footer"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
 </main>
- 
+
 <footer>
   <div class="footer-links mono">
     <a href="../index.html">Zur Startseite</a>
@@ -85,6 +85,23 @@
     <span>© 2026 LOADOUT</span>
   </div>
 </footer>
- 
+
+<script>
+  // Zählt einen echten Seitenaufruf für diesen Artikel — auch wenn jemand
+  // direkt über einen geteilten Link oder eine Google-Suche hierher kommt,
+  // nicht nur über die Startseite.
+  fetch('/api/track-view', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ articleId: 'd9035bfbef' })
+  })
+    .then(res => res.json())
+    .then(data => {
+      const el = document.getElementById('viewCount');
+      if(el && data.views) el.textContent = '👁 ' + data.views.toLocaleString('de-CH') + (data.views === 1 ? ' Aufruf' : ' Aufrufe');
+    })
+    .catch(() => {});
+</script>
+
 </body>
 </html>
