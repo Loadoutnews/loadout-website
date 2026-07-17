@@ -20,14 +20,8 @@
 
 <div class="ticker-wrap">
   <div class="ticker-label mono"><span class="live-dot"></span> LIVE</div>
-  <div class="ticker-track mono">
-    <span>🎮 <b>Palworld</b> verlässt am 10. Juli den Early Access</span>
-    <span>🕹️ <b>Halo: Campaign Evolved</b> erscheint am 28. Juli</span>
-    <span>💼 Microsoft baut Xbox-Studios um — ca. 3.200 Stellen betroffen</span>
-    <span>⚔️ <b>DOOM: The Dark Ages</b> bekommt Erweiterung „Revelations"</span>
-    <span>🏝️ <b>Splatoon Raiders</b> exklusiv für Switch 2 angekündigt</span>
-    <span>🎮 <b>Palworld</b> verlässt am 10. Juli den Early Access</span>
-    <span>🕹️ <b>Halo: Campaign Evolved</b> erscheint am 28. Juli</span>
+  <div class="ticker-track mono" id="tickerTrack">
+    <span>Lade aktuelle Meldungen…</span>
   </div>
 </div>
 
@@ -76,24 +70,7 @@
   <!-- FEED VIEW -->
   <div id="feedView">
 
-    <div style="position:relative;">
-      <a href="artikel/halo.html" class="hero" onclick="return handleCardClick(event, 'halo')">
-        <div class="hero-art"></div>
-        <div class="hero-content">
-          <span class="badge konsole">Konsolen</span>
-          <h1 class="display">Halo kehrt zu seinen Wurzeln zurück — aber komplett neu gebaut</h1>
-          <p>Mit „Campaign Evolved" bringt 343 Industries den Ursprung der Reihe zurück: Der Master-Chief-Klassiker von 2001 wird von Grund auf neu aufgebaut, samt zusätzlicher Missionen. Wer es physisch mag, bekommt zum Start am 28. Juli sogar wieder eine Box mit echten Discs.</p>
-          <div class="hype">
-            <span class="hype-label mono">Hype-Meter</span>
-            <div class="hype-bar"><div class="hype-fill" style="width:88%"></div></div>
-            <span class="hype-pct mono">88%</span>
-          </div>
-        </div>
-      </a>
-      <button class="save-btn" onclick="toggleSave(event, 'halo')" id="save-hero-halo" title="Für später merken">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E9E8F5" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-      </button>
-    </div>
+    <div id="heroContainer"></div>
 
     <div class="section-head">
       <h2 class="mono">Frisch reingekommen</h2>
@@ -565,8 +542,6 @@ function toggleSave(event, id){
 
   // Alle Merken-Buttons für diesen Artikel synchron aktualisieren (Karte, Hero, Detail)
   document.querySelectorAll(`[data-save-id="${id}"]`).forEach(btn => btn.classList.toggle('saved', !wasSaved));
-  const heroBtn = document.getElementById(`save-hero-${id}`);
-  if(heroBtn) heroBtn.classList.toggle('saved', !wasSaved);
   if(currentDetailId === id) syncDetailSaveButton();
 
   if(!wasSaved) showToast('⭐ Zur Merkliste hinzugefügt');
@@ -615,6 +590,61 @@ function renderTrendingWidget(){
   `).join('');
 }
 
+let heroArticleId = null;
+
+function renderHero(){
+  if(!articles.length){ heroArticleId = null; return; }
+
+  // Der Hero zeigt immer den aktuell angesagtesten Artikel (höchster
+  // Hype-Wert) — aktualisiert sich also automatisch mit jedem neuen
+  // Artikel, statt einen festen Artikel dauerhaft oben zu zeigen.
+  const top = [...articles].sort((a, b) => b.hype - a.hype)[0];
+  heroArticleId = top.id;
+
+  document.getElementById('heroContainer').innerHTML = `
+    <div style="position:relative;">
+      <a href="artikel/${top.id}.html" class="hero" onclick="return handleCardClick(event, '${top.id}')">
+        <div class="hero-art" style="${articleArtStyle(top)}">
+          <span class="trending-tag">🔥 Trending</span>
+        </div>
+        <div class="hero-content">
+          <span class="badge ${top.cat}">${CATS[top.cat].label}${top.game ? ' · ' + GAMES[top.game].label : ''}</span>
+          <h1 class="display">${top.title}</h1>
+          <p>${top.teaser}</p>
+          <div class="hype">
+            <span class="hype-label mono">Hype-Meter</span>
+            <div class="hype-bar"><div class="hype-fill" style="width:${top.hype}%"></div></div>
+            <span class="hype-pct mono">${top.hype}%</span>
+          </div>
+        </div>
+      </a>
+      <button class="save-btn ${savedIds.has(top.id)?'saved':''}" data-save-id="${top.id}" onclick="toggleSave(event, '${top.id}')" title="Für später merken">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E9E8F5" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      </button>
+    </div>
+  `;
+}
+
+const TICKER_CATEGORY_EMOJI = { pc: "🖥️", konsole: "🎮", hardware: "🛠️", industrie: "💼" };
+
+function renderTicker(){
+  const track = document.getElementById('tickerTrack');
+  if(!articles.length) return;
+
+  // Zeigt immer die zuletzt veröffentlichten Artikel (die Reihenfolge in
+  // articles.json ist neueste zuerst) — aktualisiert sich also automatisch
+  // mit jedem Pipeline-Lauf, statt feste Meldungen von früher zu zeigen.
+  const latest = articles.slice(0, 6);
+  const itemHtml = latest.map(a => {
+    const emoji = TICKER_CATEGORY_EMOJI[a.cat] || "📰";
+    const title = a.title.length > 80 ? a.title.slice(0, 77) + "…" : a.title;
+    return `<span>${emoji} <b>${title}</b></span>`;
+  }).join('');
+
+  // Für eine nahtlose Endlos-Schleife die Liste zweimal hintereinander
+  track.innerHTML = itemHtml + itemHtml;
+}
+
 function subscribeNewsletter(){
   const input = document.getElementById('newsletterEmail');
   const email = input.value.trim();
@@ -634,6 +664,7 @@ function renderGrid(){
   // Reihenfolge der Wörter spielt dabei keine Rolle.
   const queryWords = query.split(/\s+/).filter(Boolean);
   const filtered = articles.filter(a => {
+    if(a.id === heroArticleId) return false; // im Hero schon oben gezeigt, hier nicht doppeln
     const matchesCat = activeCat === "alle" || a.cat === activeCat;
     const matchesGame = activeGame === "alle" || a.game === activeGame;
     const searchableText = [
@@ -808,7 +839,9 @@ function applyConsent(){
 
 history.replaceState({}, '', 'index.html');
 renderChips();
+renderHero();
 renderGrid();
+renderTicker();
 renderTrendingWidget();
 updateSavedCount();
 updateXpBadge();
@@ -823,7 +856,9 @@ fetch('articles.json')
   .then(data => {
     if (Array.isArray(data) && data.length > 0) {
       articles = data;
+      renderHero();
       renderGrid();
+      renderTicker();
       renderTrendingWidget();
       console.log(`✓ ${data.length} Artikel aus articles.json geladen`);
     }
