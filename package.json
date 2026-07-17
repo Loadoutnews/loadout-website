@@ -1,0 +1,7 @@
+{
+  "name": "loadout-news",
+  "private": true,
+  "dependencies": {
+    "@vercel/kv": "^2.0.0"
+  }
+}
