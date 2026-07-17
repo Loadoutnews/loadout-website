@@ -110,11 +110,14 @@
     display:flex; align-items:center; gap:11px; cursor:pointer; flex:0 0 auto;
   }
   .logo-icon{ width:38px; height:38px; flex:0 0 auto; border-radius:9px; }
-  .logo-text{ font-size:24px; font-weight:800; letter-spacing:-0.01em; }
+  .logo-text{ font-size:24px; font-weight:800; letter-spacing:-0.01em; line-height:1.15; }
   .logo-text span{ color: var(--magenta); }
   .logo-text small{
     font-size:12px; font-weight:600; color:var(--muted); letter-spacing:0.04em;
     margin-left:2px; vertical-align:middle;
+  }
+  .logo-tagline{
+    font-size:10.5px; color:var(--muted); letter-spacing:0.01em; margin-top:1px;
   }
 
   .nav-right{ display:flex; align-items:center; gap:12px; margin-left:auto; }
@@ -451,7 +454,9 @@
     .hero-content p{ font-size:13.5px; }
     .detail h1{ font-size:23px; }
     .xp-badge{ padding:5px 9px; font-size:11px; }
+    .logo-tagline{ display:none; } /* auf sehr kleinen Screens ausblenden, Platz sparen */
     .xp-badge span:first-child{ display:none; } /* Emoji-Icon ausblenden, Platz sparen */
+    #hypeInfoBtn span{ display:inline !important; } /* Ausnahme: Flamme ist der einzige Inhalt des Buttons */
     .save-btn{ width:36px; height:36px; } /* größeres Touch-Ziel auf Mobile */
     .detail-top{ flex-wrap:wrap; gap:10px; }
     .cookie-banner.visible{ flex-direction:column; align-items:stretch; }
