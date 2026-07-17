@@ -2,6 +2,6 @@
   "name": "loadout-news",
   "private": true,
   "dependencies": {
-    "@vercel/kv": "^2.0.0"
+    "@upstash/redis": "^1.34.0"
   }
 }
