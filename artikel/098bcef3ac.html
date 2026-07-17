@@ -17,7 +17,7 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Assassin's Creed Black Flag Resynced: Warum Edwards Verstecktes Schwert-Kampfsystem fehlt", "description": "Director Richard Knight erklärt, warum Edward Kenway im Remaster einige seiner ikonischen Kampfmoves verloren hat – und lässt eine Hintertür offen.", "image": ["https://assets-prd.ignimgs.com/2026/07/07/assassinscreedblackflagresynced-review-blogroll-1783462366214.jpg"], "author": {"@type": "Organization", "name": "LOADOUT Redaktion"}, "publisher": {"@type": "Organization", "name": "LOADOUT", "logo": {"@type": "ImageObject", "url": "https://loadout-news.com/favicon.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://loadout-news.com/artikel/098bcef3ac.html"}}</script>
 </head>
 <body>
- 
+
 <div class="nav-wrap">
   <nav>
     <div class="logo-lockup" onclick="location.href='../index.html'">
@@ -39,10 +39,10 @@
     </div>
   </nav>
 </div>
- 
+
 <main>
   <div class="ad-slot ad-header"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
- 
+
   <div class="page-layout">
     <div class="content-col">
       <div class="detail active" style="display:block;">
@@ -60,7 +60,7 @@
             <div class="hype-bar"><div class="hype-fill" style="width:42%"></div></div>
             <span class="hype-pct mono">42%</span>
           </div>
-          <span class="mono" style="color:var(--muted); font-size:12px;">17. July 2026 · IGN Articles</span>
+          <span class="mono" style="color:var(--muted); font-size:12px;">17. July 2026 · IGN Articles · <span id="viewCount"></span></span>
         </div>
         <p class="body">Fans, die sich auf eine originalgetreue Rückkehr von Edward Kenway gefreut haben, dürften beim genaueren Hinsehen stutzig geworden sein: In Assassin&#x27;s Creed Black Flag Resynced fehlen einige der geliebten Kampfanimationen rund um das Hidden Blade, das verdeckte Klingenwaffe des Piraten-Assassinen. Was zunächst wie ein Kürzung wirkt, hat laut Director Richard Knight handfeste Gründe.</p>
 <p class="body">In einem Interview erklärte Knight, dass die alten Kampfsequenzen technisch nicht einfach eins zu eins in die überarbeitete Engine und das modernisierte Animationssystem übertragen werden konnten. Statt fehlerhafte oder ruckelige Bewegungen zu riskieren, habe sich das Team entschieden, bestimmte Moves lieber komplett rauszunehmen, anstatt sie in halbgarer Qualität einzubauen. Das Ziel: ein stimmiges, poliertes Kampfgefühl, auch wenn dafür Nostalgie-Momente geopfert werden mussten.</p>
@@ -68,15 +68,15 @@
         <a href="https://www.ign.com/articles/assassins-creed-black-flag-resynced-director-reveals-why-ubisoft-ditched-edwards-hidden-blade-combat" class="source-link" target="_blank" rel="noopener">Zur Originalquelle (IGN Articles) →</a>
       </div>
     </div>
- 
+
     <aside class="sidebar">
       <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×250</div>
     </aside>
   </div>
- 
+
   <div class="ad-slot ad-footer"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
 </main>
- 
+
 <footer>
   <div class="footer-links mono">
     <a href="../index.html">Zur Startseite</a>
@@ -85,6 +85,23 @@
     <span>© 2026 LOADOUT</span>
   </div>
 </footer>
- 
+
+<script>
+  // Zählt einen echten Seitenaufruf für diesen Artikel — auch wenn jemand
+  // direkt über einen geteilten Link oder eine Google-Suche hierher kommt,
+  // nicht nur über die Startseite.
+  fetch('/api/track-view', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ articleId: '098bcef3ac' })
+  })
+    .then(res => res.json())
+    .then(data => {
+      const el = document.getElementById('viewCount');
+      if(el && data.views) el.textContent = '👁 ' + data.views.toLocaleString('de-CH') + (data.views === 1 ? ' Aufruf' : ' Aufrufe');
+    })
+    .catch(() => {});
+</script>
+
 </body>
 </html>
