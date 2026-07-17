@@ -117,7 +117,8 @@
     margin-left:2px; vertical-align:middle;
   }
   .logo-tagline{
-    font-size:10.5px; color:var(--muted); letter-spacing:0.01em; margin-top:1px;
+    font-size:10.5px; font-weight:700; letter-spacing:0.07em; margin-top:2px;
+    text-transform:uppercase; color: var(--magenta);
   }
 
   .nav-right{ display:flex; align-items:center; gap:12px; margin-left:auto; }
@@ -456,7 +457,6 @@
     .xp-badge{ padding:5px 9px; font-size:11px; }
     .logo-tagline{ display:none; } /* auf sehr kleinen Screens ausblenden, Platz sparen */
     .xp-badge span:first-child{ display:none; } /* Emoji-Icon ausblenden, Platz sparen */
-    #hypeInfoBtn span{ display:inline !important; } /* Ausnahme: Flamme ist der einzige Inhalt des Buttons */
     .save-btn{ width:36px; height:36px; } /* größeres Touch-Ziel auf Mobile */
     .detail-top{ flex-wrap:wrap; gap:10px; }
     .cookie-banner.visible{ flex-direction:column; align-items:stretch; }
