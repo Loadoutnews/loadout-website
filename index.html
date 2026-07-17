@@ -48,7 +48,7 @@
       </svg>
       <div>
         <div class="logo-text display">LOAD<span>OUT</span><small class="mono">-NEWS</small></div>
-        <div class="logo-tagline mono">Verpasse keine Gaming-News mehr<span class="tagline-cursor">_</span></div>
+        <div class="logo-tagline mono">✦ Verpasse keine Gaming-News mehr</div>
       </div>
     </div>
     <div class="searchbox">
@@ -663,6 +663,7 @@ function renderHero(){
             <div class="hype-bar"><div class="hype-fill" style="width:${top.hype}%"></div></div>
             <span class="hype-pct mono">${top.hype}%</span>
           </div>
+          ${top.views ? `<p class="mono" style="font-size:11px; color:var(--muted); margin-top:8px;">👁 ${top.views.toLocaleString('de-CH')} ${top.views === 1 ? 'Aufruf' : 'Aufrufe'}</p>` : ''}
         </div>
       </a>
       <button class="save-btn ${savedIds.has(top.id)?'saved':''}" data-save-id="${top.id}" onclick="toggleSave(event, '${top.id}')" title="Für später merken">
@@ -793,7 +794,7 @@ function renderGrid(){
           <span class="badge ${a.cat}">${CATS[a.cat].label}${a.game ? ' · ' + GAMES[a.game].label : ''}</span>
           <h3>${a.title}</h3>
           <p>${a.teaser}</p>
-          <div class="meta"><span class="mono">${a.date}</span><span class="mono">${a.platform}</span></div>
+          <div class="meta"><span class="mono">${a.date}</span><span class="mono">${a.platform}${a.views ? ' · 👁 ' + a.views.toLocaleString('de-CH') : ''}</span></div>
         </div>
       </a>
       <button class="save-btn ${savedIds.has(a.id)?'saved':''}" data-save-id="${a.id}" onclick="toggleSave(event, '${a.id}')" title="Für später merken">
@@ -834,7 +835,7 @@ function openArticleView(id){
   document.getElementById('detailTitle').textContent = a.title;
   document.getElementById('detailHypeFill').style.width = a.hype + '%';
   document.getElementById('detailHypePct').textContent = a.hype + '%';
-  document.getElementById('detailMeta').textContent = `${a.date} · ${a.platform}`;
+  document.getElementById('detailMeta').textContent = `${a.date} · ${a.platform}${a.views ? ' · 👁 ' + a.views.toLocaleString('de-CH') + (a.views === 1 ? ' Aufruf' : ' Aufrufe') : ''}`;
   document.getElementById('detailBody').innerHTML = a.body.map(p => `<p class="body">${p}</p>`).join('');
   const srcLink = document.getElementById('detailSource');
   srcLink.href = a.source;
