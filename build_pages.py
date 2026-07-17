@@ -142,7 +142,7 @@ def render_article_page(a):
             <div class="hype-bar"><div class="hype-fill" style="width:{a['hype']}%"></div></div>
             <span class="hype-pct mono">{a['hype']}%</span>
           </div>
-          <span class="mono" style="color:var(--muted); font-size:12px;">{html.escape(a['date'])} · {html.escape(a['platform'])}</span>
+          <span class="mono" style="color:var(--muted); font-size:12px;">{html.escape(a['date'])} · {html.escape(a['platform'])} · <span id="viewCount"></span></span>
         </div>
         {body_html}
         <a href="{a['source']}" class="source-link" target="_blank" rel="noopener">Zur Originalquelle ({html.escape(a['sourceLabel'])}) →</a>
@@ -174,7 +174,13 @@ def render_article_page(a):
     method: 'POST',
     headers: {{ 'Content-Type': 'application/json' }},
     body: JSON.stringify({{ articleId: '{a['id']}' }})
-  }}).catch(() => {{}});
+  }})
+    .then(res => res.json())
+    .then(data => {{
+      const el = document.getElementById('viewCount');
+      if(el && data.views) el.textContent = '👁 ' + data.views.toLocaleString('de-CH') + (data.views === 1 ? ' Aufruf' : ' Aufrufe');
+    }})
+    .catch(() => {{}});
 </script>
 
 </body>
