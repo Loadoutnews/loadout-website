@@ -1,4 +1,3 @@
-
   :root{
     --bg: #0A0C16;
     --surface: #12162A;
@@ -48,6 +47,7 @@
   }
   .ticker-label{
     flex:0 0 auto;
+    position:relative; z-index:2; /* bleibt immer über dem Lauftext, egal wie weit der scrollt */
     background: var(--violet);
     color:#0A0C16;
     font-size:11px;
@@ -57,6 +57,7 @@
     display:flex;
     align-items:center;
     gap:6px;
+    box-shadow: 6px 0 10px -4px rgba(10,12,22,0.6); /* sanfter Schatten als Übergang zum Lauftext */
   }
   .live-dot{
     width:6px; height:6px; border-radius:50%; background:#0A0C16;
@@ -65,7 +66,7 @@
   @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.25; } }
   .ticker-track{
     display:inline-flex;
-    animation: scroll 28s linear infinite;
+    animation: scroll 55s linear infinite;
     padding-left:100%;
   }
   .ticker-track span{ margin-right:48px; font-size:12px; color:var(--muted); }
