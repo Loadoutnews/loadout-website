@@ -46,20 +46,26 @@
         <rect x="60" y="50" width="12" height="30" rx="5" fill="url(#navMarkGradient)"/>
         <rect x="76" y="36" width="12" height="44" rx="5" fill="url(#navMarkGradient)"/>
       </svg>
-      <div class="logo-text display">LOAD<span>OUT</span><small class="mono">-NEWS</small></div>
+      <div>
+        <div class="logo-text display">LOAD<span>OUT</span><small class="mono">-NEWS</small></div>
+        <div class="logo-tagline">Verpasse keine Gaming-News mehr</div>
+      </div>
     </div>
     <div class="searchbox">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8D90AC" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
       <input id="searchInput" type="text" placeholder="Artikel durchsuchen…" oninput="renderGrid()">
     </div>
     <div class="nav-right">
+      <button class="xp-badge" id="hypeInfoBtn" onclick="showHypeInfo()" title="Was ist der Hype-Meter?">
+        <span>🔥</span>
+      </button>
       <button class="xp-badge" id="savedToggle" onclick="toggleSavedView()" title="Gemerkte Artikel anzeigen">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
         <span id="savedCount">0 gemerkt</span>
       </button>
-      <div class="xp-badge" id="xpBadge" title="Gelesene Artikel in dieser Sitzung">
+      <button class="xp-badge" id="xpBadge" onclick="showXpInfo()" title="Was sind XP?">
         <span>⚡</span><span id="xpCount">0 XP</span>
-      </div>
+      </button>
     </div>
   </nav>
 </div>
@@ -230,6 +236,17 @@
     <div class="cookie-actions" style="margin-top:18px;">
       <button class="cookie-btn ghost" onclick="closeCookieDetails()">Abbrechen</button>
       <button class="cookie-btn primary" onclick="saveCookieDetails()">Auswahl speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Wiederverwendbares Info-Modal für kurze Erklärungen (Hype-Meter, XP) -->
+<div id="infoModal" class="cookie-modal">
+  <div class="cookie-modal-box">
+    <h3 class="display" id="infoModalTitle"></h3>
+    <div id="infoModalBody" style="font-size:13.5px; color:var(--muted); line-height:1.65;"></div>
+    <div class="cookie-actions" style="margin-top:18px;">
+      <button class="cookie-btn primary" onclick="closeInfoModal()" style="width:100%;">Verstanden</button>
     </div>
   </div>
 </div>
@@ -482,6 +499,27 @@ const savedIds = new Set();
 const readIds = new Set();
 let currentDetailId = null;
 
+// --- Dauerhafte Speicherung über Browser-Neustarts hinweg ---------------
+// Merkliste und XP sollen erhalten bleiben, auch wenn die Seite neu
+// geladen wird. localStorage ist dafür der richtige Ort, sobald die Seite
+// wirklich extern gehostet läuft (nicht nur in einer Chat-Vorschau).
+function loadPersistedState(){
+  try {
+    JSON.parse(localStorage.getItem('loadout_savedIds') || '[]').forEach(id => savedIds.add(id));
+  } catch(e) { /* localStorage nicht verfügbar oder Daten beschädigt — einfach mit leerer Liste starten */ }
+  try {
+    JSON.parse(localStorage.getItem('loadout_readIds') || '[]').forEach(id => readIds.add(id));
+  } catch(e) { /* siehe oben */ }
+}
+
+function persistSavedIds(){
+  try { localStorage.setItem('loadout_savedIds', JSON.stringify([...savedIds])); } catch(e) {}
+}
+
+function persistReadIds(){
+  try { localStorage.setItem('loadout_readIds', JSON.stringify([...readIds])); } catch(e) {}
+}
+
 function renderChips(){
   const chips = document.getElementById('chips');
   const cats = [{key:"alle", label:"Alle"}, ...Object.entries(CATS).map(([key,v]) => ({key, label:v.label}))];
@@ -537,6 +575,7 @@ function toggleSave(event, id){
   const wasSaved = savedIds.has(id);
   if(wasSaved){ savedIds.delete(id); } else { savedIds.add(id); }
   updateSavedCount();
+  persistSavedIds();
 
   // Alle Merken-Buttons für diesen Artikel synchron aktualisieren (Karte, Hero, Detail)
   document.querySelectorAll(`[data-save-id="${id}"]`).forEach(btn => btn.classList.toggle('saved', !wasSaved));
@@ -761,6 +800,7 @@ function openArticleView(id){
   if(!readIds.has(id)){
     readIds.add(id);
     updateXpBadge();
+    persistReadIds();
     showToast('⚡ +15 XP · Artikel gelesen');
   }
   return true;
@@ -798,12 +838,8 @@ window.addEventListener('popstate', (event) => {
 // Opt-in-Modell (DSGVO-konform, erfüllt auch die Schweizer revDSG-Vorgaben,
 // die selbst kein Opt-in verlangen). Nicht-notwendige Skripte (Analyse,
 // Werbe-Netzwerke) dürfen NIE vor einer aktiven Einwilligung geladen werden.
-//
-// Hinweis für den Live-Betrieb: Hier sollte der Consent zusätzlich in
-// localStorage gespeichert werden, damit die Wahl auch nach einem Neuladen
-// erhalten bleibt (in dieser Vorschau bewusst nur Session-Speicher, siehe
-// README Abschnitt "Cookie-Consent" für den Ein-Zeilen-Umbau).
-let cookieConsent = null; // null = noch nicht entschieden | 'all' | 'necessary' | 'custom'
+let cookieConsent = null;
+try { cookieConsent = localStorage.getItem('loadout_cookieConsent'); } catch(e) {}
 
 function initCookieBanner(){
   if(cookieConsent === null){
@@ -813,6 +849,7 @@ function initCookieBanner(){
 
 function setCookieConsent(acceptAll){
   cookieConsent = acceptAll ? 'all' : 'necessary';
+  try { localStorage.setItem('loadout_cookieConsent', cookieConsent); } catch(e) {}
   document.getElementById('cookieBanner').classList.remove('visible');
   applyConsent();
 }
@@ -831,6 +868,7 @@ function saveCookieDetails(){
   const analytics = document.getElementById('consentAnalytics').checked;
   const marketing = document.getElementById('consentMarketing').checked;
   cookieConsent = (analytics || marketing) ? 'custom' : 'necessary';
+  try { localStorage.setItem('loadout_cookieConsent', cookieConsent); } catch(e) {}
   window.consentState = { analytics, marketing };
   document.getElementById('cookieDetailModal').classList.remove('visible');
   document.getElementById('cookieBanner').classList.remove('visible');
@@ -848,6 +886,53 @@ function applyConsent(){
   showToast(cookieConsent === 'necessary' ? '✓ Nur notwendige Cookies aktiv' : '✓ Cookie-Einstellungen gespeichert');
 }
 
+// --- Erklärungs-Modals (Hype-Meter & XP) ---------------------------------
+function showInfoModal(title, bodyHtml){
+  document.getElementById('infoModalTitle').textContent = title;
+  document.getElementById('infoModalBody').innerHTML = bodyHtml;
+  document.getElementById('infoModal').classList.add('visible');
+}
+
+function closeInfoModal(){
+  document.getElementById('infoModal').classList.remove('visible');
+}
+
+function showHypeInfo(){
+  const top = heroArticleId ? articles.find(a => a.id === heroArticleId) : null;
+  const linkHtml = top ? `
+    <button class="cookie-btn primary" style="width:100%; margin-top:14px;"
+      onclick="closeInfoModal(); openArticle('${top.id}')">
+      🔥 Zum angesagtesten Artikel: ${top.title.length > 40 ? top.title.slice(0,37) + '…' : top.title}
+    </button>` : '';
+  showInfoModal('Was ist der Hype-Meter?', `
+    <p>
+      Der Hype-Meter zeigt, wie aufregend und relevant eine Meldung gerade für die Gaming-Community
+      ist — von 0 bis 100&nbsp;%. Je höher der Wert, desto mehr Aufmerksamkeit bekommt das Thema
+      aktuell. Der Artikel mit dem höchsten Hype-Wert steht automatisch ganz oben auf der Startseite
+      und ist mit einem 🔥-Trending-Tag markiert.
+    </p>
+    ${linkHtml}
+  `);
+}
+
+function showXpInfo(){
+  showInfoModal('Was sind XP?', `
+    <p>
+      Du sammelst XP, indem du Artikel liest — jeder Artikel bringt dir beim ersten Öffnen einmalig
+      <b style="color:var(--text);">+15 XP</b>. Erneutes Öffnen desselben Artikels bringt keine
+      weiteren XP.
+    </p>
+    <p style="margin-top:10px;">
+      Aktueller Stand: <b style="color:var(--text);">${readIds.size * 15} XP</b> aus
+      ${readIds.size} gelesenen ${readIds.size === 1 ? 'Artikel' : 'Artikeln'}.
+    </p>
+    <p style="margin-top:10px; font-size:12px; color:var(--muted);">
+      Dein Fortschritt wird auf diesem Gerät gespeichert und bleibt auch nach einem Neuladen erhalten.
+    </p>
+  `);
+}
+
+loadPersistedState();
 history.replaceState({}, '', 'index.html');
 renderChips();
 renderHero();
