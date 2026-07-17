@@ -9,7 +9,13 @@
 
 import { Redis } from '@upstash/redis';
 
-const redis = Redis.fromEnv();
+// Die genauen Variablennamen hängen vom "Custom Prefix" ab, den du beim
+// Verbinden der Upstash-Integration in Vercel vergeben hast. Falls du den
+// Prefix änderst, hier entsprechend anpassen.
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_KV_REST_API_URL,
+  token: process.env.UPSTASH_REDIS_REST_KV_REST_API_TOKEN,
+});
 
 export default async function handler(request, response) {
   if (request.method !== 'POST') {
