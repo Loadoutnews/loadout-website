@@ -39,7 +39,6 @@
   .ticker-wrap{
     border-bottom:1px solid var(--line);
     background: var(--surface);
-    overflow:hidden;
     white-space:nowrap;
     height:34px;
     display:flex;
@@ -47,7 +46,7 @@
   }
   .ticker-label{
     flex:0 0 auto;
-    position:relative; z-index:2; /* bleibt immer über dem Lauftext, egal wie weit der scrollt */
+    position:relative; z-index:2;
     background: var(--violet);
     color:#0A0C16;
     font-size:11px;
@@ -57,16 +56,28 @@
     display:flex;
     align-items:center;
     gap:6px;
-    box-shadow: 6px 0 10px -4px rgba(10,12,22,0.6); /* sanfter Schatten als Übergang zum Lauftext */
+    box-shadow: 6px 0 10px -4px rgba(10,12,22,0.6);
   }
   .live-dot{
     width:6px; height:6px; border-radius:50%; background:#0A0C16;
     animation: pulse 1.6s ease-in-out infinite;
   }
   @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.25; } }
+ 
+  /* Eigener, klar abgegrenzter Bereich für den Lauftext — dadurch kann der
+     scrollende Text technisch gar nicht mehr in den Bereich des LIVE-Labels
+     hineinlaufen, unabhängig davon, wie weit die Animation scrollt. Ein
+     sanfter Ein-/Ausblend-Rand sorgt zusätzlich dafür, dass der Text schon
+     kurz vorher ausblendet, statt hart abgeschnitten zu wirken. */
+  .ticker-viewport{
+    flex:1 1 auto; min-width:0; height:100%; overflow:hidden; position:relative;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, black 18px, black calc(100% - 18px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, black 18px, black calc(100% - 18px), transparent 100%);
+  }
   .ticker-track{
-    display:inline-flex;
-    animation: scroll 55s linear infinite;
+    display:inline-flex; align-items:center; height:100%;
+    position:absolute; top:0; left:0;
+    animation: scroll 70s linear infinite;
     padding-left:100%;
   }
   .ticker-track span{ margin-right:48px; font-size:12px; color:var(--muted); }
