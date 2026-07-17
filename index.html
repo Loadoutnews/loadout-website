@@ -48,7 +48,7 @@
       </svg>
       <div>
         <div class="logo-text display">LOAD<span>OUT</span><small class="mono">-NEWS</small></div>
-        <div class="logo-tagline">Verpasse keine Gaming-News mehr</div>
+        <div class="logo-tagline mono">Verpasse keine Gaming-News mehr<span class="tagline-cursor">_</span></div>
       </div>
     </div>
     <div class="searchbox">
@@ -57,7 +57,7 @@
     </div>
     <div class="nav-right">
       <button class="xp-badge" id="hypeInfoBtn" onclick="showHypeInfo()" title="Was ist der Hype-Meter?">
-        <span>🔥</span>
+        <span>🔥</span><span>Hype-Meter</span>
       </button>
       <button class="xp-badge" id="savedToggle" onclick="toggleSavedView()" title="Gemerkte Artikel anzeigen">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
@@ -617,8 +617,18 @@ function articleArtStyle(a){
   return `background:${CATEGORY_OVERLAYS[a.cat]}, url('${articleImageUrl(a)}') center/cover`;
 }
 
+// Bestimmt die Rangfolge eines Artikels: Sobald echte Seitenaufrufe
+// vorliegen (a.views, von /api/views geladen), zählen die klar mehr als
+// die KI-Einschätzung (a.hype) — echte Leser:innen entscheiden dann, was
+// oben steht. Ganz neue Artikel ohne Aufrufe werden vorübergehend nach der
+// KI-Einschätzung sortiert, bis echte Daten vorliegen.
+function getRankScore(article){
+  if(article.views && article.views > 0) return article.views * 1000;
+  return article.hype || 0;
+}
+
 function renderTrendingWidget(){
-  const top3 = [...articles].sort((a,b) => b.hype - a.hype).slice(0, 3);
+  const top3 = [...articles].sort((a,b) => getRankScore(b) - getRankScore(a)).slice(0, 3);
   document.getElementById('trendingList').innerHTML = top3.map((a, i) => `
     <div class="trending-item" onclick="openArticle('${a.id}')">
       <span class="trending-rank mono">${i+1}</span>
@@ -632,10 +642,10 @@ let heroArticleId = null;
 function renderHero(){
   if(!articles.length){ heroArticleId = null; return; }
 
-  // Der Hero zeigt immer den aktuell angesagtesten Artikel (höchster
-  // Hype-Wert) — aktualisiert sich also automatisch mit jedem neuen
-  // Artikel, statt einen festen Artikel dauerhaft oben zu zeigen.
-  const top = [...articles].sort((a, b) => b.hype - a.hype)[0];
+  // Der Hero zeigt den Artikel mit dem höchsten Rang (siehe getRankScore
+  // oben) — aktualisiert sich automatisch mit jedem neuen Artikel und mit
+  // echten Aufrufzahlen, statt einen festen Artikel dauerhaft oben zu zeigen.
+  const top = [...articles].sort((a, b) => getRankScore(b) - getRankScore(a))[0];
   heroArticleId = top.id;
 
   document.getElementById('heroContainer').innerHTML = `
@@ -663,6 +673,41 @@ function renderHero(){
 }
 
 const TICKER_CATEGORY_EMOJI = { pc: "🖥️", konsole: "🎮", hardware: "🛠️", industrie: "💼" };
+
+// --- Echte Aufrufzahlen -------------------------------------------------
+let realViews = {};
+
+function applyRealViews(){
+  articles.forEach(a => { a.views = realViews[a.id] || 0; });
+}
+
+function fetchRealViews(){
+  fetch('/api/views')
+    .then(res => { if(!res.ok) throw new Error('not ok'); return res.json(); })
+    .then(data => {
+      realViews = data || {};
+      applyRealViews();
+      renderHero();
+      renderGrid();
+      renderTrendingWidget();
+    })
+    .catch(() => {
+      // API/KV noch nicht eingerichtet oder nicht erreichbar — die Seite
+      // funktioniert dann einfach mit der KI-Einschätzung weiter.
+      console.log('ℹ Echte Aufrufzahlen nicht verfügbar — nutze KI-Einschätzung (Hype-Wert)');
+    });
+}
+
+function trackView(id){
+  fetch('/api/track-view', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ articleId: id })
+  }).catch(() => {
+    // Zählung fehlgeschlagen (z. B. lokal ohne Vercel-Umgebung) — soll die
+    // Nutzung der Seite nie beeinträchtigen, daher hier bewusst kein Fehler.
+  });
+}
 
 function renderTicker(){
   const track = document.getElementById('tickerTrack');
@@ -797,6 +842,11 @@ function openArticleView(id){
   syncDetailSaveButton();
   document.title = `${a.title} — LOADOUT`;
 
+  // Echten Seitenaufruf zählen — anders als die XP zählt das bei JEDEM
+  // Öffnen, nicht nur beim ersten Mal, damit die Zahl echte Lesehäufigkeit
+  // widerspiegelt.
+  trackView(id);
+
   if(!readIds.has(id)){
     readIds.add(id);
     updateXpBadge();
@@ -904,13 +954,20 @@ function showHypeInfo(){
       onclick="closeInfoModal(); openArticle('${top.id}')">
       🔥 Zum angesagtesten Artikel: ${top.title.length > 40 ? top.title.slice(0,37) + '…' : top.title}
     </button>` : '';
+  const hasRealViews = top && top.views > 0;
   showInfoModal('Was ist der Hype-Meter?', `
     <p>
-      Der Hype-Meter zeigt, wie aufregend und relevant eine Meldung gerade für die Gaming-Community
-      ist — von 0 bis 100&nbsp;%. Je höher der Wert, desto mehr Aufmerksamkeit bekommt das Thema
-      aktuell. Der Artikel mit dem höchsten Hype-Wert steht automatisch ganz oben auf der Startseite
-      und ist mit einem 🔥-Trending-Tag markiert.
+      Die Prozentzahl beim Hype-Meter ist eine <b style="color:var(--text);">redaktionelle
+      KI-Einschätzung</b>, wie bedeutend eine Meldung beim Schreiben eingeschätzt wurde — von 0
+      bis 100&nbsp;%.
     </p>
+    <p style="margin-top:10px;">
+      Welcher Artikel ganz oben auf der Startseite steht, bestimmen aber in erster Linie
+      <b style="color:var(--text);">echte Seitenaufrufe</b>: Sobald ein Artikel von echten
+      Besucher:innen gelesen wurde, zählt das stärker als die KI-Einschätzung. Ganz neue Artikel
+      ohne Aufrufe werden vorübergehend nach der KI-Einschätzung sortiert, bis echte Daten vorliegen.
+    </p>
+    ${hasRealViews ? `<p style="margin-top:10px; font-size:12px;">Aktuell angezeigter Artikel: <b style="color:var(--text);">${top.views}</b> echte Aufrufe.</p>` : ''}
     ${linkHtml}
   `);
 }
@@ -952,6 +1009,7 @@ fetch('articles.json')
   .then(data => {
     if (Array.isArray(data) && data.length > 0) {
       articles = data;
+      applyRealViews(); // falls fetchRealViews() bereits vorher durchgelaufen ist
       renderHero();
       renderGrid();
       renderTicker();
@@ -962,6 +1020,10 @@ fetch('articles.json')
   .catch(() => {
     console.log('ℹ articles.json nicht gefunden — zeige eingebaute Beispielartikel');
   });
+
+// Echte Aufrufzahlen nachladen — unabhängig davon, ob articles.json schon
+// fertig geladen ist oder nicht, dank applyRealViews() in beiden Zweigen.
+fetchRealViews();
 </script>
 
 </body>
