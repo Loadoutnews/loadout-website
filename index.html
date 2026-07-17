@@ -20,8 +20,10 @@
  
 <div class="ticker-wrap">
   <div class="ticker-label mono"><span class="live-dot"></span> LIVE</div>
-  <div class="ticker-track mono" id="tickerTrack">
-    <span>Lade aktuelle Meldungen…</span>
+  <div class="ticker-viewport">
+    <div class="ticker-track mono" id="tickerTrack">
+      <span>Lade aktuelle Meldungen…</span>
+    </div>
   </div>
 </div>
  
@@ -649,8 +651,8 @@ function renderTicker(){
   // egal ob gerade 2 oder 6 Artikel im Ticker stehen.
   requestAnimationFrame(() => {
     const singleSetWidth = track.scrollWidth / 2; // Breite einer der beiden identischen Hälften
-    const pixelsPerSecond = 45; // gemütliches Lesetempo
-    const duration = Math.max(30, singleSetWidth / pixelsPerSecond);
+    const pixelsPerSecond = 28; // deutlich gemütlicheres Lesetempo
+    const duration = Math.max(40, singleSetWidth / pixelsPerSecond);
     track.style.animationDuration = `${duration}s`;
   });
 }
