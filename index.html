@@ -734,16 +734,20 @@ function renderTrendingWidget(){
 
 let heroArticleId = null;
 
+let heroSlideHtmls = ["", "", ""]; // 0 = Trending-Artikel, 1 = Release-Kalender, 2 = Update-Kalender
+let heroSlideIndex = 0;
+let heroRotateTimer = null;
+
 function renderHero(){
   if(!articles.length){ heroArticleId = null; return; }
 
-  // Der Hero zeigt den Artikel mit dem höchsten Rang (siehe getRankScore
-  // oben) — aktualisiert sich automatisch mit jedem neuen Artikel und mit
-  // echten Aufrufzahlen, statt einen festen Artikel dauerhaft oben zu zeigen.
+  // Folie 0 zeigt immer den Artikel mit dem höchsten Rang (siehe
+  // getRankScore oben) — aktualisiert sich automatisch mit jedem neuen
+  // Artikel und mit echten Aufrufzahlen.
   const top = [...articles].sort((a, b) => getRankScore(b) - getRankScore(a))[0];
   heroArticleId = top.id;
 
-  document.getElementById('heroContainer').innerHTML = `
+  heroSlideHtmls[0] = `
     <div style="position:relative;">
       <a href="artikel/${top.id}.html" class="hero" onclick="return handleCardClick(event, '${top.id}')">
         <div class="hero-art" style="${articleArtStyle(top)}">
@@ -766,6 +770,104 @@ function renderHero(){
       </button>
     </div>
   `;
+  renderHeroCarousel();
+}
+
+function buildPromoHeroSlide({icon, tag, badge, title, subtitle, image, href, ctaText}){
+  return `
+    <a href="${href}" class="hero" style="text-decoration:none; color:inherit;">
+      <div class="hero-art" style="background:linear-gradient(160deg, rgba(52,217,201,0.22), rgba(15,19,48,0.88)), url('${image}') center/cover;">
+        <span class="trending-tag">${icon} ${tag}</span>
+      </div>
+      <div class="hero-content">
+        <span class="badge hardware">${badge}</span>
+        <h1 class="display">${title}</h1>
+        <p>${subtitle}</p>
+        <div class="hype">
+          <span class="hype-pct mono" style="color:var(--cyan); font-weight:700;">${ctaText} →</span>
+        </div>
+      </div>
+    </a>
+  `;
+}
+
+function loadReleasesHeroSlide(){
+  fetch('releases.json')
+    .then(res => { if(!res.ok) throw new Error('n/a'); return res.json(); })
+    .then(data => {
+      const list = data.releases || [];
+      if(!list.length) return;
+      const top = [...list].sort((a,b) => (b.hype||0) - (a.hype||0))[0];
+      heroSlideHtmls[1] = buildPromoHeroSlide({
+        icon: '📅', tag: 'Release-Kalender',
+        badge: data.month || 'Diesen Monat',
+        title: `Diese Spiele erscheinen im ${data.month || 'diesem Monat'}`,
+        subtitle: `${list.length} grosse Releases im Überblick — u. a. ${top.title}.`,
+        image: top.image || 'https://picsum.photos/seed/loadout-releases/900/600',
+        href: 'releases.html',
+        ctaText: 'Release-Kalender ansehen'
+      });
+      renderHeroCarousel();
+    })
+    .catch(() => { /* releases.json noch nicht vorhanden — Folie bleibt einfach aus */ });
+}
+
+function loadUpdatesHeroSlide(){
+  fetch('updates.json')
+    .then(res => { if(!res.ok) throw new Error('n/a'); return res.json(); })
+    .then(data => {
+      const list = Array.isArray(data) ? data : [];
+      if(!list.length) return;
+      const next = [...list].sort((a,b) => (a.update_date||'').localeCompare(b.update_date||''))[0];
+      heroSlideHtmls[2] = buildPromoHeroSlide({
+        icon: '🛠️', tag: 'Update-Kalender',
+        badge: 'Angekündigt',
+        title: `${list.length} angekündigte Updates`,
+        subtitle: `Als Nächstes: ${next.game} — ${next.update_title} am ${next.update_date}.`,
+        image: next.image || 'https://picsum.photos/seed/loadout-updates/900/600',
+        href: 'updates.html',
+        ctaText: 'Update-Kalender ansehen'
+      });
+      renderHeroCarousel();
+    })
+    .catch(() => { /* updates.json noch nicht vorhanden — Folie bleibt einfach aus */ });
+}
+
+function renderHeroCarousel(){
+  const container = document.getElementById('heroContainer');
+  const available = heroSlideHtmls.map((h,i) => h ? i : null).filter(i => i !== null);
+  if(!available.includes(heroSlideIndex)) heroSlideIndex = available[0] ?? 0;
+
+  const slidesHtml = available.map(i =>
+    `<div class="hero-slide ${i===heroSlideIndex?'active':''}">${heroSlideHtmls[i]}</div>`
+  ).join('');
+  const dotsHtml = available.length > 1 ? `<div class="hero-dots">${available.map(i =>
+    `<button class="hero-dot ${i===heroSlideIndex?'active':''}" onclick="goToHeroSlide(${i})" aria-label="Folie ${i+1}"></button>`
+  ).join('')}</div>` : '';
+
+  container.innerHTML = `<div class="hero-carousel">${slidesHtml}</div>${dotsHtml}`;
+
+  if(available.length > 1 && !heroRotateTimer) resetHeroRotation();
+}
+
+function goToHeroSlide(i){
+  if(!heroSlideHtmls[i]) return;
+  heroSlideIndex = i;
+  renderHeroCarousel();
+  resetHeroRotation();
+}
+
+function rotateHeroSlide(){
+  const available = heroSlideHtmls.map((h,i) => h ? i : null).filter(i => i !== null);
+  if(available.length <= 1) return;
+  const pos = available.indexOf(heroSlideIndex);
+  heroSlideIndex = available[(pos + 1) % available.length];
+  renderHeroCarousel();
+}
+
+function resetHeroRotation(){
+  if(heroRotateTimer) clearInterval(heroRotateTimer);
+  heroRotateTimer = setInterval(rotateHeroSlide, 7000);
 }
 
 const TICKER_CATEGORY_EMOJI = { pc: "🖥️", konsole: "🎮", hardware: "🛠️", industrie: "💼" };
@@ -1137,6 +1239,8 @@ fetch('articles.json')
 // Echte Aufrufzahlen nachladen — unabhängig davon, ob articles.json schon
 // fertig geladen ist oder nicht, dank applyRealViews() in beiden Zweigen.
 fetchRealViews();
+loadReleasesHeroSlide();
+loadUpdatesHeroSlide();
 </script>
 
 </body>
