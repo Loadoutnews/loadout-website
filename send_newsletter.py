@@ -28,7 +28,7 @@ import requests
 ARTICLES_FILE = "articles.json"
 ARTICLE_COUNT = 6          # wie viele Artikel pro Ausgabe im Newsletter stehen
 SENDER_NAME = "LOADOUT-NEWS"
-SENDER_EMAIL = "loadoutnews@gmail.com"
+SENDER_EMAIL = "newsletter@loadout-news.com"
 SITE_URL = "https://loadout-news.com"
 
 CATS = {
