@@ -53,7 +53,7 @@
     </div>
     <div class="searchbox">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8D90AC" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      <input id="searchInput" type="text" placeholder="Artikel durchsuchen…" oninput="renderGrid()">
+      <input id="searchInput" type="text" placeholder="Artikel durchsuchen…" oninput="onSearchInput()">
     </div>
     <div class="nav-right">
       <a href="releases.html" class="xp-badge" style="text-decoration:none; background:linear-gradient(90deg, var(--violet), var(--magenta)); border:none;" title="Release-Kalender">
@@ -169,6 +169,13 @@
       <h3 class="mono">Trending jetzt</h3>
       <div id="trendingList"></div>
     </div>
+    <a href="archiv.html" class="widget" style="text-decoration:none; color:inherit; display:block; transition:border-color .15s;" onmouseover="this.style.borderColor='#39406b'" onmouseout="this.style.borderColor='var(--line)'">
+      <h3 class="mono">📚 Archiv</h3>
+      <p style="font-size:12.5px; color:var(--muted); margin-top:6px; line-height:1.5;">
+        Alle jemals veröffentlichten Artikel — durchsuchbar nach Datum, Kategorie und Genre.
+      </p>
+      <span style="display:inline-block; margin-top:10px; font-size:12.5px; font-weight:700; color:var(--violet);">Archiv durchsuchen →</span>
+    </a>
     <div class="newsletter-box">
       <h3 class="display">Nie wieder News verpassen</h3>
       <p>Die wichtigsten Gaming-Updates jede Woche direkt ins Postfach.</p>
@@ -187,6 +194,14 @@
 <div id="toast-container"></div>
 
 <footer>
+  <div class="widget" style="max-width:1180px; margin:0 auto 24px; background:linear-gradient(160deg, rgba(124,92,252,0.1), rgba(255,77,141,0.06)); border-color:rgba(124,92,252,0.3);">
+    <h3 class="mono" style="font-size:14px;">📢 Werbung bei LOADOUT-NEWS schalten</h3>
+    <p style="font-size:13px; color:var(--muted); margin-top:8px; line-height:1.6;">
+      Du möchtest deine Marke, dein Spiel oder dein Produkt einer aktiven Gaming-Community zeigen?
+      Für Anzeigenplätze, Kooperationen und Presse-Anfragen erreichst du uns unter
+      <a href="mailto:loadoutnews@gmail.com" style="color:var(--violet); font-weight:600;">loadoutnews@gmail.com</a>.
+    </p>
+  </div>
   <div class="footer-top">
     <div>
       <b>LOADOUT-NEWS</b> ist redaktionell unabhängig und nicht offiziell verbunden mit oder
@@ -566,20 +581,56 @@ function renderChips(){
   ).join('');
 }
 
+let archiveMerged = false;
+
+function onSearchInput(){
+  if(document.getElementById('searchInput').value.trim()) ensureArchiveMerged();
+  renderGrid();
+}
+
+// Lädt bei Bedarf das komplette Archiv nach und mischt es in die aktuell
+// angezeigten Artikel ein — so bleiben ältere, von der Startseite
+// gefallene Artikel über Kategorie-/Genre-/Titel-Filter und die Suche
+// weiterhin auffindbar, ohne dass die Startseite im Normalfall (keine
+// Filter aktiv) das komplette Archiv laden und dadurch langsamer werden muss.
+function ensureArchiveMerged(){
+  if(archiveMerged) return;
+  archiveMerged = true;
+  fetch('archive.json')
+    .then(res => { if(!res.ok) throw new Error('not found'); return res.json(); })
+    .then(data => {
+      if(!Array.isArray(data)) return;
+      const existingIds = new Set(articles.map(a => a.id));
+      const newOnes = data.filter(a => !existingIds.has(a.id));
+      if(newOnes.length){
+        articles = articles.concat(newOnes);
+        applyRealViews();
+        renderGrid();
+        showToast(`✓ ${newOnes.length} weitere Artikel aus dem Archiv eingeblendet`);
+      }
+    })
+    .catch(() => {
+      console.log('ℹ archive.json nicht verfügbar — nur aktuelle Artikel durchsuchbar');
+    });
+}
+
 function setGenre(genre){
   activeGenre = genre;
+  if(genre !== "alle") ensureArchiveMerged();
   renderChips();
   renderGrid();
 }
 
 function setCat(cat){
   activeCat = cat;
+  if(cat !== "alle") ensureArchiveMerged();
   renderChips();
   renderGrid();
 }
 
 function setGame(game){
   activeGame = game;
+  if(game !== "alle") ensureArchiveMerged();
   renderChips();
   renderGrid();
 }
