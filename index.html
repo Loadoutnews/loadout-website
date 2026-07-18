@@ -56,6 +56,9 @@
       <input id="searchInput" type="text" placeholder="Artikel durchsuchen…" oninput="onSearchInput()">
     </div>
     <div class="nav-right">
+      <a href="updates.html" class="xp-badge" style="text-decoration:none; background:linear-gradient(90deg, var(--cyan), var(--violet)); border:none;" title="Update-Kalender">
+        <span>🛠️</span><span style="color:#0A0C16; font-weight:700;">Updates</span>
+      </a>
       <a href="releases.html" class="xp-badge" style="text-decoration:none; background:linear-gradient(90deg, var(--violet), var(--magenta)); border:none;" title="Release-Kalender">
         <span>📅</span><span style="color:#0A0C16; font-weight:700;">Releases</span>
       </a>
@@ -101,8 +104,11 @@
       <h2 class="mono" style="font-size:11px; color:var(--muted);">Große Titel</h2>
     </div>
     <div class="chips" id="gameChips" style="margin-bottom:12px;"></div>
-    <a href="releases.html" class="chip" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:linear-gradient(90deg, var(--violet), var(--magenta)); color:#0A0C16; font-weight:700; border:none; margin-bottom:26px;">
+    <a href="releases.html" class="chip" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:linear-gradient(90deg, var(--violet), var(--magenta)); color:#0A0C16; font-weight:700; border:none; margin-bottom:10px;">
       📅 Release-Kalender öffnen
+    </a>
+    <a href="updates.html" class="chip" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:linear-gradient(90deg, var(--cyan), var(--violet)); color:#0A0C16; font-weight:700; border:none; margin-bottom:26px; margin-left:8px;">
+      🛠️ Update-Kalender öffnen
     </a>
 
     <div class="grid" id="grid"></div>
