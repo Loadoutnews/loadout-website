@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archiv — LOADOUT-NEWS</title>
+<meta name="description" content="Alle jemals bei LOADOUT-NEWS veröffentlichten Artikel — durchsuchbar und dauerhaft auffindbar.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav>
+    <div class="logo-lockup" onclick="location.href='index.html'">
+      <svg class="logo-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs><linearGradient id="navMarkGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#7C5CFC"/><stop offset="100%" stop-color="#FF4D8D"/></linearGradient></defs>
+        <rect width="120" height="120" rx="26" fill="#0A0C16"/>
+        <rect x="24" y="24" width="14" height="68" rx="6" fill="url(#navMarkGradient)"/>
+        <rect x="24" y="80" width="72" height="12" rx="6" fill="url(#navMarkGradient)"/>
+        <rect x="44" y="62" width="12" height="18" rx="5" fill="url(#navMarkGradient)"/>
+        <rect x="60" y="50" width="12" height="30" rx="5" fill="url(#navMarkGradient)"/>
+        <rect x="76" y="36" width="12" height="44" rx="5" fill="url(#navMarkGradient)"/>
+      </svg>
+      <div><div class="logo-text display">LOAD<span>OUT</span><small class="mono">-NEWS</small></div></div>
+    </div>
+    <div class="searchbox">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8D90AC" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="searchInput" type="text" placeholder="Archiv durchsuchen…" oninput="renderList()">
+    </div>
+    <div class="nav-right" style="margin-left:auto;">
+      <a href="index.html" class="xp-badge" style="text-decoration:none;">← Zum Feed</a>
+    </div>
+  </nav>
+</div>
+
+<main>
+  <div class="ad-slot ad-header"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
+
+  <div class="section-head" style="margin-top:24px;">
+    <h2 class="mono">Archiv</h2>
+    <div class="rule"></div>
+  </div>
+  <h1 class="display" style="font-size:28px; margin-bottom:6px;">Alle Artikel</h1>
+  <p style="color:var(--muted); font-size:13.5px; margin-bottom:22px;" id="countLabel">Lade Archiv…</p>
+
+  <div class="chips" id="chips"></div>
+
+  <div id="archiveList"></div>
+  <div class="empty-state" id="emptyState" style="display:none;">Keine Artikel gefunden. Versuch's mit einem anderen Suchbegriff oder Filter.</div>
+
+  <div style="text-align:center; margin-top:24px;">
+    <button class="cookie-btn ghost" id="loadMoreBtn" onclick="loadMore()" style="display:none;">Weitere anzeigen</button>
+  </div>
+
+  <div class="ad-slot ad-footer" style="margin-top:30px;"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
+</main>
+
+<footer>
+  <div class="footer-links mono">
+    <a href="index.html">Zur Startseite</a>
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+    <span>© 2026 LOADOUT-NEWS</span>
+  </div>
+</footer>
+
+<script>
+const CATS = { pc: "PC", konsole: "Konsolen", hardware: "Hardware", industrie: "Industrie" };
+const GAMES = { gta: "GTA", minecraft: "Minecraft", fortnite: "Fortnite", cod: "Call of Duty", valorant: "Valorant / LoL", fifa: "FIFA / EA Sports FC" };
+
+let allArticles = [];
+let activeCat = "alle";
+const BATCH_SIZE = 30;
+let visibleCount = BATCH_SIZE;
+
+function renderChips(){
+  const chips = document.getElementById('chips');
+  const cats = [{key:"alle", label:"Alle"}, ...Object.entries(CATS).map(([key,label]) => ({key, label}))];
+  chips.innerHTML = cats.map(c =>
+    `<button class="chip ${activeCat===c.key?'active':''}" onclick="setCat('${c.key}')">${c.label}</button>`
+  ).join('');
+}
+
+function setCat(cat){
+  activeCat = cat;
+  visibleCount = BATCH_SIZE;
+  renderChips();
+  renderList();
+}
+
+function renderList(){
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  const queryWords = query.split(/\s+/).filter(Boolean);
+
+  const filtered = allArticles.filter(a => {
+    const matchesCat = activeCat === "alle" || a.cat === activeCat;
+    const searchableText = [a.title, a.teaser].filter(Boolean).join(" ").toLowerCase();
+    const matchesQuery = queryWords.length === 0 || queryWords.every(w => searchableText.includes(w));
+    return matchesCat && matchesQuery;
+  });
+
+  document.getElementById('countLabel').textContent =
+    `${filtered.length} Artikel${activeCat !== "alle" ? " in " + CATS[activeCat] : ""}${query ? ` für "${query}"` : ""}`;
+
+  const listEl = document.getElementById('archiveList');
+  const emptyEl = document.getElementById('emptyState');
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+  if(filtered.length === 0){
+    listEl.innerHTML = "";
+    emptyEl.style.display = "block";
+    loadMoreBtn.style.display = "none";
+    return;
+  }
+  emptyEl.style.display = "none";
+
+  const visible = filtered.slice(0, visibleCount);
+
+  // Nach Monat gruppieren, damit man sich beim Browsen leichter orientiert
+  let html = "";
+  let lastMonth = null;
+  visible.forEach(a => {
+    const monthLabel = monthFromDateString(a.date);
+    if(monthLabel !== lastMonth){
+      html += `<div class="section-head" style="margin:26px 0 14px;"><h2 class="mono" style="font-size:11px; color:var(--muted);">${monthLabel}</h2><div class="rule"></div></div>`;
+      lastMonth = monthLabel;
+    }
+    html += `
+      <a href="artikel/${a.id}.html" class="release-card" style="text-decoration:none; color:inherit; display:flex; flex-direction:row; align-items:center; padding:14px 18px; margin-bottom:10px;">
+        <div style="flex:1;">
+          <span class="badge ${a.cat}" style="margin-bottom:6px;">${CATS[a.cat] || ''}${a.game ? ' · ' + (GAMES[a.game]||'') : ''}</span>
+          <h3 style="font-size:15px; margin:4px 0 2px;">${a.title}</h3>
+          <p style="font-size:12.5px; color:var(--muted); margin:0;">${a.teaser}</p>
+        </div>
+        <span class="mono" style="font-size:11px; color:var(--muted); white-space:nowrap; margin-left:14px;">${a.date}</span>
+      </a>
+    `;
+  });
+  listEl.innerHTML = html;
+
+  loadMoreBtn.style.display = filtered.length > visibleCount ? "inline-block" : "none";
+}
+
+function monthFromDateString(dateStr){
+  // Versucht, aus Datumsangaben wie "17. Juli 2026" oder "Juli 2026" grob
+  // den Monat fürs Gruppieren zu extrahieren; bei Unklarheit einfach den
+  // rohen String verwenden.
+  const match = dateStr && dateStr.match(/([A-ZÄÖÜa-zäöü]+)\s+(\d{4})/);
+  return match ? `${match[1]} ${match[2]}` : (dateStr || "Unbekannt");
+}
+
+function loadMore(){
+  visibleCount += BATCH_SIZE;
+  renderList();
+}
+
+fetch('archiv-index.json')
+  .then(res => { if(!res.ok) throw new Error('not found'); return res.json(); })
+  .then(data => {
+    allArticles = Array.isArray(data) ? data : [];
+    renderChips();
+    renderList();
+  })
+  .catch(() => {
+    document.getElementById('countLabel').textContent = 'Archiv konnte nicht geladen werden.';
+  });
+</script>
+
+</body>
+</html>
