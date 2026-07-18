@@ -188,17 +188,25 @@ def render_article_page(a):
 """
 
 
+ARCHIVE_FILE = "archive.json"     # unbegrenztes Archiv, siehe news_pipeline.py
+
+
 def build():
-    if not os.path.exists(ARTICLES_FILE):
-        print(f"! {ARTICLES_FILE} nicht gefunden — nichts zu bauen.")
+    # Seiten werden aus dem KOMPLETTEN Archiv erzeugt (nicht nur aus der für
+    # die Startseite gekürzten articles.json) — so bleibt jeder je
+    # geschriebene Artikel über seine eigene URL erreichbar und in der
+    # Sitemap gelistet, auch wenn er von der Startseite verschwunden ist.
+    source_file = ARCHIVE_FILE if os.path.exists(ARCHIVE_FILE) else ARTICLES_FILE
+    if not os.path.exists(source_file):
+        print(f"! Weder {ARCHIVE_FILE} noch {ARTICLES_FILE} gefunden — nichts zu bauen.")
         return
 
-    with open(ARTICLES_FILE, "r", encoding="utf-8") as f:
+    with open(source_file, "r", encoding="utf-8") as f:
         articles = json.load(f)
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-    urls = [f"{SITE_URL}/index.html"]
+    urls = [f"{SITE_URL}/index.html", f"{SITE_URL}/archiv.html"]
     for a in articles:
         page = render_article_page(a)
         path = os.path.join(OUTPUT_DIR, f"{a['id']}.html")
@@ -214,6 +222,20 @@ def build():
     sitemap.append("</urlset>")
     with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write("\n".join(sitemap))
+
+    # archiv-index.json — eine schlanke Version des Archivs (ohne den
+    # vollständigen Artikeltext) für die durchsuchbare Archiv-Seite, damit
+    # sie auch bei tausenden Artikeln noch schnell lädt.
+    archive_index = [
+        {
+            "id": a["id"], "title": a["title"], "teaser": a["teaser"],
+            "cat": a["cat"], "game": a.get("game"), "date": a["date"],
+            "hype": a.get("hype", 0),
+        }
+        for a in articles
+    ]
+    with open("archiv-index.json", "w", encoding="utf-8") as f:
+        json.dump(archive_index, f, ensure_ascii=False, indent=2)
 
     # robots.txt
     robots = f"""User-agent: *
