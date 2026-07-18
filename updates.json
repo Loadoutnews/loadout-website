@@ -1,0 +1,92 @@
+[
+  {
+    "game": "Call of Duty: Black Ops 7",
+    "update_title": "Season 05",
+    "update_date": "2026-07-23",
+    "platforms": [
+      "PC",
+      "PS5",
+      "Xbox Series X/S",
+      "PS4",
+      "Xbox One"
+    ],
+    "content": "Season 05 verlegt Black Ops 7 in eine ländliche japanische Stadt mit engen Nahkampf-Gefechten im Multiplayer und bringt eine neue Zombies-Survival-Map sowie das Endgame-Assignment 'Burn Run'. Zusätzlich erwartet Spieler eine neue Verdansk-POI namens Drone Labs sowie ein frischer Battle Pass mit neuen Waffen und Belohnungen.",
+    "hype": 78,
+    "source_url": "https://www.callofduty.com/blackops7",
+    "id": "c8a7bc7585"
+  },
+  {
+    "game": "Apex Legends",
+    "update_title": "Season 30",
+    "update_date": "2026-08-04",
+    "platforms": [
+      "PC",
+      "PS5",
+      "Xbox Series X/S",
+      "Nintendo Switch 2"
+    ],
+    "content": "Season 30 bringt laut Respawns 'Road Ahead'-Roadmap eine große Überarbeitung des Loot-Systems für schnelleren und wirkungsvolleren Machtaufbau sowie ein kompetitives Rework der Map World's Edge für Ranked und ALGS. Zusätzlich enden mit diesem Update die Unterstützung für die originale Nintendo Switch sowie zwei geplante Wildcard-Events pro Season.",
+    "hype": 70,
+    "source_url": "https://www.gamespot.com/articles/apex-legends-unveils-year-long-plan-with-two-new-characters-as-fan-complaints-mount/1100-6538151/",
+    "id": "91b67f5f95"
+  },
+  {
+    "game": "Marvel Rivals",
+    "update_title": "Season 9.5: The Hood",
+    "update_date": "2026-08-07",
+    "platforms": [
+      "PC",
+      "PS5",
+      "Xbox Series X/S"
+    ],
+    "content": "Die Mid-Season-Aktualisierung von Season 9 führt den neuen Helden The Hood ein, der als Vanguard mit magischen Klon-Fähigkeiten ausgestattet sein soll. Das Update setzt die Ägypten-thematisierte Apocalypse-Storyline aus 'The Mystery of Thebes' fort und bringt frische Kosmetik sowie Balance-Anpassungen mit sich.",
+    "hype": 65,
+    "source_url": "https://www.marvelrivals.com/news/",
+    "id": "bf5b9e6fc5"
+  },
+  {
+    "game": "Overwatch",
+    "update_title": "Reign of Talon – Season 4",
+    "update_date": "2026-08-11",
+    "platforms": [
+      "PC",
+      "PS5",
+      "Xbox Series X/S",
+      "Nintendo Switch"
+    ],
+    "content": "Season 4 setzt die 'Reign of Talon'-Story fort und bringt voraussichtlich die neue Heldin D.Mon, eine mobile Tank-Pilotin mit fliegendem Mech, die eng mit D.Va verbunden ist. Die Season soll rund neun Wochen laufen und führt auf BlizzCon 2026 sowie den Overwatch World Cup zu.",
+    "hype": 68,
+    "source_url": "https://www.dexerto.com/wikis/overwatch/overwatch-season-4-update/",
+    "id": "661d0e3849"
+  },
+  {
+    "game": "Genshin Impact",
+    "update_title": "Version 7.0: Snezhnaya",
+    "update_date": "2026-08-12",
+    "platforms": [
+      "PC",
+      "PS5",
+      "Mobile (iOS/Android)"
+    ],
+    "content": "Nach über fünf Jahren Wartezeit öffnet Version 7.0 endlich die finale Nation Snezhnaya, die eisige Heimat der Tsaritsa und der Fatui. Das Update führt die neuen spielbaren Charaktere Odette und Alyosha sowie den Cryo-Reisenden ein und bringt mit den 'Stellar Reactions' ein komplett neues Cryo-fokussiertes Kampfsystem.",
+    "hype": 85,
+    "source_url": "https://www.notebookcheck.net/Genshin-Impact-Version-7-0-launches-August-12.1282893.0.html",
+    "id": "579045db25"
+  },
+  {
+    "game": "Fortnite",
+    "update_title": "Chapter 7 Season 4",
+    "update_date": "2026-08-19",
+    "platforms": [
+      "PC",
+      "PS5",
+      "Xbox Series X/S",
+      "Nintendo Switch",
+      "Mobile"
+    ],
+    "content": "Nach dem Ende der 'Runners'-Season startet Chapter 7 Season 4 mit einem kompletten Battle-Pass-Reset, einer überarbeiteten Karte und einer Fortsetzung der Dark-Voyager-Storyline rund um Zero Point. Genaue Inhalte werden traditionell erst in den letzten zwei Wochen der Vorgänger-Season enthüllt, doch der Termin basiert auf dem offiziellen Epic-Games-Fahrplan für 2026.",
+    "hype": 82,
+    "source_url": "https://www.dexerto.com/fortnite/when-is-the-next-fortnite-update-2453773/",
+    "id": "f73fe2e4b3"
+  }
+]
