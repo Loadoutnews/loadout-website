@@ -196,6 +196,7 @@ JSON-Format:
 {
   "cat": "pc" | "konsole" | "hardware" | "industrie",
   "game": "gta" | "minecraft" | "fortnite" | "cod" | "valorant" | "fifa" | null,
+  "genre": "action" | "adventure" | "rpg" | "strategie" | "simulation" | "shooter" | "sport" | "rennspiel" | "horror" | "puzzle" | null,
   "title": "Deutscher, knackiger Titel (max. 90 Zeichen)",
   "teaser": "1-2 Sätze Anreißer (max. 200 Zeichen)",
   "body": ["Absatz 1", "Absatz 2", "Absatz 3"],
@@ -205,6 +206,11 @@ JSON-Format:
 Setze "game" nur, wenn die Meldung eindeutig zu einem dieser sechs großen \
 Franchises gehört (GTA, Minecraft, Fortnite, Call of Duty, Valorant/League of \
 Legends, FIFA/EA Sports FC). Bei allen anderen Themen: null.
+
+Setze "genre" nur, wenn die Meldung sich klar auf ein konkretes Spiel mit \
+erkennbarem Genre bezieht (z. B. Ankündigung, Release, Update zu einem \
+bestimmten Spiel). Bei allgemeinen Branchen-/Hardware-/Unternehmensmeldungen \
+ohne Bezug zu einem einzelnen Spiel: null.
 """
 
 
@@ -241,6 +247,7 @@ Original-Link: {entry['link']}"""
         "id": article_id(entry["link"]),
         "cat": data.get("cat", "industrie"),
         "game": data.get("game"),
+        "genre": data.get("genre"),
         "title": data.get("title", entry["title"]),
         "teaser": data.get("teaser", ""),
         "body": data.get("body", []),
