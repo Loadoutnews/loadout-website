@@ -93,6 +93,11 @@
     <div class="chips" id="chips"></div>
 
     <div class="section-head" style="margin: 4px 0 12px;">
+      <h2 class="mono" style="font-size:11px; color:var(--muted);">Genre</h2>
+    </div>
+    <div class="chips" id="genreChips" style="margin-bottom:22px;"></div>
+
+    <div class="section-head" style="margin: 4px 0 12px;">
       <h2 class="mono" style="font-size:11px; color:var(--muted);">Große Titel</h2>
     </div>
     <div class="chips" id="gameChips" style="margin-bottom:12px;"></div>
@@ -273,6 +278,19 @@ const GAMES = {
   cod: { label: "Call of Duty" },
   valorant: { label: "Valorant / LoL" },
   fifa: { label: "FIFA / EA Sports FC" },
+};
+
+const GENRES = {
+  action: { label: "Action" },
+  adventure: { label: "Abenteuer" },
+  rpg: { label: "Rollenspiel" },
+  strategie: { label: "Strategie" },
+  simulation: { label: "Simulation" },
+  shooter: { label: "Shooter" },
+  sport: { label: "Sport" },
+  rennspiel: { label: "Rennspiel" },
+  horror: { label: "Horror" },
+  puzzle: { label: "Puzzle & Party" },
 };
 
 let articles = [
@@ -501,6 +519,7 @@ let articles = [
 
 let activeCat = "alle";
 let activeGame = "alle";
+let activeGenre = "alle";
 let showSavedOnly = false;
 const savedIds = new Set();
 const readIds = new Set();
@@ -534,11 +553,23 @@ function renderChips(){
     `<button class="chip ${activeCat===c.key?'active':''}" onclick="setCat('${c.key}')">${c.label}</button>`
   ).join('');
 
+  const genreChips = document.getElementById('genreChips');
+  const genres = [{key:"alle", label:"Alle Genres"}, ...Object.entries(GENRES).map(([key,v]) => ({key, label:v.label}))];
+  genreChips.innerHTML = genres.map(g =>
+    `<button class="chip ${activeGenre===g.key?'active':''}" onclick="setGenre('${g.key}')">${g.label}</button>`
+  ).join('');
+
   const gameChips = document.getElementById('gameChips');
   const games = [{key:"alle", label:"Alle Titel"}, ...Object.entries(GAMES).map(([key,v]) => ({key, label:v.label}))];
   gameChips.innerHTML = games.map(g =>
     `<button class="chip ${activeGame===g.key?'active':''}" onclick="setGame('${g.key}')">${g.label}</button>`
   ).join('');
+}
+
+function setGenre(genre){
+  activeGenre = genre;
+  renderChips();
+  renderGrid();
 }
 
 function setCat(cat){
@@ -786,12 +817,13 @@ function renderGrid(){
     if(a.id === heroArticleId) return false; // im Hero schon oben gezeigt, hier nicht doppeln
     const matchesCat = activeCat === "alle" || a.cat === activeCat;
     const matchesGame = activeGame === "alle" || a.game === activeGame;
+    const matchesGenre = activeGenre === "alle" || a.genre === activeGenre;
     const searchableText = [
       a.title, a.teaser, ...(Array.isArray(a.body) ? a.body : []), a.platform, a.sourceLabel
     ].filter(Boolean).join(" ").toLowerCase();
     const matchesQuery = queryWords.length === 0 || queryWords.every(w => searchableText.includes(w));
     const matchesSaved = !showSavedOnly || savedIds.has(a.id);
-    return matchesCat && matchesGame && matchesQuery && matchesSaved;
+    return matchesCat && matchesGame && matchesGenre && matchesQuery && matchesSaved;
   });
 
   const grid = document.getElementById('grid');
@@ -814,7 +846,7 @@ function renderGrid(){
           ${a.hype >= 85 ? `<span class="trending-tag">🔥 Trending</span>` : ''}
         </div>
         <div class="card-body">
-          <span class="badge ${a.cat}">${CATS[a.cat].label}${a.game ? ' · ' + GAMES[a.game].label : ''}</span>
+          <span class="badge ${a.cat}">${CATS[a.cat].label}${a.genre && GENRES[a.genre] ? ' · ' + GENRES[a.genre].label : ''}${a.game ? ' · ' + GAMES[a.game].label : ''}</span>
           <h3>${a.title}</h3>
           <p>${a.teaser}</p>
           <div class="meta"><span class="mono">${a.date}</span><span class="mono">${a.platform}${a.views ? ' · 👁 ' + a.views.toLocaleString('de-CH') : ''}</span></div>
@@ -854,7 +886,7 @@ function openArticleView(id){
 
   document.getElementById('detailArt').style.cssText = articleArtStyle(a) + '; background-size:cover; background-position:center;';
   document.getElementById('detailBadge').className = `badge ${a.cat}`;
-  document.getElementById('detailBadge').textContent = CATS[a.cat].label + (a.game ? ' · ' + GAMES[a.game].label : '');
+  document.getElementById('detailBadge').textContent = CATS[a.cat].label + (a.genre && GENRES[a.genre] ? ' · ' + GENRES[a.genre].label : '') + (a.game ? ' · ' + GAMES[a.game].label : '');
   document.getElementById('detailTitle').textContent = a.title;
   document.getElementById('detailHypeFill').style.width = a.hype + '%';
   document.getElementById('detailHypePct').textContent = a.hype + '%';
