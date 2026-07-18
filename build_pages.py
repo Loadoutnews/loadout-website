@@ -229,7 +229,7 @@ def build():
     archive_index = [
         {
             "id": a["id"], "title": a["title"], "teaser": a["teaser"],
-            "cat": a["cat"], "game": a.get("game"), "date": a["date"],
+            "cat": a["cat"], "game": a.get("game"), "genre": a.get("genre"), "date": a["date"],
             "hype": a.get("hype", 0),
         }
         for a in articles
