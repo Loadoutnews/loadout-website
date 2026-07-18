@@ -219,6 +219,19 @@
     .sidebar .ad-slot{ order:3; flex-basis:100%; min-height:100px; }
   }
 
+  /* Hero-Karussell (Trending-Artikel, Release-Kalender, Update-Kalender) */
+  .hero-carousel{ position:relative; }
+  .hero-slide{ display:none; animation: heroFadeIn .4s ease; }
+  .hero-slide.active{ display:block; }
+  @keyframes heroFadeIn{ from{ opacity:0; } to{ opacity:1; } }
+  .hero-dots{ display:flex; gap:8px; justify-content:center; margin-top:-20px; margin-bottom:34px; position:relative; z-index:1; }
+  .hero-dot{
+    width:8px; height:8px; border-radius:50%; background:var(--line);
+    border:none; padding:0; cursor:pointer; transition:background .15s, width .15s;
+  }
+  .hero-dot:hover{ background:#39406b; }
+  .hero-dot.active{ background:var(--violet); width:22px; border-radius:4px; }
+
   /* Hero */
   .hero{
     display:grid; grid-template-columns: 1.3fr 1fr; gap:28px;
