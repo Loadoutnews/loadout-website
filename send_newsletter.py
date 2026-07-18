@@ -145,6 +145,7 @@ def build_html(articles):
               <td style="padding:22px 30px; background:#080911; text-align:center; font-size:11.5px; color:#5C5F7A; font-family:Arial,sans-serif; border-top:1px solid #1E2340;">
                 Du erhältst diese E-Mail, weil du dich für den LOADOUT-NEWS-Newsletter angemeldet hast.<br>
                 <a href="{{{{ unsubscribe }}}}" style="color:#8D90AC;">Newsletter abbestellen</a>
+                <p style="margin:12px 0 0; color:#4A4D66;">LOADOUT-NEWS · Marcel Mader · Meiershofstrasse 9 · 8600 Dübendorf · Schweiz</p>
               </td>
             </tr>
 
