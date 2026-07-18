@@ -61,7 +61,7 @@ kein Markdown, keine Code-Fences. Jedes Element im folgenden Format:
   "genre": "z. B. Action-RPG",
   "description": "2-3 eigenständig formulierte Sätze — NICHT aus einer Quelle kopiert",
   "hype": <Zahl 0-100, wie gross das erwartete Interesse ist>,
-  "source_url": "Link zu einer offiziellen Ankündigung, Store-Seite o. Ä."
+  "source_url": "Link zu einer Seite MIT VORSCHAUBILD — bevorzugt ein Artikel bei IGN, GameSpot, PC Gamer, Eurogamer oder die offizielle Store-Seite (Steam/PlayStation Store/Xbox). Vermeide Wikipedia, Foren oder reine Text-Ankündigungen ohne Titelbild."
 }}
 
 Nutze für Preise, sofern verfügbar, Schweizer Franken (CHF); falls nur andere
@@ -117,26 +117,38 @@ def _recover_truncated_json_array(raw_text):
 
 
 def fetch_og_image(url, timeout=8):
-    """Dieselbe Logik wie in news_pipeline.py: versucht, das offizielle
-    Vorschaubild der Quelle zu übernehmen, statt Spiele-Artwork selbst
-    auszuwählen (Urheberrecht!)."""
+    """Dieselbe robuste Logik wie in news_pipeline.py: versucht, das
+    offizielle Vorschaubild der Quelle zu übernehmen, statt Spiele-Artwork
+    selbst auszuwählen (Urheberrecht!). Prüft mehrere Meta-Tag-Varianten und
+    löst relative Bild-Pfade zu vollständigen URLs auf."""
     if not url:
         return None
+    from urllib.parse import urljoin
+
+    patterns = [
+        r'<meta[^>]+property=["\']og:image:secure_url["\'][^>]+content=["\']([^"\']+)',
+        r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)',
+        r'<meta[^>]+name=["\']twitter:image:src["\'][^>]+content=["\']([^"\']+)',
+        r'<meta[^>]+name=["\']twitter:image["\'][^>]+content=["\']([^"\']+)',
+    ]
     try:
         resp = requests.get(
             url, timeout=timeout,
-            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"},
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                "Accept-Language": "de-DE,de;q=0.9,en;q=0.8",
+            },
         )
         if resp.status_code != 200:
+            print(f"  ! og:image-Abruf fehlgeschlagen (Status {resp.status_code}) für {url}", file=sys.stderr)
             return None
-        for pattern in [
-            r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)',
-            r'<meta[^>]+name=["\']twitter:image["\'][^>]+content=["\']([^"\']+)',
-        ]:
+        for pattern in patterns:
             match = re.search(pattern, resp.text, re.I)
             if match:
-                return match.group(1)
-    except Exception:
+                return urljoin(url, match.group(1))
+        print(f"  ! Kein og:image-Tag gefunden auf {url}", file=sys.stderr)
+    except Exception as e:
+        print(f"  ! Konnte kein og:image laden von {url}: {e}", file=sys.stderr)
         pass
     return None
 
