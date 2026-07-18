@@ -748,8 +748,24 @@ function subscribeNewsletter(){
     showToast('Bitte eine gültige E-Mail-Adresse eingeben');
     return;
   }
-  showToast('✓ Fast geschafft — Anmeldung in diesem Prototyp simuliert');
-  input.value = '';
+
+  fetch('/api/subscribe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if(data.success){
+        showToast('✓ Fast geschafft — check dein Postfach für die Bestätigung');
+        input.value = '';
+      } else {
+        showToast('⚠ Anmeldung gerade nicht möglich — versuch es später erneut');
+      }
+    })
+    .catch(() => {
+      showToast('⚠ Newsletter-Dienst gerade nicht erreichbar');
+    });
 }
 
 function renderGrid(){
