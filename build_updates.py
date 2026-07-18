@@ -184,7 +184,7 @@ def render_html(updates):
     cards = ""
     for u in updates_sorted:
         platforms = " · ".join(u.get("platforms", []))
-        img = update_image(u)
+        img = u.get("image") or update_image(u)
         d = days_until(u.get("update_date"))
         countdown = ""
         if d is not None:
@@ -299,6 +299,13 @@ def main():
 
     all_updates = existing + added
     all_updates = remove_expired(all_updates)
+
+    # Bilder server-seitig auflösen und mitspeichern (siehe build_releases.py
+    # für die Begründung — CORS verhindert das clientseitig im Browser).
+    # Nur für neue Einträge nötig, bestehende haben ihr Bild schon gespeichert.
+    for u in all_updates:
+        if not u.get("image"):
+            u["image"] = update_image(u)
 
     with open(UPDATES_FILE, "w", encoding="utf-8") as f:
         json.dump(all_updates, f, ensure_ascii=False, indent=2)
