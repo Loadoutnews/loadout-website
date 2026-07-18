@@ -69,7 +69,7 @@ Währungen bekannt sind, gib diese an. Sortiere nach Release-Datum, dann nach Hy
 
     response = client.messages.create(
         model=MODEL,
-        max_tokens=4000,
+        max_tokens=8000,
         system=system_prompt,
         messages=[{"role": "user", "content": f"Recherchiere die Spiele-Releases für {month_label}."}],
         tools=[{"type": "web_search_20250305", "name": "web_search"}],
@@ -89,10 +89,31 @@ Währungen bekannt sind, gib diese an. Sortiere nach Release-Datum, dann nach Hy
     try:
         releases = json.loads(raw_text)
     except json.JSONDecodeError:
-        print("! Antwort konnte nicht als JSON gelesen werden:", raw_text[:300], file=sys.stderr)
-        return []
+        # Falls die Antwort (z. B. durch ein Token-Limit) mitten im JSON
+        # abgeschnitten wurde: die bereits vollständigen Objekte im Array
+        # retten, statt alles zu verwerfen.
+        releases = _recover_truncated_json_array(raw_text)
+        if releases:
+            print(f"  ⚠ Antwort war abgeschnitten — {len(releases)} vollständige Einträge gerettet.", file=sys.stderr)
+        else:
+            print("! Antwort konnte nicht als JSON gelesen werden:", raw_text[:300], file=sys.stderr)
+            return []
 
     return releases[:MAX_RELEASES]
+
+
+def _recover_truncated_json_array(raw_text):
+    """Versucht, aus einem abgeschnittenen JSON-Array die letzten
+    vollständigen {...}-Objekte zu retten, indem das Array nach dem letzten
+    vollständigen '}' geschlossen wird."""
+    last_brace = raw_text.rfind("}")
+    if last_brace == -1:
+        return []
+    repaired = raw_text[: last_brace + 1] + "]"
+    try:
+        return json.loads(repaired)
+    except json.JSONDecodeError:
+        return []
 
 
 def fetch_og_image(url, timeout=8):
