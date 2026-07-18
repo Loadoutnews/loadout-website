@@ -1,0 +1,22 @@
+name: Build Releases
+on:
+  workflow_dispatch:   # wird extern von cron-job.org ausgelöst
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python build_releases.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "Release-Kalender aktualisiert"
+          title: "📅 Neuer Release-Kalender zur Prüfung"
+          body: "Automatisch recherchiert. Bitte Termine/Preise kurz gegenlesen, bevor gemergt wird."
+          branch: "auto-releases-update"
