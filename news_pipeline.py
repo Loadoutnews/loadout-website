@@ -1,45 +1,44 @@
-
 """
 LOADOUT News-Pipeline
 ======================
 Ruft Gaming-News aus mehreren RSS-Feeds ab und lässt Claude daraus
 eigenständige, deutsche Artikel im Format der LOADOUT-Website schreiben.
- 
+
 Setup:
     pip install feedparser anthropic
- 
+
     export ANTHROPIC_API_KEY="dein-api-key"   # macOS/Linux
     setx ANTHROPIC_API_KEY "dein-api-key"      # Windows
- 
+
 Ausführen:
     python news_pipeline.py
- 
+
 Ergebnis:
     articles.json  -> wird von der Website (index.html) geladen
 """
- 
+
 import json
 import hashlib
 import datetime
 import os
 import re
 import sys
- 
+
 import feedparser
 import requests
 from anthropic import Anthropic
- 
+
 # ---------------------------------------------------------------------------
 # 1. KONFIGURATION
 # ---------------------------------------------------------------------------
- 
+
 FEEDS = [
     {"url": "https://www.ign.com/rss/articles/feed?tags=games", "priority": False},
     {"url": "https://www.pcgamer.com/rss/", "priority": False},
     {"url": "https://www.eurogamer.net/feed", "priority": False},
     {"url": "https://www.nintendolife.com/feeds/latest", "priority": False},
     {"url": "https://kotaku.com/rss", "priority": False},
- 
+
     # Spezialisierte Feeds für die 6 großen Franchise-Hubs (GTA, Minecraft,
     # Fortnite, Call of Duty, Valorant/LoL, FIFA/EA Sports FC). Diese werden
     # unten über PRIORITY_QUOTA bevorzugt behandelt, damit jeder Lauf
@@ -53,24 +52,25 @@ FEEDS = [
     {"url": "https://dotesports.com/feed", "priority": True},              # Valorant/LoL
     {"url": "https://realsport101.com/feed.xml", "priority": True},        # FIFA/EA Sports FC
 ]
- 
+
 # Wie viele der pro Lauf geschriebenen Artikel mindestens aus den
 # Franchise-Feeds oben kommen sollen (der Rest wird mit allgemeinen
 # Gaming-News aufgefüllt).
-PRIORITY_QUOTA = 2
- 
+PRIORITY_QUOTA = 4
+
 MAX_ARTICLES_PER_RUN = 8          # wie viele neue Artikel pro Durchlauf geschrieben werden
-MAX_ARTICLES_TOTAL = 30           # wie viele insgesamt in articles.json bleiben (älteste fliegen raus)
+MAX_ARTICLES_TOTAL = 60           # wie viele in articles.json (Startseite/Suche) bleiben — der Rest verschwindet NICHT, sondern wandert ins unbegrenzte archive.json
 OUTPUT_FILE = "articles.json"
+ARCHIVE_FILE = "archive.json"     # unbegrenztes Archiv — jeder je geschriebene Artikel bleibt hier für immer auffindbar
 MODEL = "claude-sonnet-5"
- 
+
 client = Anthropic()  # liest ANTHROPIC_API_KEY automatisch aus der Umgebung
- 
- 
+
+
 # ---------------------------------------------------------------------------
 # 2. NEWS SAMMELN
 # ---------------------------------------------------------------------------
- 
+
 def fetch_raw_entries():
     """Holt die neuesten Einträge aus allen konfigurierten Feeds."""
     entries = []
@@ -94,8 +94,8 @@ def fetch_raw_entries():
         except Exception as e:
             print(f"  ! Feed konnte nicht geladen werden ({feed_url}): {e}", file=sys.stderr)
     return entries
- 
- 
+
+
 def extract_feed_image(entry):
     """Versucht, das im RSS-Eintrag mitgelieferte Bild der Original-Meldung
     zu finden (media:thumbnail, media:content oder ein Bild-Enclosure).
@@ -104,34 +104,34 @@ def extract_feed_image(entry):
     thumb = entry.get("media_thumbnail")
     if thumb:
         return thumb[0].get("url")
- 
+
     content = entry.get("media_content")
     if content:
         for item in content:
             if item.get("medium") == "image" or "image" in item.get("type", ""):
                 return item.get("url")
- 
+
     for enc in entry.get("links", []):
         if enc.get("rel") == "enclosure" and enc.get("type", "").startswith("image"):
             return enc.get("href")
- 
+
     return None
- 
- 
+
+
 def fetch_og_image(url, timeout=8):
     """Fallback, falls der Feed selbst kein Bild mitliefert: ruft die
     Original-Seite ab und liest das og:image (bzw. twitter:image) Meta-Tag
     aus — dasselbe Bild, das auch bei Facebook/Twitter-Vorschauen erscheint.
     Löst dabei auch relative Bild-Pfade zu vollständigen URLs auf."""
     from urllib.parse import urljoin
- 
+
     patterns = [
         r'<meta[^>]+property=["\']og:image:secure_url["\'][^>]+content=["\']([^"\']+)',
         r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)',
         r'<meta[^>]+name=["\']twitter:image:src["\'][^>]+content=["\']([^"\']+)',
         r'<meta[^>]+name=["\']twitter:image["\'][^>]+content=["\']([^"\']+)',
     ]
- 
+
     # Ein Browser-typischer User-Agent statt eines erkennbaren Bot-Namens —
     # viele große Gaming-Seiten (IGN, PC Gamer etc.) blockieren Anfragen,
     # die sich klar als automatisierter Scraper zu erkennen geben.
@@ -142,13 +142,13 @@ def fetch_og_image(url, timeout=8):
         ),
         "Accept-Language": "de-DE,de;q=0.9,en;q=0.8",
     }
- 
+
     try:
         resp = requests.get(url, timeout=timeout, headers=headers)
         if resp.status_code != 200:
             print(f"  ! og:image-Abruf fehlgeschlagen (Status {resp.status_code}) für {url}", file=sys.stderr)
             return None
- 
+
         for pattern in patterns:
             match = re.search(pattern, resp.text, re.I)
             if match:
@@ -156,34 +156,34 @@ def fetch_og_image(url, timeout=8):
                 # Manche Seiten liefern relative Pfade (z. B. "/img/cover.jpg")
                 # statt vollständiger URLs — hier zur echten, ladbaren URL auflösen.
                 return urljoin(url, image_url)
- 
+
         print(f"  ! Kein og:image-Tag gefunden auf {url}", file=sys.stderr)
     except Exception as e:
         print(f"  ! Konnte kein og:image laden von {url}: {e}", file=sys.stderr)
     return None
- 
- 
+
+
 def strip_html(text):
     """Sehr einfache HTML-Bereinigung für RSS-Summaries."""
     import re
     text = re.sub(r"<[^>]+>", " ", text)
     return re.sub(r"\s+", " ", text).strip()
- 
- 
+
+
 def article_id(link):
     """Stabile, kurze ID aus dem Original-Link ableiten (verhindert Duplikate)."""
     return hashlib.sha1(link.encode("utf-8")).hexdigest()[:10]
- 
- 
+
+
 # ---------------------------------------------------------------------------
 # 3. ARTIKEL MIT CLAUDE SCHREIBEN
 # ---------------------------------------------------------------------------
- 
+
 WRITER_SYSTEM_PROMPT = """Du bist Redakteur:in bei LOADOUT, einer deutschsprachigen Gaming- \
 und Tech-News-Seite. Du bekommst Titel, Kurzbeschreibung und Quelle einer \
 englischsprachigen News-Meldung und schreibst daraus einen eigenständigen, \
 spannend geschriebenen deutschen Artikel.
- 
+
 Regeln:
 - Schreibe komplett in eigenen Worten. Übersetze NICHT wörtlich, formuliere neu.
 - Keine wörtlichen Zitate aus der Quelle übernehmen.
@@ -191,7 +191,7 @@ Regeln:
 - Ordne die Meldung ein (Warum ist das relevant? Was bedeutet es für Spieler:innen?).
 - Antworte AUSSCHLIESSLICH mit einem validen JSON-Objekt, keine Erklärungen, \
 kein Markdown, keine Code-Fences.
- 
+
 JSON-Format:
 {
   "cat": "pc" | "konsole" | "hardware" | "industrie",
@@ -201,26 +201,26 @@ JSON-Format:
   "body": ["Absatz 1", "Absatz 2", "Absatz 3"],
   "hype": <Zahl 0-100, wie aufregend/relevant die News für Gaming-Fans ist>
 }
- 
+
 Setze "game" nur, wenn die Meldung eindeutig zu einem dieser sechs großen \
 Franchises gehört (GTA, Minecraft, Fortnite, Call of Duty, Valorant/League of \
 Legends, FIFA/EA Sports FC). Bei allen anderen Themen: null.
 """
- 
- 
+
+
 def write_article(entry):
     user_prompt = f"""Titel: {entry['title']}
 Kurzbeschreibung: {entry['summary'][:600]}
 Quelle: {entry['source']}
 Original-Link: {entry['link']}"""
- 
+
     response = client.messages.create(
         model=MODEL,
         max_tokens=1200,
         system=WRITER_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_prompt}],
     )
- 
+
     # content[0] ist nicht immer der Text-Block — manche Modelle liefern
     # zuerst einen internen "Thinking"-Block. Deshalb gezielt den Block
     # mit type == "text" heraussuchen statt content[0] anzunehmen.
@@ -230,13 +230,13 @@ Original-Link: {entry['link']}"""
         return None
     raw_text = text_blocks[0].strip()
     raw_text = raw_text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
- 
+
     try:
         data = json.loads(raw_text)
     except json.JSONDecodeError:
         print(f"  ! Konnte Antwort nicht parsen für: {entry['title']}", file=sys.stderr)
         return None
- 
+
     return {
         "id": article_id(entry["link"]),
         "cat": data.get("cat", "industrie"),
@@ -251,29 +251,40 @@ Original-Link: {entry['link']}"""
         "sourceLabel": entry["source"],
         "image": entry.get("image"),
     }
- 
- 
+
+
 # ---------------------------------------------------------------------------
 # 4. HAUPTABLAUF
 # ---------------------------------------------------------------------------
- 
+
 def load_existing_articles():
     if os.path.exists(OUTPUT_FILE):
         with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
     return []
- 
- 
+
+
+def load_archive():
+    if os.path.exists(ARCHIVE_FILE):
+        with open(ARCHIVE_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+
 def main():
     print("→ Sammle Feeds …")
     raw_entries = fetch_raw_entries()
     print(f"  {len(raw_entries)} Roheinträge gefunden")
- 
+
     existing = load_existing_articles()
-    existing_ids = {a["id"] for a in existing}
- 
+    archive = load_archive()
+    # Gegen das komplette Archiv prüfen, nicht nur die gekürzte articles.json —
+    # sonst könnte eine alte, von der Startseite gefallene Meldung fälschlich
+    # nochmal als "neu" erkannt und doppelt geschrieben werden.
+    existing_ids = {a["id"] for a in archive} | {a["id"] for a in existing}
+
     new_raw = [e for e in raw_entries if article_id(e["link"]) not in existing_ids]
- 
+
     # Auswahl mit garantierter Franchise-Quote: zuerst bis zu PRIORITY_QUOTA
     # Artikel aus den 6 großen Franchise-Feeds (GTA, Minecraft, Fortnite,
     # Call of Duty, Valorant/LoL, FIFA) reservieren, den Rest der
@@ -283,44 +294,50 @@ def main():
     # Feeds auftaucht.
     priority_entries = [e for e in new_raw if e.get("priority")]
     normal_entries = [e for e in new_raw if not e.get("priority")]
- 
+
     selected = priority_entries[:PRIORITY_QUOTA]
     remaining_slots = MAX_ARTICLES_PER_RUN - len(selected)
     selected += normal_entries[:remaining_slots]
- 
+
     # Falls die Franchise-Feeds mehr als die Quote liefern und die
     # allgemeinen Feeds die restlichen Plätze nicht auffüllen: mit
     # weiteren Franchise-Artikeln auffüllen, statt Plätze verfallen zu lassen.
     if len(selected) < MAX_ARTICLES_PER_RUN:
         extra_priority = priority_entries[PRIORITY_QUOTA:]
         selected += extra_priority[:MAX_ARTICLES_PER_RUN - len(selected)]
- 
+
     new_entries = selected
     print(f"  {len(new_entries)} davon sind neu und werden geschrieben "
           f"({sum(1 for e in new_entries if e.get('priority'))} aus Franchise-Feeds)")
- 
+
     # Für Einträge ohne Bild aus dem Feed: og:image von der Original-Seite holen
     for entry in new_entries:
         if not entry.get("image"):
             entry["image"] = fetch_og_image(entry["link"])
- 
+
     written = []
     for entry in new_entries:
         print(f"  ✎ Schreibe: {entry['title'][:70]}")
         article = write_article(entry)
         if article:
             written.append(article)
- 
+
     all_articles = written + existing
     all_articles = all_articles[:MAX_ARTICLES_TOTAL]
- 
+
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(all_articles, f, ensure_ascii=False, indent=2)
- 
-    print(f"✓ {len(written)} neue Artikel geschrieben, {len(all_articles)} insgesamt in {OUTPUT_FILE}")
- 
- 
+
+    # Archiv: unbegrenzt, damit wirklich jeder je geschriebene Artikel
+    # dauerhaft auffindbar bleibt (siehe archiv.html auf der Website).
+    full_archive = written + archive
+    with open(ARCHIVE_FILE, "w", encoding="utf-8") as f:
+        json.dump(full_archive, f, ensure_ascii=False, indent=2)
+
+    print(f"✓ {len(written)} neue Artikel geschrieben")
+    print(f"  → {len(all_articles)} aktuell auf der Startseite ({OUTPUT_FILE})")
+    print(f"  → {len(full_archive)} insgesamt im Archiv ({ARCHIVE_FILE})")
+
+
 if __name__ == "__main__":
     main()
- 
- 
