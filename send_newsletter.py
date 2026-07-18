@@ -85,7 +85,15 @@ def build_html(articles):
 
     today = datetime.date.today().strftime("%d.%m.%Y")
 
-    return f"""
+    return f"""<!DOCTYPE html>
+<html lang="de" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>LOADOUT-NEWS Wochenrückblick</title>
+</head>
+<body style="margin:0; padding:0; background:#05060B;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#05060B; padding:32px 0;">
       <tr>
         <td align="center">
@@ -144,7 +152,9 @@ def build_html(articles):
         </td>
       </tr>
     </table>
-    """
+</body>
+</html>
+"""
 
 
 def main():
