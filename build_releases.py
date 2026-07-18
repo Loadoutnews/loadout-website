@@ -165,7 +165,7 @@ def render_html(month_label, releases):
     cards = ""
     for r in releases:
         platforms = " · ".join(r.get("platforms", []))
-        img = release_image(r)
+        img = r.get("image") or release_image(r)
         cards += f"""
         <div class="release-card">
           <div class="release-art" style="background:linear-gradient(160deg, rgba(18,48,40,0.78), rgba(13,31,36,0.9)), url('{img}') center/cover;">
@@ -258,6 +258,13 @@ def main():
     if not releases:
         print("! Keine Releases gefunden, breche ab.", file=sys.stderr)
         sys.exit(1)
+
+    # Bilder einmal server-seitig auflösen und im Datensatz selbst
+    # mitspeichern — Browser dürfen fremde Seiten aus Sicherheitsgründen
+    # (CORS) nicht einfach per JavaScript nach og:image durchsuchen, daher
+    # muss das fertige Bild schon in releases.json stehen.
+    for r in releases:
+        r["image"] = release_image(r)
 
     with open("releases.json", "w", encoding="utf-8") as f:
         json.dump({"month": month_label, "month_num": month, "year": year, "releases": releases},
