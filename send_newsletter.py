@@ -47,7 +47,101 @@ def article_image(a):
     return f"https://picsum.photos/seed/loadout-{a['id']}/240/180"
 
 
-def build_html(articles):
+def load_releases_preview():
+    """Lädt den aktuellen Release-Kalender, falls vorhanden, und bereitet
+    eine kompakte Vorschau für den Newsletter auf."""
+    if not os.path.exists("releases.json"):
+        return None
+    try:
+        with open("releases.json", "r", encoding="utf-8") as f:
+            data = json.load(f)
+        releases = data.get("releases", [])
+        if not releases:
+            return None
+        top = max(releases, key=lambda r: r.get("hype", 0))
+        return {
+            "month": data.get("month", ""),
+            "count": len(releases),
+            "top_title": top.get("title", ""),
+            "image": top.get("image") or "https://picsum.photos/seed/loadout-releases/300/200",
+        }
+    except (json.JSONDecodeError, KeyError, ValueError):
+        return None
+
+
+def load_updates_preview():
+    """Lädt den aktuellen Update-Kalender, falls vorhanden, und bereitet
+    eine kompakte Vorschau für den Newsletter auf."""
+    if not os.path.exists("updates.json"):
+        return None
+    try:
+        with open("updates.json", "r", encoding="utf-8") as f:
+            updates = json.load(f)
+        if not updates:
+            return None
+        next_update = min(updates, key=lambda u: u.get("update_date", "9999-99-99"))
+        return {
+            "count": len(updates),
+            "next_game": next_update.get("game", ""),
+            "next_title": next_update.get("update_title", ""),
+            "next_date": next_update.get("update_date", ""),
+            "image": next_update.get("image") or "https://picsum.photos/seed/loadout-updates/300/200",
+        }
+    except (json.JSONDecodeError, KeyError, ValueError):
+        return None
+
+
+def build_calendar_teasers_html(releases_preview, updates_preview):
+    """Baut die zwei kompakten Vorschau-Kacheln für Release- und
+    Update-Kalender — jede verlinkt direkt auf die jeweilige Kalender-Seite."""
+    if not releases_preview and not updates_preview:
+        return ""
+
+    def teaser_cell(icon, label, title, subtitle, image, href):
+        return f"""
+        <td width="50%" valign="top" style="padding:4px;">
+          <a href="{href}" style="display:block; text-decoration:none; background:#12162A; border-radius:12px; overflow:hidden; border:1px solid #1E2340;">
+            <div style="height:70px; background:linear-gradient(160deg, rgba(52,217,201,0.25), rgba(15,19,48,0.9)), url('{image}') center/cover;"></div>
+            <div style="padding:12px 14px;">
+              <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#34D9C9; font-family:Arial,sans-serif;">{icon} {label}</span>
+              <p style="margin:6px 0 2px; font-size:13px; font-weight:700; color:#ffffff; font-family:Arial,sans-serif; line-height:1.3;">{title}</p>
+              <p style="margin:0; font-size:11.5px; color:#8D90AC; font-family:Arial,sans-serif; line-height:1.4;">{subtitle}</p>
+            </div>
+          </a>
+        </td>
+        """
+
+    releases_cell = teaser_cell(
+        "📅", "Release-Kalender",
+        f"{releases_preview['count']} Releases im {releases_preview['month']}" if releases_preview else "",
+        f"U. a. {releases_preview['top_title']}" if releases_preview else "",
+        releases_preview["image"] if releases_preview else "",
+        f"{SITE_URL}/releases.html",
+    ) if releases_preview else '<td width="50%"></td>'
+
+    updates_cell = teaser_cell(
+        "🛠️", "Update-Kalender",
+        f"{updates_preview['count']} angekündigte Updates" if updates_preview else "",
+        f"Als Nächstes: {updates_preview['next_game']} — {updates_preview['next_title']}" if updates_preview else "",
+        updates_preview["image"] if updates_preview else "",
+        f"{SITE_URL}/updates.html",
+    ) if updates_preview else '<td width="50%"></td>'
+
+    return f"""
+    <tr>
+      <td style="padding:6px 26px 4px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            {releases_cell}
+            {updates_cell}
+          </tr>
+        </table>
+      </td>
+    </tr>
+    """
+
+
+def build_html(articles, releases_preview=None, updates_preview=None):
     """Baut die E-Mail als Tabellen-Layout mit ausschliesslich Inline-Styles
     — das ist bei E-Mails nötig, da viele Mail-Programme (v. a. Outlook,
     Gmail) externe/interne <style>-Blöcke, CSS-Verläufe und Hintergrundbilder
@@ -133,6 +227,9 @@ def build_html(articles):
               </td>
             </tr>
 
+            <!-- Release- & Update-Kalender-Vorschau -->
+            {build_calendar_teasers_html(releases_preview, updates_preview)}
+
             <!-- Call-to-Action -->
             <tr>
               <td style="padding:14px 30px 30px; text-align:center;">
@@ -180,7 +277,9 @@ def main():
     # articles.json ist neueste zuerst sortiert (siehe news_pipeline.py) —
     # die ersten Einträge sind also automatisch die aktuellsten.
     top_articles = articles[:ARTICLE_COUNT]
-    html = build_html(top_articles)
+    releases_preview = load_releases_preview()
+    updates_preview = load_updates_preview()
+    html = build_html(top_articles, releases_preview, updates_preview)
 
     today_str = datetime.date.today().strftime("%d.%m.%Y")
     campaign_name = f"LOADOUT-NEWS Wochenrückblick {today_str}"
