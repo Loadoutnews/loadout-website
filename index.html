@@ -78,7 +78,10 @@
 
 <main>
 
-  <div class="ad-slot ad-header"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
+  <div class="ad-slot ad-header">
+    <span class="ad-tag mono">Anzeige</span>
+    <ins class="adsbygoogle" data-placement="leaderboard" style="display:block; width:100%; min-height:90px;"></ins>
+  </div>
 
   <div class="page-layout">
   <div class="content-col">
@@ -170,7 +173,10 @@
   </div>
 
   <aside class="sidebar">
-    <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×250</div>
+    <div class="ad-slot ad-sidebar">
+      <span class="ad-tag mono">Anzeige</span>
+      <ins class="adsbygoogle" data-placement="sidebar" style="display:block; width:100%; min-height:250px;"></ins>
+    </div>
     <div class="widget">
       <h3 class="mono">Trending jetzt</h3>
       <div id="trendingList"></div>
@@ -188,12 +194,18 @@
       <input type="email" placeholder="deine@email.de" id="newsletterEmail">
       <button onclick="subscribeNewsletter()">Kostenlos anmelden</button>
     </div>
-    <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×600</div>
+    <div class="ad-slot ad-sidebar">
+      <span class="ad-tag mono">Anzeige</span>
+      <ins class="adsbygoogle" data-placement="sidebar" style="display:block; width:100%; min-height:250px;"></ins>
+    </div>
   </aside>
 
   </div>
 
-  <div class="ad-slot ad-footer"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
+  <div class="ad-slot ad-footer">
+    <span class="ad-tag mono">Anzeige</span>
+    <ins class="adsbygoogle" data-placement="leaderboard" style="display:block; width:100%; min-height:90px;"></ins>
+  </div>
 
 </main>
 
@@ -1019,10 +1031,11 @@ function renderGrid(){
 
   // Native In-Feed-Anzeige nach der 6. Karte einfügen (nur wenn genug Artikel da sind)
   if(cardsArr.length > 5){
-    cardsArr.splice(6, 0, `<div class="ad-slot ad-infeed"><span class="ad-tag mono">Anzeige</span>Native Werbeplatz · volle Breite</div>`);
+    cardsArr.splice(6, 0, `<div class="ad-slot ad-infeed"><span class="ad-tag mono">Anzeige</span><ins class="adsbygoogle" data-placement="infeed" style="display:block; width:100%; min-height:120px;"></ins></div>`);
   }
 
   grid.innerHTML = cardsArr.join('');
+  initAdSlots();
 }
 
 // Klick-Handler für Karten/Hero: normaler Klick = smooth SPA-Wechsel,
@@ -1166,7 +1179,7 @@ function openCookieSettings(){
 // Trag hier deine echte Messwert-ID ein (Google Analytics → Verwaltung →
 // Datenstreams → dein Datenstream → "Mess-ID", Format "G-XXXXXXXXXX").
 // Solange hier der Platzhalter steht, wird nichts geladen.
-const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
+const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
 
 let analyticsLoaded = false;
 
@@ -1185,15 +1198,61 @@ function loadGoogleAnalytics(){
   window.gtag('config', GA_MEASUREMENT_ID);
 }
 
+// --- Google AdSense --------------------------------------------------
+// Trag hier deine Publisher-ID ein (AdSense → Konto → Kontoinformationen,
+// Format "ca-pub-XXXXXXXXXXXXXXXX") sowie die drei Anzeigenblock-IDs, die
+// du beim Anlegen der jeweiligen Anzeigenblöcke in AdSense bekommst
+// (Anzeigen → nach Anzeigenblock → jeweils "Anzeigenblock-ID"). Solange
+// hier Platzhalter stehen, werden keine Anzeigen geladen.
+const ADSENSE_CLIENT_ID = 'ca-pub-XXXXXXXXXXXXXXXX';
+const AD_PLACEMENTS = {
+  leaderboard: { slot: 'HIER_SLOT_ID_LEADERBOARD', format: 'horizontal' }, // Header & Footer (728×90)
+  sidebar:     { slot: 'HIER_SLOT_ID_SIDEBAR',     format: 'auto' },      // beide Sidebar-Plätze
+  infeed:      { slot: 'HIER_SLOT_ID_INFEED',      format: 'fluid' },     // Anzeige mitten im Artikel-Feed
+};
+
+let adsenseLoaded = false;
+
+function loadAdSense(){
+  if(adsenseLoaded || !ADSENSE_CLIENT_ID || ADSENSE_CLIENT_ID.includes('XXXX')) return;
+  adsenseLoaded = true;
+
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`;
+  script.crossOrigin = 'anonymous';
+  script.onload = initAdSlots;
+  document.head.appendChild(script);
+}
+
+function initAdSlots(){
+  // Findet alle vorbereiteten Werbeplätze auf der Seite und aktiviert sie
+  // — wird auch nach jedem renderGrid() erneut aufgerufen (z. B. für den
+  // Werbeplatz mitten im Feed, der erst dynamisch eingefügt wird), lässt
+  // aber bereits aktivierte Plätze unangetastet.
+  if(!adsenseLoaded) return;
+  document.querySelectorAll('ins.adsbygoogle:not([data-ads-initialized])').forEach(ins => {
+    const config = AD_PLACEMENTS[ins.dataset.placement];
+    if(!config || !config.slot || config.slot.includes('HIER_')) return;
+    ins.setAttribute('data-ad-client', ADSENSE_CLIENT_ID);
+    ins.setAttribute('data-ad-slot', config.slot);
+    ins.setAttribute('data-ad-format', config.format);
+    ins.setAttribute('data-full-width-responsive', 'true');
+    ins.setAttribute('data-ads-initialized', 'true');
+    try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) { /* einzelner Anzeigenblock fehlgeschlagen — Rest der Seite soll trotzdem normal funktionieren */ }
+  });
+}
+
 function applyConsent(showConfirmation){
   // Wird bei jeder Consent-Änderung UND beim Laden mit bereits vorhandener
-  // Einwilligung aufgerufen — lädt Analytics nur, wenn wirklich zugestimmt
-  // wurde, nie vorab.
+  // Einwilligung aufgerufen — lädt Analytics/Werbung nur, wenn wirklich
+  // zugestimmt wurde, nie vorab.
   if(consentDetails.analytics){
     loadGoogleAnalytics();
   }
-  // Produktiv: Hier bei Bedarf auch Werbe-Skripte (z. B. Google AdSense)
-  // erst nach consentDetails.marketing laden.
+  if(consentDetails.marketing){
+    loadAdSense();
+  }
   if(showConfirmation){
     showToast(cookieConsent === 'necessary' ? '✓ Nur notwendige Cookies aktiv' : '✓ Cookie-Einstellungen gespeichert');
   }
