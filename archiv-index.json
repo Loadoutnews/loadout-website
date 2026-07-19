@@ -1,5 +1,65 @@
 [
   {
+    "id": "8af8fe061a",
+    "title": "Nächster Coup: Fortnite crosst jetzt mit Christopher Nolans „The Odyssey“",
+    "teaser": "Epic Games lässt Fortnite erneut mit Hollywood verschmelzen: Diese Woche startet die Zusammenarbeit mit Christopher Nolans kommendem Blockbuster „The Odyssey“.",
+    "cat": "pc",
+    "game": "fortnite",
+    "genre": "action",
+    "date": "19. July 2026",
+    "hype": 58
+  },
+  {
+    "id": "1a9bb0c048",
+    "title": "Fortnite-Leak-Skandal: Epic Games einigt sich außergerichtlich",
+    "teaser": "Der Rechtsstreit um durchgesickerte Fortnite-Kooperationen ist vorbei: Epic Games hat sich mit einem ehemaligen Vertragsmitarbeiter geeinigt.",
+    "cat": "industrie",
+    "game": "fortnite",
+    "genre": null,
+    "date": "19. July 2026",
+    "hype": 38
+  },
+  {
+    "id": "6e5df41451",
+    "title": "Fortnite: Neues DC-Crossover angeblich schon geleakt",
+    "teaser": "Datamining-Funde deuten auf eine frische DC-Comics-Kooperation in Fortnite hin – neue Skins könnten noch dieses Jahr an den Start gehen.",
+    "cat": "pc",
+    "game": "fortnite",
+    "genre": "shooter",
+    "date": "19. July 2026",
+    "hype": 58
+  },
+  {
+    "id": "7684a744f8",
+    "title": "Gratis auf Steam: Dieses düstere Rollenspiel voller Leid gibt's jetzt kostenlos",
+    "teaser": "Wer auf schwere Entscheidungen und noch schwerere Konsequenzen steht, sollte jetzt zuschlagen: The Life and Suffering of Sir Brante ist für kurze Zeit gratis auf Steam.",
+    "cat": "pc",
+    "game": null,
+    "genre": "rpg",
+    "date": "19. July 2026",
+    "hype": 35
+  },
+  {
+    "id": "a1c900a945",
+    "title": "Fallout: New Vegas 2 – Warum Obsidian auch aus Chaos Gold macht",
+    "teaser": "Die Entwicklung des ersten New Vegas war ein einziges Improvisationstheater unter Zeitdruck. Genau deshalb muss uns um den Nachfolger nicht bange sein.",
+    "cat": "pc",
+    "game": null,
+    "genre": "rpg",
+    "date": "19. July 2026",
+    "hype": 62
+  },
+  {
+    "id": "24c56cfa4b",
+    "title": "ZA/UM erneut in der Krise: Disco-Elysium-Studio entlässt bis zu 32 Mitarbeiter",
+    "teaser": "Das von Skandalen geplagte Studio hinter Disco Elysium und Zero Parades streicht erneut zahlreiche Stellen quer durch alle Abteilungen.",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "date": "19. July 2026",
+    "hype": 35
+  },
+  {
     "id": "4ad9915aa9",
     "title": "Nach Shitstorm: Rockstar rudert bei GTA-Online-Heist-Kürzungen zurück",
     "teaser": "Heimliche Nerfs an den Heist-Auszahlungen sorgten für dicke Luft in der GTA-Online-Community – jetzt reagiert Rockstar Games auf den Druck der Fans.",
