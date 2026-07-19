@@ -286,7 +286,7 @@ def render_article_page(a):
   }}
 
   // --- Google AdSense — dieselben IDs wie in index.html eintragen -------
-  const ADSENSE_CLIENT_ID = 'ca-pub-XXXXXXXXXXXXXXXX';
+  const ADSENSE_CLIENT_ID = 'ca-pub-8080055429345245';
   const AD_PLACEMENTS = {{
     leaderboard: {{ slot: 'HIER_SLOT_ID_LEADERBOARD', format: 'horizontal' }},
   }};
