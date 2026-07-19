@@ -41,7 +41,10 @@
 </div>
 
 <main>
-  <div class="ad-slot ad-header"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
+  <div class="ad-slot ad-header">
+    <span class="ad-tag mono">Anzeige</span>
+    <ins class="adsbygoogle" data-placement="leaderboard" style="display:block; width:100%; min-height:90px;"></ins>
+  </div>
 
   <div class="page-layout">
     <div class="content-col">
@@ -74,7 +77,10 @@
     </aside>
   </div>
 
-  <div class="ad-slot ad-footer"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
+  <div class="ad-slot ad-footer">
+    <span class="ad-tag mono">Anzeige</span>
+    <ins class="adsbygoogle" data-placement="leaderboard" style="display:block; width:100%; min-height:90px;"></ins>
+  </div>
 </main>
 
 <footer>
@@ -182,7 +188,7 @@
   }
 
   // --- Google Analytics (GA4) — dieselbe Mess-ID wie in index.html ------
-  const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
+  const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
   let analyticsLoaded = false;
 
   function loadGoogleAnalytics(){
@@ -198,8 +204,41 @@
     window.gtag('config', GA_MEASUREMENT_ID);
   }
 
+  // --- Google AdSense — dieselben IDs wie in index.html eintragen -------
+  const ADSENSE_CLIENT_ID = 'ca-pub-8080055429345245';
+  const AD_PLACEMENTS = {
+    leaderboard: { slot: 'HIER_SLOT_ID_LEADERBOARD', format: 'horizontal' },
+  };
+  let adsenseLoaded = false;
+
+  function loadAdSense(){
+    if(adsenseLoaded || !ADSENSE_CLIENT_ID || ADSENSE_CLIENT_ID.includes('XXXX')) return;
+    adsenseLoaded = true;
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`;
+    script.crossOrigin = 'anonymous';
+    script.onload = initAdSlots;
+    document.head.appendChild(script);
+  }
+
+  function initAdSlots(){
+    if(!adsenseLoaded) return;
+    document.querySelectorAll('ins.adsbygoogle:not([data-ads-initialized])').forEach(ins => {
+      const config = AD_PLACEMENTS[ins.dataset.placement];
+      if(!config || !config.slot || config.slot.includes('HIER_')) return;
+      ins.setAttribute('data-ad-client', ADSENSE_CLIENT_ID);
+      ins.setAttribute('data-ad-slot', config.slot);
+      ins.setAttribute('data-ad-format', config.format);
+      ins.setAttribute('data-full-width-responsive', 'true');
+      ins.setAttribute('data-ads-initialized', 'true');
+      try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+    });
+  }
+
   function applyConsent(){
     if(consentDetails.analytics) loadGoogleAnalytics();
+    if(consentDetails.marketing) loadAdSense();
   }
 
   initCookieBanner();
