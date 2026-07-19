@@ -468,7 +468,7 @@
     .hero-content p{ font-size:13.5px; }
     .detail h1{ font-size:23px; }
     .xp-badge{ padding:5px 9px; font-size:11px; }
-    .logo-tagline{ display:none; } /* auf sehr kleinen Screens ausblenden, Platz sparen */
+    .logo-tagline{ font-size:9px; letter-spacing:0.04em; }
     .xp-badge span:first-child{ display:none; } /* Emoji-Icon ausblenden, Platz sparen */
     .save-btn{ width:36px; height:36px; } /* größeres Touch-Ziel auf Mobile */
     .detail-top{ flex-wrap:wrap; gap:10px; }
