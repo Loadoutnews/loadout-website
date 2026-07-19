@@ -26,6 +26,7 @@ Ergebnis:
 import json
 import os
 import html
+import datetime
 
 SITE_URL = "https://loadout-news.com"  # bereits auf die gewählte Domain eingestellt
 OUTPUT_DIR = "artikel"
@@ -262,7 +263,7 @@ def render_article_page(a):
   }}
 
   // --- Google Analytics (GA4) — dieselbe Mess-ID wie in index.html ------
-  const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
+  const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
   let analyticsLoaded = false;
 
   function loadGoogleAnalytics(){{
@@ -325,7 +326,16 @@ def build():
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-    urls = [f"{SITE_URL}/index.html", f"{SITE_URL}/archiv.html"]
+    urls = [f"{SITE_URL}/index.html", f"{SITE_URL}/archiv.html",
+            f"{SITE_URL}/impressum.html", f"{SITE_URL}/datenschutz.html"]
+
+    # Release- und Update-Kalender nur eintragen, wenn sie schon existieren
+    # (beim allerersten Lauf, bevor die jeweiligen Skripte einmal gelaufen
+    # sind, gäbe es sonst einen toten Link in der Sitemap).
+    for optional_page in ["releases.html", "updates.html"]:
+        if os.path.exists(optional_page):
+            urls.append(f"{SITE_URL}/{optional_page}")
+
     for a in articles:
         page = render_article_page(a)
         path = os.path.join(OUTPUT_DIR, f"{a['id']}.html")
@@ -333,11 +343,14 @@ def build():
             f.write(page)
         urls.append(f"{SITE_URL}/artikel/{a['id']}.html")
 
-    # sitemap.xml
+    # sitemap.xml — mit Aktualisierungsdatum (lastmod), damit Google
+    # erkennen kann, dass die Sitemap bei jedem Pipeline-Lauf frisch ist,
+    # was erneutes, zügigeres Crawlen begünstigt.
+    today_iso = datetime.date.today().isoformat()
     sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in urls:
-        sitemap.append(f"  <url><loc>{u}</loc></url>")
+        sitemap.append(f"  <url><loc>{u}</loc><lastmod>{today_iso}</lastmod></url>")
     sitemap.append("</urlset>")
     with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write("\n".join(sitemap))
