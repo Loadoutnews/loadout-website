@@ -262,7 +262,7 @@ def render_article_page(a):
   }}
 
   // --- Google Analytics (GA4) — dieselbe Mess-ID wie in index.html ------
-  const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+  const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
   let analyticsLoaded = false;
 
   function loadGoogleAnalytics(){{
