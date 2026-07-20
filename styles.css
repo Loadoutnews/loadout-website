@@ -546,3 +546,18 @@
   .editorial-box.rec-no .editorial-label{ color:var(--magenta); }
   .editorial-box.rec-wait{ border-color:rgba(255,183,77,0.4); border-left-color:var(--amber); background:linear-gradient(160deg, rgba(255,183,77,0.1), rgba(31,25,13,0.05)); }
   .editorial-box.rec-wait .editorial-label{ color:var(--amber); }
+
+  /* Feedback-Widget (Sidebar) */
+  .star-rating{ display:flex; gap:4px; margin-bottom:12px; }
+  .star-rating .star{
+    background:none; border:none; cursor:pointer; font-size:26px; line-height:1;
+    color:var(--line); padding:0; transition:color .1s, transform .1s;
+  }
+  .star-rating .star:hover{ transform:scale(1.15); }
+  .star-rating .star.active{ color:var(--amber); }
+  .feedback-widget textarea{
+    width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; color:var(--text); font-size:13px; font-family:inherit; resize:vertical;
+    box-sizing:border-box;
+  }
+  .feedback-widget textarea:focus{ outline:none; border-color:var(--violet); }
