@@ -1,5 +1,25 @@
 [
   {
+    "id": "0bc3397985",
+    "cat": "industrie",
+    "game": null,
+    "genre": "strategie",
+    "title": "Slowpoke lernt 'All-You-Can-Yeet': Wenn ein Pokémon-Kartentext plötzlich Gen-Z-Slang spricht",
+    "teaser": "Im neuen TCG-Set 'Pitch Black' bekommt das notorisch langsame Slowpoke eine Attacke, die Fans zum Schmunzeln bringt: All-You-Can-Yeet.",
+    "body": [
+      "Wer in den letzten Tagen Booster des neuen Pokémon-TCG-Sets 'Mega Evolution—Pitch Black' geöffnet hat, ist vermutlich über eine Karte gestolpert, die kurz die Augenbrauen hochgehen lässt. Slowpoke Nummer 29 aus dem Set besitzt eine Attacke, die schlicht 'All-You-Can-Yeet' heißt. Die Zeit dahinter ist eigentlich unspektakulär: <cite index=\"1-7\">Sie erlaubt es der spielenden Person, beliebig viele Karten aus der eigenen Hand direkt auf den Ablagestapel zu werfen.</cite> Der Name allein hat jedoch gereicht, um in der Community für Gesprächsstoff zu sorgen – schließlich klingt 'Yeet' eher nach TikTok-Kommentarspalte als nach klassischem Sammelkartentext.",
+      "Besonders kurios: Im Original steckt von der flapsigen Übersetzung nichts. <cite index=\"1-10\">Die englische Lokalisierung des Pokémon-Konzerns hat sich hier offenbar einen Spaß erlaubt, denn im japanischen Original ist von 'Yeeten' keine Spur.</cite> Fans wiesen zudem auf die Ironie hin: <cite index=\"1-11\">Ausgerechnet ein Pokémon, das für seine Langsamkeit berühmt ist, ist plötzlich bestens mit aktuellem Jugendslang vertraut.</cite> Kommentatoren ordnen das als Teil eines größeren Trends ein – schließlich hat Pokémon längst Streamer-Figuren, Smartphones und Selfie-Funktionen in seine Spielwelt integriert, um zeitgemäß zu wirken, wie es in einer Analyse des Fachportals Wargamer heißt: <cite index=\"1-12,1-13\">Solche Anpassungen scheinen fast unausweichlich, wenn Pokémon zeitgemäß bleiben will – schließlich sind Iono und Canarai Streamer, praktisch jede Trainerin hat inzwischen ein Rotom-Smartphone, und man kann in Scarlet und Violet quer durch Paldea Selfies mit Arenaleitern schießen.</cite>",
+      "In der Community gehen die Reaktionen auseinander: Manche finden den Slang-Move charmant und lustig, andere empfinden ihn, wie ein Redakteur von Wargamer es beschreibt, als leicht befremdlich für eine so traditionsreiche Marke. Auf sozialen Medien wurde die Attacke außerdem mit anderen kuriosen Namensänderungen der Lokalisierung verglichen, etwa der Umbenennung von 'Ghost Veil' zu 'Hide n Sneak' in einer weiteren Karte desselben Sets. Spielerisch ist der Move übrigens keineswegs nur ein Gag: Die offizielle Pokémon-Website empfiehlt Slowpokes Fähigkeit sogar als Combo-Baustein, denn <cite index=\"12-1,12-3\">die Entwicklungsform Slowbro kann satte 210 Schaden für nur eine Energie austeilen, allerdings nur, wenn keine Karten mehr auf der Hand liegen – und genau dafür lässt sich Slowpokes All-You-Can-Yeet-Attacke nutzen, um sich passend vorzubereiten.</cite> Auch wenn Fachmedien wie Wargamer betonen, dass die Karte <cite index=\"1-8\">zwar eine ungewöhnliche Selbst-Discard-Strategie ermöglicht, aber sicher nicht zu den stärksten Karten des Sets gehört.</cite>"
+    ],
+    "editorial_take": "Wir finden: Ein bisschen Gen-Z-Chaos tut der manchmal etwas verstaubten Pokémon-Lore gut, auch wenn der Sprung von gemächlichem Slowpoke zu Internet-Slang schon einen ironischen Bruch erzeugt. Spielerisch ist die Karte zwar nett für Discard-Synergien mit Slowbro, aber kein Meta-Umstürzler – der eigentliche Wert liegt hier klar im Meme-Potenzial und dem Gesprächsstoff in der Community. Genau solche kleinen Kuriositäten zeigen aber auch, wie lebendig das Pokémon-TCG-Universum trotz seines Alters bleibt.",
+    "date": "20. July 2026",
+    "platform": "IGN Articles",
+    "hype": 34,
+    "source": "https://www.ign.com/articles/slowpoke-just-got-a-new-pokemon-trading-card-game-move-and-its-called-all-you-can-yeet",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/07/20/screenshot-2026-07-20-120343-1784546541116.png"
+  },
+  {
     "id": "72a40fa8b4",
     "cat": "pc",
     "game": "minecraft",
@@ -1111,23 +1131,5 @@
     "source": "https://www.pcgamer.com/games/get-15-games-for-usd15-in-humbles-2k-megahits-bundle-including-bioshock-infinite-risk-of-rain-2-and-one-of-my-favourite-shooters-of-all-time/",
     "sourceLabel": "PCGamer latest",
     "image": "https://cdn.mos.cms.futurecdn.net/btnktaA7j5yRkHP8yrwxFE-1280-80.jpg"
-  },
-  {
-    "id": "a706c82e87",
-    "cat": "pc",
-    "game": "gta",
-    "title": "FiveM für GTA V Enhanced: Release-Termin steht endlich fest",
-    "teaser": "Nach über einem Jahr Wartezeit gibt es endlich konkrete News: FiveM für GTA V Enhanced startet schon nächste Woche. Die Cfx.re-Macher haben den Vorhang gelüftet.",
-    "body": [
-      "Roleplay-Fans, aufgepasst: Die lange Funkstille rund um FiveM für GTA V Enhanced hat endlich ein Ende. Das Cfx.re-Team, verantwortlich für die beliebte Multiplayer-Modding-Plattform, hat in einem Blogpost am Mittwoch überraschend konkrete Fakten geliefert – inklusive eines Release-Termins, der schon in der kommenden Woche liegt. Angesichts der monatelangen Funkstille seit der ersten Ankündigung vor über einem Jahr war die Community zuletzt ziemlich ungeduldig geworden.",
-      "FiveM hat sich seit Jahren als das Rückgrat unzähliger GTA-Online-Alternativen etabliert: Riesige Roleplay-Server, eigene Wirtschaftssysteme, komplett individualisierte Städte voller Custom-Content – all das wäre ohne die Mod-Plattform kaum denkbar. Mit dem Umstieg auf GTA V Enhanced, der verbesserten Next-Gen-Version des Spiels, mussten die Entwickler jedoch quasi bei null anfangen, da sich die technische Basis des Spiels deutlich verändert hat. Das erklärt auch, warum die Umsetzung so viel länger gedauert hat als ursprünglich erwartet.",
-      "Für Spieler:innen bedeutet der bevorstehende Release vor allem eins: Die riesige FiveM-Szene kann endlich auch auf der technisch überlegenen Enhanced-Version durchstarten, mit besserer Performance, mehr Grafikoptionen und potenziell neuen Möglichkeiten für Server-Betreiber. Wer bislang aus reiner Mod-Treue an der alten Legacy-Version festgehalten hat, dürfte nun endlich einen guten Grund zum Umstieg bekommen. Ob zum Start bereits alle gewohnten Features und beliebten Skripte reibungslos laufen, wird sich zeigen – aber allein die Tatsache, dass ein Termin feststeht, sorgt in der Roleplay-Community schon jetzt für ordentlich Vorfreude."
-    ],
-    "date": "18. July 2026",
-    "platform": "RockstarINTEL",
-    "hype": 62,
-    "source": "https://rockstarintel.com/fivem-for-gta-v-enhanced-releases-next-week/",
-    "sourceLabel": "RockstarINTEL",
-    "image": "https://rockstarintel.com/wp-content/uploads/2026/07/fivem-enhanced-devblog-3-2.jpg"
   }
 ]

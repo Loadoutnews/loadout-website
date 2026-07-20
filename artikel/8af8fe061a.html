@@ -69,6 +69,29 @@
 <p class="body">Details dazu, wie genau sich die Odyssee-Welt ins Fortnite-Universum einfügt, sickern gerade erst durch, doch schon jetzt ist klar: Die Community wird gespannt beobachten, ob es neue Skins, thematische Herausforderungen oder gar eigene Spielmodi rund um Nolans epische Neuinterpretation des antiken Mythos geben wird. Solche Kollaborationen sind für Epic längst zur festen Marketingstrategie geworden – sie sorgen für frischen Gesprächsstoff, ziehen neue Spieler:innen an und halten Stammspieler:innen bei Laune.</p>
 <p class="body">Für Fans bedeutet das vor allem eins: Fortnite bleibt auch Jahre nach seinem Launch der place-to-be für ungewöhnliche popkulturelle Verschmelzungen. Dass ausgerechnet ein Nolan-Blockbuster den Sprung ins Spiel schafft, unterstreicht einmal mehr, wie sehr sich die Grenzen zwischen Gaming, Kino und Marketing inzwischen aufgelöst haben. Wer also demnächst durch die Insel streift und dabei auf mythologische Anspielungen stößt, weiß jetzt, woher der Wind weht.</p>
         <a href="https://gamerant.com/fortnite-odyssey-movie-collab/" class="source-link" target="_blank" rel="noopener">Zur Originalquelle (GameRant - Fortnite News) →</a>
+
+        <div class="reaction-bar">
+          <button class="reaction-btn" id="likeBtn" onclick="react('like')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+            <span id="likeCount">0</span>
+          </button>
+          <button class="reaction-btn" id="dislikeBtn" onclick="react('dislike')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 14V2M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L13 22h0a3.13 3.13 0 0 1-3-3.88Z"/></svg>
+            <span id="dislikeCount">0</span>
+          </button>
+        </div>
+
+        <div class="comments-section">
+          <h3 class="mono">💬 Was denkst du dazu?</h3>
+          <p class="comments-hint">Lass uns gerne wissen, was du zu dieser Meldung meinst — sei dabei fair und respektvoll.</p>
+          <div class="comment-form">
+            <input type="text" id="commentName" placeholder="Name (optional)" maxlength="40">
+            <textarea id="commentText" placeholder="Deine Meinung..." maxlength="500" rows="3"></textarea>
+            <input type="text" id="commentWebsite" name="website" class="honeypot" tabindex="-1" autocomplete="off">
+            <button class="cookie-btn primary" onclick="submitComment()">Kommentar absenden</button>
+          </div>
+          <div id="commentsList"></div>
+        </div>
       </div>
     </div>
 
@@ -259,6 +282,109 @@
       if(el && data.views) el.textContent = '👁 ' + data.views.toLocaleString('de-CH') + (data.views === 1 ? ' Aufruf' : ' Aufrufe');
     })
     .catch(() => {});
+</script>
+
+<script>
+  // --- Reaktionen (Like/Dislike) -----------------------------------------
+  const ARTICLE_ID = '8af8fe061a';
+  let myReactions = {};
+  try { myReactions = JSON.parse(localStorage.getItem('loadout_reactions') || '{}'); } catch(e) {}
+
+  function updateReactionButtons(){
+    const mine = myReactions[ARTICLE_ID];
+    document.getElementById('likeBtn').classList.toggle('active', mine === 'like');
+    document.getElementById('dislikeBtn').classList.toggle('active', mine === 'dislike');
+  }
+
+  fetch(`/api/react?articleId=${encodeURIComponent(ARTICLE_ID)}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('likeCount').textContent = data.likes || 0;
+      document.getElementById('dislikeCount').textContent = data.dislikes || 0;
+      updateReactionButtons();
+    })
+    .catch(() => {});
+
+  function react(type){
+    if(myReactions[ARTICLE_ID]) return;
+    fetch('/api/react', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ articleId: ARTICLE_ID, type })
+    })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById(type === 'like' ? 'likeCount' : 'dislikeCount').textContent = data.count;
+        myReactions[ARTICLE_ID] = type;
+        try { localStorage.setItem('loadout_reactions', JSON.stringify(myReactions)); } catch(e) {}
+        updateReactionButtons();
+      })
+      .catch(() => {});
+  }
+
+  // --- Kommentare -----------------------------------------------------------
+  function loadComments(){
+    fetch(`/api/comments?articleId=${encodeURIComponent(ARTICLE_ID)}`)
+      .then(res => res.json())
+      .then(data => renderComments(data.comments || []))
+      .catch(() => { document.getElementById('commentsList').innerHTML = '<p class="comments-empty">Kommentare konnten nicht geladen werden.</p>'; });
+  }
+
+  function renderComments(comments){
+    const list = document.getElementById('commentsList');
+    if(!comments.length){
+      list.innerHTML = '<p class="comments-empty">Noch keine Kommentare — sei die/der Erste!</p>';
+      return;
+    }
+    const sorted = [...comments].reverse();
+    list.innerHTML = '';
+    sorted.forEach(c => {
+      const item = document.createElement('div');
+      item.className = 'comment-item';
+      const head = document.createElement('div');
+      head.className = 'comment-head';
+      const name = document.createElement('span');
+      name.className = 'comment-name';
+      name.textContent = c.name || 'Anonym';
+      const date = document.createElement('span');
+      date.className = 'comment-date mono';
+      try {
+        const d = new Date(c.timestamp);
+        date.textContent = d.toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' · ' + d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+      } catch(e) {}
+      head.appendChild(name);
+      head.appendChild(date);
+      const text = document.createElement('div');
+      text.className = 'comment-text';
+      text.textContent = c.text || '';
+      item.appendChild(head);
+      item.appendChild(text);
+      list.appendChild(item);
+    });
+  }
+
+  function submitComment(){
+    const nameEl = document.getElementById('commentName');
+    const textEl = document.getElementById('commentText');
+    const websiteEl = document.getElementById('commentWebsite');
+    const text = textEl.value.trim();
+    if(!text) return;
+
+    fetch('/api/comments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ articleId: ARTICLE_ID, name: nameEl.value.trim(), text, website: websiteEl.value })
+    })
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if(!data) return;
+        textEl.value = '';
+        loadComments();
+      })
+      .catch(() => {});
+  }
+
+  loadComments();
 </script>
 
 </body>
