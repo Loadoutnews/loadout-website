@@ -1,5 +1,85 @@
 [
   {
+    "id": "72a40fa8b4",
+    "title": "17 Jahre gewartet: Minecraft bekommt endlich dieses Community-Feature",
+    "teaser": "Ein Wunsch, der fast so alt ist wie das Spiel selbst, geht in Erfüllung: Minecraft-Fans dürfen sich auf ein lang ersehntes Feature freuen.",
+    "cat": "pc",
+    "game": "minecraft",
+    "genre": "adventure",
+    "date": "20. July 2026",
+    "hype": 58
+  },
+  {
+    "id": "9477efb144",
+    "title": "Minecraft: Chaos-Cubed-Update ist endlich da",
+    "teaser": "Neue Blöcke, Biome und Mobs warten auf Entdecker – dazu gibt's jede Menge Bugfixes im frischen Minecraft-Update.",
+    "cat": "pc",
+    "game": "minecraft",
+    "genre": "adventure",
+    "date": "20. July 2026",
+    "hype": 58
+  },
+  {
+    "id": "926b0c97a4",
+    "title": "Neue Gremlin-SMG in Black Ops 7 und Warzone: So schaltet ihr sie frei",
+    "teaser": "Mit Season 5 hält eine neue Maschinenpistole namens Gremlin Einzug in Black Ops 7 und Warzone. Wir zeigen, wie ihr sie euch sichert.",
+    "cat": "konsole",
+    "game": "cod",
+    "genre": "shooter",
+    "date": "20. July 2026",
+    "hype": 47
+  },
+  {
+    "id": "68138043f5",
+    "title": "VCT Americas Stage 2 2026: Alle Infos zu Terminen, Teams und Übertragung",
+    "teaser": "Die zweite Stage der VCT Americas 2026 steht an – wir liefern den Überblick zu Spielplan, Teilnehmern und Streaming-Möglichkeiten.",
+    "cat": "pc",
+    "game": "valorant",
+    "genre": "shooter",
+    "date": "20. July 2026",
+    "hype": 55
+  },
+  {
+    "id": "0bba8ec8ae",
+    "title": "Pokémon TCG „Pitch Black“: Diese 10 Karten sind pures Gold wert",
+    "teaser": "Die neue Pokémon-TCG-Erweiterung sorgt für Goldrausch unter Sammlern – eine Karte soll allein schon rund 1.000 Dollar wert sein.",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "date": "20. July 2026",
+    "hype": 42
+  },
+  {
+    "id": "d3bfca866b",
+    "title": "Hamster-Leben als FMV-Adventure: Skurrile Inspiration liefert ausgerechnet GTA 5",
+    "teaser": "In „Sweet Hamster Days“ schlüpfst du in ein Hamsterfell und wirst von drei japanischen Schwestern verwöhnt – die Idee dazu kam vom Maskottchen-Job des Machers und, ausgerechnet, von GTA 5.",
+    "cat": "pc",
+    "game": null,
+    "genre": "adventure",
+    "date": "20. July 2026",
+    "hype": 38
+  },
+  {
+    "id": "77d3096b81",
+    "title": "Kart-Klassiker mit Tempo: Warum Sonic & All-Stars Racing Transformed noch immer begeistert",
+    "teaser": "Ein Blick zurück auf einen der besten Kart-Racer überhaupt – und warum sich eine Runde mit Sonic & Co. auch heute noch lohnt.",
+    "cat": "pc",
+    "game": null,
+    "genre": "rennspiel",
+    "date": "20. July 2026",
+    "hype": 38
+  },
+  {
+    "id": "bf99ae8b0c",
+    "title": "Geleakte Build von 2008: Inoffizieller PC-Port von Gears of War 2 taucht auf",
+    "teaser": "Ein Community-Projekt macht möglich, wovon Fans jahrelang geträumt haben: Gears of War 2 läuft jetzt auf dem PC – allerdings völlig inoffiziell und auf Basis eines uralten Leaks.",
+    "cat": "pc",
+    "game": null,
+    "genre": "shooter",
+    "date": "20. July 2026",
+    "hype": 42
+  },
+  {
     "id": "5e288bd5eb",
     "title": "Eklat im Senat: Community-Server für Minecraft & Co. als 'illegal' bezeichnet",
     "teaser": "Bei einer Anhörung im kalifornischen Senat gerieten private Minecraft-Server ins Kreuzfeuer – die ESA soll sie als illegal bezeichnet haben. Die Community ist entsetzt.",
