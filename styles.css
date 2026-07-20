@@ -498,3 +498,34 @@
   @media (max-width:820px){
     .release-grid{ grid-template-columns:1fr; }
   }
+
+  /* Reaktionen (Like/Dislike) */
+  .reaction-bar{ display:flex; gap:12px; margin:28px 0 8px; padding-top:20px; border-top:1px solid var(--line); }
+  .reaction-btn{
+    display:flex; align-items:center; gap:8px; padding:9px 16px; border-radius:10px;
+    background:var(--surface); border:1px solid var(--line); color:var(--text);
+    cursor:pointer; font-size:13px; font-weight:600; transition:border-color .15s, background .15s;
+  }
+  .reaction-btn:hover{ border-color:#39406b; }
+  .reaction-btn.active{ border-color:var(--violet); background:rgba(124,92,252,0.12); color:var(--violet); }
+  .reaction-btn:disabled{ cursor:not-allowed; opacity:0.6; }
+
+  /* Kommentare */
+  .comments-section{ margin-top:32px; padding-top:24px; border-top:1px solid var(--line); }
+  .comments-section h3{ font-size:16px; margin-bottom:6px; }
+  .comments-hint{ font-size:13px; color:var(--muted); margin-bottom:18px; }
+  .comment-form{ display:flex; flex-direction:column; gap:10px; margin-bottom:26px; }
+  .comment-form input[type="text"]:not(.honeypot), .comment-form textarea{
+    background:var(--surface); border:1px solid var(--line); border-radius:10px;
+    padding:11px 14px; color:var(--text); font-size:13.5px; font-family:inherit; resize:vertical;
+  }
+  .comment-form input[type="text"]:not(.honeypot):focus, .comment-form textarea:focus{ outline:none; border-color:var(--violet); }
+  .comment-form button{ align-self:flex-end; }
+  .honeypot{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
+  .comment-item{ padding:14px 0; border-bottom:1px solid var(--line); }
+  .comment-item:last-child{ border-bottom:none; }
+  .comment-item .comment-head{ display:flex; align-items:center; gap:10px; margin-bottom:5px; }
+  .comment-item .comment-name{ font-weight:700; font-size:13px; }
+  .comment-item .comment-date{ font-size:11px; color:var(--muted); }
+  .comment-item .comment-text{ font-size:13.5px; color:var(--text); line-height:1.55; white-space:pre-wrap; }
+  .comments-empty{ font-size:13px; color:var(--muted); padding:10px 0; }
