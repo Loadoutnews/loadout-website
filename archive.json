@@ -1,5 +1,65 @@
 [
   {
+    "id": "a706c82e87",
+    "cat": "pc",
+    "game": "gta",
+    "genre": null,
+    "title": "FiveM für GTA V Enhanced startet nächste Woche in den Early Access",
+    "teaser": "Nach über einem Jahr Funkstille steht der Release-Termin: Am 21. Juli geht FiveM für GTA V Enhanced live – mit massivem Netzwerk-Umbau und neuer Engine unter der Haube.",
+    "body": [
+      "Die GTA-RP-Community darf sich den 21. Juli 2026 dick im Kalender markieren: Dann startet FiveM für GTA V Enhanced offiziell in den Early Access. Das Cfx.re-Team, das seit der Übernahme durch Take-Two als hausinterne Rockstar-Abteilung für Custom-Multiplayer fungiert, hat den Termin über einen Blogpost bestätigt. <cite index=\"2-2\">FiveM für GTA 5 Enhanced Edition startet am Dienstag, dem 21. Juli 2026, in den Early Access.</cite> Wer mitspielen will, braucht dafür einen separaten Client, denn <cite index=\"2-3\">da eine eigene Client-Anwendung getrennt von GTA 5 Legacy genutzt wird, muss die neue Version von der FiveM-Website heruntergeladen werden</cite>, die erst am Release-Tag freigeschaltet wird.",
+      "Spannend ist das Ganze vor allem deshalb, weil es sich nicht um einen simplen Port handelt. <cite index=\"2-12\">Die neue Edition ist deutlich mehr als reine Kompatibilität, denn das Team hat viele Kernkomponenten der Plattform von Grund auf neu aufgebaut, um die bestmögliche Erfahrung zu liefern.</cite> Unter der Haube wurde vor allem das Netzwerk-Fundament überarbeitet: <cite index=\"4-9,4-10\">Für den Enhanced-Build wurde das Networking komplett überarbeitet, was höhere Sync-Raten, verbesserte Stabilität, schnelleres Entity-Streaming und Unterstützung für größere Server bringt.</cite> Für alle, die die berüchtigten Desync-Probleme auf Legacy-Servern kennen, dürfte das laut Fachpresse die spürbarste Verbesserung überhaupt sein. Hinzu kommt ein umbenannter Server-Unterbau: <cite index=\"4-13\">Die Server-Komponente selbst heißt jetzt Cfx Server und bringt deutliche Effizienzgewinne, insbesondere niedrigeren RAM- und CPU-Verbrauch, während die gewohnte Einrichtung erhalten bleibt.</cite> Auch am Installer und Cache-Management wurde geschraubt, unter anderem entfernt der Client künftig automatisch nicht mehr benötigte Server-Dateien.",
+      "In der Community und Fachpresse überwiegt die Erleichterung, schließlich hatte das Warten für Frust gesorgt. GTA Boom ordnet ein: <cite index=\"3-3,3-4\">FiveM ist eine Modifikationsplattform, die es Spielern erlaubt, eigene Multiplayer-Server für GTA V zu betreiben – die Technologie hinter der gesamten GTA-Roleplay-Welt, in der Spieler Jobs ausüben, Polizeireviere führen und Storylines durchspielen.</cite> Wichtig für Server-Betreiber: Der Umstieg ist kein Muss, denn <cite index=\"3-7,3-8,3-9\">der GTA-V-Enhanced-Client läuft über einen separaten Client parallel zu FiveM Legacy, statt es zu ersetzen – beide Versionen existieren nebeneinander.</cite> Nicht bei allen kommt jedoch jede Neuerung gut an: Teile des bisher offenen Quellcodes werden künftig gesperrt, was besonders Open-Source-Fans stört, auch wenn Cfx.re dies mit langfristiger Stabilität begründet. Zudem raten manche Fachmedien Server-Betreibern zur Vorsicht, da zum Start noch die sogenannte Asset-Escrow-Unterstützung fehlt und es sich explizit um einen Early-Access-Launch mit erwarteten Bugs handelt."
+    ],
+    "editorial_take": "Dass FiveM nach Monaten der Funkstille endlich einen festen Termin bekommt, ist ein echtes Lebenszeichen für die riesige GTA-RP-Szene – und die technischen Verbesserungen bei Netzwerk und Serverlast klingen nach einem längst überfälligen Fundament-Update. Gleichzeitig sollte man den Early-Access-Stempel ernst nehmen: Wer stabil auf Enhanced umsteigen will, sollte noch etwas Geduld mitbringen, bis Bugs ausgemerzt und fehlende Features wie Asset Escrow nachgereicht sind. Spannend bleibt vor allem, wie sich diese Neuausrichtung ins GTA-6-Zeitalter einfügt, denn Rockstar dürfte hier langfristig größere Pläne verfolgen.",
+    "date": "20. July 2026",
+    "platform": "RockstarINTEL",
+    "hype": 70,
+    "source": "https://rockstarintel.com/fivem-for-gta-v-enhanced-releases-next-week/",
+    "sourceLabel": "RockstarINTEL",
+    "image": "https://rockstarintel.com/wp-content/uploads/2026/07/fivem-enhanced-devblog-3-2.jpg"
+  },
+  {
+    "id": "4ed13b4e81",
+    "cat": "konsole",
+    "game": "cod",
+    "genre": "shooter",
+    "title": "Call of Duty: Modern Warfare 4 – Beta-Termine stehen fest, Switch 2 erstmals dabei",
+    "teaser": "Activision und Infinity Ward nennen die Beta-Termine für Modern Warfare 4 – und erstmals seit 13 Jahren ist wieder eine Nintendo-Konsole am Start.",
+    "body": [
+      "Der Countdown läuft: Activision und Infinity Ward haben die genauen Termine für die Beta-Tests von Call of Duty: Modern Warfare 4 bekanntgegeben. Wer das Spiel für PC, PS5 oder Xbox Series X|S vorbestellt hat, darf schon ab dem 21. August in den sogenannten Early-Access-Test starten – direkt im Anschluss an das große Call of Duty: NEXT-Event, bei dem es laut Ankündigung ein umfassendes Multiplayer-Briefing samt neuer Enthüllungen geben soll. Die exklusive Testphase endet am 25. August. Eine Woche später öffnet sich die Tür für alle: Vom 28. August bis 1. September findet die offene Beta statt, für die keine Vorbestellung nötig ist.",
+      "Besonders spannend für Nintendo-Fans: Erstmals seit Call of Duty: Ghosts auf der Wii U im Jahr 2013 kehrt die Reihe wieder auf eine Nintendo-Konsole zurück. Für die Switch 2 gibt es allerdings nur die zweite Beta-Runde, die frühe Testphase bleibt PC-, PlayStation- und Xbox-Spielern vorbehalten. Vorbestellungen für die Switch-2-Version starten passend dazu am 26. August. Inhaltlich verspricht Activision einiges: Bis zu 19 Waffen, Gefechte von kleinen 3-vs-3-Skirmishes bis zu Großschlachten mit Panzern sowie Modi wie Search & Destroy und die komplett neue, dynamisch wandelbare Karte Kill Block mit angeblich über 500 möglichen Kombinationen sollen getestet werden. Das Spiel selbst erscheint am 23. Oktober für PS5, Xbox Series X|S, PC und Switch 2 – die letzte Konsolengeneration wird dabei komplett fallen gelassen.",
+      "In der Fachpresse kommt die frühe Testphase gut an: Kollegen von PC Gamer, die bereits vorab spielen durften, beschreiben Highlights wie ein 10-vs-10-Gunfight-Modus auf der neuen Kill-Block-Karte, bei dem sich das Layout im Spielverlauf zeitweise in eine originalgetreue Rekonstruktion der Kult-Map Crash aus dem Original-Modern-Warfare verwandelte. In der Community sind die Reaktionen dagegen gespalten. Während das nordkoreanische Invasions-Setting und die Rückkehr des Extraction-Modus DMZ positiv aufgenommen werden, bleiben laut Berichten viele Fans auf Reddit skeptisch gegenüber den großspurigen Versprechen von Activision zu Gunplay und Grafik. Zusätzlich für Diskussionsstoff sorgt, dass Modern Warfare 4 als erster Teil der Serie seit der Microsoft-Übernahme nicht zum Launch im Xbox Game Pass verfügbar sein wird – ein Umstand, der laut Berichten sogar aktiv in einer viralen Werbeanzeige als Kaufargument beworben wurde, was in der Xbox-Community für gemischte bis verärgerte Reaktionen sorgte."
+    ],
+    "editorial_take": "Die Doppel-Beta-Strategie ist bewährtes CoD-Handwerk, aber der eigentliche Knalleffekt ist die Switch-2-Integration – wenn Call of Duty dort wirklich flüssig läuft, ist das ein Statement für Nintendos neue Konsole. Dass Microsoft den Titel trotz Milliarden-Übernahme vom Game-Pass-Start ausschließt und das auch noch offensiv bewirbt, wirkt aus unserer Sicht wie ein riskanter Vertrauensbruch gegenüber treuen Abonnenten. Ob Kill Block und die neuen Bewegungsmechaniken den skeptischen Teil der Community überzeugen, wird sich erst in der offenen Beta ab dem 28. August zeigen.",
+    "date": "20. July 2026",
+    "platform": "IGN Articles",
+    "hype": 78,
+    "source": "https://www.ign.com/articles/call-of-duty-modern-warfare-4-beta-dates-confirmed",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/07/20/call-of-duty-modern-warfare-4-beta-test-dates-confirmed-1784582463520.png"
+  },
+  {
+    "id": "24a5a21483",
+    "cat": "industrie",
+    "game": "cod",
+    "genre": "shooter",
+    "title": "Zu Tränen gerührt: Fan schenkt Obsession-Star seltene MW2-Sammlerausgabe",
+    "teaser": "Bei der Fanatics Fest in New York bekam Schauspielerin Inde Navarrette ein Geschenk, das sie völlig aus der Fassung brachte: eine versiegelte Rarität von Modern Warfare 2.",
+    "body": [
+      "Manchmal sind es die kleinen, persönlichen Momente auf einer riesigen Convention, die am meisten hängen bleiben. Auf der Fanatics Fest 2026 im New Yorker Javits Center überraschte ein Fan die Obsession-Darstellerin Inde Navarrette mit einer originalversiegelten Xbox-360-Ausgabe von Call of Duty: Modern Warfare 2 aus dem Jahr 2009 – aufwendig begutachtet und in einer Schutzvitrine präsentiert. Auf Videos, die seither durchs Netz gehen, ist Navarrette der Schock regelrecht ins Gesicht geschrieben, als sie erkennt, was sie da in den Händen hält.",
+      "Ganz zufällig war das Geschenk nicht gewählt: <cite index=\"6-3\">Laut der Schauspielerin selbst handelt es sich um eine der frühesten und seltensten Exemplare des Spiels, ein vergleichbares Stück soll zuletzt für rund 1.000 Dollar versteigert worden sein.</cite> Besonders wertvoll wird die Ausgabe durch die Begutachtung – <cite index=\"9-7\">bei einer Note im hohen Neuner-Bereich, etwa einer 9,8, liegt der Marktwert klar über 1.000 Dollar und kann bei Spitzenexemplaren sogar Richtung 1.500 Dollar gehen</cite>. Trotz des Preisschilds machte Navarrette sofort klar, dass sie nicht ans Verkaufen denkt: <cite index=\"17-16,17-17\">Sie lachte jeden Gedanken an einen Verkauf weg und sagte nur: 'Ich verkaufe dieses hier nicht.'</cite> Auf die Frage, wo das Stück landen soll, <cite index=\"17-19,17-20\">antwortete sie: 'In meinem Haus. In meinem Zimmer.'</cite>",
+      "Dass ausgerechnet Modern Warfare 2 für so viel Emotion sorgte, hat einen sehr persönlichen Hintergrund. <cite index=\"5-12,5-13\">Navarrettes Verbindung zu Call of Duty ist echt und persönlich – ihr Vater brachte sie über Modern Warfare 2 mit der Serie in Kontakt, gemeinsam spielten die beiden als Kind lokalen Multiplayer</cite>. Ihr Waffenloadout von damals hat sie nicht vergessen: <cite index=\"19-15\">'Meine Lieblingswaffe war das SCAR, meine Zweitwaffe der THUMPER', erzählte sie, und scherzte, dass ihr Bruder meistens gewann.</cite> Nicht ohne Grund war sie überhaupt zu Gast: Aktivision hatte sie gezielt für ein Panel eingeladen, denn <cite index=\"4-14,4-15\">sie gilt als langjährige Fan-Streamerin der Reihe, und Activision wollte, wie CMO Tyler Bahl es formulierte, ihren Erfolg mit 'Obsession' feiern</cite>. Passend dazu erlebte die Veranstaltung ohnehin eine kleine Zäsur für die Branche: <cite index=\"25-16,25-18\">Activision brachte Modern Warfare 4 als ersten Videospiel-Headliner überhaupt zur sportfokussierten Fanatics Fest, parallel zur Vorbereitung auf den Release am 23. Oktober</cite>. Die Reaktionen der Community fallen entsprechend positiv aus: Zahlreiche US-Medien wie Complex, GameSpot und Yahoo Entertainment griffen die virale Szene auf, viele Fans feiern in den sozialen Netzwerken, dass Navarrette als 'echte' Gamerin und nicht nur als Werbegesicht auftritt – manche erinnern sich sogar an ihre alten Twitch-Streams, die durch ihren Kinoerfolg plötzlich wiederentdeckt wurden."
+    ],
+    "editorial_take": "Für uns ist das genau die Art von Gaming-Momenten, die im ganzen Marketing-Trubel um neue Blockbuster-Releases oft untergeht: echte Nostalgie statt inszenierter PR. Dass Activision mit Modern Warfare 4 zwar riesige Aston-Martin-Aktivierungen auffährt, aber ausgerechnet ein spontanes Fan-Geschenk für die viralste Szene des Wochenendes sorgt, zeigt, wie viel Strahlkraft ehrliche Verbindungen zur Community immer noch haben. Und ehrlich: Wer als Kind mit SCAR und Thumper auf Rust unterwegs war, versteht Navarrettes Emotionen sofort.",
+    "date": "20. July 2026",
+    "platform": "IGN Articles",
+    "hype": 42,
+    "source": "https://www.ign.com/articles/inde-navarrette-stunned-after-fan-gifts-her-a-rare-sealed-copy-of-modern-warfare-2",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/07/20/inde-mw2-copy-1784581455008.jpg"
+  },
+  {
     "id": "0bc3397985",
     "cat": "industrie",
     "game": null,
