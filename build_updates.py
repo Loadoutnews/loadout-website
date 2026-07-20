@@ -92,7 +92,7 @@ auftauchen: {known_list}"""
 
     response = client.messages.create(
         model=MODEL,
-        max_tokens=6000,
+        max_tokens=10000,
         system=system_prompt,
         messages=[{"role": "user", "content": f"Recherchiere anstehende, angekündigte Spiele-Updates, Stand {today_label}."}],
         tools=[{"type": "web_search_20250305", "name": "web_search"}],
@@ -105,6 +105,14 @@ auftauchen: {known_list}"""
 
     raw_text = text_blocks[-1].strip()
     raw_text = raw_text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+
+    # Zusätzliche Absicherung: erklärenden Text vor dem eigentlichen
+    # JSON-Array abschneiden, falls vorhanden. Das Ende bleibt bewusst
+    # unangetastet, damit die Abschneide-Rettung (_recover_truncated_json_array)
+    # bei abgebrochenen Antworten weiter korrekt greift.
+    first_bracket = raw_text.find("[")
+    if first_bracket > 0:
+        raw_text = raw_text[first_bracket:]
 
     try:
         return json.loads(raw_text)
@@ -319,4 +327,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
