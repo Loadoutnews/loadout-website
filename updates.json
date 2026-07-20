@@ -13,7 +13,8 @@
     "content": "Season 05 verlegt Black Ops 7 in eine ländliche japanische Stadt mit engen Nahkampf-Gefechten im Multiplayer und bringt eine neue Zombies-Survival-Map sowie das Endgame-Assignment 'Burn Run'. Zusätzlich erwartet Spieler eine neue Verdansk-POI namens Drone Labs sowie ein frischer Battle Pass mit neuen Waffen und Belohnungen.",
     "hype": 78,
     "source_url": "https://www.callofduty.com/blackops7",
-    "id": "c8a7bc7585"
+    "id": "c8a7bc7585",
+    "image": "https://imgs.callofduty.com/content/dam/atvi/callofduty/cod-touchui/blackops7/meta/Chimera_KA_16x9_BR.webp"
   },
   {
     "game": "Apex Legends",
@@ -28,7 +29,8 @@
     "content": "Season 30 bringt laut Respawns 'Road Ahead'-Roadmap eine große Überarbeitung des Loot-Systems für schnelleren und wirkungsvolleren Machtaufbau sowie ein kompetitives Rework der Map World's Edge für Ranked und ALGS. Zusätzlich enden mit diesem Update die Unterstützung für die originale Nintendo Switch sowie zwei geplante Wildcard-Events pro Season.",
     "hype": 70,
     "source_url": "https://www.gamespot.com/articles/apex-legends-unveils-year-long-plan-with-two-new-characters-as-fan-complaints-mount/1100-6538151/",
-    "id": "91b67f5f95"
+    "id": "91b67f5f95",
+    "image": "https://picsum.photos/seed/loadout-update-ApexLegendsSeason30/300/200"
   },
   {
     "game": "Marvel Rivals",
@@ -42,7 +44,8 @@
     "content": "Die Mid-Season-Aktualisierung von Season 9 führt den neuen Helden The Hood ein, der als Vanguard mit magischen Klon-Fähigkeiten ausgestattet sein soll. Das Update setzt die Ägypten-thematisierte Apocalypse-Storyline aus 'The Mystery of Thebes' fort und bringt frische Kosmetik sowie Balance-Anpassungen mit sich.",
     "hype": 65,
     "source_url": "https://www.marvelrivals.com/news/",
-    "id": "bf5b9e6fc5"
+    "id": "bf5b9e6fc5",
+    "image": "https://www.marvelrivals.com/pc/gw/20240301101352/data/share.jpg"
   },
   {
     "game": "Overwatch",
@@ -57,7 +60,8 @@
     "content": "Season 4 setzt die 'Reign of Talon'-Story fort und bringt voraussichtlich die neue Heldin D.Mon, eine mobile Tank-Pilotin mit fliegendem Mech, die eng mit D.Va verbunden ist. Die Season soll rund neun Wochen laufen und führt auf BlizzCon 2026 sowie den Overwatch World Cup zu.",
     "hype": 68,
     "source_url": "https://www.dexerto.com/wikis/overwatch/overwatch-season-4-update/",
-    "id": "661d0e3849"
+    "id": "661d0e3849",
+    "image": "https://www.dexerto.com/cdn-image/wp-content/uploads/2026/06/19/Overwatch-Season-4-update.jpg"
   },
   {
     "game": "Genshin Impact",
@@ -71,7 +75,8 @@
     "content": "Nach über fünf Jahren Wartezeit öffnet Version 7.0 endlich die finale Nation Snezhnaya, die eisige Heimat der Tsaritsa und der Fatui. Das Update führt die neuen spielbaren Charaktere Odette und Alyosha sowie den Cryo-Reisenden ein und bringt mit den 'Stellar Reactions' ein komplett neues Cryo-fokussiertes Kampfsystem.",
     "hype": 85,
     "source_url": "https://www.notebookcheck.net/Genshin-Impact-Version-7-0-launches-August-12.1282893.0.html",
-    "id": "579045db25"
+    "id": "579045db25",
+    "image": "https://www.notebookcheck.net/fileadmin/Notebooks/News/_nc5/Genshin-Impact-Version-7.076.jpg"
   },
   {
     "game": "Fortnite",
@@ -87,6 +92,86 @@
     "content": "Nach dem Ende der 'Runners'-Season startet Chapter 7 Season 4 mit einem kompletten Battle-Pass-Reset, einer überarbeiteten Karte und einer Fortsetzung der Dark-Voyager-Storyline rund um Zero Point. Genaue Inhalte werden traditionell erst in den letzten zwei Wochen der Vorgänger-Season enthüllt, doch der Termin basiert auf dem offiziellen Epic-Games-Fahrplan für 2026.",
     "hype": 82,
     "source_url": "https://www.dexerto.com/fortnite/when-is-the-next-fortnite-update-2453773/",
-    "id": "f73fe2e4b3"
+    "id": "f73fe2e4b3",
+    "image": "https://www.dexerto.com/cdn-image/wp-content/uploads/2024/03/11/fortnite-showdown-schedule-next-update-chapter-7-season-2.jpg"
+  },
+  {
+    "game": "Elden Ring",
+    "update_title": "Tarnished Edition & Tarnished Pack DLC",
+    "update_date": "2026-08-28",
+    "platforms": [
+      "PC",
+      "PS5",
+      "PS4",
+      "Xbox Series X/S",
+      "Xbox One",
+      "Nintendo Switch 2"
+    ],
+    "content": "FromSoftware bringt Elden Ring erstmals auf eine Nintendo-Plattform: Die Tarnished Edition für Switch 2 enthält das Basisspiel sowie die komplette Shadow of the Erdtree-Erweiterung. Zusätzlich erscheint am selben Tag ein kostenpflichtiges Tarnished-Pack-DLC für alle anderen Plattformen mit neuen Waffen, Rüstungen, zwei neuen Startklassen und Anpassungsoptionen für Reittier Torrent.",
+    "hype": 78,
+    "source_url": "https://screenrant.com/elden-ring-switch-2-tarnished-dlc-august-2026/",
+    "id": "a040b10e5d",
+    "image": "https://static0.srcdn.com/wordpress/wp-content/uploads/2025/08/elden-ring-riding-horse-with-new-skin.jpg?w=1200&amp;h=675&amp;fit=crop"
+  },
+  {
+    "game": "Tekken 8",
+    "update_title": "Season 3 DLC-Kämpfer: Bob",
+    "update_date": "2026-08-19",
+    "platforms": [
+      "PC",
+      "PS5",
+      "Xbox Series X/S"
+    ],
+    "content": "Der aus Tekken 6 bekannte Kämpfer Bob kehrt als zweiter DLC-Charakter der dritten Season zurück und bringt seinen einzigartigen Mix aus Geschwindigkeit und Gewicht mit. Season-Pass-3-Besitzer erhalten ab dem 19./20. August exklusiven Vorabzugriff, der reguläre Verkaufsstart für alle Spieler folgt wenige Tage später am 24./25. August. Bandai Namco zeigte im Trailer sein überarbeitetes Moveset inklusive neuer Stances und Konter-Optionen.",
+    "hype": 66,
+    "source_url": "https://www.psu.com/news/tekken-8-bob-release-date-trailer-ps5/",
+    "id": "583ee2b334",
+    "image": "https://picsum.photos/seed/loadout-update-Tekken8Season3DLCKmpferBob/300/200"
+  },
+  {
+    "game": "Street Fighter 6",
+    "update_title": "Year 4 DLC-Charakter: Yasmine",
+    "update_date": "2026-08-03",
+    "platforms": [
+      "PC",
+      "PS5",
+      "PS4",
+      "Xbox Series X/S",
+      "Nintendo Switch 2"
+    ],
+    "content": "Als erster Kämpfer der vierten Season-Pass-Staffel betritt die philippinische Newcomerin Yasmine mit ihrem charakteristischen Karambit-Messer und einem schnellen Eskrima-Kampfstil die Arena. Capcom bestätigte den Starttermin mit einem ersten Gameplay-Trailer, wonach Yasmine sowohl einzeln als auch über den Year-4-Charakter- bzw. Ultimate-Pass erhältlich sein wird.",
+    "hype": 58,
+    "source_url": "https://www.nintendolife.com/news/2026/06/video-street-fighter-6-gameplay-shows-off-new-dlc-fighter-out-august",
+    "id": "23e05cc2c6",
+    "image": "https://images.nintendolife.com/3fe6c49429a0e/large.jpg"
+  },
+  {
+    "game": "Zenless Zone Zero",
+    "update_title": "Version 3.1: The Long Goodbye",
+    "update_date": "2026-07-29",
+    "platforms": [
+      "PC",
+      "PS5",
+      "iOS",
+      "Android"
+    ],
+    "content": "Passend zum zweiten Jahrestag des Spiels bringt HoYoverse mit Version 3.1 die neuen S-Rang-Agenten Remielle und Sigrid ins Spiel, dazu den neuen Lumiflux-Attributtyp und den Endgame-Modus 'Enigma of the Labyrinth: Operation Bage'. Zur Jubiläumsfeier gibt es umfangreiche Login-Belohnungen sowie erste Details zu einem kommenden Crossover mit Honkai: Star Rail. Der Termin wurde im offiziellen Livestream am 17. Juli bestätigt.",
+    "hype": 60,
+    "source_url": "https://www.sportskeeda.com/esports/zenless-zone-zero-zzz-3-1-livestream-summary-release-date-banners-events-anniversary-rewards",
+    "id": "73174604bb",
+    "image": "https://picsum.photos/seed/loadout-update-ZenlessZoneZeroVersion31TheLongGoodbye/300/200"
+  },
+  {
+    "game": "Valorant",
+    "update_title": "Season 2026: Act 5",
+    "update_date": "2026-08-19",
+    "platforms": [
+      "PC"
+    ],
+    "content": "Mit dem Ende von Act 4 startet Riot Games am 19. August den fünften Akt der laufenden Season 2026, der wie gewohnt einen neuen Battle Pass, Balance-Anpassungen und einen Ranglisten-Reset mitbringt. Der Termin ergibt sich aus dem offiziell bestätigten Enddatum des vorherigen Acts, das nahtlos in den Start des neuen Inhalts übergeht.",
+    "hype": 52,
+    "source_url": "https://www.esportstales.com/valorant/season-end-date",
+    "id": "a566b19a80",
+    "image": "http://static1.squarespace.com/static/59af2189c534a58c97bd63b3/5ea9a22bfa38715761c42d79/6633a5972212af59d8991b6a/1782311163521/Valorant.jpeg?format=1500w"
   }
 ]
