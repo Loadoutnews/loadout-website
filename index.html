@@ -701,6 +701,7 @@ function ensureArchiveMerged(){
         articles = articles.concat(newOnes);
         applyRealViews();
         applyRealLikes();
+        applyRealComments();
         renderGrid();
         showToast(`✓ ${newOnes.length} weitere Artikel aus dem Archiv eingeblendet`);
       }
@@ -811,13 +812,34 @@ function articleArtStyle(a){
 // die KI-Einschätzung (a.hype) — echte Leser:innen entscheiden dann, was
 // oben steht. Ganz neue Artikel ohne Aufrufe werden vorübergehend nach der
 // KI-Einschätzung sortiert, bis echte Daten vorliegen.
-function getRankScore(article){
-  if(article.views && article.views > 0) return article.views * 1000;
-  return article.hype || 0;
+// Bestimmt die Trending-Rangfolge als gewichtete Mischung aus mehreren
+// Signalen — nicht mehr "Aufrufe schlagen alles", sondern ein echter Mix:
+//   35 % Aufrufe · 25 % Hype-Meter (KI-Einschätzung) · 25 % Likes · 15 % Kommentare
+// Da die vier Werte ganz unterschiedliche Größenordnungen haben (Hype 0-100,
+// Aufrufe ggf. Tausende, Likes/Kommentare meist niedrig), wird jeder Wert
+// zuerst relativ zum aktuell höchsten Wert im Feed normiert (0-1), bevor
+// gewichtet summiert wird — so dominiert keine einzelne Zahl allein nur
+// wegen ihrer absoluten Größe.
+function getTrendingMaxes(){
+  return {
+    views: Math.max(1, ...articles.map(a => a.views || 0)),
+    likes: Math.max(1, ...articles.map(a => a.likes || 0)),
+    comments: Math.max(1, ...articles.map(a => a.commentCount || 0)),
+  };
+}
+
+function getRankScore(article, maxes){
+  const m = maxes || getTrendingMaxes();
+  const hypeNorm = (article.hype || 0) / 100;
+  const viewsNorm = (article.views || 0) / m.views;
+  const likesNorm = (article.likes || 0) / m.likes;
+  const commentsNorm = (article.commentCount || 0) / m.comments;
+  return viewsNorm * 0.35 + hypeNorm * 0.25 + likesNorm * 0.25 + commentsNorm * 0.15;
 }
 
 function renderTrendingWidget(){
-  const top3 = [...articles].sort((a,b) => getRankScore(b) - getRankScore(a)).slice(0, 3);
+  const maxes = getTrendingMaxes();
+  const top3 = [...articles].sort((a,b) => getRankScore(b, maxes) - getRankScore(a, maxes)).slice(0, 3);
   document.getElementById('trendingList').innerHTML = top3.map((a, i) => `
     <div class="trending-item" onclick="openArticle('${a.id}')">
       <span class="trending-rank mono">${i+1}</span>
@@ -837,8 +859,9 @@ function renderHero(){
 
   // Folie 0 zeigt immer den Artikel mit dem höchsten Rang (siehe
   // getRankScore oben) — aktualisiert sich automatisch mit jedem neuen
-  // Artikel und mit echten Aufrufzahlen.
-  const top = [...articles].sort((a, b) => getRankScore(b) - getRankScore(a))[0];
+  // Artikel, echten Aufrufzahlen, Likes und Kommentaren.
+  const heroMaxes = getTrendingMaxes();
+  const top = [...articles].sort((a, b) => getRankScore(b, heroMaxes) - getRankScore(a, heroMaxes))[0];
   heroArticleId = top.id;
 
   heroSlideHtmls[0] = `
@@ -1007,6 +1030,28 @@ function fetchRealLikes(){
     })
     .catch(() => {
       console.log('ℹ Like-Zahlen nicht verfügbar');
+    });
+}
+
+// --- Echte Kommentar-Zahlen (fließen mit in die Trending-Berechnung ein) --
+let realComments = {};
+
+function applyRealComments(){
+  articles.forEach(a => { a.commentCount = realComments[a.id] || 0; });
+}
+
+function fetchRealComments(){
+  fetch('/api/comments-bulk')
+    .then(res => { if(!res.ok) throw new Error('not ok'); return res.json(); })
+    .then(data => {
+      realComments = data || {};
+      applyRealComments();
+      renderHero();
+      renderGrid();
+      renderTrendingWidget();
+    })
+    .catch(() => {
+      console.log('ℹ Kommentar-Zahlen nicht verfügbar');
     });
 }
 
@@ -1582,7 +1627,6 @@ function showHypeInfo(){
       onclick="closeInfoModal(); openArticle('${top.id}')">
       🔥 Zum angesagtesten Artikel: ${top.title.length > 40 ? top.title.slice(0,37) + '…' : top.title}
     </button>` : '';
-  const hasRealViews = top && top.views > 0;
   showInfoModal('Was ist der Hype-Meter?', `
     <p>
       Die Prozentzahl beim Hype-Meter ist eine <b style="color:var(--text);">redaktionelle
@@ -1590,12 +1634,12 @@ function showHypeInfo(){
       bis 100&nbsp;%.
     </p>
     <p style="margin-top:10px;">
-      Welcher Artikel ganz oben auf der Startseite steht, bestimmen aber in erster Linie
-      <b style="color:var(--text);">echte Seitenaufrufe</b>: Sobald ein Artikel von echten
-      Besucher:innen gelesen wurde, zählt das stärker als die KI-Einschätzung. Ganz neue Artikel
-      ohne Aufrufe werden vorübergehend nach der KI-Einschätzung sortiert, bis echte Daten vorliegen.
+      Welcher Artikel als "🔥 Trending" ganz oben steht, bestimmt sich aber aus einer
+      <b style="color:var(--text);">Mischung aus mehreren echten Signalen</b>: Seitenaufrufe (35 %),
+      Hype-Meter (25 %), Likes (25 %) und Kommentare (15 %). So entscheiden nicht nur reine Klicks,
+      sondern auch, wie sehr Leser:innen wirklich reagieren.
     </p>
-    ${hasRealViews ? `<p style="margin-top:10px; font-size:12px;">Aktuell angezeigter Artikel: <b style="color:var(--text);">${top.views}</b> echte Aufrufe.</p>` : ''}
+    ${top ? `<p style="margin-top:10px; font-size:12px;">Aktuell angezeigter Artikel: <b style="color:var(--text);">${top.views || 0}</b> Aufrufe · <b style="color:var(--text);">${top.likes || 0}</b> Likes · <b style="color:var(--text);">${top.commentCount || 0}</b> Kommentare.</p>` : ''}
     ${linkHtml}
   `);
 }
@@ -1639,6 +1683,7 @@ fetch('articles.json')
       articles = data;
       applyRealViews(); // falls fetchRealViews() bereits vorher durchgelaufen ist
       applyRealLikes(); // falls fetchRealLikes() bereits vorher durchgelaufen ist
+      applyRealComments(); // falls fetchRealComments() bereits vorher durchgelaufen ist
       renderHero();
       renderGrid();
       renderTicker();
@@ -1650,11 +1695,12 @@ fetch('articles.json')
     console.log('ℹ articles.json nicht gefunden — zeige eingebaute Beispielartikel');
   });
 
-// Echte Aufrufzahlen und Like-Zahlen nachladen — unabhängig davon, ob
-// articles.json schon fertig geladen ist oder nicht, dank applyRealViews()/
-// applyRealLikes() in allen Zweigen.
+// Echte Aufrufzahlen, Like-Zahlen und Kommentar-Zahlen nachladen —
+// unabhängig davon, ob articles.json schon fertig geladen ist oder nicht,
+// dank applyRealViews()/applyRealLikes()/applyRealComments() in allen Zweigen.
 fetchRealViews();
 fetchRealLikes();
+fetchRealComments();
 loadReleasesHeroSlide();
 loadUpdatesHeroSlide();
 </script>
