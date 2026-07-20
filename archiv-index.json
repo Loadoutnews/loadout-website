@@ -1,5 +1,85 @@
 [
   {
+    "id": "5e288bd5eb",
+    "title": "Eklat im Senat: Community-Server für Minecraft & Co. als 'illegal' bezeichnet",
+    "teaser": "Bei einer Anhörung im kalifornischen Senat gerieten private Minecraft-Server ins Kreuzfeuer – die ESA soll sie als illegal bezeichnet haben. Die Community ist entsetzt.",
+    "cat": "industrie",
+    "game": "minecraft",
+    "genre": null,
+    "date": "20. July 2026",
+    "hype": 58
+  },
+  {
+    "id": "a8b4e52804",
+    "title": "CDL Champs 2026: MerK und Maven übernehmen die Mikros für das Finale",
+    "teaser": "Zwei CoD-Esport-Legenden dürfen das größte Event der Saison kommentieren – für beide ein echter Karriere-Höhepunkt.",
+    "cat": "industrie",
+    "game": "cod",
+    "genre": null,
+    "date": "20. July 2026",
+    "hype": 42
+  },
+  {
+    "id": "e8e709c368",
+    "title": "Marathon bekommt PvE-Modus: Das steckt hinter „Vault Breaker“",
+    "teaser": "Bungie experimentiert mit einem neuen PvE-Modus für Marathon. Wir erklären, was „Vault Breaker“ ist und warum er für Fans des Extraction-Shooters spannend sein könnte.",
+    "cat": "pc",
+    "game": null,
+    "genre": "shooter",
+    "date": "20. July 2026",
+    "hype": 45
+  },
+  {
+    "id": "eb1d1c529f",
+    "title": "FaZe Vegas stoppt OpTic Texas: Kein Threepeat bei den CoD Champs 2026",
+    "teaser": "FaZe Vegas krönt sich zum neuen König der Call of Duty-Szene und durchkreuzt OpTic Texas' Pläne für einen historischen dritten Titel in Folge.",
+    "cat": "industrie",
+    "game": "cod",
+    "genre": "shooter",
+    "date": "20. July 2026",
+    "hype": 62
+  },
+  {
+    "id": "42345b8d92",
+    "title": "Nostalgie zum Einschlafen: Diese Website simuliert alte CoD-Lobbys als Ambient-Sound",
+    "teaser": "Eine neue Fan-Website lässt euch bei nostalgischem Lobby-Gebrabbel aus Black Ops und MW2 einschlafen – Mikro-Rauschen und Kinderstimmen inklusive.",
+    "cat": "industrie",
+    "game": "cod",
+    "genre": null,
+    "date": "20. July 2026",
+    "hype": 25
+  },
+  {
+    "id": "07a5b958da",
+    "title": "Jimothy der Waschbär erobert die Gaming-Welt – jetzt fordern Fans offizielle Cameos",
+    "teaser": "Ein viraler Waschbär namens Jimothy hat das halbe Internet verzaubert – und jetzt auch Entwickler von WoW und RuneScape. Die Community will mehr.",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "date": "20. July 2026",
+    "hype": 35
+  },
+  {
+    "id": "6e9782f353",
+    "title": "KI überall: Bald hat jedes zweite Steam-Spiel eine KI-Kennzeichnung",
+    "teaser": "Neue Zahlen zeigen einen rasanten Anstieg von KI-Disclaimern auf Steam – Prognosen zufolge könnte bis 2027/2028 mehr als die Hälfte aller Spiele generative KI offenlegen müssen.",
+    "cat": "pc",
+    "game": null,
+    "genre": null,
+    "date": "20. July 2026",
+    "hype": 45
+  },
+  {
+    "id": "ef97abbb0f",
+    "title": "Nach BG3-Erfolg: Shadowheart-Sprecherin steigt aus neuem Actionspiel aus",
+    "teaser": "Jennifer English, gefeiert für ihre Rollen in Baldur's Gate 3 und Clair Obscur: Expedition 33, verlässt das Actionspiel Tides of Annihilation aus gesundheitlichen Gründen.",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "date": "20. July 2026",
+    "hype": 34
+  },
+  {
     "id": "2d531e273d",
     "title": "Minecraft trifft Stardew Valley: Neuer Steam-Geheimtipp mischt zwei Welten",
     "teaser": "Ein neues Indie-Game auf Steam kombiniert das Erkunden von Minecraft mit dem gemütlichen Pixel-Look von Stardew Valley – und will damit einen ganz eigenen Sog erzeugen.",
