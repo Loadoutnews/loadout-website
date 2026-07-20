@@ -219,6 +219,22 @@
       <input type="email" placeholder="deine@email.de" id="newsletterEmail">
       <button onclick="subscribeNewsletter()">Kostenlos anmelden</button>
     </div>
+    <div class="widget feedback-widget">
+      <h3 class="mono">💌 Wie gefällt dir LOADOUT-NEWS?</h3>
+      <p style="font-size:12.5px; color:var(--muted); margin-top:6px; margin-bottom:14px; line-height:1.5;">
+        Gib uns gerne kurz Feedback, damit wir uns stetig verbessern können!
+      </p>
+      <div class="star-rating" id="starRating">
+        <button class="star" data-value="1" onclick="setRating(1)">★</button>
+        <button class="star" data-value="2" onclick="setRating(2)">★</button>
+        <button class="star" data-value="3" onclick="setRating(3)">★</button>
+        <button class="star" data-value="4" onclick="setRating(4)">★</button>
+        <button class="star" data-value="5" onclick="setRating(5)">★</button>
+      </div>
+      <textarea id="feedbackText" placeholder="Was können wir besser machen? (optional)" rows="3" maxlength="1000"></textarea>
+      <input type="text" id="feedbackWebsite" name="website" class="honeypot" tabindex="-1" autocomplete="off">
+      <button class="cookie-btn primary" style="width:100%; margin-top:10px;" onclick="submitFeedback()">Feedback senden</button>
+    </div>
     <div class="ad-slot ad-sidebar">
       <span class="ad-tag mono">Anzeige</span>
       <ins class="adsbygoogle" data-placement="sidebar" style="display:block; width:100%; min-height:250px;"></ins>
@@ -1103,6 +1119,47 @@ function renderTicker(){
     const duration = Math.max(20, totalWidth / pixelsPerSecond);
     track.style.animationDuration = `${duration}s`;
   });
+}
+
+let currentRating = 0;
+
+function setRating(value){
+  currentRating = value;
+  document.querySelectorAll('#starRating .star').forEach(star => {
+    star.classList.toggle('active', Number(star.dataset.value) <= value);
+  });
+}
+
+function submitFeedback(){
+  if(currentRating === 0){
+    showToast('Bitte zuerst eine Sternebewertung auswählen');
+    return;
+  }
+  const textEl = document.getElementById('feedbackText');
+  const websiteEl = document.getElementById('feedbackWebsite');
+
+  fetch('/api/feedback', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      rating: currentRating,
+      text: textEl.value.trim(),
+      page: window.location.href,
+      website: websiteEl.value,
+    })
+  })
+    .then(res => {
+      if(res.status === 429){ showToast('Bitte kurz warten, bevor du erneut Feedback sendest'); return null; }
+      if(!res.ok){ showToast('⚠ Feedback konnte nicht gesendet werden'); return null; }
+      return res.json();
+    })
+    .then(data => {
+      if(!data) return;
+      showToast('✓ Danke für dein Feedback!');
+      textEl.value = '';
+      setRating(0);
+    })
+    .catch(() => showToast('⚠ Feedback konnte nicht gesendet werden'));
 }
 
 function subscribeNewsletter(){
