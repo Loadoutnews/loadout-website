@@ -189,6 +189,11 @@ Regeln:
 - Keine wörtlichen Zitate aus der Quelle übernehmen.
 - Ton: informativ, aber lebendig und für Gaming-Fans geschrieben, nicht trocken.
 - Ordne die Meldung ein (Warum ist das relevant? Was bedeutet es für Spieler:innen?).
+- Nutze die Websuche, um herauszufinden, was ANDERE Quellen, Fachpresse und die \
+Community zu diesem Thema sagen — nicht nur die eine gegebene Quelle. Fasse \
+diese verschiedenen Einschätzungen in eigenen Worten in den Artikel mit ein \
+(z. B. "Mehrere Fachmedien loben..." / "In der Community gibt es geteilte \
+Reaktionen: Während... loben, kritisieren andere...").
 - Antworte AUSSCHLIESSLICH mit einem validen JSON-Objekt, keine Erklärungen, \
 kein Markdown, keine Code-Fences.
 
@@ -199,7 +204,8 @@ JSON-Format:
   "genre": "action" | "adventure" | "rpg" | "strategie" | "simulation" | "shooter" | "sport" | "rennspiel" | "horror" | "puzzle" | null,
   "title": "Deutscher, knackiger Titel (max. 90 Zeichen)",
   "teaser": "1-2 Sätze Anreißer (max. 200 Zeichen)",
-  "body": ["Absatz 1", "Absatz 2", "Absatz 3"],
+  "body": ["Absatz 1", "Absatz 2", "Absatz 3 — hier auch einordnen, was andere Quellen/Experten/die Community dazu sagen"],
+  "editorial_take": "2-3 Sätze EIGENE redaktionelle Einschätzung/Meinung von LOADOUT — nicht nur zusammenfassen, sondern klar Position beziehen (z. B. 'Wir finden...', 'Aus unserer Sicht...'). Basierend auf dem, was du recherchiert hast, aber als eigene Stimme formuliert, nicht als weitere Zusammenfassung.",
   "hype": <Zahl 0-100, wie aufregend/relevant die News für Gaming-Fans ist>
 }
 
@@ -222,19 +228,20 @@ Original-Link: {entry['link']}"""
 
     response = client.messages.create(
         model=MODEL,
-        max_tokens=1200,
+        max_tokens=3500,
         system=WRITER_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_prompt}],
+        tools=[{"type": "web_search_20250305", "name": "web_search"}],
     )
 
-    # content[0] ist nicht immer der Text-Block — manche Modelle liefern
-    # zuerst einen internen "Thinking"-Block. Deshalb gezielt den Block
-    # mit type == "text" heraussuchen statt content[0] anzunehmen.
+    # Bei aktivierter Websuche enthält die Antwort mehrere Blöcke (Suchanfragen,
+    # Suchergebnisse, ggf. Denk-Blöcke) — uns interessiert nur der letzte,
+    # finale Text-Block mit dem eigentlichen JSON-Ergebnis.
     text_blocks = [block.text for block in response.content if block.type == "text"]
     if not text_blocks:
         print(f"  ! Keine Textantwort erhalten für: {entry['title']}", file=sys.stderr)
         return None
-    raw_text = text_blocks[0].strip()
+    raw_text = text_blocks[-1].strip()
     raw_text = raw_text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
     try:
@@ -251,6 +258,7 @@ Original-Link: {entry['link']}"""
         "title": data.get("title", entry["title"]),
         "teaser": data.get("teaser", ""),
         "body": data.get("body", []),
+        "editorial_take": data.get("editorial_take", ""),
         "date": datetime.date.today().strftime("%d. %B %Y"),
         "platform": entry["source"],
         "hype": int(data.get("hype", 50)),
