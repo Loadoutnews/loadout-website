@@ -96,6 +96,16 @@ Währungen bekannt sind, gib diese an. Sortiere nach Release-Datum, dann nach Hy
     raw_text = text_blocks[-1].strip()
     raw_text = raw_text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
+    # Zusätzliche Absicherung: Falls Claude trotz Anweisung noch erklärenden
+    # Text VOR dem eigentlichen JSON-Array schreibt (z. B. "Hier sind die
+    # Releases: [...]"), alles vor der ersten "[" abschneiden. Das Ende wird
+    # bewusst NICHT angeschnitten, damit die Abschneide-Rettung weiter unten
+    # (_recover_truncated_json_array) bei abgebrochenen Antworten weiter
+    # korrekt greifen kann.
+    first_bracket = raw_text.find("[")
+    if first_bracket > 0:
+        raw_text = raw_text[first_bracket:]
+
     try:
         releases = json.loads(raw_text)
     except json.JSONDecodeError:
