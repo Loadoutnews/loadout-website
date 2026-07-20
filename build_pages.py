@@ -59,6 +59,13 @@ def render_article_page(a):
     game_label = GAMES.get(a.get("game"), "") if a.get("game") else ""
     badge_label = cat_label + (f" · {game_label}" if game_label else "")
     body_html = "\n".join(f'<p class="body">{html.escape(p)}</p>' for p in a["body"])
+    if a.get("editorial_take"):
+        body_html += f'''
+        <div class="editorial-box">
+          <div class="editorial-label mono">🗣️ Einschätzung der Redaktion</div>
+          <p>{html.escape(a["editorial_take"])}</p>
+        </div>
+        '''
     image = article_image(a)
     canonical = f"{SITE_URL}/artikel/{a['id']}.html"
     title = html.escape(a["title"])
