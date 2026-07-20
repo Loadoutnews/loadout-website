@@ -79,7 +79,7 @@ Währungen bekannt sind, gib diese an. Sortiere nach Release-Datum, dann nach Hy
 
     response = client.messages.create(
         model=MODEL,
-        max_tokens=8000,
+        max_tokens=16000,
         system=system_prompt,
         messages=[{"role": "user", "content": f"Recherchiere die Spiele-Releases für {month_label}."}],
         tools=[{"type": "web_search_20250305", "name": "web_search"}],
