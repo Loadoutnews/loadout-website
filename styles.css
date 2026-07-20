@@ -149,7 +149,8 @@
 
   /* Zweispaltiges Layout: Inhalt + Sidebar (für Werbung & Widgets) */
   .page-layout{ display:grid; grid-template-columns: 1fr 300px; gap:32px; align-items:start; }
-  .sidebar{ display:flex; flex-direction:column; gap:24px; position:sticky; top:80px; }
+  .content-col{ min-width:0; }
+  .sidebar{ display:flex; flex-direction:column; gap:24px; position:sticky; top:80px; min-width:0; }
 
   /* Werbeplätze — klar markiert, bereit für echten Anzeigen-Code (z. B. Google AdSense) */
   .ad-slot{
@@ -461,6 +462,7 @@
     main{ padding-left:16px; padding-right:16px; }
     nav{ padding-left:16px; padding-right:16px; }
     footer{ padding-left:16px; padding-right:16px; }
+    .nav-right{ flex-wrap:wrap; justify-content:flex-end; gap:8px; row-gap:8px; }
     .logo-icon{ width:32px; height:32px; }
     .logo-text{ font-size:19px; }
     .logo-text small{ display:block; margin-left:0; font-size:10px; }
