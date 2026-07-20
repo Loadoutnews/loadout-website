@@ -561,3 +561,12 @@
     box-sizing:border-box;
   }
   .feedback-widget textarea:focus{ outline:none; border-color:var(--violet); }
+
+  /* Sortierleiste */
+  .sort-bar{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .sort-bar span{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; }
+  .sort-bar select{
+    background:var(--surface); border:1px solid var(--line); border-radius:8px;
+    padding:7px 12px; color:var(--text); font-size:12.5px; font-family:inherit; cursor:pointer;
+  }
+  .sort-bar select:focus{ outline:none; border-color:var(--violet); }
