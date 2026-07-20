@@ -1218,7 +1218,13 @@ function openArticleView(id){
   document.getElementById('detailHypeFill').style.width = a.hype + '%';
   document.getElementById('detailHypePct').textContent = a.hype + '%';
   document.getElementById('detailMeta').textContent = `${a.date} · ${a.platform}${a.views ? ' · 👁 ' + a.views.toLocaleString('de-CH') + (a.views === 1 ? ' Aufruf' : ' Aufrufe') : ''}`;
-  document.getElementById('detailBody').innerHTML = a.body.map(p => `<p class="body">${p}</p>`).join('');
+  document.getElementById('detailBody').innerHTML = a.body.map(p => `<p class="body">${p}</p>`).join('')
+    + (a.editorial_take ? `
+      <div class="editorial-box">
+        <div class="editorial-label mono">🗣️ Einschätzung der Redaktion</div>
+        <p>${a.editorial_take}</p>
+      </div>
+    ` : '');
   const srcLink = document.getElementById('detailSource');
   srcLink.href = a.source;
   srcLink.textContent = `Zur Originalquelle (${a.sourceLabel}) →`;
