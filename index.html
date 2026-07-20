@@ -168,6 +168,31 @@
     </div>
     <div id="detailBody"></div>
     <a id="detailSource" class="source-link" target="_blank" rel="noopener">Zur Originalquelle →</a>
+
+    <div class="reaction-bar">
+      <button class="reaction-btn" id="likeBtn" onclick="react('like')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+        <span id="likeCount">0</span>
+      </button>
+      <button class="reaction-btn" id="dislikeBtn" onclick="react('dislike')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 14V2M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L13 22h0a3.13 3.13 0 0 1-3-3.88Z"/></svg>
+        <span id="dislikeCount">0</span>
+      </button>
+    </div>
+
+    <div class="comments-section">
+      <h3 class="mono">💬 Was denkst du dazu?</h3>
+      <p class="comments-hint">Lass uns gerne wissen, was du zu dieser Meldung meinst — sei dabei fair und respektvoll.</p>
+
+      <div class="comment-form">
+        <input type="text" id="commentName" placeholder="Name (optional)" maxlength="40">
+        <textarea id="commentText" placeholder="Deine Meinung..." maxlength="500" rows="3"></textarea>
+        <input type="text" id="commentWebsite" name="website" class="honeypot" tabindex="-1" autocomplete="off">
+        <button class="cookie-btn primary" onclick="submitComment()">Kommentar absenden</button>
+      </div>
+
+      <div id="commentsList"></div>
+    </div>
   </div>
 
   </div>
@@ -919,6 +944,136 @@ function trackView(id){
   });
 }
 
+// --- Reaktionen (Like/Dislike) -------------------------------------------
+// Verhindert Mehrfach-Klicks vom selben Gerät (nicht wasserdicht — ein
+// echtes "eine Stimme pro Person"-System bräuchte Nutzerkonten — aber für
+// eine anonyme Reaktion völlig ausreichend).
+let myReactions = {};
+try { myReactions = JSON.parse(localStorage.getItem('loadout_reactions') || '{}'); } catch(e) {}
+
+function loadReactions(id){
+  fetch(`/api/react?articleId=${encodeURIComponent(id)}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('likeCount').textContent = data.likes || 0;
+      document.getElementById('dislikeCount').textContent = data.dislikes || 0;
+      updateReactionButtons(id);
+    })
+    .catch(() => {});
+}
+
+function updateReactionButtons(id){
+  const mine = myReactions[id];
+  document.getElementById('likeBtn').classList.toggle('active', mine === 'like');
+  document.getElementById('dislikeBtn').classList.toggle('active', mine === 'dislike');
+}
+
+function react(type){
+  const id = currentDetailId;
+  if(!id || myReactions[id]) return; // schon reagiert — kein erneutes Zählen
+
+  fetch('/api/react', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ articleId: id, type })
+  })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById(type === 'like' ? 'likeCount' : 'dislikeCount').textContent = data.count;
+      myReactions[id] = type;
+      try { localStorage.setItem('loadout_reactions', JSON.stringify(myReactions)); } catch(e) {}
+      updateReactionButtons(id);
+    })
+    .catch(() => showToast('⚠ Konnte nicht gespeichert werden'));
+}
+
+// --- Kommentare ------------------------------------------------------------
+function loadComments(id){
+  const list = document.getElementById('commentsList');
+  list.innerHTML = '<p class="comments-empty">Lade Kommentare…</p>';
+  fetch(`/api/comments?articleId=${encodeURIComponent(id)}`)
+    .then(res => res.json())
+    .then(data => renderComments(data.comments || []))
+    .catch(() => { list.innerHTML = '<p class="comments-empty">Kommentare konnten nicht geladen werden.</p>'; });
+}
+
+function renderComments(comments){
+  const list = document.getElementById('commentsList');
+  if(!comments.length){
+    list.innerHTML = '<p class="comments-empty">Noch keine Kommentare — sei die/der Erste!</p>';
+    return;
+  }
+  // Neueste zuerst
+  const sorted = [...comments].reverse();
+  list.innerHTML = '';
+  sorted.forEach(c => {
+    const item = document.createElement('div');
+    item.className = 'comment-item';
+
+    const head = document.createElement('div');
+    head.className = 'comment-head';
+    const name = document.createElement('span');
+    name.className = 'comment-name';
+    name.textContent = c.name || 'Anonym'; // textContent, NIE innerHTML — Nutzereingabe darf nie als HTML interpretiert werden
+    const date = document.createElement('span');
+    date.className = 'comment-date mono';
+    date.textContent = formatCommentDate(c.timestamp);
+    head.appendChild(name);
+    head.appendChild(date);
+
+    const text = document.createElement('div');
+    text.className = 'comment-text';
+    text.textContent = c.text || '';
+
+    item.appendChild(head);
+    item.appendChild(text);
+    list.appendChild(item);
+  });
+}
+
+function formatCommentDate(iso){
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' · ' + d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+  } catch(e) { return ''; }
+}
+
+function submitComment(){
+  const id = currentDetailId;
+  if(!id) return;
+  const nameEl = document.getElementById('commentName');
+  const textEl = document.getElementById('commentText');
+  const websiteEl = document.getElementById('commentWebsite'); // Honeypot
+  const text = textEl.value.trim();
+
+  if(!text){
+    showToast('Bitte einen Kommentar eingeben');
+    return;
+  }
+  if(text.length > 500){
+    showToast('Kommentar ist zu lang (max. 500 Zeichen)');
+    return;
+  }
+
+  fetch('/api/comments', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ articleId: id, name: nameEl.value.trim(), text, website: websiteEl.value })
+  })
+    .then(res => {
+      if(res.status === 429) { showToast('Bitte kurz warten, bevor du erneut kommentierst'); return null; }
+      if(!res.ok) { showToast('⚠ Kommentar konnte nicht gespeichert werden'); return null; }
+      return res.json();
+    })
+    .then(data => {
+      if(!data) return;
+      textEl.value = '';
+      showToast('✓ Kommentar veröffentlicht');
+      loadComments(id);
+    })
+    .catch(() => showToast('⚠ Kommentar konnte nicht gespeichert werden'));
+}
+
 function renderTicker(){
   const track = document.getElementById('tickerTrack');
   if(!articles.length) return;
@@ -1081,6 +1236,9 @@ function openArticleView(id){
     persistReadIds();
     showToast('⚡ +15 XP · Artikel gelesen');
   }
+
+  loadReactions(id);
+  loadComments(id);
   return true;
 }
 
