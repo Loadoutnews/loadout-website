@@ -50,6 +50,14 @@ Recherchiere mit der Websuche die bedeutendsten, meist erwarteten Spiele-Release
 für {month_label} — nur AAA-Titel bzw. Spiele mit erkennbar hohem Interesse
 (nicht jedes kleine Indie-Spiel), maximal {MAX_RELEASES} Stück.
 
+Recherchiere für jedes Spiel zusätzlich, wie hoch die Vorfreude/Nachfrage \
+ist (z. B. Wishlist-Zahlen, Vorbestellungen, Community-Reaktionen auf \
+Trailer/Ankündigungen) und wie es von Fachpresse/Expert:innen bisher \
+eingeschätzt wird (Preview-Berichte, Hands-on-Eindrücke, falls vorhanden). \
+Bilde dir daraus eine EIGENE redaktionelle Meinung: Lohnt sich der Kauf für \
+das verlangte Geld — ja, nein, oder eher abwarten (z. B. auf einen Sale \
+oder auf Reviews nach Release)?
+
 Antworte AUSSCHLIESSLICH mit einem validen JSON-Array, keine Erklärungen,
 kein Markdown, keine Code-Fences. Jedes Element im folgenden Format:
 
@@ -61,6 +69,8 @@ kein Markdown, keine Code-Fences. Jedes Element im folgenden Format:
   "genre": "z. B. Action-RPG",
   "description": "2-3 eigenständig formulierte Sätze — NICHT aus einer Quelle kopiert",
   "hype": <Zahl 0-100, wie gross das erwartete Interesse ist>,
+  "recommendation": "ja" | "nein" | "abwarten",
+  "recommendation_reason": "2-3 Sätze EIGENE Begründung, gestützt auf recherchierte Nachfrage/Experteneinschätzungen — als klare Position formuliert, nicht als reine Zusammenfassung.",
   "source_url": "Link zu einer Seite MIT VORSCHAUBILD — bevorzugt ein Artikel bei IGN, GameSpot, PC Gamer, Eurogamer oder die offizielle Store-Seite (Steam/PlayStation Store/Xbox). Vermeide Wikipedia, Foren oder reine Text-Ankündigungen ohne Titelbild."
 }}
 
@@ -162,10 +172,25 @@ def release_image(r):
 
 
 def render_html(month_label, releases):
+    REC_LABELS = {
+        "ja": ("✅ Kaufen lohnt sich", "rec-yes"),
+        "nein": ("❌ Eher nicht", "rec-no"),
+        "abwarten": ("⏳ Abwarten empfohlen", "rec-wait"),
+    }
     cards = ""
     for r in releases:
         platforms = " · ".join(r.get("platforms", []))
         img = r.get("image") or release_image(r)
+        rec_key = (r.get("recommendation") or "").lower()
+        rec_label, rec_class = REC_LABELS.get(rec_key, (None, None))
+        rec_html = ""
+        if rec_label:
+            rec_html = f"""
+            <div class="editorial-box {rec_class}">
+              <div class="editorial-label mono">🗣️ Einschätzung der Redaktion — {rec_label}</div>
+              <p>{r.get('recommendation_reason','')}</p>
+            </div>
+            """
         cards += f"""
         <div class="release-card">
           <div class="release-art" style="background:linear-gradient(160deg, rgba(18,48,40,0.78), rgba(13,31,36,0.9)), url('{img}') center/cover;">
@@ -175,6 +200,7 @@ def render_html(month_label, releases):
             <h3>{r.get('title','')}</h3>
             <div class="release-meta mono">{r.get('release_date','')} · {platforms}</div>
             <p class="release-desc">{r.get('description','')}</p>
+            {rec_html}
             <div class="release-footer">
               <span class="release-price mono">{r.get('price','')}</span>
               <div class="hype">
