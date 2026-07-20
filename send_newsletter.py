@@ -20,6 +20,7 @@ Ausführen:
 
 import json
 import os
+import re
 import sys
 import datetime
 
@@ -255,6 +256,48 @@ def build_html(articles, releases_preview=None, updates_preview=None):
 """
 
 
+GERMAN_MONTHS = {
+    "Januar": 1, "Februar": 2, "März": 3, "April": 4, "Mai": 5, "Juni": 6,
+    "Juli": 7, "August": 8, "September": 9, "Oktober": 10, "November": 11, "Dezember": 12,
+}
+
+
+def parse_article_date(date_str):
+    """Wandelt das deutsche Anzeigedatum (z. B. '17. Juli 2026') in ein
+    echtes datetime.date um, damit sich Artikel nach Zeitraum filtern lassen."""
+    match = re.match(r"(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)\s*(\d{4})", date_str or "")
+    if not match:
+        return None
+    day, month_name, year = match.groups()
+    month = GERMAN_MONTHS.get(month_name)
+    if not month:
+        return None
+    try:
+        return datetime.date(int(year), month, int(day))
+    except ValueError:
+        return None
+
+
+def select_weekly_highlights(articles):
+    """Wählt die gehyptesten Artikel der vergangenen 7 Tage aus — nicht
+    einfach nur die neuesten, wie zuvor."""
+    today = datetime.date.today()
+    week_ago = today - datetime.timedelta(days=7)
+
+    this_week = [a for a in articles if (d := parse_article_date(a.get("date"))) and week_ago <= d <= today]
+
+    # Sicherheitsnetz: falls in einer ruhigen Woche zu wenige Artikel
+    # erschienen sind, mit den nächstneuesten auffüllen, statt einen fast
+    # leeren Newsletter zu verschicken.
+    if len(this_week) < ARTICLE_COUNT:
+        already_included = {a["id"] for a in this_week}
+        fill_ups = [a for a in articles if a["id"] not in already_included]
+        this_week += fill_ups[: ARTICLE_COUNT - len(this_week)]
+
+    this_week.sort(key=lambda a: a.get("hype", 0), reverse=True)
+    return this_week[:ARTICLE_COUNT]
+
+
 def main():
     api_key = os.environ.get("BREVO_API_KEY")
     list_id = os.environ.get("BREVO_LIST_ID")
@@ -274,9 +317,9 @@ def main():
         print("Keine Artikel vorhanden — kein Newsletter verschickt.")
         return
 
-    # articles.json ist neueste zuerst sortiert (siehe news_pipeline.py) —
-    # die ersten Einträge sind also automatisch die aktuellsten.
-    top_articles = articles[:ARTICLE_COUNT]
+    # Statt einfach nur der neuesten Artikel: die gehyptesten Artikel der
+    # vergangenen 7 Tage, wie gewünscht (echter "Wochenrückblick").
+    top_articles = select_weekly_highlights(articles)
     releases_preview = load_releases_preview()
     updates_preview = load_updates_preview()
     html = build_html(top_articles, releases_preview, updates_preview)
