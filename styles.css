@@ -529,3 +529,20 @@
   .comment-item .comment-date{ font-size:11px; color:var(--muted); }
   .comment-item .comment-text{ font-size:13.5px; color:var(--text); line-height:1.55; white-space:pre-wrap; }
   .comments-empty{ font-size:13px; color:var(--muted); padding:10px 0; }
+
+  /* Einschätzung der Redaktion */
+  .editorial-box{
+    margin:22px 0; padding:18px 20px; border-radius:12px;
+    background:linear-gradient(160deg, rgba(124,92,252,0.1), rgba(255,77,141,0.05));
+    border:1px solid rgba(124,92,252,0.3); border-left:3px solid var(--violet);
+  }
+  .editorial-label{ font-size:11px; color:var(--violet); letter-spacing:0.05em; margin-bottom:8px; font-weight:700; }
+  .editorial-box p{ font-size:14.5px; line-height:1.65; color:var(--text); }
+
+  /* Kauf-Empfehlungs-Varianten (Release-Kalender) */
+  .editorial-box.rec-yes{ border-color:rgba(52,217,201,0.4); border-left-color:var(--cyan); background:linear-gradient(160deg, rgba(52,217,201,0.1), rgba(13,31,36,0.05)); }
+  .editorial-box.rec-yes .editorial-label{ color:var(--cyan); }
+  .editorial-box.rec-no{ border-color:rgba(255,77,141,0.4); border-left-color:var(--magenta); background:linear-gradient(160deg, rgba(255,77,141,0.1), rgba(31,13,20,0.05)); }
+  .editorial-box.rec-no .editorial-label{ color:var(--magenta); }
+  .editorial-box.rec-wait{ border-color:rgba(255,183,77,0.4); border-left-color:var(--amber); background:linear-gradient(160deg, rgba(255,183,77,0.1), rgba(31,25,13,0.05)); }
+  .editorial-box.rec-wait .editorial-label{ color:var(--amber); }
