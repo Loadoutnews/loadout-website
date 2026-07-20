@@ -116,6 +116,9 @@
 
     <div class="grid" id="grid"></div>
     <div class="empty-state" id="emptyState" style="display:none;">Keine Artikel gefunden. Versuch's mit einem anderen Suchbegriff oder Filter.</div>
+    <div id="gridLoadMoreWrap" style="display:none; text-align:center; margin-top:10px;">
+      <button class="cookie-btn ghost" id="gridLoadMoreBtn" onclick="loadMoreGrid()">Mehr anzeigen</button>
+    </div>
 
     <div class="section-head" style="margin-top:44px;">
       <h2 class="mono">Wie das hier funktioniert</h2>
@@ -598,6 +601,8 @@ let showSavedOnly = false;
 const savedIds = new Set();
 const readIds = new Set();
 let currentDetailId = null;
+const GRID_BATCH_SIZE = 12; // wie viele Artikel anfangs sichtbar sind, bevor "Mehr anzeigen" nötig ist
+let visibleGridCount = GRID_BATCH_SIZE;
 
 // --- Dauerhafte Speicherung über Browser-Neustarts hinweg ---------------
 // Merkliste und XP sollen erhalten bleiben, auch wenn die Seite neu
@@ -644,6 +649,7 @@ let archiveMerged = false;
 
 function onSearchInput(){
   if(document.getElementById('searchInput').value.trim()) ensureArchiveMerged();
+  visibleGridCount = GRID_BATCH_SIZE;
   renderGrid();
 }
 
@@ -676,6 +682,7 @@ function ensureArchiveMerged(){
 function setGenre(genre){
   activeGenre = genre;
   if(genre !== "alle") ensureArchiveMerged();
+  visibleGridCount = GRID_BATCH_SIZE;
   renderChips();
   renderGrid();
 }
@@ -683,6 +690,7 @@ function setGenre(genre){
 function setCat(cat){
   activeCat = cat;
   if(cat !== "alle") ensureArchiveMerged();
+  visibleGridCount = GRID_BATCH_SIZE;
   renderChips();
   renderGrid();
 }
@@ -690,12 +698,14 @@ function setCat(cat){
 function setGame(game){
   activeGame = game;
   if(game !== "alle") ensureArchiveMerged();
+  visibleGridCount = GRID_BATCH_SIZE;
   renderChips();
   renderGrid();
 }
 
 function toggleSavedView(){
   showSavedOnly = !showSavedOnly;
+  visibleGridCount = GRID_BATCH_SIZE;
   document.getElementById('savedToggle').classList.toggle('has-saved', showSavedOnly);
   renderGrid();
   document.getElementById('grid').scrollIntoView({ behavior:'smooth', block:'start' });
@@ -1218,11 +1228,13 @@ function renderGrid(){
     empty.textContent = showSavedOnly
       ? "Noch nichts gemerkt. Tippe auf das Lesezeichen-Symbol einer Karte, um Artikel für später zu sammeln."
       : "Keine Artikel gefunden. Versuch's mit einem anderen Suchbegriff oder Filter.";
+    document.getElementById('gridLoadMoreWrap').style.display = "none";
     return;
   }
   empty.style.display = "none";
 
-  const cardsArr = filtered.map(a => `
+  const visible = filtered.slice(0, visibleGridCount);
+  const cardsArr = visible.map(a => `
     <div style="position:relative;">
       <a href="artikel/${a.id}.html" class="card" onclick="return handleCardClick(event, '${a.id}')">
         <div class="card-art" style="${articleArtStyle(a)}">
@@ -1248,6 +1260,19 @@ function renderGrid(){
 
   grid.innerHTML = cardsArr.join('');
   initAdSlots();
+
+  const loadMoreWrap = document.getElementById('gridLoadMoreWrap');
+  if(filtered.length > visibleGridCount){
+    loadMoreWrap.style.display = "block";
+    document.getElementById('gridLoadMoreBtn').textContent = `Mehr anzeigen (noch ${filtered.length - visibleGridCount})`;
+  } else {
+    loadMoreWrap.style.display = "none";
+  }
+}
+
+function loadMoreGrid(){
+  visibleGridCount += GRID_BATCH_SIZE;
+  renderGrid();
 }
 
 // Klick-Handler für Karten/Hero: normaler Klick = smooth SPA-Wechsel,
