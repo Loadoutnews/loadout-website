@@ -114,6 +114,15 @@
       🛠️ Update-Kalender öffnen
     </a>
 
+    <div class="sort-bar">
+      <span class="mono">Sortieren:</span>
+      <select id="sortSelect" onchange="setSort(this.value)">
+        <option value="date">Neueste zuerst</option>
+        <option value="hype">Hype-Meter</option>
+        <option value="views">Meiste Aufrufe</option>
+        <option value="likes">Meiste Likes</option>
+      </select>
+    </div>
     <div class="grid" id="grid"></div>
     <div class="empty-state" id="emptyState" style="display:none;">Keine Artikel gefunden. Versuch's mit einem anderen Suchbegriff oder Filter.</div>
     <div id="gridLoadMoreWrap" style="display:none; text-align:center; margin-top:10px;">
@@ -603,6 +612,27 @@ const readIds = new Set();
 let currentDetailId = null;
 const GRID_BATCH_SIZE = 12; // wie viele Artikel anfangs sichtbar sind, bevor "Mehr anzeigen" nötig ist
 let visibleGridCount = GRID_BATCH_SIZE;
+let activeSort = "date";
+
+const GERMAN_MONTHS = { Januar:0, Februar:1, März:2, April:3, Mai:4, Juni:5, Juli:6, August:7, September:8, Oktober:9, November:10, Dezember:11 };
+
+function parseArticleDate(a){
+  // Artikel speichern ihr Datum als lesbaren deutschen Text (z. B. "17. Juli
+  // 2026"), nicht als Computer-Datum — für die Sortierung wird das hier in
+  // eine vergleichbare Zahl umgewandelt.
+  if(!a.date) return 0;
+  const match = a.date.match(/(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)\s*(\d{4})/);
+  if(!match) return 0;
+  const month = GERMAN_MONTHS[match[2]];
+  if(month === undefined) return 0;
+  return new Date(Number(match[3]), month, Number(match[1])).getTime();
+}
+
+function setSort(value){
+  activeSort = value;
+  visibleGridCount = GRID_BATCH_SIZE;
+  renderGrid();
+}
 
 // --- Dauerhafte Speicherung über Browser-Neustarts hinweg ---------------
 // Merkliste und XP sollen erhalten bleiben, auch wenn die Seite neu
@@ -670,6 +700,7 @@ function ensureArchiveMerged(){
       if(newOnes.length){
         articles = articles.concat(newOnes);
         applyRealViews();
+        applyRealLikes();
         renderGrid();
         showToast(`✓ ${newOnes.length} weitere Artikel aus dem Archiv eingeblendet`);
       }
@@ -959,6 +990,26 @@ function fetchRealViews(){
     });
 }
 
+// --- Echte Like-Zahlen (fürs Sortieren nach "Meiste Likes") ---------------
+let realLikes = {};
+
+function applyRealLikes(){
+  articles.forEach(a => { a.likes = realLikes[a.id] || 0; });
+}
+
+function fetchRealLikes(){
+  fetch('/api/likes-bulk')
+    .then(res => { if(!res.ok) throw new Error('not ok'); return res.json(); })
+    .then(data => {
+      realLikes = data || {};
+      applyRealLikes();
+      renderGrid();
+    })
+    .catch(() => {
+      console.log('ℹ Like-Zahlen nicht verfügbar');
+    });
+}
+
 function trackView(id){
   fetch('/api/track-view', {
     method: 'POST',
@@ -1232,6 +1283,15 @@ function renderGrid(){
     return;
   }
   empty.style.display = "none";
+
+  // Sortierung anwenden — funktioniert auf der gefilterten Liste, also
+  // egal welche Kategorie/Genre/Große-Titel-Filter gerade aktiv sind.
+  filtered.sort((a, b) => {
+    if(activeSort === "hype") return (b.hype || 0) - (a.hype || 0);
+    if(activeSort === "views") return (b.views || 0) - (a.views || 0);
+    if(activeSort === "likes") return (b.likes || 0) - (a.likes || 0);
+    return parseArticleDate(b) - parseArticleDate(a); // "date": neueste zuerst
+  });
 
   const visible = filtered.slice(0, visibleGridCount);
   const cardsArr = visible.map(a => `
@@ -1578,6 +1638,7 @@ fetch('articles.json')
     if (Array.isArray(data) && data.length > 0) {
       articles = data;
       applyRealViews(); // falls fetchRealViews() bereits vorher durchgelaufen ist
+      applyRealLikes(); // falls fetchRealLikes() bereits vorher durchgelaufen ist
       renderHero();
       renderGrid();
       renderTicker();
@@ -1589,9 +1650,11 @@ fetch('articles.json')
     console.log('ℹ articles.json nicht gefunden — zeige eingebaute Beispielartikel');
   });
 
-// Echte Aufrufzahlen nachladen — unabhängig davon, ob articles.json schon
-// fertig geladen ist oder nicht, dank applyRealViews() in beiden Zweigen.
+// Echte Aufrufzahlen und Like-Zahlen nachladen — unabhängig davon, ob
+// articles.json schon fertig geladen ist oder nicht, dank applyRealViews()/
+// applyRealLikes() in allen Zweigen.
 fetchRealViews();
+fetchRealLikes();
 loadReleasesHeroSlide();
 loadUpdatesHeroSlide();
 </script>
