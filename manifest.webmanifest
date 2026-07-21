@@ -1,0 +1,44 @@
+{
+  "name": "LOADOUT-NEWS — Gaming News, neu erzählt",
+  "short_name": "LOADOUT-NEWS",
+  "description": "Gaming-News, Release-Kalender und Update-Kalender für die DACH-Region.",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#05060B",
+  "theme_color": "#0A0C16",
+  "lang": "de-CH",
+  "icons": [
+    {
+      "src": "/logo-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Release-Kalender",
+      "url": "/releases.html",
+      "icons": [{ "src": "/logo-icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Update-Kalender",
+      "url": "/updates.html",
+      "icons": [{ "src": "/logo-icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
