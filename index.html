@@ -10,6 +10,14 @@
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#0A0C16">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='26' fill='%230A0C16'/%3E%3Crect x='24' y='24' width='14' height='68' rx='6' fill='%23FF4D8D'/%3E%3Crect x='24' y='80' width='72' height='12' rx='6' fill='%23FF4D8D'/%3E%3Crect x='44' y='62' width='12' height='18' rx='5' fill='%23FF4D8D'/%3E%3Crect x='60' y='50' width='12' height='30' rx='5' fill='%23FF4D8D'/%3E%3Crect x='76' y='36' width='12' height='44' rx='5' fill='%23FF4D8D'/%3E%3C/svg%3E">
+
+<!-- PWA: installierbar als App auf dem Homescreen -->
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0A0C16">
+<link rel="apple-touch-icon" href="/logo-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LOADOUT-NEWS">
 <!-- Bewusst KEINE Google Fonts eingebunden: externe Font-Requests übertragen die
      IP-Adresse der Besucher:innen an Google, ohne vorherige Einwilligung ein
      bekanntes DSGVO-Abmahnrisiko (u. a. LG München I, Urteil zu Google Fonts).
@@ -1659,6 +1667,16 @@ function showXpInfo(){
       Dein Fortschritt wird auf diesem Gerät gespeichert und bleibt auch nach einem Neuladen erhalten.
     </p>
   `);
+}
+
+// PWA: Service Worker registrieren, macht die Seite installierbar und
+// bereitet Push-Benachrichtigungen vor.
+if("serviceWorker" in navigator){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {
+      console.log("ℹ Service Worker konnte nicht registriert werden");
+    });
+  });
 }
 
 loadPersistedState();
