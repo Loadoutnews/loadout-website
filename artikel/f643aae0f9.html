@@ -13,6 +13,11 @@
 <meta property="og:url" content="https://loadout-news.com/artikel/f643aae0f9.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0C16">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/logo-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LOADOUT-NEWS">
 <link rel="stylesheet" href="../styles.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Gears-of-War-Schöpfer denkt über Comeback nach – aber PvP ist tabu", "description": "Cliff Bleszinski liebäugelt mit einer Rückkehr in die Spieleentwicklung. Ein Multiplayer-Shooter mit PvP-Fokus soll es aber definitiv nicht werden.", "image": ["https://cdn.mos.cms.futurecdn.net/AcaTqBp5D96SjRaanZDZaB-1280-80.jpg"], "author": {"@type": "Organization", "name": "LOADOUT Redaktion"}, "publisher": {"@type": "Organization", "name": "LOADOUT", "logo": {"@type": "ImageObject", "url": "https://loadout-news.com/favicon.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://loadout-news.com/artikel/f643aae0f9.html"}}</script>
 </head>
@@ -265,6 +270,14 @@
   }
 
   initCookieBanner();
+
+  // PWA: Service Worker registrieren (funktioniert von jeder Seite aus,
+  // Pfad ist absolut).
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    });
+  }
 </script>
 
 <script>

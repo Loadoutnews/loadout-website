@@ -13,6 +13,11 @@
 <meta property="og:url" content="https://loadout-news.com/artikel/24a5a21483.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0C16">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/logo-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LOADOUT-NEWS">
 <link rel="stylesheet" href="../styles.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Zu Tränen gerührt: Fan schenkt Obsession-Star seltene MW2-Sammlerausgabe", "description": "Bei der Fanatics Fest in New York bekam Schauspielerin Inde Navarrette ein Geschenk, das sie völlig aus der Fassung brachte: eine versiegelte Rarität von Modern Warfare 2.", "image": ["https://assets-prd.ignimgs.com/2026/07/20/inde-mw2-copy-1784581455008.jpg"], "author": {"@type": "Organization", "name": "LOADOUT Redaktion"}, "publisher": {"@type": "Organization", "name": "LOADOUT", "logo": {"@type": "ImageObject", "url": "https://loadout-news.com/favicon.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://loadout-news.com/artikel/24a5a21483.html"}}</script>
 </head>
@@ -270,6 +275,14 @@
   }
 
   initCookieBanner();
+
+  // PWA: Service Worker registrieren (funktioniert von jeder Seite aus,
+  // Pfad ist absolut).
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    });
+  }
 </script>
 
 <script>
