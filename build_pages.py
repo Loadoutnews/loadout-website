@@ -103,6 +103,11 @@ def render_article_page(a):
 <meta property="og:url" content="{canonical}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0C16">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/logo-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LOADOUT-NEWS">
 <link rel="stylesheet" href="../styles.css">
 <script type="application/ld+json">{json.dumps(json_ld, ensure_ascii=False)}</script>
 </head>
@@ -353,6 +358,14 @@ def render_article_page(a):
   }}
 
   initCookieBanner();
+
+  // PWA: Service Worker registrieren (funktioniert von jeder Seite aus,
+  // Pfad ist absolut).
+  if("serviceWorker" in navigator){{
+    window.addEventListener("load", () => {{
+      navigator.serviceWorker.register("/sw.js").catch(() => {{}});
+    }});
+  }}
 </script>
 
 <script>
