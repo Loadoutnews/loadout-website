@@ -1,0 +1,32 @@
+name: Post to Social Media
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'articles.json'
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python post_to_social.py
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+          PUSH_SECRET: ${{ secrets.PUSH_SECRET }}
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add social-posted.json
+          git diff --staged --quiet || git commit -m "Social-Media-Post-Verlauf aktualisiert"
+          git push
