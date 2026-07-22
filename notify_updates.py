@@ -21,6 +21,8 @@ import sys
 
 import requests
 
+from push_helper import send_push_notification
+
 SITE_URL = "https://loadout-news.com"
 SENDER_NAME = "LOADOUT-NEWS"
 SENDER_EMAIL = "newsletter@loadout-news.com"
@@ -125,6 +127,12 @@ def main():
     else:
         print(f"! Versand fehlgeschlagen: {send_resp.status_code} {send_resp.text}", file=sys.stderr)
         sys.exit(1)
+
+    send_push_notification(
+        title="🛠️ Neue Spiele-Updates angekündigt!",
+        body=f"{len(updates)} angekündigte Updates — jetzt reinschauen.",
+        url="/updates.html",
+    )
 
 
 if __name__ == "__main__":
