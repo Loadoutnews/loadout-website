@@ -23,6 +23,7 @@ import datetime
 import os
 import re
 import sys
+import difflib
 
 import feedparser
 import requests
@@ -56,9 +57,9 @@ FEEDS = [
 # Wie viele der pro Lauf geschriebenen Artikel mindestens aus den
 # Franchise-Feeds oben kommen sollen (der Rest wird mit allgemeinen
 # Gaming-News aufgefüllt).
-PRIORITY_QUOTA = 4
+PRIORITY_QUOTA = 1
 
-MAX_ARTICLES_PER_RUN = 8          # wie viele neue Artikel pro Durchlauf geschrieben werden
+MAX_ARTICLES_PER_RUN = 4          # wie viele neue Artikel pro Durchlauf geschrieben werden
 MAX_ARTICLES_TOTAL = 60           # wie viele in articles.json (Startseite/Suche) bleiben — der Rest verschwindet NICHT, sondern wandert ins unbegrenzte archive.json
 OUTPUT_FILE = "articles.json"
 ARCHIVE_FILE = "archive.json"     # unbegrenztes Archiv — jeder je geschriebene Artikel bleibt hier für immer auffindbar
@@ -175,6 +176,35 @@ def article_id(link):
     return hashlib.sha1(link.encode("utf-8")).hexdigest()[:10]
 
 
+TITLE_SIMILARITY_THRESHOLD = 0.6  # ab diesem Ähnlichkeitswert (0-1) gilt es als "gleiches Thema"
+
+
+def normalize_title(title):
+    """Titel auf reinen Wortkern reduzieren, damit z. B. unterschiedliche
+    Satzzeichen/Groß-Kleinschreibung den Vergleich nicht verfälschen."""
+    return re.sub(r"[^a-z0-9\s]", "", title.lower()).strip()
+
+
+def titles_similar(a, b, threshold=TITLE_SIMILARITY_THRESHOLD):
+    return difflib.SequenceMatcher(None, normalize_title(a), normalize_title(b)).ratio() >= threshold
+
+
+def filter_duplicate_topics(entries, already_covered_titles):
+    """Entfernt Meldungen, deren Titel einem bereits verarbeiteten Thema zu
+    ähnlich ist — sowohl im Vergleich zu kürzlich geschriebenen Artikeln
+    (verschiedene Läufe) als auch zu anderen Einträgen im selben Lauf
+    (verschiedene Quellen, gleiches Thema, z. B. IGN und PCGamer berichten
+    beide über dasselbe GTA-Update)."""
+    kept = []
+    seen_titles = list(already_covered_titles)
+    for entry in entries:
+        if any(titles_similar(entry["title"], seen) for seen in seen_titles):
+            continue  # gleiches Thema wurde schon abgedeckt — überspringen
+        kept.append(entry)
+        seen_titles.append(entry["title"])
+    return kept
+
+
 # ---------------------------------------------------------------------------
 # 3. ARTIKEL MIT CLAUDE SCHREIBEN
 # ---------------------------------------------------------------------------
@@ -196,6 +226,9 @@ diese verschiedenen Einschätzungen in eigenen Worten in den Artikel mit ein \
 Reaktionen: Während... loben, kritisieren andere...").
 - Antworte AUSSCHLIESSLICH mit einem validen JSON-Objekt, keine Erklärungen, \
 kein Markdown, keine Code-Fences.
+- Schreibe zusätzlich zur deutschen Version auch eine EIGENSTÄNDIGE englische \
+Version (nicht einfach eine Übersetzung Wort für Wort, sondern genauso \
+lebendig und eigenständig formuliert wie die deutsche — im Feld "en").
 
 JSON-Format:
 {
@@ -206,6 +239,12 @@ JSON-Format:
   "teaser": "1-2 Sätze Anreißer (max. 200 Zeichen)",
   "body": ["Absatz 1", "Absatz 2", "Absatz 3 — hier auch einordnen, was andere Quellen/Experten/die Community dazu sagen"],
   "editorial_take": "2-3 Sätze EIGENE redaktionelle Einschätzung/Meinung von LOADOUT — nicht nur zusammenfassen, sondern klar Position beziehen (z. B. 'Wir finden...', 'Aus unserer Sicht...'). Basierend auf dem, was du recherchiert hast, aber als eigene Stimme formuliert, nicht als weitere Zusammenfassung.",
+  "en": {
+    "title": "Englischer, ebenso eigenständig formulierter Titel (max. 90 Zeichen)",
+    "teaser": "1-2 englische Sätze Anreißer (max. 200 Zeichen)",
+    "body": ["Absatz 1 auf Englisch", "Absatz 2 auf Englisch", "Absatz 3 auf Englisch — inkl. Einordnung anderer Quellen"],
+    "editorial_take": "2-3 Sätze redaktionelle Einschätzung auf Englisch — eigenständig formuliert, keine reine Übersetzung des deutschen Texts."
+  },
   "hype": <Zahl 0-100, wie aufregend/relevant die News für Gaming-Fans ist>
 }
 
@@ -228,7 +267,7 @@ Original-Link: {entry['link']}"""
 
     response = client.messages.create(
         model=MODEL,
-        max_tokens=3500,
+        max_tokens=6000,
         system=WRITER_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_prompt}],
         tools=[{"type": "web_search_20250305", "name": "web_search"}],
@@ -243,6 +282,12 @@ Original-Link: {entry['link']}"""
         return None
     raw_text = text_blocks[-1].strip()
     raw_text = raw_text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+
+    # Absicherung: erklärenden Text vor dem eigentlichen JSON-Objekt abschneiden,
+    # falls Claude trotz Anweisung noch welchen hinzufügt.
+    first_brace = raw_text.find("{")
+    if first_brace > 0:
+        raw_text = raw_text[first_brace:]
 
     try:
         data = json.loads(raw_text)
@@ -259,6 +304,7 @@ Original-Link: {entry['link']}"""
         "teaser": data.get("teaser", ""),
         "body": data.get("body", []),
         "editorial_take": data.get("editorial_take", ""),
+        "en": data.get("en"),  # englische Zusatzversion, siehe Prompt oben — kann bei alten Artikeln fehlen
         "date": datetime.date.today().strftime("%d. %B %Y"),
         "platform": entry["source"],
         "hype": int(data.get("hype", 50)),
@@ -299,6 +345,18 @@ def main():
     existing_ids = {a["id"] for a in archive} | {a["id"] for a in existing}
 
     new_raw = [e for e in raw_entries if article_id(e["link"]) not in existing_ids]
+
+    # Themen-Dopplung verhindern: Titel gegen die zuletzt geschriebenen
+    # Artikel vergleichen (deckt auch Fälle ab, in denen zwei verschiedene
+    # Quellen — z. B. IGN und PCGamer — über dieselbe Meldung berichten,
+    # aber mit unterschiedlicher URL, was der reine Link-Vergleich oben
+    # nicht erkennen würde).
+    recent_titles = [a.get("title", "") for a in (archive[-40:] + existing)]
+    before_count = len(new_raw)
+    new_raw = filter_duplicate_topics(new_raw, recent_titles)
+    skipped = before_count - len(new_raw)
+    if skipped:
+        print(f"  {skipped} Meldung(en) als Themen-Duplikat übersprungen")
 
     # Auswahl mit garantierter Franchise-Quote: zuerst bis zu PRIORITY_QUOTA
     # Artikel aus den 6 großen Franchise-Feeds (GTA, Minecraft, Fortnite,
