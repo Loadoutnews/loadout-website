@@ -18,3 +18,4 @@ jobs:
         env:
           BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           BREVO_LIST_ID: ${{ secrets.BREVO_LIST_ID }}
+          PUSH_SECRET: ${{ secrets.PUSH_SECRET }}
