@@ -139,6 +139,11 @@
     <div id="gridLoadMoreWrap" style="display:none; text-align:center; margin-top:10px;">
       <button class="cookie-btn ghost" id="gridLoadMoreBtn" onclick="loadMoreGrid()">Mehr anzeigen</button>
     </div>
+    <div id="gridLimitHint" class="empty-state" style="display:none;">
+      Die News, die du suchst, ist nicht dabei? Versuch's gerne über die
+      <a href="#" onclick="document.getElementById('searchInput').focus(); return false;" style="color:var(--violet); font-weight:600;">Artikelsuche</a>
+      oder in den jeweiligen Kategorien — dort findest du auch ältere Artikel aus dem Archiv.
+    </div>
 
     <div class="section-head" style="margin-top:44px;">
       <h2 class="mono">Wie das hier funktioniert</h2>
@@ -700,8 +705,20 @@ let showSavedOnly = false;
 const savedIds = new Set();
 const readIds = new Set();
 let currentDetailId = null;
-const GRID_BATCH_SIZE = 12; // wie viele Artikel anfangs sichtbar sind, bevor "Mehr anzeigen" nötig ist
+const GRID_BATCH_SIZE = 10; // wie viele Artikel pro "Mehr anzeigen"-Klick dazukommen
 let visibleGridCount = GRID_BATCH_SIZE;
+// Auf der reinen Startseite (kein Kategorie-/Genre-/Titel-Filter, keine
+// Suche, keine Merkliste-Ansicht) werden insgesamt maximal so viele Artikel
+// angezeigt — alles darüber hinaus bleibt im Archiv, aber verschwindet
+// bewusst von der Startseite selbst, damit sie nicht endlos wird. Sobald
+// gefiltert oder gesucht wird, gilt diese Grenze NICHT mehr — dann sind
+// alle passenden Artikel aus dem kompletten Archiv erreichbar.
+const HOMEPAGE_MAX_SHOWN = 30;
+
+function isDefaultUnfilteredView(){
+  return activeCat === "alle" && activeGame === "alle" && activeGenre === "alle" &&
+         !showSavedOnly && !document.getElementById('searchInput').value.trim();
+}
 let activeSort = "date";
 
 const GERMAN_MONTHS = { Januar:0, Februar:1, März:2, April:3, Mai:4, Juni:5, Juli:6, August:7, September:8, Oktober:9, November:10, Dezember:11 };
@@ -1415,6 +1432,7 @@ function renderGrid(){
       ? "Noch nichts gemerkt. Tippe auf das Lesezeichen-Symbol einer Karte, um Artikel für später zu sammeln."
       : "Keine Artikel gefunden. Versuch's mit einem anderen Suchbegriff oder Filter.";
     document.getElementById('gridLoadMoreWrap').style.display = "none";
+    document.getElementById('gridLimitHint').style.display = "none";
     return;
   }
   empty.style.display = "none";
@@ -1428,7 +1446,13 @@ function renderGrid(){
     return parseArticleDate(b) - parseArticleDate(a); // "date": neueste zuerst
   });
 
-  const visible = filtered.slice(0, visibleGridCount);
+  // Auf der reinen, ungefilterten Startseite gilt zusätzlich die
+  // Gesamt-Obergrenze von HOMEPAGE_MAX_SHOWN — sobald gefiltert oder
+  // gesucht wird, dürfen beliebig viele (alle passenden) Artikel geladen werden.
+  const effectiveMax = isDefaultUnfilteredView() ? Math.min(HOMEPAGE_MAX_SHOWN, filtered.length) : filtered.length;
+  const effectiveVisibleCount = Math.min(visibleGridCount, effectiveMax);
+
+  const visible = filtered.slice(0, effectiveVisibleCount);
   const cardsArr = visible.map(a => `
     <div style="position:relative;">
       <a href="artikel/${a.id}.html" class="card" onclick="return handleCardClick(event, '${a.id}')">
@@ -1457,12 +1481,18 @@ function renderGrid(){
   initAdSlots();
 
   const loadMoreWrap = document.getElementById('gridLoadMoreWrap');
-  if(filtered.length > visibleGridCount){
+  const limitHint = document.getElementById('gridLimitHint');
+  if(effectiveMax > effectiveVisibleCount){
     loadMoreWrap.style.display = "block";
-    document.getElementById('gridLoadMoreBtn').textContent = `Mehr anzeigen (noch ${filtered.length - visibleGridCount})`;
+    document.getElementById('gridLoadMoreBtn').textContent = `Mehr anzeigen (noch ${effectiveMax - effectiveVisibleCount})`;
   } else {
     loadMoreWrap.style.display = "none";
   }
+
+  // Hinweis auf Suche/Kategorien nur, wenn wirklich das 30er-Limit der
+  // Standardansicht erreicht wurde (nicht einfach, weil zufällig weniger
+  // als 30 Artikel insgesamt existieren).
+  limitHint.style.display = (isDefaultUnfilteredView() && filtered.length > HOMEPAGE_MAX_SHOWN && effectiveVisibleCount >= HOMEPAGE_MAX_SHOWN) ? "block" : "none";
 }
 
 function loadMoreGrid(){
@@ -1620,7 +1650,7 @@ function openCookieSettings(){
 // Trag hier deine echte Messwert-ID ein (Google Analytics → Verwaltung →
 // Datenstreams → dein Datenstream → "Mess-ID", Format "G-XXXXXXXXXX").
 // Solange hier der Platzhalter steht, wird nichts geladen.
-const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
+const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
 
 let analyticsLoaded = false;
 
