@@ -121,6 +121,9 @@
     <a href="updates.html" class="chip" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:linear-gradient(90deg, var(--cyan), var(--violet)); color:#0A0C16; font-weight:700; border:none; margin-bottom:26px; margin-left:8px;">
       🛠️ Update-Kalender öffnen
     </a>
+    <a href="app.html" class="chip" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:var(--surface-2); border:1px solid var(--line); color:var(--text); font-weight:700; margin-bottom:26px; margin-left:8px;">
+      📲 Zu unserer App
+    </a>
 
     <div class="sort-bar">
       <span class="mono">Sortieren:</span>
@@ -292,6 +295,7 @@
   </div>
   <div class="footer-links mono">
     <a href="archiv.html">Archiv</a>
+    <a href="app.html">Unsere App</a>
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
     <a href="#" onclick="openCookieSettings(); return false;">Cookie-Einstellungen</a>
@@ -313,6 +317,20 @@
     <button class="cookie-btn ghost" onclick="setCookieConsent(false)">Nur Notwendige</button>
     <button class="cookie-btn ghost" onclick="showCookieDetails()">Einstellungen</button>
     <button class="cookie-btn primary" onclick="setCookieConsent(true)">Alle akzeptieren</button>
+  </div>
+</div>
+
+<!-- Push-Benachrichtigungs-Nachfrage: eigene, freundliche Nachfrage VOR der
+     nativen Browser-Anfrage, weil Browser-Anfragen ohne Kontext oft
+     abgelehnt werden und man sie nicht beliebig oft wiederholen kann. -->
+<div id="pushPrompt" class="cookie-banner push-prompt">
+  <div class="cookie-text">
+    <b>🔔 Nichts mehr verpassen?</b> Aktiviere Push-Benachrichtigungen für neue Artikel,
+    den Release-Kalender und den Update-Kalender.
+  </div>
+  <div class="cookie-actions">
+    <button class="cookie-btn ghost" onclick="dismissPushPrompt()">Später</button>
+    <button class="cookie-btn primary" onclick="enablePush()">Ja, aktivieren</button>
   </div>
 </div>
 
@@ -359,10 +377,10 @@
 
 <script>
 const CATS = {
-  pc: { label: "PC", color: "pc" },
-  konsole: { label: "Konsolen", color: "konsole" },
-  hardware: { label: "Hardware", color: "hardware" },
-  industrie: { label: "Industrie", color: "industrie" },
+  pc: { label: { de: "PC", en: "PC" }, color: "pc" },
+  konsole: { label: { de: "Konsolen", en: "Console" }, color: "konsole" },
+  hardware: { label: { de: "Hardware", en: "Hardware" }, color: "hardware" },
+  industrie: { label: { de: "Industrie", en: "Industry" }, color: "industrie" },
 };
 
 const GAMES = {
@@ -375,17 +393,81 @@ const GAMES = {
 };
 
 const GENRES = {
-  action: { label: "Action" },
-  adventure: { label: "Abenteuer" },
-  rpg: { label: "Rollenspiel" },
-  strategie: { label: "Strategie" },
-  simulation: { label: "Simulation" },
-  shooter: { label: "Shooter" },
-  sport: { label: "Sport" },
-  rennspiel: { label: "Rennspiel" },
-  horror: { label: "Horror" },
-  puzzle: { label: "Puzzle & Party" },
+  action: { label: { de: "Action", en: "Action" } },
+  adventure: { label: { de: "Abenteuer", en: "Adventure" } },
+  rpg: { label: { de: "Rollenspiel", en: "RPG" } },
+  strategie: { label: { de: "Strategie", en: "Strategy" } },
+  simulation: { label: { de: "Simulation", en: "Simulation" } },
+  shooter: { label: { de: "Shooter", en: "Shooter" } },
+  sport: { label: { de: "Sport", en: "Sports" } },
+  rennspiel: { label: { de: "Rennspiel", en: "Racing" } },
+  horror: { label: { de: "Horror", en: "Horror" } },
+  puzzle: { label: { de: "Puzzle & Party", en: "Puzzle & Party" } },
 };
+
+// --- Sprache (Deutsch/Englisch) -------------------------------------------
+let currentLang = localStorage.getItem("loadout_lang") || (navigator.language.toLowerCase().startsWith("de") ? "de" : "en");
+
+const UI_STRINGS = {
+  de: {
+    tagline: "Verpasse keine Gaming-News mehr",
+    searchPlaceholder: "Artikel durchsuchen…",
+    releasesBtn: "Releases", updatesBtn: "Updates", hypeMeterBtn: "Hype-Meter", savedBtn: "gemerkt",
+    genreHeading: "Genre", bigTitlesHeading: "Große Titel", freshHeading: "Frisch reingekommen",
+    allCats: "Alle", allGenres: "Alle Genres", allGames: "Alle Titel",
+    releaseCalBtn: "📅 Release-Kalender öffnen", updateCalBtn: "🛠️ Update-Kalender öffnen",
+    sortLabel: "Sortieren:", sortDate: "Neueste zuerst", sortHype: "Hype-Meter", sortViews: "Meiste Aufrufe", sortLikes: "Meiste Likes",
+    loadMore: "Mehr anzeigen", emptyDefault: "Keine Artikel gefunden. Versuch's mit einem anderen Suchbegriff oder Filter.",
+    emptySaved: "Noch nichts gemerkt. Tippe auf das Lesezeichen-Symbol einer Karte, um Artikel für später zu sammeln.",
+    trendingTag: "🔥 Trending", sourceLink: "Zur Originalquelle →",
+    trendingWidget: "Trending jetzt", archivWidget: "📚 Archiv",
+    archivDesc: "Alle jemals veröffentlichten Artikel — durchsuchbar nach Datum, Kategorie und Genre.",
+    archivLink: "Archiv durchsuchen →",
+    newsletterTitle: "Nie wieder News verpassen", newsletterDesc: "Die wichtigsten Gaming-Updates jede Woche direkt ins Postfach.",
+    newsletterBtn: "Kostenlos anmelden",
+    feedbackTitle: "💌 Wie gefällt dir LOADOUT-NEWS?", feedbackDesc: "Gib uns gerne kurz Feedback, damit wir uns stetig verbessern können!",
+    feedbackPlaceholder: "Was können wir besser machen? (optional)", feedbackBtn: "Feedback senden",
+    commentsHeading: "💬 Was denkst du dazu?", commentsHint: "Lass uns gerne wissen, was du zu dieser Meldung meinst — sei dabei fair und respektvoll.",
+    commentNamePlaceholder: "Name (optional)", commentTextPlaceholder: "Deine Meinung...", commentBtn: "Kommentar absenden",
+    editorialLabel: "🗣️ Einschätzung der Redaktion",
+  },
+  en: {
+    tagline: "Never miss gaming news again",
+    searchPlaceholder: "Search articles…",
+    releasesBtn: "Releases", updatesBtn: "Updates", hypeMeterBtn: "Hype Meter", savedBtn: "saved",
+    genreHeading: "Genre", bigTitlesHeading: "Big Titles", freshHeading: "Fresh in",
+    allCats: "All", allGenres: "All genres", allGames: "All titles",
+    releaseCalBtn: "📅 Open release calendar", updateCalBtn: "🛠️ Open update calendar",
+    sortLabel: "Sort:", sortDate: "Newest first", sortHype: "Hype meter", sortViews: "Most views", sortLikes: "Most likes",
+    loadMore: "Show more", emptyDefault: "No articles found. Try a different search term or filter.",
+    emptySaved: "Nothing saved yet. Tap the bookmark icon on a card to save articles for later.",
+    trendingTag: "🔥 Trending", sourceLink: "Go to original source →",
+    trendingWidget: "Trending now", archivWidget: "📚 Archive",
+    archivDesc: "Every article ever published — searchable by date, category and genre.",
+    archivLink: "Browse archive →",
+    newsletterTitle: "Never miss news again", newsletterDesc: "The most important gaming updates, straight to your inbox every week.",
+    newsletterBtn: "Subscribe for free",
+    feedbackTitle: "💌 How do you like LOADOUT-NEWS?", feedbackDesc: "Give us some quick feedback so we can keep improving!",
+    feedbackPlaceholder: "What could we do better? (optional)", feedbackBtn: "Send feedback",
+    commentsHeading: "💬 What do you think?", commentsHint: "Let us know your thoughts on this story — please be fair and respectful.",
+    commentNamePlaceholder: "Name (optional)", commentTextPlaceholder: "Your thoughts...", commentBtn: "Post comment",
+    editorialLabel: "🗣️ Editorial take",
+  },
+};
+
+function t(key){ return UI_STRINGS[currentLang][key] ?? UI_STRINGS.de[key]; }
+
+// Liefert die Inhalte eines Artikels in der aktuell gewählten Sprache.
+// Fällt automatisch auf Deutsch zurück, wenn keine englische Version
+// vorliegt (z. B. bei älteren Artikeln, die vor der Zweisprachigkeit
+// geschrieben wurden) — so bleibt alles nutzbar, statt leer zu sein.
+function getLocalized(a){
+  if(currentLang === "en" && a.en && a.en.title) return a.en;
+  return { title: a.title, teaser: a.teaser, body: a.body, editorial_take: a.editorial_take };
+}
+
+function catLabel(key){ return CATS[key] ? CATS[key].label[currentLang] : ""; }
+function genreLabel(key){ return GENRES[key] ? GENRES[key].label[currentLang] : ""; }
 
 let articles = [
   {
@@ -851,7 +933,7 @@ function renderTrendingWidget(){
   document.getElementById('trendingList').innerHTML = top3.map((a, i) => `
     <div class="trending-item" onclick="openArticle('${a.id}')">
       <span class="trending-rank mono">${i+1}</span>
-      <p>${a.title}</p>
+      <p>${getLocalized(a).title}</p>
     </div>
   `).join('');
 }
@@ -879,7 +961,7 @@ function renderHero(){
           <span class="trending-tag">🔥 Trending</span>
         </div>
         <div class="hero-content">
-          <span class="badge ${top.cat}">${CATS[top.cat].label}${top.game ? ' · ' + GAMES[top.game].label : ''}</span>
+          <span class="badge ${top.cat}">${catLabel(top.cat)}${top.game ? ' · ' + GAMES[top.game].label : ''}</span>
           <h1 class="display">${top.title}</h1>
           <p>${top.teaser}</p>
           <div class="hype">
@@ -1354,7 +1436,7 @@ function renderGrid(){
           ${a.hype >= 85 ? `<span class="trending-tag">🔥 Trending</span>` : ''}
         </div>
         <div class="card-body">
-          <span class="badge ${a.cat}">${CATS[a.cat].label}${a.genre && GENRES[a.genre] ? ' · ' + GENRES[a.genre].label : ''}${a.game ? ' · ' + GAMES[a.game].label : ''}</span>
+          <span class="badge ${a.cat}">${catLabel(a.cat)}${a.genre && GENRES[a.genre] ? ' · ' + genreLabel(a.genre) : ''}${a.game ? ' · ' + GAMES[a.game].label : ''}</span>
           <h3>${a.title}</h3>
           <p>${a.teaser}</p>
           <div class="meta"><span class="mono">${a.date}</span><span class="mono">${a.platform}${a.views ? ' · 👁 ' + a.views.toLocaleString('de-CH') : ''}</span></div>
@@ -1408,7 +1490,7 @@ function openArticleView(id){
 
   document.getElementById('detailArt').style.cssText = articleArtStyle(a) + '; background-size:cover; background-position:center;';
   document.getElementById('detailBadge').className = `badge ${a.cat}`;
-  document.getElementById('detailBadge').textContent = CATS[a.cat].label + (a.genre && GENRES[a.genre] ? ' · ' + GENRES[a.genre].label : '') + (a.game ? ' · ' + GAMES[a.game].label : '');
+  document.getElementById('detailBadge').textContent = catLabel(a.cat) + (a.genre && GENRES[a.genre] ? ' · ' + genreLabel(a.genre) : '') + (a.game ? ' · ' + GAMES[a.game].label : '');
   document.getElementById('detailTitle').textContent = a.title;
   document.getElementById('detailHypeFill').style.width = a.hype + '%';
   document.getElementById('detailHypePct').textContent = a.hype + '%';
@@ -1538,7 +1620,7 @@ function openCookieSettings(){
 // Trag hier deine echte Messwert-ID ein (Google Analytics → Verwaltung →
 // Datenstreams → dein Datenstream → "Mess-ID", Format "G-XXXXXXXXXX").
 // Solange hier der Platzhalter steht, wird nichts geladen.
-const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
+const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
 
 let analyticsLoaded = false;
 
@@ -1571,6 +1653,62 @@ const AD_PLACEMENTS = {
 };
 
 let adsenseLoaded = false;
+
+// --- Push-Benachrichtigungen ---------------------------------------------
+// Trag hier den öffentlichen VAPID-Schlüssel ein (siehe api/send-push.js /
+// deine Vercel-Umgebungsvariablen — VAPID_PUBLIC_KEY).
+const VAPID_PUBLIC_KEY = 'BGToyDGwTn20mAVtGzZPVzd89k82cnhCtGeaMnqL0THWAq6snFRPT273X1VrXFoNk3yJWxkFc8NzGr5F7CNBMJw';
+
+function urlBase64ToUint8Array(base64String){
+  const padding = "=".repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const rawData = atob(base64);
+  return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+}
+
+function initPushPrompt(){
+  if(!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+  if(typeof Notification === "undefined" || Notification.permission !== "default") return;
+
+  // Nicht sofort und nicht bei jedem Besuch nerven — nach einem "Später"
+  // erst nach 14 Tagen erneut fragen.
+  const dismissedAt = localStorage.getItem("loadout_push_prompt_dismissed");
+  if(dismissedAt && (Date.now() - Number(dismissedAt)) < 14 * 24 * 60 * 60 * 1000) return;
+
+  setTimeout(() => {
+    document.getElementById("pushPrompt").classList.add("visible");
+  }, 4000);
+}
+
+function dismissPushPrompt(){
+  document.getElementById("pushPrompt").classList.remove("visible");
+  localStorage.setItem("loadout_push_prompt_dismissed", Date.now().toString());
+}
+
+async function enablePush(){
+  try {
+    const permission = await Notification.requestPermission();
+    if(permission !== "granted"){
+      dismissPushPrompt();
+      return;
+    }
+    const registration = await navigator.serviceWorker.ready;
+    const subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+    });
+    await fetch("/api/push-subscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(subscription),
+    });
+    document.getElementById("pushPrompt").classList.remove("visible");
+    showToast("🔔 Push-Benachrichtigungen aktiviert!");
+  } catch(e){
+    showToast("⚠ Konnte Push-Benachrichtigungen nicht aktivieren");
+    dismissPushPrompt();
+  }
+}
 
 function loadAdSense(){
   if(adsenseLoaded || !ADSENSE_CLIENT_ID || ADSENSE_CLIENT_ID.includes('XXXX')) return;
@@ -1673,9 +1811,11 @@ function showXpInfo(){
 // bereitet Push-Benachrichtigungen vor.
 if("serviceWorker" in navigator){
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(() => {
-      console.log("ℹ Service Worker konnte nicht registriert werden");
-    });
+    navigator.serviceWorker.register("/sw.js")
+      .then(() => initPushPrompt())
+      .catch(() => {
+        console.log("ℹ Service Worker konnte nicht registriert werden");
+      });
   });
 }
 
