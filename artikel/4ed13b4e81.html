@@ -13,6 +13,11 @@
 <meta property="og:url" content="https://loadout-news.com/artikel/4ed13b4e81.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0C16">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/logo-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LOADOUT-NEWS">
 <link rel="stylesheet" href="../styles.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Call of Duty: Modern Warfare 4 – Beta-Termine stehen fest, Switch 2 erstmals dabei", "description": "Activision und Infinity Ward nennen die Beta-Termine für Modern Warfare 4 – und erstmals seit 13 Jahren ist wieder eine Nintendo-Konsole am Start.", "image": ["https://assets-prd.ignimgs.com/2026/07/20/call-of-duty-modern-warfare-4-beta-test-dates-confirmed-1784582463520.png"], "author": {"@type": "Organization", "name": "LOADOUT Redaktion"}, "publisher": {"@type": "Organization", "name": "LOADOUT", "logo": {"@type": "ImageObject", "url": "https://loadout-news.com/favicon.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://loadout-news.com/artikel/4ed13b4e81.html"}}</script>
 </head>
@@ -270,6 +275,14 @@
   }
 
   initCookieBanner();
+
+  // PWA: Service Worker registrieren (funktioniert von jeder Seite aus,
+  // Pfad ist absolut).
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    });
+  }
 </script>
 
 <script>

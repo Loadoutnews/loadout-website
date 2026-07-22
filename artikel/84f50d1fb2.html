@@ -13,6 +13,11 @@
 <meta property="og:url" content="https://loadout-news.com/artikel/84f50d1fb2.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0C16">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/logo-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LOADOUT-NEWS">
 <link rel="stylesheet" href="../styles.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Stardew Valley trifft auf Magic: The Gathering – und Fans sind not amused", "description": "Der Farming-Hit bekommt sein eigenes Kartenset für Magic: The Gathering, doch nicht alle Charakterportraits kommen bei der Community gut an.", "image": ["https://cdn.mos.cms.futurecdn.net/oejwXP45hnbzCzKcogpbu9-1280-80.jpg"], "author": {"@type": "Organization", "name": "LOADOUT Redaktion"}, "publisher": {"@type": "Organization", "name": "LOADOUT", "logo": {"@type": "ImageObject", "url": "https://loadout-news.com/favicon.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://loadout-news.com/artikel/84f50d1fb2.html"}}</script>
 </head>
@@ -265,6 +270,14 @@
   }
 
   initCookieBanner();
+
+  // PWA: Service Worker registrieren (funktioniert von jeder Seite aus,
+  // Pfad ist absolut).
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    });
+  }
 </script>
 
 <script>

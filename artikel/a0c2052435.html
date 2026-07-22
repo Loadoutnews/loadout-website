@@ -13,6 +13,11 @@
 <meta property="og:url" content="https://loadout-news.com/artikel/a0c2052435.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0C16">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/logo-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LOADOUT-NEWS">
 <link rel="stylesheet" href="../styles.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Ex-Rockstar-Entwickler packt aus: So ist die Arbeit mit den Houser-Brüdern wirklich", "description": "Ein früherer Rockstar-Producer verrät exklusive Einblicke in die kreative Handschrift von Sam und Dan Houser – und warum ihr Einfluss bis heute spürbar ist.", "image": ["https://rockstarintel.com/wp-content/uploads/2022/07/Grand-Theft-Auto-V-27_07_2022-14_51_09-1-copy.jpg"], "author": {"@type": "Organization", "name": "LOADOUT Redaktion"}, "publisher": {"@type": "Organization", "name": "LOADOUT", "logo": {"@type": "ImageObject", "url": "https://loadout-news.com/favicon.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://loadout-news.com/artikel/a0c2052435.html"}}</script>
 </head>
@@ -265,6 +270,14 @@
   }
 
   initCookieBanner();
+
+  // PWA: Service Worker registrieren (funktioniert von jeder Seite aus,
+  // Pfad ist absolut).
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    });
+  }
 </script>
 
 <script>

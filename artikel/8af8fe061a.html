@@ -13,6 +13,11 @@
 <meta property="og:url" content="https://loadout-news.com/artikel/8af8fe061a.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0C16">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/logo-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LOADOUT-NEWS">
 <link rel="stylesheet" href="../styles.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Nächster Coup: Fortnite crosst jetzt mit Christopher Nolans „The Odyssey“", "description": "Epic Games lässt Fortnite erneut mit Hollywood verschmelzen: Diese Woche startet die Zusammenarbeit mit Christopher Nolans kommendem Blockbuster „The Odyssey“.", "image": ["https://static0.gamerantimages.com/wordpress/wp-content/uploads/wm/2026/07/fortnite-is-officially-crossing-over-with-the-odyssey-gamerant-feature.jpg"], "author": {"@type": "Organization", "name": "LOADOUT Redaktion"}, "publisher": {"@type": "Organization", "name": "LOADOUT", "logo": {"@type": "ImageObject", "url": "https://loadout-news.com/favicon.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://loadout-news.com/artikel/8af8fe061a.html"}}</script>
 </head>
@@ -265,6 +270,14 @@
   }
 
   initCookieBanner();
+
+  // PWA: Service Worker registrieren (funktioniert von jeder Seite aus,
+  // Pfad ist absolut).
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    });
+  }
 </script>
 
 <script>
