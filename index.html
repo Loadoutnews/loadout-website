@@ -411,7 +411,14 @@ const GENRES = {
 };
 
 // --- Sprache (Deutsch/Englisch) -------------------------------------------
-let currentLang = localStorage.getItem("loadout_lang") || (navigator.language.toLowerCase().startsWith("de") ? "de" : "en");
+// HINWEIS: Die vollständige Zweisprachigkeit (DE/EN) ist noch nicht fertig
+// ausgebaut (nur Kategorie-/Genre-Bezeichnungen sind technisch schon
+// vorbereitet). Bis die restliche Seite (Artikeltexte, Buttons, Hinweise
+// etc.) ebenfalls übersetzt ist, bleibt die Sprache fest auf Deutsch
+// gesetzt, damit niemand eine halbfertig übersetzte Seite sieht.
+let currentLang = "de";
+// Spätere automatische Erkennung (dann wieder aktivieren):
+// let currentLang = localStorage.getItem("loadout_lang") || (navigator.language.toLowerCase().startsWith("de") ? "de" : "en");
 
 const UI_STRINGS = {
   de: {
@@ -764,13 +771,13 @@ function persistReadIds(){
 
 function renderChips(){
   const chips = document.getElementById('chips');
-  const cats = [{key:"alle", label:"Alle"}, ...Object.entries(CATS).map(([key,v]) => ({key, label:v.label}))];
+  const cats = [{key:"alle", label:"Alle"}, ...Object.keys(CATS).map(key => ({key, label:catLabel(key)}))];
   chips.innerHTML = cats.map(c =>
     `<button class="chip ${activeCat===c.key?'active':''}" onclick="setCat('${c.key}')">${c.label}</button>`
   ).join('');
 
   const genreChips = document.getElementById('genreChips');
-  const genres = [{key:"alle", label:"Alle Genres"}, ...Object.entries(GENRES).map(([key,v]) => ({key, label:v.label}))];
+  const genres = [{key:"alle", label:"Alle Genres"}, ...Object.keys(GENRES).map(key => ({key, label:genreLabel(key)}))];
   genreChips.innerHTML = genres.map(g =>
     `<button class="chip ${activeGenre===g.key?'active':''}" onclick="setGenre('${g.key}')">${g.label}</button>`
   ).join('');
