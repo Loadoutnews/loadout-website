@@ -39,6 +39,12 @@ FEEDS = [
     {"url": "https://www.eurogamer.net/feed", "priority": False},
     {"url": "https://www.nintendolife.com/feeds/latest", "priority": False},
     {"url": "https://kotaku.com/rss", "priority": False},
+    {"url": "https://www.polygon.com/rss/index.xml", "priority": False},
+    {"url": "https://www.gamespot.com/feeds/mashup/", "priority": False},
+    {"url": "https://www.rockpapershotgun.com/feed", "priority": False},
+    {"url": "https://www.vg247.com/feed", "priority": False},
+    {"url": "https://www.pcgamesn.com/feed", "priority": False},
+    {"url": "https://www.gamesradar.com/feeds/rss", "priority": False},
 
     # Spezialisierte Feeds für die 6 großen Franchise-Hubs (GTA, Minecraft,
     # Fortnite, Call of Duty, Valorant/LoL, FIFA/EA Sports FC). Diese werden
@@ -358,42 +364,69 @@ def main():
     if skipped:
         print(f"  {skipped} Meldung(en) als Themen-Duplikat übersprungen")
 
-    # Auswahl mit garantierter Franchise-Quote: zuerst bis zu PRIORITY_QUOTA
-    # Artikel aus den 6 großen Franchise-Feeds (GTA, Minecraft, Fortnite,
-    # Call of Duty, Valorant/LoL, FIFA) reservieren, den Rest der
-    # verfügbaren Plätze mit allgemeinen Gaming-News auffüllen. So kommt
-    # jeder Lauf zuverlässig mit Inhalt für die Franchise-Hubs, statt
-    # darauf zu hoffen, dass zufällig genug davon in den allgemeinen
-    # Feeds auftaucht.
+    # Auswahl mit garantierter Franchise-Quote UND garantierter Gesamtzahl:
+    # Es wird so lange der jeweils nächste Kandidat aus dem Pool probiert,
+    # bis entweder PRIORITY_QUOTA Franchise-Artikel bzw. MAX_ARTICLES_PER_RUN
+    # Artikel insgesamt wirklich erfolgreich geschrieben wurden — nicht nur
+    # ausgewählt. Schlägt das Schreiben eines einzelnen Kandidaten fehl
+    # (z. B. nicht parsebare KI-Antwort), wird automatisch der nächste
+    # Kandidat aus dem Pool nachgezogen, statt einfach einen Platz frei zu
+    # lassen. So kommen zuverlässig immer MAX_ARTICLES_PER_RUN Artikel pro
+    # Lauf zustande, solange die Feeds insgesamt genug Material liefern.
     priority_entries = [e for e in new_raw if e.get("priority")]
     normal_entries = [e for e in new_raw if not e.get("priority")]
 
-    selected = priority_entries[:PRIORITY_QUOTA]
-    remaining_slots = MAX_ARTICLES_PER_RUN - len(selected)
-    selected += normal_entries[:remaining_slots]
-
-    # Falls die Franchise-Feeds mehr als die Quote liefern und die
-    # allgemeinen Feeds die restlichen Plätze nicht auffüllen: mit
-    # weiteren Franchise-Artikeln auffüllen, statt Plätze verfallen zu lassen.
-    if len(selected) < MAX_ARTICLES_PER_RUN:
-        extra_priority = priority_entries[PRIORITY_QUOTA:]
-        selected += extra_priority[:MAX_ARTICLES_PER_RUN - len(selected)]
-
-    new_entries = selected
-    print(f"  {len(new_entries)} davon sind neu und werden geschrieben "
-          f"({sum(1 for e in new_entries if e.get('priority'))} aus Franchise-Feeds)")
-
-    # Für Einträge ohne Bild aus dem Feed: og:image von der Original-Seite holen
-    for entry in new_entries:
-        if not entry.get("image"):
-            entry["image"] = fetch_og_image(entry["link"])
+    print(f"  {len(new_raw)} mögliche Kandidaten verfügbar für {MAX_ARTICLES_PER_RUN} Plätze "
+          f"({len(priority_entries)} davon aus Franchise-Feeds)")
 
     written = []
-    for entry in new_entries:
+    used_links = set()
+
+    def try_write(entry):
+        if not entry.get("image"):
+            entry["image"] = fetch_og_image(entry["link"])
         print(f"  ✎ Schreibe: {entry['title'][:70]}")
         article = write_article(entry)
         if article:
             written.append(article)
+            used_links.add(entry["link"])
+            return True
+        print(f"  ⚠ Fehlgeschlagen — probiere nächsten Kandidaten aus dem Pool.")
+        return False
+
+    # Schritt 1: mindestens PRIORITY_QUOTA Franchise-Artikel sicherstellen —
+    # bei Fehlschlägen den nächsten Franchise-Kandidaten probieren, nicht
+    # nach dem ersten Versuch aufgeben.
+    franchise_written = 0
+    for entry in priority_entries:
+        if franchise_written >= PRIORITY_QUOTA:
+            break
+        if try_write(entry):
+            franchise_written += 1
+
+    # Schritt 2: restliche Plätze auffüllen — aus allen noch nicht
+    # verwendeten Kandidaten (allgemeine zuerst, dann übrige Franchise-
+    # Artikel), ebenfalls mit automatischem Nachziehen bei Fehlschlägen.
+    remaining_pool = [e for e in (normal_entries + priority_entries) if e["link"] not in used_links]
+    seen_links = set()
+    dedup_pool = []
+    for e in remaining_pool:
+        if e["link"] in seen_links:
+            continue
+        seen_links.add(e["link"])
+        dedup_pool.append(e)
+
+    for entry in dedup_pool:
+        if len(written) >= MAX_ARTICLES_PER_RUN:
+            break
+        try_write(entry)
+
+    if len(written) < MAX_ARTICLES_PER_RUN:
+        print(f"  ⚠ Nur {len(written)} von {MAX_ARTICLES_PER_RUN} Artikeln konnten erstellt "
+              f"werden — nicht genug neue, einzigartige Meldungen in den Feeds gefunden.")
+    if franchise_written < PRIORITY_QUOTA:
+        print(f"  ⚠ Keine passende Franchise-Meldung (GTA/Minecraft/Fortnite/CoD/Valorant/FIFA) "
+              f"in diesem Lauf gefunden.")
 
     all_articles = written + existing
     all_articles = all_articles[:MAX_ARTICLES_TOTAL]
