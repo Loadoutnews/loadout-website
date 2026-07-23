@@ -62,6 +62,51 @@ CATS = {"pc": "PC", "konsole": "Konsolen", "hardware": "Hardware", "industrie": 
 MAX_BLUESKY_IMAGES = 4       # technisches Limit von Bluesky
 MAX_INSTAGRAM_CAROUSEL = 10  # technisches Limit von Instagram (wir haben eh nie mehr als 4)
 
+# --- Hashtags für maximale organische Reichweite -----------------------------
+# Mischung aus allgemeinen Gaming-Hashtags (werden viel gesucht, aber auch
+# stark umkämpft) und spezifischen Spiel-/Kategorie-Hashtags (weniger
+# Konkurrenz, aber gezielteres Publikum) — genau diese Mischung empfehlen
+# die Algorithmen der jeweiligen Plattformen für organische Reichweite.
+GENERAL_HASHTAGS = ["gaming", "gamingnews", "videogames", "gamer"]
+
+CAT_HASHTAGS = {
+    "pc": ["pcgaming", "pcgamer"],
+    "konsole": ["consolegaming", "playstation", "xbox"],
+    "hardware": ["gaminghardware", "pcbuild"],
+    "industrie": ["gamingindustry"],
+}
+
+GAME_HASHTAGS = {
+    "gta": ["GTA6", "GTA", "RockstarGames"],
+    "minecraft": ["Minecraft", "MinecraftNews"],
+    "fortnite": ["Fortnite", "FortniteNews"],
+    "cod": ["CallOfDuty", "Warzone"],
+    "valorant": ["Valorant", "LeagueOfLegends", "Esports"],
+    "fifa": ["EASportsFC", "FIFA"],
+}
+
+
+def generate_hashtags(articles, max_tags=12):
+    """Baut eine Hashtag-Liste aus den Themen der aktuellen Artikel-Auswahl —
+    spezifische Spiel-/Kategorie-Tags zuerst (gezieltes Publikum, weniger
+    Konkurrenz), allgemeine Gaming-Tags als Auffüller (große Reichweite)."""
+    tags = []
+
+    def add(t):
+        if t.lower() not in [x.lower() for x in tags]:
+            tags.append(t)
+
+    for a in articles:
+        for t in GAME_HASHTAGS.get(a.get("game"), []):
+            add(t)
+    for a in articles:
+        for t in CAT_HASHTAGS.get(a.get("cat"), []):
+            add(t)
+    for t in GENERAL_HASHTAGS:
+        add(t)
+
+    return tags[:max_tags]
+
 
 def load_json(path, default):
     if os.path.exists(path):
@@ -133,14 +178,50 @@ def post_bluesky_batch(articles):
 
     headers = {"Authorization": f"Bearer {access_jwt}", "Content-Type": "application/json"}
 
+    # Nur 3 Hashtags bei Bluesky — der Post ist auf 300 Zeichen begrenzt und
+    # schon die Artikel-Titel + Link brauchen viel Platz.
+    hashtags = generate_hashtags(articles, max_tags=3)
+    hashtag_line = " ".join(f"#{t}" for t in hashtags)
+
     # Sammel-Text: Aufzählung aller neuen Artikel
     lines = [f"🎮 {len(articles)} neue Artikel bei LOADOUT-NEWS:"]
     for a in articles:
         lines.append(f"• {a['title']}")
     lines.append(f"\n👉 {SITE_URL}")
+    if hashtag_line:
+        lines.append(hashtag_line)
     text = "\n".join(lines)
     if len(text) > 295:
-        text = text[:292] + "..."
+        # Lieber die Hashtag-Zeile komplett weglassen als mittendrin
+        # abzuschneiden und dabei den Link oder einen Hashtag zu zerstören.
+        text = "\n".join(lines[:-1]) if hashtag_line else text
+        if len(text) > 295:
+            text = text[:292] + "..."
+
+    # Bluesky macht aus reinem Text-URLs und #Hashtags NICHT automatisch
+    # klickbare Links/Tags — dafür braucht es "Facets", die genau angeben,
+    # welcher Byte-Bereich im Text ein Link bzw. ein Hashtag ist (Bluesky
+    # zählt in UTF-8-Bytes, nicht in Zeichen, wegen Emojis wie 🎮 im Text).
+    facets = []
+    if SITE_URL in text:
+        url_char_start = text.rindex(SITE_URL)
+        byte_start = len(text[:url_char_start].encode("utf-8"))
+        byte_end = byte_start + len(SITE_URL.encode("utf-8"))
+        facets.append({
+            "index": {"byteStart": byte_start, "byteEnd": byte_end},
+            "features": [{"$type": "app.bsky.richtext.facet#link", "uri": SITE_URL}],
+        })
+    for t in hashtags:
+        tag_str = f"#{t}"
+        if tag_str not in text:
+            continue
+        char_start = text.rindex(tag_str)
+        byte_start = len(text[:char_start].encode("utf-8"))
+        byte_end = byte_start + len(tag_str.encode("utf-8"))
+        facets.append({
+            "index": {"byteStart": byte_start, "byteEnd": byte_end},
+            "features": [{"$type": "app.bsky.richtext.facet#tag", "tag": t}],
+        })
 
     # Bis zu 4 Vorschaubilder hochladen (Bluesky-Limit)
     images = []
@@ -166,6 +247,8 @@ def post_bluesky_batch(articles):
         "text": text,
         "createdAt": datetime.datetime.utcnow().isoformat() + "Z",
     }
+    if facets:
+        record["facets"] = facets
     if images:
         record["embed"] = {"$type": "app.bsky.embed.images", "images": images}
 
@@ -212,10 +295,12 @@ def post_instagram_carousel(articles):
             child_ids.append(child_resp.json()["id"])
 
         # Schritt 2: die gesammelte Bildunterschrift für das ganze Karussell
+        hashtags = generate_hashtags(articles_with_images, max_tags=15)
+        hashtag_block = " ".join(f"#{t}" for t in hashtags)
         caption_lines = [f"🎮 {len(articles_with_images)} neue Artikel bei LOADOUT-NEWS!\n"]
         for a in articles_with_images:
             caption_lines.append(f"• {a['title']}")
-        caption_lines.append(f"\n👉 Alle Artikel über den Link in unserer Bio: {SITE_URL}\n\n#gaming #gamingnews")
+        caption_lines.append(f"\n👉 Alle Artikel über den Link in unserer Bio: {SITE_URL}\n\n{hashtag_block}")
         caption = "\n".join(caption_lines)
 
         # Schritt 3: Karussell-Container mit allen Kindern anlegen
@@ -249,7 +334,9 @@ def post_instagram_carousel(articles):
 def _post_instagram_single(article, access_token, ig_user_id):
     """Fallback für den (seltenen) Fall, dass nur ein einziger neuer Artikel
     mit Bild vorliegt — Instagram erlaubt kein Karussell mit nur 1 Bild."""
-    caption = f"{article['title']}\n\n{article['teaser']}\n\n👉 Den ganzen Artikel gibt's über den Link in unserer Bio: {SITE_URL}\n\n#gaming #gamingnews"
+    hashtags = generate_hashtags([article], max_tags=15)
+    hashtag_block = " ".join(f"#{t}" for t in hashtags)
+    caption = f"{article['title']}\n\n{article['teaser']}\n\n👉 Den ganzen Artikel gibt's über den Link in unserer Bio: {SITE_URL}\n\n{hashtag_block}"
     try:
         container_resp = requests.post(
             f"https://graph.facebook.com/v21.0/{ig_user_id}/media",
@@ -298,9 +385,26 @@ def post_tumblr_batch(articles):
         content_blocks.append({"type": "text", "text": f"{a['title']}\n{a['teaser']}"})
         if a.get("image"):
             content_blocks.append({"type": "image", "media": [{"url": a["image"]}]})
-    content_blocks.append({"type": "text", "text": f"👉 Alle Artikel: {SITE_URL}"})
 
-    payload = {"content": content_blocks, "tags": "gaming,gamingnews,loadoutnews"}
+    # Tumblrs "Neues Post Format" verlangt eine explizite Formatierungs-
+    # Angabe, um aus reinem Text einen echten klickbaren Link zu machen —
+    # sonst bleibt die URL einfach unverlinkter Text.
+    link_line = f"👉 Alle Artikel: {SITE_URL}"
+    url_start = link_line.index(SITE_URL)
+    url_end = url_start + len(SITE_URL)
+    content_blocks.append({
+        "type": "text",
+        "text": link_line,
+        "formatting": [{"start": url_start, "end": url_end, "type": "link", "url": SITE_URL}],
+    })
+
+    # Bei Tumblr zählt fürs hauseigene Empfehlungs-/Suchsystem VOR ALLEM
+    # das separate "tags"-Feld — nicht (nur) Hashtags im Fließtext. Bis zu
+    # 30 Tags sind erlaubt; wir nutzen eine themenspezifische Mischung plus
+    # den Marken-Tag.
+    hashtags = generate_hashtags(articles, max_tags=20)
+    tags = ",".join(hashtags + ["loadoutnews"])
+    payload = {"content": content_blocks, "tags": tags}
 
     resp = requests.post(
         f"https://api.tumblr.com/v2/blog/{blog_name}/posts",
@@ -365,7 +469,14 @@ def post_reddit_batch(articles):
             print("  Reddit: ! Keine Bilder konnten heruntergeladen werden.")
             return False
 
-        title = f"🎮 {len(articles_with_images)} neue Artikel bei LOADOUT-NEWS"
+        # Ein konkreter, neugierig machender Titel performt auf Reddit
+        # erfahrungsgemäß deutlich besser als eine reine Zahlenangabe —
+        # daher wird der gehypteste Artikel der Auswahl im Titel genannt.
+        top_article = max(articles_with_images, key=lambda a: a.get("hype", 0))
+        if len(articles_with_images) == 1:
+            title = f"🎮 {top_article['title']}"
+        else:
+            title = f"🎮 {top_article['title']} (+{len(articles_with_images) - 1} weitere News)"
         if len(gallery_images) == 1:
             # Reddit erlaubt keine Galerie mit nur 1 Bild — normaler Bild-Post stattdessen
             subreddit.submit_image(title=title, image_path=gallery_images[0]["image_path"])
