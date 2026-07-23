@@ -178,25 +178,36 @@ def post_bluesky_batch(articles):
 
     headers = {"Authorization": f"Bearer {access_jwt}", "Content-Type": "application/json"}
 
-    # Nur 3 Hashtags bei Bluesky — der Post ist auf 300 Zeichen begrenzt und
-    # schon die Artikel-Titel + Link brauchen viel Platz.
+    MAX_BLUESKY_CHARS = 300
+
+    # Nur 3 Hashtags bei Bluesky — der Post ist auf 300 Zeichen begrenzt.
     hashtags = generate_hashtags(articles, max_tags=3)
     hashtag_line = " ".join(f"#{t}" for t in hashtags)
 
-    # Sammel-Text: Aufzählung aller neuen Artikel
-    lines = [f"🎮 {len(articles)} neue Artikel bei LOADOUT-NEWS:"]
-    for a in articles:
-        lines.append(f"• {a['title']}")
-    lines.append(f"\n👉 {SITE_URL}")
+    # Fußzeile (Link + Hashtags) wird ZUERST festgelegt und bekommt garantiert
+    # Platz reserviert — die darf niemals wegfallen oder abgeschnitten werden.
+    footer = f"👉 {SITE_URL}"
     if hashtag_line:
-        lines.append(hashtag_line)
-    text = "\n".join(lines)
-    if len(text) > 295:
-        # Lieber die Hashtag-Zeile komplett weglassen als mittendrin
-        # abzuschneiden und dabei den Link oder einen Hashtag zu zerstören.
-        text = "\n".join(lines[:-1]) if hashtag_line else text
-        if len(text) > 295:
-            text = text[:292] + "..."
+        footer += f"\n{hashtag_line}"
+
+    # Nur eine grobe Sammel-Überschrift statt einer Liste aller Artikel-Titel
+    # — verhindert, dass der Post bei vielen/langen Titeln unkontrolliert
+    # mitten im Text (oder sogar vor dem Link) abgeschnitten wird.
+    top_article = max(articles, key=lambda a: a.get("hype", 0))
+    if len(articles) == 1:
+        headline = f"🎮 {top_article['title']}"
+    else:
+        headline = f"🎮 {len(articles)} neue Artikel bei LOADOUT-NEWS — u. a. {top_article['title']}"
+
+    # Verbleibender Platz fürs Headline = Gesamtlimit minus Fußzeile minus
+    # Zeilenumbruch dazwischen. Passt das Headline nicht komplett rein,
+    # wird NUR das Headline gekürzt (mit "…") — Link und Hashtags bleiben
+    # davon immer unangetastet.
+    budget = MAX_BLUESKY_CHARS - len(footer) - 1
+    if len(headline) > budget:
+        headline = headline[:max(budget - 1, 0)].rstrip() + "…"
+
+    text = f"{headline}\n{footer}"
 
     # Bluesky macht aus reinem Text-URLs und #Hashtags NICHT automatisch
     # klickbare Links/Tags — dafür braucht es "Facets", die genau angeben,
