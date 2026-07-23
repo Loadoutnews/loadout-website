@@ -177,15 +177,6 @@ def update_image(u):
     return f"https://picsum.photos/seed/loadout-update-{seed}/300/200"
 
 
-def days_until(date_str):
-    try:
-        target = datetime.date.fromisoformat(date_str)
-        delta = (target - datetime.date.today()).days
-        return delta
-    except (ValueError, TypeError):
-        return None
-
-
 def render_html(updates):
     updates_sorted = sorted(updates, key=lambda u: u.get("update_date", "9999-99-99"))
 
@@ -193,19 +184,11 @@ def render_html(updates):
     for u in updates_sorted:
         platforms = " · ".join(u.get("platforms", []))
         img = u.get("image") or update_image(u)
-        d = days_until(u.get("update_date"))
-        countdown = ""
-        if d is not None:
-            if d == 0:
-                countdown = "Heute"
-            elif d == 1:
-                countdown = "Morgen"
-            else:
-                countdown = f"in {d} Tagen"
+        update_date = u.get("update_date", "")
         cards += f"""
         <div class="release-card">
           <div class="release-art" style="background:linear-gradient(160deg, rgba(52,217,201,0.16), rgba(13,31,36,0.9)), url('{img}') center/cover;">
-            <span class="badge hardware" style="position:absolute; top:10px; left:10px;">{countdown}</span>
+            <span class="badge hardware countdown-badge" data-update-date="{update_date}" style="position:absolute; top:10px; left:10px;"></span>
           </div>
           <div class="release-body">
             <h3>{u.get('game','')}</h3>
@@ -281,6 +264,26 @@ def render_html(updates):
     <span>© 2026 LOADOUT-NEWS</span>
   </div>
 </footer>
+
+<script>
+  // Countdown wird bei JEDEM Seitenaufruf frisch berechnet — nicht einmalig
+  // beim wöchentlichen Bauen der Seite. So bleibt "in X Tagen" auch dann
+  // korrekt, wenn die Seite selbst erst wieder nächste Woche neu gebaut wird.
+  document.querySelectorAll('.countdown-badge').forEach(el => {{
+    const dateStr = el.dataset.updateDate;
+    if(!dateStr) return;
+    const target = new Date(dateStr + 'T00:00:00');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diffDays = Math.round((target - today) / (1000 * 60 * 60 * 24));
+
+    let text = `in ${{diffDays}} Tagen`;
+    if(diffDays === 0) text = 'Heute';
+    else if(diffDays === 1) text = 'Morgen';
+    else if(diffDays < 0) text = 'Bereits da';
+    el.textContent = text;
+  }});
+</script>
 
 </body>
 </html>
