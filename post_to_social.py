@@ -278,6 +278,25 @@ def post_bluesky_batch(articles):
 # Ein einziges Karussell (mehrere Bilder zum Durchwischen in einem Post) —
 # technisch ein zweistufiger Prozess: erst jedes Bild als "Karussell-Kind"
 # anlegen, dann alle zusammen als ein Karussell veröffentlichen.
+#
+# WICHTIG: Instagram lehnt Bilder mit falschem Seitenverhältnis/Format/zu
+# geringer Auflösung ab. Damit deshalb NIE ein Artikel-Bild einfach
+# wegfällt, wird hier JEDES Bild automatisch über wsrv.nl (ein etabliertes,
+# kostenloses Open-Source-Bild-Cache/Zuschneide-Service, seit 2011 aktiv,
+# von Cloudflare abgesichert) auf ein garantiert gültiges 1:1-Quadrat im
+# JPEG-Format zugeschnitten — unabhängig vom ursprünglichen Format der
+# Quelle. Jeder Artikel bekommt so zuverlässig sein eigenes Bild/Slide.
+
+def get_instagram_safe_image_url(original_url):
+    """Schneidet ein beliebiges Bild automatisch auf ein für Instagram
+    garantiert gültiges Format zu (1080×1080, quadratisch, JPEG) — statt es
+    bei falschem Seitenverhältnis/Format einfach zu überspringen."""
+    if not original_url:
+        return None
+    from urllib.parse import quote
+    encoded = quote(original_url, safe="")
+    return f"https://wsrv.nl/?url={encoded}&w=1080&h=1080&fit=cover&output=jpg&q=85"
+
 
 def post_instagram_carousel(articles):
     access_token = os.environ.get("INSTAGRAM_ACCESS_TOKEN")
@@ -299,7 +318,7 @@ def post_instagram_carousel(articles):
         for a in articles_with_images:
             child_resp = requests.post(
                 f"https://graph.facebook.com/v21.0/{ig_user_id}/media",
-                data={"image_url": a["image"], "is_carousel_item": "true", "access_token": access_token},
+                data={"image_url": get_instagram_safe_image_url(a["image"]), "is_carousel_item": "true", "access_token": access_token},
                 timeout=15,
             )
             if child_resp.status_code != 200:
@@ -315,6 +334,8 @@ def post_instagram_carousel(articles):
             caption_lines.append(f"• {a['title']}")
         caption_lines.append(f"\n👉 Alle Artikel über den Link in unserer Bio: {SITE_URL}\n\n{hashtag_block}")
         caption = "\n".join(caption_lines)
+        if len(caption) > 2200:  # dokumentiertes Instagram-Limit für Bildunterschriften
+            caption = caption[:2197] + "..."
 
         # Schritt 3: Karussell-Container mit allen Kindern anlegen
         carousel_resp = requests.post(
@@ -352,10 +373,12 @@ def _post_instagram_single(article, access_token, ig_user_id):
     hashtags = generate_hashtags([article], max_tags=15)
     hashtag_block = " ".join(f"#{t}" for t in hashtags)
     caption = f"{article['title']}\n\n{article['teaser']}\n\n👉 Den ganzen Artikel gibt's über den Link in unserer Bio: {SITE_URL}\n\n{hashtag_block}"
+    if len(caption) > 2200:
+        caption = caption[:2197] + "..."
     try:
         container_resp = requests.post(
             f"https://graph.facebook.com/v21.0/{ig_user_id}/media",
-            data={"image_url": article["image"], "caption": caption, "access_token": access_token},
+            data={"image_url": get_instagram_safe_image_url(article["image"]), "caption": caption, "access_token": access_token},
             timeout=15,
         )
         if container_resp.status_code != 200:
