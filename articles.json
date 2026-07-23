@@ -1,5 +1,95 @@
 [
   {
+    "id": "2b7bf55a7f",
+    "cat": "konsole",
+    "game": null,
+    "genre": null,
+    "title": "Zwischen Triumph und Trümmern: So steht es um Sonys PlayStation Studios im Sommer 2026",
+    "teaser": "IGN zieht Bilanz über alle PlayStation-Studios: Während Wolverine und ein neues God of War mit Laufey Hoffnung machen, kämpfen andere Teams mit Absagen, Verzögerungen und Schließungen.",
+    "body": [
+      "IGN hat sich die Mühe gemacht, jedes einzelne PlayStation-Studio unter die Lupe zu nehmen – und das Ergebnis liest sich wie eine Achterbahnfahrt. Auf der einen Seite stehen zwei echte Prestigeprojekte, die im Rampenlicht der jüngsten State of Play im Juni 2026 glänzten. Insomniacs Marvel's Wolverine hat mittlerweile einen festen Starttermin am 15. September 2026, während Santa Monica Studio mit God of War Laufey eine waschechte Überraschung aus dem Hut zauberte.",
+      "Besonders Laufey sorgt für Gesprächsstoff, weil das Studio zum ersten Mal in der Seriengeschichte nicht Kratos, sondern seine verstorbene Frau Faye alias Laufey ins Zentrum rückt. Die Geschichte setzt direkt nach ihrer Verbrennung am Anfang von God of War (2018) an: Faye erwacht im mythologischen Jenseits Everywhen und muss sich dort gegen Götter aus verschiedensten Pantheons behaupten, um ihre Familie zu schützen. Insomniac ließ es bei Wolverine dagegen ordentlich krachen – die gezeigte Gameplay-Sequenz präsentierte einen deutlich brutaleren, weniger 'combo-verspielten' Kampfstil als noch bei Spider-Man, inklusive Jean Grey als kämpferische Verbündete an Logans Seite.",
+      "Doch abseits dieser Leuchttürme zeichnet IGNs Bestandsaufnahme auch ein deutlich unruhigeres Bild der PlayStation-Familie. Naughty Dogs Sci-Fi-Projekt Intergalactic: The Heretic Prophet blieb bei der State of Play komplett außen vor, und Insider gehen inzwischen davon aus, dass das Spiel noch Jahre entfernt und möglicherweise gar erst zum Start der PS6 erscheinen könnte. Noch dramatischer traf es Bluepoint Games: Das für Demon's Souls gefeierte Remake-Studio wurde nach der Absage eines Live-Service-Projekts komplett aufgelöst, nachdem zuvor bereits Firewalk Studios im Zuge des Concord-Debakels und Teile von Bend Studio nach gecancelten Online-Projekten Federn lassen mussten. In der Community sorgt vor allem die Kratos-lose Ausrichtung von Laufey für gespaltene Reaktionen: Manche Fans feiern den mutigen Perspektivwechsel, andere befürchten, dass Sony damit sein wichtigstes Zugpferd riskiert – Kritik, die sich auch in den überwiegend negativen Reaktionen auf den ersten Trailer widerspiegelte."
+    ],
+    "editorial_take": "Für uns zeigt diese Bestandsaufnahme vor allem eins: Sony fährt aktuell zweigleisig zwischen mutigen kreativen Wetten und den Nachwirkungen seiner gescheiterten Live-Service-Strategie. Dass ausgerechnet Laufey und Wolverine die Fahne hochhalten sollen, während Naughty Dog im Dunkeln verschwindet und ganze Studios verschwinden, macht uns nervös für die kurzfristige Zukunft der Marke – langfristig könnte der Mut zu neuen Perspektiven wie bei God of War aber genau das sein, was die Reihe frisch hält.",
+    "en": {
+      "title": "Triumphs and Turmoil: The Real State of PlayStation's Studios in Summer 2026",
+      "teaser": "IGN takes stock of every PlayStation studio — Wolverine and a bold new God of War spark excitement, while other teams face cancellations, delays, and closures.",
+      "body": [
+        "IGN went through the trouble of checking in on every single PlayStation studio, and the resulting picture feels like a roller coaster. On one side sit two genuine prestige projects that stole the spotlight at June 2026's State of Play. Insomniac's Marvel's Wolverine now has a confirmed release date of September 15, 2026, while Santa Monica Studio pulled off a genuine surprise with the reveal of God of War Laufey.",
+        "Laufey in particular is generating buzz because, for the first time in the franchise's history, the studio is putting Kratos's late wife Faye, also known as Laufey, front and center instead of Kratos himself. The story picks up right after her funeral pyre burns at the start of God of War (2018), with Faye waking up in the mythological afterlife known as Everywhen, forced to battle gods from multiple pantheons to protect her family. Wolverine, meanwhile, went full brutal — the gameplay reveal showed a faster, far less 'punchy' combat style compared to Insomniac's Spider-Man games, with Jean Grey joining Logan as a psychic-powered ally.",
+        "But beyond these headliners, IGN's roundup also paints a much rockier picture of the PlayStation family. Naughty Dog's sci-fi project Intergalactic: The Heretic Prophet was a complete no-show at State of Play, and insiders now suspect it's still years away, potentially even a PS6-era launch title. Bluepoint Games had it worse still — the beloved Demon's Souls remake studio was shut down entirely after a live-service project got scrapped, following similar turmoil at Firewalk Studios in the wake of the Concord fallout and layoffs at Bend Studio after its own canceled online game. Community reaction to Laufey's Kratos-free direction has been especially split, with plenty of fans praising the bold pivot while others worry Sony is gambling with its biggest IP — a tension reflected in the trailer's largely negative initial reception."
+      ],
+      "editorial_take": "This state-of-the-union moment shows Sony straddling two very different realities: bold creative swings on one hand, and the fallout from its failed live-service push on the other. Betting the near-term future on Laufey and Wolverine while Naughty Dog goes dark and entire studios disappear feels shaky in the short run — but if God of War's willingness to hand the spotlight to a new protagonist pays off, it might just be the kind of risk that keeps the franchise feeling alive."
+    },
+    "date": "23. July 2026",
+    "platform": "IGN Articles",
+    "hype": 68,
+    "source": "https://www.ign.com/articles/the-state-of-every-playstation-studio-july-2026",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/07/22/ps-studios-blog-1784719358847.jpg"
+  },
+  {
+    "id": "ce5dc7f220",
+    "cat": "konsole",
+    "game": null,
+    "genre": "action",
+    "title": "Avatar Legends: The Fighting Game im Test – vom Cancel-Fluch zum FGC-Liebling?",
+    "teaser": "Erst gecancelt, dann wiederbelebt: Das Avatar-Prügelspiel landet mit hand­gezeichnetem 2D-Look und cleverem Flow-System einen echten Überraschungscoup bei Kritik und Community.",
+    "body": [
+      "Es ist die Art von Geschichte, die man sich im Gaming-Business kaum ausdenken könnte: Ein Spiel wird angekündigt, fällt der Streichliste eines Studios zum Opfer, gilt monatelang als tot – und feiert dann doch noch seinen Release. Genau das ist Avatar Legends: The Fighting Game passiert. Ursprünglich von Maximum Entertainment entwickelt, wurde das Projekt fallengelassen, bevor sich das kleine Team Gameplay Group International des Titels annahm und ihn quasi aus der Asche wiederauferstehen ließ. Am 23. Juli 2026 ist der 1-gegen-1-Prügler nun für PC, PS5, Xbox Series X|S und Switch erschienen – und die Reaktionen sprechen für sich.",
+      "Spielerisch setzt Avatar Legends auf handgezeichnete 2D-Animationen im Stil der Zeichentrickserien und ein Kampfsystem, das komplett um das sogenannte Flow-Mechanikum herum gebaut ist: Wer die Taste gedrückt hält, weicht automatisch Angriffen aus und sammelt dabei Energie für stärkere Spezialmoves und cinematische Super-Attacken – wird der eigene Flow-Meter jedoch komplett aufgebraucht, gerät man in einen verwundbaren „Unbalanced“-Zustand. IGN hebt in seinem Test genau diese Flexibilität hervor und lobt das Spiel als Traum für Fighting-Game-Fans mit vielfältigem Kämpferroster. Zum Start treten zwölf Charaktere an, darunter Aang, Korra, Zuko, Katara, Toph, Sokka, Azula, Zaheer, Feuerlord Ozai und Kyoshi – ergänzt durch Support-Charaktere und ein für 2026 geplantes DLC-Jahr mit fünf weiteren Kämpfern wie Iroh, Ty Lee, Lin Beifong und Bolin.",
+      "In der Fachpresse kommt das Spiel überraschend gut weg: Auf Metacritic und OpenCritic pendelt sich der Wertungsschnitt bei rund 81 Punkten ein, was den Titel aktuell zum bestbewerteten Fighting Game des Jahres 2026 macht. <cite index=\"27-1,27-2\">TheGamer vergab 4,5 von 5 Sternen und lobte die exzellenten Kampfmechaniken, die beeindruckende Optik und den überraschend umfangreichen Story-Modus, auch wenn das etwas zu schmale Roster und die Balance Abzüge bringen.</cite> Auch TechRaptor, DualShockers und Game8 zeigten sich begeistert von der Liebe zum Detail und der spielerischen Tiefe. Allerdings gibt es auch deutlich kritischere Stimmen: <cite index=\"27-10\">Noisy Pixel vergab mit 5,5 von 10 die bislang niedrigste Wertung und bemängelte die „rushed“ wirkende Präsentation sowie ein „homogenes“ Kämpferroster.</cite> Auch <cite index=\"18-4\">der schwache Story-Modus und das komplette Fehlen grundlegender Optionen wie Schwierigkeitsgrade für die KI machen das Spiel für Casual-Fans der Serie schwer empfehlenswert</cite>, wie es in einem Test hieß – für Fighting-Game-Puristen sei es dagegen genau das Richtige. In der Community wird ebenfalls diskutiert, ob zwölf Kämpfer plus Support-System wirklich genug Abwechslung bieten, gerade weil zwei Slots auf Avatar-Zustand-Varianten von Aang und Korra entfallen."
+    ],
+    "editorial_take": "Wir finden es bemerkenswert, dass ein einst totgeglaubtes Lizenzspiel am Ende zu einem der besten Fighting Games des Jahres werden konnte – das zeigt, wie viel Herzblut hier reingeflossen ist. Das Flow-System klingt nach einer der spannendsten Neuerungen im Genre seit Langem, auch wenn der schmale Umfang zum Start und der schwache Story-Modus berechtigte Kritikpunkte sind. Für Avatar-Fans, die vor allem ein episches Story-Erlebnis erwarten, könnte es eine Enttäuschung geben – Fighting-Game-Nerds sollten aber definitiv genauer hinschauen.",
+    "en": {
+      "title": "Avatar Legends: The Fighting Game Review – From Cancellation Curse to FGC Darling?",
+      "teaser": "Cancelled, then revived from the ashes: this Avatar fighter's hand-drawn art and clever Flow system are winning over critics and the community alike.",
+      "body": [
+        "It's the kind of story you couldn't make up in the games industry: a project gets announced, ends up on the chopping block, is presumed dead for months — and then still makes it to launch. That's exactly what happened with Avatar Legends: The Fighting Game. Originally built by Maximum Entertainment, the project was dropped before the small team at Gameplay Group International picked it back up and effectively resurrected it from nothing. On July 23, 2026, the 1v1 fighter finally launched on PC, PS5, Xbox Series X|S, and Switch — and the reception has been telling.",
+        "Mechanically, the game leans on hand-drawn 2D animation styled after the original cartoons and a combat system built entirely around its signature Flow mechanic: hold the button and you automatically dodge incoming attacks while building Energy for stronger specials and cinematic Super Arts — but drain your Flow meter completely and you're left dangerously exposed in an 'Unbalanced' state. IGN's review specifically praised this flexibility, calling it a dream for fighting game fans thanks to its diverse cast and adaptable combat system. Twelve characters make up the launch roster, including Aang, Korra, Zuko, Katara, Toph, Sokka, Azula, Zaheer, Fire Lord Ozai, and Kyoshi, backed by support characters and a Year One DLC pass promising five more fighters like Iroh, Ty Lee, Lin Beifong, and Bolin.",
+        "Critics have been surprisingly kind: Metacritic and OpenCritic scores hover around 81, making it currently the highest-rated fighting game of 2026. <cite index=\"27-1,27-2\">TheGamer awarded it 4.5 out of 5, praising the excellent fighting mechanics, stunning visuals, and surprisingly meaty story mode, even if the slightly too slim roster and balancing bring it down a little.</cite> TechRaptor, DualShockers, and Game8 were similarly impressed by the love for the source material and mechanical depth. But not everyone's on board: <cite index=\"27-10\">Noisy Pixel handed out the lowest score seen so far, 5.5 out of 10, calling out the 'rushed' presentation and 'homogeneous' roster.</cite> Other outlets pointed out that <cite index=\"18-4\">the lackluster story mode and complete absence of basic options like CPU difficulty settings make it hard to recommend to casual fans</cite> of the show, even as hardcore fighting game players eat it up. The community itself remains split on whether twelve fighters plus a support system is really enough variety, especially with two roster slots going to Avatar State versions of Aang and Korra."
+      ],
+      "editorial_take": "We're genuinely struck by the fact that a once-cancelled licensed game ended up as one of the year's best fighters — that says a lot about the passion poured into this project. The Flow system sounds like one of the more inventive additions to the genre in a while, though the slim launch content and weak story mode are fair knocks against it. Avatar fans hoping for an epic narrative might walk away disappointed, but anyone who lives for fighting game mechanics should absolutely take a closer look."
+    },
+    "date": "23. July 2026",
+    "platform": "IGN Articles",
+    "hype": 72,
+    "source": "https://www.ign.com/articles/avatar-legends-the-fighting-game-review",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/07/21/avatar-legends-the-fighting-game-blogroll-01-1784674167084.jpg"
+  },
+  {
+    "id": "3937e4157d",
+    "cat": "pc",
+    "game": null,
+    "genre": null,
+    "title": "Von Dungeon Keeper bis Dwarf Fortress: Wie das Koloniesim-Genre die PC-Gaming-Landschaft prägt",
+    "teaser": "PC Gamer spricht mit den Köpfen hinter Dwarf Fortress, RimWorld und Co. über die größte Herausforderung des Genres: Chaos in gute Geschichten zu verwandeln.",
+    "body": [
+      "Kaum ein Genre erzeugt so viele denkwürdige, ungeplante Geschichten wie der Koloniesim. Man baut keine Charaktere, man erschafft eine Bühne – und schaut dann zu, wie sich Zwerge, Sträflinge oder Dämonen gegenseitig das Leben schwer machen. PC Gamer hat für ein großes Feature mit den prägenden Köpfen des Genres gesprochen, darunter Tarn Adams von Bay 12 Games, dem Studio hinter Dwarf Fortress, und Tynan Sylvester, Gründer von Ludeon Studios und Kopf hinter RimWorld.",
+      "Die zentrale Erkenntnis der Entwickler: Die eigentliche Schwierigkeit liegt nicht darin, interessante Ereignisse zu simulieren, sondern sie dem Spieler verständlich zu vermitteln. <cite index=\"1-1\">Eine der größten Herausforderungen bei der Gestaltung dieser Spiele ist nicht, ein System zu schaffen, das interessante Ereignisse erzeugt, sondern diese Ereignisse dem Spieler effektiv zu vermitteln.</cite> Tarn Adams bringt es so auf den Punkt: <cite index=\"1-2,1-3\">Man beobachtet in einem Koloniesim mehr benannte NPCs, die über längere Zeit miteinander interagieren, und man beobachtet sie aufmerksamer, als man es normalerweise bei geskripteten NPCs in einem Rollenspiel tun würde – dadurch lernt man die Charaktere wirklich kennen.</cite> Genau dieser Detailgrad macht die Entwicklung solcher Spiele aber auch zu einem Höllenritt. Ursprung des Ganzen ist Bullfrogs Dungeon Keeper, das mit seinen zänkischen Dämonen quasi das Blaupausen-Design für das gesamte Genre lieferte – <cite index=\"1-4\">seither wurden aber nur eine Handvoll vergleichbarer Spiele entwickelt.</cite>",
+      "Interessant wird es beim Blick auf die beiden Platzhirsche der Szene, die im Artikel direkt gegenübergestellt werden: Dwarf Fortress gilt als unnachgiebiges, fast schon feindliches Erlebnis – <cite index=\"7-1,7-2,7-3\">seine Hingabe an die Simulation jedes Aspekts des Zwergenlebens hat es in der Branche legendär gemacht, allerdings ist es berüchtigt schwer zugänglich, mit einer archaischen Oberfläche und Ergebnissen, die durch den Zufall stark schwanken können.</cite> RimWorld dagegen geht den entgegengesetzten Weg: <cite index=\"7-5,7-6,7-7\">Es ist eine natürliche Weiterentwicklung von Dwarf Fortress' Design, aber zugänglicher und dreht die Design-Philosophie um – statt aus prozeduraler Generierung Geschichten zu erzeugen, nutzt es Storytelling als Grundlage für die Generierung selbst.</cite> Sylvester bringt seine Designphilosophie kompromisslos auf den Punkt: <cite index=\"14-16,14-17\">'RimWorld ist auf jeder Ebene darauf ausgelegt, Geschichten zu erzeugen', sagt er – jeder Designkonflikt zwischen 'Spiel' und 'Story-Generator' werde bewusst zugunsten der Story entschieden.</cite> In der Community wird dieser Gegensatz bis heute heiß diskutiert: Auf Steam-Foren streiten Fans regelmäßig, ob RimWorlds zugänglicherer AI-Erzähler oder Dwarf Fortress' rohe, ungefilterte Simulationstiefe das bessere Erlebnis liefert – die einen loben RimWorlds klarere Storyführung, während Hardcore-Fans Dwarf Fortress für seine schiere Mechanik-Tiefe feiern. Auch abseits der beiden Platzhirsche zeigt sich, wie viel Einfluss das ursprüngliche Dungeon-Keeper-Erbe bis heute hat: Titel wie Maia, KeeperRL oder Evil Genius greifen offen auf dessen Ideen zurück, was zeigt, wie klein der Kreis an Studios ist, die sich überhaupt an dieses aufwendige Genre heranwagen."
+    ],
+    "editorial_take": "Für uns zeigt dieses Feature eindrucksvoll, warum Koloniesims so eine treue, fast schon obsessive Fanbase haben: Kein anderes Genre lässt einen so sehr das Gefühl haben, echte Geschichten selbst zu erleben statt sie nur zu konsumieren. Dass ausgerechnet zwei so gegensätzliche Ansätze wie Dwarf Fortress' brutale Simulationstiefe und RimWorlds cleveres Storytelling-Design nebeneinander bestehen können, spricht dafür, dass im Genre noch lange nicht alles gesagt ist. Wer sich für emergente Erzählungen und Spielsysteme interessiert, sollte dieses Interview mit den Genre-Vätern nicht verpassen.",
+    "en": {
+      "title": "From Dungeon Keeper to Dwarf Fortress: How Colony Sims Quietly Shaped PC Gaming",
+      "teaser": "PC Gamer sat down with the minds behind Dwarf Fortress, RimWorld and more to unpack colony sims' toughest design puzzle: turning chaos into compelling stories.",
+      "body": [
+        "Few genres spin unscripted stories quite like the colony sim. You're not crafting characters directly — you're building a stage and watching dwarves, prisoners, or demons make each other's lives miserable. PC Gamer's latest feature brought together the genre's defining voices, including Tarn Adams of Bay 12 Games, creator of Dwarf Fortress, and Tynan Sylvester, founder of Ludeon Studios and lead designer on RimWorld.",
+        "The developers agree on one core truth: the hardest part isn't simulating interesting events, it's communicating them clearly to the player. <cite index=\"1-1\">One of the toughest challenges when designing these games is not creating a system that produces interesting events, but ensuring it communicates those events effectively to the player.</cite> Adams puts it vividly: <cite index=\"1-2,1-3\">you watch more named NPCs interacting over longer periods than you typically would with scheduled characters in an RPG, which lets you really get to know them.</cite> That same depth, though, is exactly why so few studios have dared to follow in Dungeon Keeper's footsteps — <cite index=\"1-4\">since Bullfrog's game set the genre's template, only a handful of similar games have been made.</cite>",
+        "The article's real spark comes from contrasting the genre's two towering figures. Dwarf Fortress is uncompromising by design: <cite index=\"7-1,7-2,7-3\">its dedication to simulating every angle of fantasy colony life made it legendary, but it's famously difficult to grasp thanks to an archaic interface and wildly unpredictable outcomes.</cite> RimWorld takes the opposite route — <cite index=\"7-5,7-6,7-7\">it's a natural evolution of Dwarf Fortress's design, but more accessible, flipping the philosophy by using storytelling as the basis for generation rather than the other way around.</cite> Sylvester doesn't mince words about that priority: <cite index=\"14-16,14-17\">'RimWorld is designed at every level to generate story,' he explains, always resolving design conflicts in favor of narrative over pure mechanics.</cite> That divide still fuels endless Steam forum debates, where fans argue whether RimWorld's guided storytelling or Dwarf Fortress's raw simulation depth makes for the better experience — and the genre's DNA clearly lives on in smaller homages like Maia, KeeperRL, and Evil Genius, proof of just how few studios dare tackle this notoriously punishing genre."
+      ],
+      "editorial_take": "What strikes us most is how colony sims turn players into co-authors of their own stories rather than passive consumers — that's a rare kind of magic in gaming. The fact that Dwarf Fortress's brutal simulation and RimWorld's sharper narrative focus can both thrive says the genre still has plenty of room to grow. If you care about emergent storytelling in games, this deep dive with the genre's founding fathers is well worth your time."
+    },
+    "date": "23. July 2026",
+    "platform": "PCGamer latest",
+    "hype": 42,
+    "source": "https://www.pcgamer.com/games/strategy/the-challenges-of-developing-the-colony-sim-from-dungeon-keeper-to-dwarf-fortress-and-beyond/",
+    "sourceLabel": "PCGamer latest",
+    "image": "https://cdn.mos.cms.futurecdn.net/wWnEbLR3zpiEZxqDqV6L7Z-1280-80.jpg"
+  },
+  {
     "id": "d2f64d717b",
     "cat": "konsole",
     "game": "gta",
@@ -1172,62 +1262,5 @@
     "source": "https://www.pcgamer.com/gaming-industry/the-mid-2000s-was-the-golden-era-of-first-person-shooters-david-syzmankski-creator-of-dusk-and-iron-lung-discusses-the-games-on-his-pc/",
     "sourceLabel": "PCGamer latest",
     "image": "https://cdn.mos.cms.futurecdn.net/KzayFZLQGnGjmh7mCJYSSm-1280-80.jpg"
-  },
-  {
-    "id": "97019b5310",
-    "cat": "industrie",
-    "game": null,
-    "genre": "action",
-    "title": "Kritik am Casting? God of War-Serienstar Deborah Ann Woll bleibt gelassen",
-    "teaser": "Nach ihrer Besetzung als Laufey in der God of War-Verfilmung hagelte es negative Reaktionen aus der Fangemeinde. Die Schauspielerin lässt sich davon aber nicht beeindrucken.",
-    "body": [
-      "Seit die Besetzungsliste für die geplante God of War-Adaption bekannt wurde, brodelt es in den sozialen Netzwerken. Besonders die Entscheidung, Deborah Ann Woll als Laufey zu casten, sorgte für hitzige Diskussionen unter Fans der Videospielreihe, die genaue Vorstellungen davon haben, wie ihre geliebten Charaktere auf dem Bildschirm aussehen sollten.",
-      "Woll selbst zeigt sich von dem Gegenwind allerdings unbeeindruckt. In aktuellen Interviews macht die Schauspielerin deutlich, dass sie voll und ganz hinter dem Projekt steht und von der Qualität dessen, was gerade entsteht, überzeugt ist. Statt sich von der Kritik verunsichern zu lassen, richtet sie den Fokus lieber auf die eigentliche Arbeit vor der Kamera.",
-      "Fan-Casting-Debatten sind bei Adaptionen beliebter Spielereihen längst Standard geworden – man denke nur an die hitzigen Diskussionen rund um andere große Videospielverfilmungen der letzten Jahre. Ob sich die Aufregung um Laufey am Ende als berechtigt erweist oder die Serie die Zweifler eines Besseren belehrt, wird sich erst zeigen, wenn konkretere Details und letztlich die fertige Produktion selbst vorliegen. Bis dahin bleibt vor allem eines spannend: wie treu die Serie der Vorlage aus dem PlayStation-Universum wirklich folgen wird."
-    ],
-    "date": "19. July 2026",
-    "platform": "PCGamer latest",
-    "hype": 38,
-    "source": "https://www.pcgamer.com/games/action/god-of-war-laufey-star-deborah-ann-woll-isnt-phased-by-the-negative-reactions-to-its-announcement-i-feel-totally-unbothered/",
-    "sourceLabel": "PCGamer latest",
-    "image": "https://cdn.mos.cms.futurecdn.net/B5JvMSgdsaLfHSNCyawzf9-1280-80.jpg"
-  },
-  {
-    "id": "f643aae0f9",
-    "cat": "industrie",
-    "game": null,
-    "genre": null,
-    "title": "Gears-of-War-Schöpfer denkt über Comeback nach – aber PvP ist tabu",
-    "teaser": "Cliff Bleszinski liebäugelt mit einer Rückkehr in die Spieleentwicklung. Ein Multiplayer-Shooter mit PvP-Fokus soll es aber definitiv nicht werden.",
-    "body": [
-      "Cliff Bleszinski, der Kopf hinter der legendären Gears-of-War-Reihe, spielt offenbar mit dem Gedanken, wieder aktiv Spiele zu entwickeln. Nach Jahren abseits der großen Bühne meldet sich der Designer zu Wort und lässt durchblicken, dass ein Projekt in seinem Kopf heranreift. Für Fans der alten Gears-Ära dürfte das aufhorchen lassen, schließlich prägte Bleszinski mit seiner Cover-Shooter-Formel eine ganze Generation von Third-Person-Shootern.",
-      "Klar ist aber schon jetzt: Ein reinrassiger PvP-Titel wird es nicht. Bleszinski hat mit seinem letzten großen Projekt, dem Hero-Shooter LawBreakers, eine schmerzhafte Bauchlandung hingelegt, das Spiel wurde nach enttäuschenden Spielerzahlen wieder eingestellt. Diese Erfahrung scheint tiefe Spuren hinterlassen zu haben. Seiner Einschätzung nach ist der kompetitive Multiplayer-Markt inzwischen so hart umkämpft und von Platzhirschen wie Fortnite, Valorant oder Overwatch dominiert, dass er anderen Entwicklern in diesem Segment nur noch viel Glück wünschen kann.",
-      "Stattdessen betont er, dass viele Spieler:innen sich eigentlich etwas ganz Einfaches wünschen: entspannt mit Freund:innen online abhängen und gemeinsam Gegner plätten, ohne den Druck eines knallharten Ranked-Systems. Genau diese Erkenntnis könnte die Richtung für sein mögliches neues Projekt vorgeben. Ob daraus tatsächlich ein neues Spiel entsteht, ist noch offen, doch allein die Aussicht, dass einer der einflussreichsten Shooter-Designer der Branche zurückkehren könnte, dürfte bei vielen Gaming-Fans für Vorfreude sorgen."
-    ],
-    "date": "19. July 2026",
-    "platform": "PCGamer latest",
-    "hype": 47,
-    "source": "https://www.pcgamer.com/gaming-industry/gears-of-wars-creator-is-considering-returning-to-game-development-but-whatever-he-makes-wont-be-pvp-like-his-last-efforts-good-look-to-anyone-in-that-space/",
-    "sourceLabel": "PCGamer latest",
-    "image": "https://cdn.mos.cms.futurecdn.net/AcaTqBp5D96SjRaanZDZaB-1280-80.jpg"
-  },
-  {
-    "id": "4f8b50c41e",
-    "cat": "pc",
-    "game": "gta",
-    "genre": "action",
-    "title": "GTA-5-Mod verwandelt Roleplay-Knast in ein komplettes Spiel im Spiel",
-    "teaser": "Ein Modder hat aus dem klassischen Gefängnis-Roleplay ein derart durchdachtes System gebaut, dass Fans jetzt schon fordern: Das muss in GTA 6 rein.",
-    "body": [
-      "Roleplay-Server leben von improvisierten Regeln und Community-Kreativität, aber ein neuer GTA-5-Mod hebt das Ganze auf ein völlig neues Level. Statt eines simplen Gefängnisbereichs, in dem man ein paar Minuten absitzt und dann weiterzockt, entsteht hier eine eigenständige Erfahrung mit Struktur, Fortschritt und echten Konsequenzen – inspiriert von Gefängnisfilmen wie Shawshank, wie Spieler selbst anmerken.",
-      "Das Besondere: Der Knast fühlt sich nicht mehr wie ein Nebenschauplatz an, sondern wie ein eigenes kleines Spiel innerhalb von GTA Online. Wer verhaftet wird, taucht in ein System mit eigenen Abläufen, Interaktionsmöglichkeiten und einer Art innerer Logik ein, die deutlich über das hinausgeht, was Rockstar selbst je angeboten hat. Genau deshalb macht gerade in Roleplay-Communities die Runde, dass Rockstar sich davon für GTA 6 eine Scheibe abschneiden sollte.",
-      "Dass ausgerechnet ein Community-Projekt zeigt, wie viel Potenzial im Gefängnis-Feature steckt, ist bezeichnend für die GTA-Modding-Szene: Seit Jahren stopfen Mods und Roleplay-Server Lücken, die das Basisspiel offen lässt, und pushen dabei ständig die Grenzen dessen, was mit der alten GTA-5-Engine überhaupt möglich ist. Für GTA 6 wäre ein waschechtes Gefängnissystem mit echten Konsequenzen ein spannender Baustein, um die Fantasie vom Verbrecherleben glaubwürdiger zu machen – vorausgesetzt, Rockstar hört den eigenen Modding-Fans zu."
-    ],
-    "date": "19. July 2026",
-    "platform": "PCGamer latest",
-    "hype": 45,
-    "source": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-needs-this-this-gta-5-prison-mod-turns-one-of-roleplays-most-enduring-staples-into-a-game-within-a-game/",
-    "sourceLabel": "PCGamer latest",
-    "image": "https://cdn.mos.cms.futurecdn.net/ruiSvPtYyNtTHT7GHJhhdh-1280-80.jpg"
   }
 ]
