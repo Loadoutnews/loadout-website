@@ -573,3 +573,14 @@
     padding:7px 12px; color:var(--text); font-size:12.5px; font-family:inherit; cursor:pointer;
   }
   .sort-bar select:focus{ outline:none; border-color:var(--violet); }
+
+  /* Social-Media-Icons im Footer */
+  .social-icons{ display:flex; gap:14px; justify-content:center; margin:16px 0; }
+  .social-icons a{
+    display:flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border-radius:9px;
+    background:var(--surface-2); border:1px solid var(--line);
+    color:var(--muted); transition:color .15s, border-color .15s, transform .15s;
+  }
+  .social-icons a:hover{ color:var(--violet); border-color:var(--violet); transform:translateY(-2px); }
+  .social-icons svg{ width:17px; height:17px; }
