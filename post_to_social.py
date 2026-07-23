@@ -302,7 +302,9 @@ def post_instagram_carousel(articles):
                 data={"image_url": a["image"], "is_carousel_item": "true", "access_token": access_token},
                 timeout=15,
             )
-            child_resp.raise_for_status()
+            if child_resp.status_code != 200:
+                print(f"  Instagram: ! Fehler beim Anlegen eines Karussell-Bilds ({child_resp.status_code}): {child_resp.text[:500]}", file=sys.stderr)
+                return False
             child_ids.append(child_resp.json()["id"])
 
         # Schritt 2: die gesammelte Bildunterschrift für das ganze Karussell
@@ -325,7 +327,9 @@ def post_instagram_carousel(articles):
             },
             timeout=15,
         )
-        carousel_resp.raise_for_status()
+        if carousel_resp.status_code != 200:
+            print(f"  Instagram: ! Fehler beim Anlegen des Karussells ({carousel_resp.status_code}): {carousel_resp.text[:500]}", file=sys.stderr)
+            return False
         creation_id = carousel_resp.json()["id"]
 
         # Schritt 4: veröffentlichen
@@ -335,10 +339,10 @@ def post_instagram_carousel(articles):
             timeout=15,
         )
         ok = publish_resp.status_code == 200
-        print(f"  Instagram: {'✓ 1 Karussell-Post mit ' + str(len(child_ids)) + ' Bildern' if ok else '! Fehler ' + str(publish_resp.status_code) + ' ' + publish_resp.text[:200]}")
+        print(f"  Instagram: {'✓ 1 Karussell-Post mit ' + str(len(child_ids)) + ' Bildern' if ok else '! Fehler beim Veröffentlichen (' + str(publish_resp.status_code) + '): ' + publish_resp.text[:500]}")
         return ok
     except Exception as e:
-        print(f"  Instagram: ! Fehlgeschlagen: {e}", file=sys.stderr)
+        print(f"  Instagram: ! Unerwarteter Fehler: {e}", file=sys.stderr)
         return False
 
 
@@ -354,7 +358,9 @@ def _post_instagram_single(article, access_token, ig_user_id):
             data={"image_url": article["image"], "caption": caption, "access_token": access_token},
             timeout=15,
         )
-        container_resp.raise_for_status()
+        if container_resp.status_code != 200:
+            print(f"  Instagram: ! Fehler beim Anlegen des Bilds ({container_resp.status_code}): {container_resp.text[:500]}", file=sys.stderr)
+            return False
         creation_id = container_resp.json()["id"]
         publish_resp = requests.post(
             f"https://graph.facebook.com/v21.0/{ig_user_id}/media_publish",
@@ -362,10 +368,10 @@ def _post_instagram_single(article, access_token, ig_user_id):
             timeout=15,
         )
         ok = publish_resp.status_code == 200
-        print(f"  Instagram: {'✓ 1 Post (Einzelbild)' if ok else '! Fehler ' + str(publish_resp.status_code)}")
+        print(f"  Instagram: {'✓ 1 Post (Einzelbild)' if ok else '! Fehler beim Veröffentlichen (' + str(publish_resp.status_code) + '): ' + publish_resp.text[:500]}")
         return ok
     except Exception as e:
-        print(f"  Instagram: ! Fehlgeschlagen: {e}", file=sys.stderr)
+        print(f"  Instagram: ! Unerwarteter Fehler: {e}", file=sys.stderr)
         return False
 
 
