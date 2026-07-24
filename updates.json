@@ -1,22 +1,5 @@
 [
   {
-    "game": "Call of Duty: Black Ops 7",
-    "update_title": "Season 05",
-    "update_date": "2026-07-23",
-    "platforms": [
-      "PC",
-      "PS5",
-      "Xbox Series X/S",
-      "PS4",
-      "Xbox One"
-    ],
-    "content": "Season 05 verlegt Black Ops 7 in eine ländliche japanische Stadt mit engen Nahkampf-Gefechten im Multiplayer und bringt eine neue Zombies-Survival-Map sowie das Endgame-Assignment 'Burn Run'. Zusätzlich erwartet Spieler eine neue Verdansk-POI namens Drone Labs sowie ein frischer Battle Pass mit neuen Waffen und Belohnungen.",
-    "hype": 78,
-    "source_url": "https://www.callofduty.com/blackops7",
-    "id": "c8a7bc7585",
-    "image": "https://imgs.callofduty.com/content/dam/atvi/callofduty/cod-touchui/blackops7/meta/Chimera_KA_16x9_BR.webp"
-  },
-  {
     "game": "Apex Legends",
     "update_title": "Season 30",
     "update_date": "2026-08-04",
