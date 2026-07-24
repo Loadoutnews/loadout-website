@@ -239,11 +239,39 @@ Original-Link: {entry['link']}"""
         print(f"  ! Konnte Antwort nicht parsen für: {entry['title']}", file=sys.stderr)
         return None
 
+    # Absicherung gegen ungültige Aufzählungswerte: Die KI soll laut Prompt
+    # nur bestimmte feste Werte für "cat", "game" und "genre" liefern, hält
+    # sich aber nicht immer zuverlässig daran (z. B. "league of legends"
+    # statt "valorant"). Ein ungültiger Wert hier würde auf der Website
+    # NICHT einfach nur falsch aussehen, sondern die komplette Seite zum
+    # Absturz bringen (JavaScript bricht beim Nachschlagen des Labels ab,
+    # noch bevor die Klick-Funktionen eingerichtet sind) — deshalb wird
+    # hier klar validiert statt der KI blind zu vertrauen.
+    VALID_CATS = {"pc", "konsole", "hardware", "industrie"}
+    VALID_GAMES = {"gta", "minecraft", "fortnite", "cod", "valorant", "fifa"}
+    VALID_GENRES = {"action", "adventure", "rpg", "strategie", "simulation",
+                     "shooter", "sport", "rennspiel", "horror", "puzzle"}
+
+    cat = data.get("cat")
+    if cat not in VALID_CATS:
+        print(f"  ⚠ Ungültiger cat-Wert '{cat}' — auf 'industrie' zurückgesetzt.", file=sys.stderr)
+        cat = "industrie"
+
+    game = data.get("game")
+    if game is not None and game not in VALID_GAMES:
+        print(f"  ⚠ Ungültiger game-Wert '{game}' — auf None zurückgesetzt.", file=sys.stderr)
+        game = None
+
+    genre = data.get("genre")
+    if genre is not None and genre not in VALID_GENRES:
+        print(f"  ⚠ Ungültiger genre-Wert '{genre}' — auf None zurückgesetzt.", file=sys.stderr)
+        genre = None
+
     return {
         "id": article_id(entry["link"]),
-        "cat": data.get("cat", "industrie"),
-        "game": data.get("game"),
-        "genre": data.get("genre"),
+        "cat": cat,
+        "game": game,
+        "genre": genre,
         "title": data.get("title", entry["title"]),
         "teaser": data.get("teaser", ""),
         "body": data.get("body", []),
