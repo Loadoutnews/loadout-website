@@ -345,7 +345,7 @@ def post_instagram_carousel(articles):
         child_ids = []
         for a in articles_with_images:
             child_resp = requests.post(
-                f"https://graph.facebook.com/v21.0/{ig_user_id}/media",
+                f"https://graph.instagram.com/v21.0/{ig_user_id}/media",
                 data={"image_url": get_instagram_safe_image_url(a["image"]), "is_carousel_item": "true", "access_token": access_token},
                 timeout=15,
             )
@@ -367,7 +367,7 @@ def post_instagram_carousel(articles):
 
         # Schritt 3: Karussell-Container mit allen Kindern anlegen
         carousel_resp = requests.post(
-            f"https://graph.facebook.com/v21.0/{ig_user_id}/media",
+            f"https://graph.instagram.com/v21.0/{ig_user_id}/media",
             data={
                 "media_type": "CAROUSEL",
                 "children": ",".join(child_ids),
@@ -383,7 +383,7 @@ def post_instagram_carousel(articles):
 
         # Schritt 4: veröffentlichen
         publish_resp = requests.post(
-            f"https://graph.facebook.com/v21.0/{ig_user_id}/media_publish",
+            f"https://graph.instagram.com/v21.0/{ig_user_id}/media_publish",
             data={"creation_id": creation_id, "access_token": access_token},
             timeout=15,
         )
@@ -406,7 +406,7 @@ def _post_instagram_single(article, access_token, ig_user_id):
 
     try:
         container_resp = requests.post(
-            f"https://graph.facebook.com/v21.0/{ig_user_id}/media",
+            f"https://graph.instagram.com/v21.0/{ig_user_id}/media",
             data={"image_url": get_instagram_safe_image_url(article["image"]), "caption": caption, "access_token": access_token},
             timeout=15,
         )
@@ -415,7 +415,7 @@ def _post_instagram_single(article, access_token, ig_user_id):
             return False
         creation_id = container_resp.json()["id"]
         publish_resp = requests.post(
-            f"https://graph.facebook.com/v21.0/{ig_user_id}/media_publish",
+            f"https://graph.instagram.com/v21.0/{ig_user_id}/media_publish",
             data={"creation_id": creation_id, "access_token": access_token},
             timeout=15,
         )
