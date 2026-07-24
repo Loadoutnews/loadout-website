@@ -8,16 +8,23 @@ Artikel als EINEN gesammelten Post pro Lauf — nicht einen Post pro Artikel:
   - Discord: EIN Post mit mehreren Embeds (bis zu 10 möglich, wir haben
     i. d. R. max. 4 neue Artikel pro Lauf) — erscheint als mehrere
     Artikel-Vorschauen untereinander in derselben Nachricht.
-  - Bluesky: EIN Post mit Sammel-Text + bis zu 4 Vorschaubildern
-    (Bluesky erlaubt maximal 4 Bilder pro Post).
+  - Bluesky: EIN Post mit kurzer Sammel-Überschrift + bis zu 4
+    Vorschaubildern (Bluesky erlaubt maximal 300 Zeichen und 4 Bilder).
+    Link und Hashtags sind echte klickbare "Facets", nicht nur Text, und
+    bekommen IMMER garantiert Platz — nur die Überschrift wird bei Bedarf
+    gekürzt, nie der Link.
   - Instagram: EIN Karussell-Post (mehrere Bilder zum Durchwischen in
-    einem einzigen Beitrag) mit einer Bildunterschrift, die alle
-    Artikel auflistet.
+    einem einzigen Beitrag). JEDES Artikel-Bild wird automatisch über
+    wsrv.nl auf ein garantiert gültiges 1080×1080-JPEG zugeschnitten,
+    damit nie ein Bild wegen falschem Format/Seitenverhältnis fehlt.
   - Tumblr: EIN Post im "Neuen Post Format" mit Text- und Bild-Blöcken
-    pro Artikel, untereinander in einem durchlaufenden Beitrag.
+    pro Artikel, mit echtem klickbarem Link. Hashtags landen zusätzlich
+    im separaten Tags-Feld (Tumblrs wichtigster Hebel fürs eigene
+    Empfehlungssystem).
   - Reddit: EIN Galerie-Post im EIGENEN Subreddit (nicht in fremden
     Gaming-Subreddits — dort gilt automatisiertes Posten schnell als
-    Spam und riskiert eine Kontosperrung).
+    Spam und riskiert eine Kontosperrung). Titel nennt den gehyptesten
+    Artikel konkret statt nur eine Zahl.
 
 Merkt sich in social-posted.json, was schon gepostet wurde, damit nichts
 doppelt gepostet wird.
@@ -61,6 +68,15 @@ CATS = {"pc": "PC", "konsole": "Konsolen", "hardware": "Hardware", "industrie": 
 
 MAX_BLUESKY_IMAGES = 4       # technisches Limit von Bluesky
 MAX_INSTAGRAM_CAROUSEL = 10  # technisches Limit von Instagram (wir haben eh nie mehr als 4)
+
+
+def env(name):
+    """Liest eine Umgebungsvariable und entfernt automatisch versehentlich
+    mitkopierte Leerzeichen/Zeilenumbrüche — häufigste Fehlerursache bei
+    manuell eingefügten API-Tokens ("Cannot parse access token")."""
+    value = os.environ.get(name)
+    return value.strip() if value else value
+
 
 # --- Hashtags für maximale organische Reichweite -----------------------------
 # Mischung aus allgemeinen Gaming-Hashtags (werden viel gesucht, aber auch
@@ -125,7 +141,7 @@ def save_json(path, data):
 # Vorschaukarten untereinander in EINER Nachricht an.
 
 def post_discord_batch(articles):
-    webhook_url = os.environ.get("DISCORD_WEBHOOK_URL")
+    webhook_url = env("DISCORD_WEBHOOK_URL")
     if not webhook_url:
         return False
 
@@ -154,11 +170,13 @@ def post_discord_batch(articles):
 
 
 # --- Bluesky ------------------------------------------------------------------
-# Ein einziger Post mit Sammel-Text und bis zu 4 Vorschaubildern.
+# Ein einziger Post mit kurzer Sammel-Überschrift und bis zu 4
+# Vorschaubildern. Link + Hashtags bekommen IMMER garantiert Platz — nur
+# die Überschrift wird bei Bedarf gekürzt, nie der Link.
 
 def post_bluesky_batch(articles):
-    handle = os.environ.get("BLUESKY_HANDLE")
-    app_password = os.environ.get("BLUESKY_APP_PASSWORD")
+    handle = env("BLUESKY_HANDLE")
+    app_password = env("BLUESKY_APP_PASSWORD")
     if not handle or not app_password:
         return False
 
@@ -299,8 +317,8 @@ def get_instagram_safe_image_url(original_url):
 
 
 def post_instagram_carousel(articles):
-    access_token = os.environ.get("INSTAGRAM_ACCESS_TOKEN")
-    ig_user_id = os.environ.get("INSTAGRAM_USER_ID")
+    access_token = env("INSTAGRAM_ACCESS_TOKEN")
+    ig_user_id = env("INSTAGRAM_USER_ID")
     if not access_token or not ig_user_id:
         return False
 
@@ -375,6 +393,7 @@ def _post_instagram_single(article, access_token, ig_user_id):
     caption = f"{article['title']}\n\n{article['teaser']}\n\n👉 Den ganzen Artikel gibt's über den Link in unserer Bio: {SITE_URL}\n\n{hashtag_block}"
     if len(caption) > 2200:
         caption = caption[:2197] + "..."
+
     try:
         container_resp = requests.post(
             f"https://graph.facebook.com/v21.0/{ig_user_id}/media",
@@ -404,11 +423,11 @@ def _post_instagram_single(article, access_token, ig_user_id):
 # Beitrag mit mehreren Bildern, ähnlich einem Karussell.
 
 def post_tumblr_batch(articles):
-    consumer_key = os.environ.get("TUMBLR_CONSUMER_KEY")
-    consumer_secret = os.environ.get("TUMBLR_CONSUMER_SECRET")
-    oauth_token = os.environ.get("TUMBLR_OAUTH_TOKEN")
-    oauth_token_secret = os.environ.get("TUMBLR_OAUTH_TOKEN_SECRET")
-    blog_name = os.environ.get("TUMBLR_BLOG_NAME")  # z. B. "loadoutnews.tumblr.com"
+    consumer_key = env("TUMBLR_CONSUMER_KEY")
+    consumer_secret = env("TUMBLR_CONSUMER_SECRET")
+    oauth_token = env("TUMBLR_OAUTH_TOKEN")
+    oauth_token_secret = env("TUMBLR_OAUTH_TOKEN_SECRET")
+    blog_name = env("TUMBLR_BLOG_NAME")  # z. B. "loadout-news.tumblr.com"
     if not all([consumer_key, consumer_secret, oauth_token, oauth_token_secret, blog_name]):
         return False
 
@@ -463,11 +482,11 @@ def post_tumblr_batch(articles):
 # gewertet und riskiert eine Kontosperrung).
 
 def post_reddit_batch(articles):
-    client_id = os.environ.get("REDDIT_CLIENT_ID")
-    client_secret = os.environ.get("REDDIT_CLIENT_SECRET")
-    username = os.environ.get("REDDIT_USERNAME")
-    password = os.environ.get("REDDIT_PASSWORD")
-    subreddit_name = os.environ.get("REDDIT_SUBREDDIT")  # z. B. "LoadoutNews", ohne "r/"
+    client_id = env("REDDIT_CLIENT_ID")
+    client_secret = env("REDDIT_CLIENT_SECRET")
+    username = env("REDDIT_USERNAME")
+    password = env("REDDIT_PASSWORD")
+    subreddit_name = env("REDDIT_SUBREDDIT")  # z. B. "LoadoutNews", ohne "r/"
     if not all([client_id, client_secret, username, password, subreddit_name]):
         return False
 
@@ -517,6 +536,7 @@ def post_reddit_batch(articles):
             title = f"🎮 {top_article['title']}"
         else:
             title = f"🎮 {top_article['title']} (+{len(articles_with_images) - 1} weitere News)"
+
         if len(gallery_images) == 1:
             # Reddit erlaubt keine Galerie mit nur 1 Bild — normaler Bild-Post stattdessen
             subreddit.submit_image(title=title, image_path=gallery_images[0]["image_path"])
