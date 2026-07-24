@@ -260,7 +260,7 @@ def render_html(month_label, releases):
   <div class="ad-slot ad-header">
     <span class="ad-tag mono">Werbung</span>
     <a rel="sponsored" href="https://www.awin1.com/cread.php?s=3562320&v=9862&q=417917&r=3000881" target="_blank">
-      <img src="https://www.awin1.com/cshow.php?s=3562320&v=9862&q=417917&r=3000881" border="0" alt="Kinguin – günstige Gaming-Keys">
+      <img src="https://www.awin1.com/cshow.php?s=3562320&v=9862&q=417917&r=3000881" border="0" alt="Kinguin – günstige Gaming-Keys" style="max-width:100%; height:auto; display:block; margin:0 auto; border-radius:8px;">
     </a>
   </div>
 
