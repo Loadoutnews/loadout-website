@@ -320,7 +320,17 @@ def post_instagram_carousel(articles):
     access_token = env("INSTAGRAM_ACCESS_TOKEN")
     ig_user_id = env("INSTAGRAM_USER_ID")
     if not access_token or not ig_user_id:
+        print("  Instagram: ! INSTAGRAM_ACCESS_TOKEN oder INSTAGRAM_USER_ID ist komplett leer/nicht gesetzt.", file=sys.stderr)
         return False
+
+    # Diagnose OHNE den Token selbst preiszugeben (GitHub würde ihn ohnehin
+    # automatisch als *** anzeigen) — nur Länge und auffällige Zeichen, um
+    # zu unterscheiden zwischen "Token kommt falsch/leer an" (Workflow-
+    # Problem) und "Token ist inhaltlich ungültig/abgelaufen" (Meta-Problem).
+    print(f"  Instagram: Diagnose — Token-Länge={len(access_token)} Zeichen, "
+          f"User-ID-Länge={len(ig_user_id)} Zeichen, "
+          f"enthält Anführungszeichen={'\"' in access_token or chr(39) in access_token}, "
+          f"enthält 'Bearer'={('Bearer' in access_token)}")
 
     articles_with_images = [a for a in articles if a.get("image")][:MAX_INSTAGRAM_CAROUSEL]
     if not articles_with_images:
