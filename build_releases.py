@@ -85,9 +85,6 @@ Währungen bekannt sind, gib diese an. Sortiere nach Release-Datum, dann nach Hy
         tools=[{"type": "web_search_20250305", "name": "web_search"}],
     )
 
-    # Bei aktivierter Websuche enthält die Antwort mehrere Blöcke (Suchanfragen,
-    # Suchergebnisse, ggf. Denk-Blöcke) — uns interessiert nur der/die finalen
-    # Text-Block(e) mit dem eigentlichen JSON-Ergebnis.
     text_blocks = [block.text for block in response.content if block.type == "text"]
     if not text_blocks:
         print("! Keine Textantwort von Claude erhalten.", file=sys.stderr)
@@ -96,12 +93,6 @@ Währungen bekannt sind, gib diese an. Sortiere nach Release-Datum, dann nach Hy
     raw_text = text_blocks[-1].strip()
     raw_text = raw_text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
-    # Zusätzliche Absicherung: Falls Claude trotz Anweisung noch erklärenden
-    # Text VOR dem eigentlichen JSON-Array schreibt (z. B. "Hier sind die
-    # Releases: [...]"), alles vor der ersten "[" abschneiden. Das Ende wird
-    # bewusst NICHT angeschnitten, damit die Abschneide-Rettung weiter unten
-    # (_recover_truncated_json_array) bei abgebrochenen Antworten weiter
-    # korrekt greifen kann.
     first_bracket = raw_text.find("[")
     if first_bracket > 0:
         raw_text = raw_text[first_bracket:]
@@ -109,9 +100,6 @@ Währungen bekannt sind, gib diese an. Sortiere nach Release-Datum, dann nach Hy
     try:
         releases = json.loads(raw_text)
     except json.JSONDecodeError:
-        # Falls die Antwort (z. B. durch ein Token-Limit) mitten im JSON
-        # abgeschnitten wurde: die bereits vollständigen Objekte im Array
-        # retten, statt alles zu verwerfen.
         releases = _recover_truncated_json_array(raw_text)
         if releases:
             print(f"  ⚠ Antwort war abgeschnitten — {len(releases)} vollständige Einträge gerettet.", file=sys.stderr)
@@ -123,9 +111,6 @@ Währungen bekannt sind, gib diese an. Sortiere nach Release-Datum, dann nach Hy
 
 
 def _recover_truncated_json_array(raw_text):
-    """Versucht, aus einem abgeschnittenen JSON-Array die letzten
-    vollständigen {...}-Objekte zu retten, indem das Array nach dem letzten
-    vollständigen '}' geschlossen wird."""
     last_brace = raw_text.rfind("}")
     if last_brace == -1:
         return []
@@ -137,10 +122,6 @@ def _recover_truncated_json_array(raw_text):
 
 
 def fetch_og_image(url, timeout=8):
-    """Dieselbe robuste Logik wie in news_pipeline.py: versucht, das
-    offizielle Vorschaubild der Quelle zu übernehmen, statt Spiele-Artwork
-    selbst auszuwählen (Urheberrecht!). Prüft mehrere Meta-Tag-Varianten und
-    löst relative Bild-Pfade zu vollständigen URLs auf."""
     if not url:
         return None
     from urllib.parse import urljoin
@@ -257,7 +238,14 @@ def render_html(month_label, releases):
 </div>
 
 <main>
-  <div class="ad-slot ad-header"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
+  <div class="ad-slot ad-header">
+    <span class="ad-tag mono">Anzeige</span>
+    <!-- START ADVERTISER: Kinguin DE from awin.com -->
+    <a rel="sponsored" href="https://www.awin1.com/cread.php?s=3562320&v=9862&q=417917&r=3000881">
+      <img src="https://www.awin1.com/cshow.php?s=3562320&v=9862&q=417917&r=3000881" border="0">
+    </a>
+    <!-- END ADVERTISER: Kinguin DE from awin.com -->
+  </div>
 
   <div class="section-head" style="margin-top:24px;">
     <h2 class="mono">Release-Kalender</h2>
@@ -309,10 +297,6 @@ def main():
         print("! Keine Releases gefunden, breche ab.", file=sys.stderr)
         sys.exit(1)
 
-    # Bilder einmal server-seitig auflösen und im Datensatz selbst
-    # mitspeichern — Browser dürfen fremde Seiten aus Sicherheitsgründen
-    # (CORS) nicht einfach per JavaScript nach og:image durchsuchen, daher
-    # muss das fertige Bild schon in releases.json stehen.
     for r in releases:
         r["image"] = release_image(r)
 
