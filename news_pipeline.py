@@ -179,9 +179,6 @@ diese verschiedenen Einschätzungen in eigenen Worten in den Artikel mit ein \
 Reaktionen: Während... loben, kritisieren andere...").
 - Antworte AUSSCHLIESSLICH mit einem validen JSON-Objekt, keine Erklärungen, \
 kein Markdown, keine Code-Fences.
-- Schreibe zusätzlich zur deutschen Version auch eine EIGENSTÄNDIGE englische \
-Version (nicht einfach eine Übersetzung Wort für Wort, sondern genauso \
-lebendig und eigenständig formuliert wie die deutsche — im Feld "en").
 
 JSON-Format:
 {
@@ -192,12 +189,6 @@ JSON-Format:
   "teaser": "1-2 Sätze Anreißer (max. 200 Zeichen)",
   "body": ["Absatz 1", "Absatz 2", "Absatz 3 — hier auch einordnen, was andere Quellen/Experten/die Community dazu sagen"],
   "editorial_take": "2-3 Sätze EIGENE redaktionelle Einschätzung/Meinung von LOADOUT — nicht nur zusammenfassen, sondern klar Position beziehen (z. B. 'Wir finden...', 'Aus unserer Sicht...'). Basierend auf dem, was du recherchiert hast, aber als eigene Stimme formuliert, nicht als weitere Zusammenfassung.",
-  "en": {
-    "title": "Englischer, ebenso eigenständig formulierter Titel (max. 90 Zeichen)",
-    "teaser": "1-2 englische Sätze Anreißer (max. 200 Zeichen)",
-    "body": ["Absatz 1 auf Englisch", "Absatz 2 auf Englisch", "Absatz 3 auf Englisch — inkl. Einordnung anderer Quellen"],
-    "editorial_take": "2-3 Sätze redaktionelle Einschätzung auf Englisch — eigenständig formuliert, keine reine Übersetzung des deutschen Texts."
-  },
   "hype": <Zahl 0-100, wie aufregend/relevant die News für Gaming-Fans ist>
 }
 
@@ -220,7 +211,7 @@ Original-Link: {entry['link']}"""
 
     response = client.messages.create(
         model=MODEL,
-        max_tokens=6000,
+        max_tokens=3500,
         system=WRITER_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_prompt}],
         tools=[{"type": "web_search_20250305", "name": "web_search"}],
@@ -257,7 +248,6 @@ Original-Link: {entry['link']}"""
         "teaser": data.get("teaser", ""),
         "body": data.get("body", []),
         "editorial_take": data.get("editorial_take", ""),
-        "en": data.get("en"),  # englische Zusatzversion, siehe Prompt oben — kann bei alten Artikeln fehlen
         "source_title": entry["title"],  # das ORIGINALE, englische Quelltitel — wichtig für die Themen-Dedup-Prüfung künftiger Läufe!
         "date": datetime.date.today().strftime("%d. %B %Y"),
         "platform": entry["source"],
