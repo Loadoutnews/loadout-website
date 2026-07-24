@@ -42,6 +42,8 @@ client = Anthropic()
 
 
 def update_id(game, update_title, update_date):
+    """Stabile ID aus Spiel + Update-Name + Datum, damit dieselbe Meldung
+    bei wiederholten Läufen nicht doppelt aufgenommen wird."""
     raw = f"{game}|{update_title}|{update_date}".lower()
     return hashlib.sha1(raw.encode("utf-8")).hexdigest()[:10]
 
@@ -54,6 +56,8 @@ def load_existing_updates():
 
 
 def remove_expired(updates):
+    """Wirft alle Updates raus, deren Datum bereits erreicht/vergangen ist —
+    das ist der Kern des 'automatisch verschwinden'-Mechanismus."""
     today = datetime.date.today().isoformat()
     return [u for u in updates if u.get("update_date", "9999-99-99") >= today]
 
@@ -102,6 +106,10 @@ auftauchen: {known_list}"""
     raw_text = text_blocks[-1].strip()
     raw_text = raw_text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
+    # Zusätzliche Absicherung: erklärenden Text vor dem eigentlichen
+    # JSON-Array abschneiden, falls vorhanden. Das Ende bleibt bewusst
+    # unangetastet, damit die Abschneide-Rettung (_recover_truncated_json_array)
+    # bei abgebrochenen Antworten weiter korrekt greift.
     first_bracket = raw_text.find("[")
     if first_bracket > 0:
         raw_text = raw_text[first_bracket:]
@@ -129,6 +137,9 @@ def _recover_truncated_json_array(raw_text):
 
 
 def fetch_og_image(url, timeout=8):
+    """Dieselbe robuste Logik wie im News- und Release-System: übernimmt
+    nur das echte Vorschaubild der Quelle, kein selbst ausgewähltes
+    Spiele-Artwork (Urheberrecht!)."""
     if not url:
         return None
     from urllib.parse import urljoin
@@ -228,12 +239,10 @@ def render_html(updates):
 
 <main>
   <div class="ad-slot ad-header">
-    <span class="ad-tag mono">Anzeige</span>
-    <!-- START ADVERTISER: Kinguin DE from awin.com -->
-    <a rel="sponsored" href="https://www.awin1.com/cread.php?s=3562320&v=9862&q=417917&r=3000881">
-      <img src="https://www.awin1.com/cshow.php?s=3562320&v=9862&q=417917&r=3000881" border="0">
+    <span class="ad-tag mono">Werbung</span>
+    <a rel="sponsored" href="https://www.awin1.com/cread.php?s=3562320&v=9862&q=417917&r=3000881" target="_blank">
+      <img src="https://www.awin1.com/cshow.php?s=3562320&v=9862&q=417917&r=3000881" border="0" alt="Kinguin – günstige Gaming-Keys">
     </a>
-    <!-- END ADVERTISER: Kinguin DE from awin.com -->
   </div>
 
   <div class="section-head" style="margin-top:24px;">
@@ -276,6 +285,9 @@ def render_html(updates):
 </footer>
 
 <script>
+  // Countdown wird bei JEDEM Seitenaufruf frisch berechnet — nicht einmalig
+  // beim wöchentlichen Bauen der Seite. So bleibt "in X Tagen" auch dann
+  // korrekt, wenn die Seite selbst erst wieder nächste Woche neu gebaut wird.
   document.querySelectorAll('.countdown-badge').forEach(el => {{
     const dateStr = el.dataset.updateDate;
     if(!dateStr) return;
@@ -318,6 +330,9 @@ def main():
     all_updates = existing + added
     all_updates = remove_expired(all_updates)
 
+    # Bilder server-seitig auflösen und mitspeichern (siehe build_releases.py
+    # für die Begründung — CORS verhindert das clientseitig im Browser).
+    # Nur für neue Einträge nötig, bestehende haben ihr Bild schon gespeichert.
     for u in all_updates:
         if not u.get("image"):
             u["image"] = update_image(u)
