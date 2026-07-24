@@ -1001,7 +1001,7 @@ function renderHero(){
           <span class="trending-tag">🔥 Trending</span>
         </div>
         <div class="hero-content">
-          <span class="badge ${top.cat}">${catLabel(top.cat)}${top.game ? ' · ' + GAMES[top.game].label : ''}</span>
+          <span class="badge ${top.cat}">${catLabel(top.cat)}${top.game && GAMES[top.game] ? ' · ' + GAMES[top.game].label : ''}</span>
           <h1 class="display">${top.title}</h1>
           <p>${top.teaser}</p>
           <div class="hype">
@@ -1483,7 +1483,7 @@ function renderGrid(){
           ${a.hype >= 85 ? `<span class="trending-tag">🔥 Trending</span>` : ''}
         </div>
         <div class="card-body">
-          <span class="badge ${a.cat}">${catLabel(a.cat)}${a.genre && GENRES[a.genre] ? ' · ' + genreLabel(a.genre) : ''}${a.game ? ' · ' + GAMES[a.game].label : ''}</span>
+          <span class="badge ${a.cat}">${catLabel(a.cat)}${a.genre && GENRES[a.genre] ? ' · ' + genreLabel(a.genre) : ''}${a.game && GAMES[a.game] ? ' · ' + GAMES[a.game].label : ''}</span>
           <h3>${a.title}</h3>
           <p>${a.teaser}</p>
           <div class="meta"><span class="mono">${a.date}</span><span class="mono">${a.platform}${a.views ? ' · 👁 ' + a.views.toLocaleString('de-CH') : ''}</span></div>
@@ -1543,7 +1543,7 @@ function openArticleView(id){
 
   document.getElementById('detailArt').style.cssText = articleArtStyle(a) + '; background-size:cover; background-position:center;';
   document.getElementById('detailBadge').className = `badge ${a.cat}`;
-  document.getElementById('detailBadge').textContent = catLabel(a.cat) + (a.genre && GENRES[a.genre] ? ' · ' + genreLabel(a.genre) : '') + (a.game ? ' · ' + GAMES[a.game].label : '');
+  document.getElementById('detailBadge').textContent = catLabel(a.cat) + (a.genre && GENRES[a.genre] ? ' · ' + genreLabel(a.genre) : '') + (a.game && GAMES[a.game] ? ' · ' + GAMES[a.game].label : '');
   document.getElementById('detailTitle').textContent = a.title;
   document.getElementById('detailHypeFill').style.width = a.hype + '%';
   document.getElementById('detailHypePct').textContent = a.hype + '%';
