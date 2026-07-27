@@ -1,5 +1,45 @@
 [
   {
+    "id": "d42b05db72",
+    "title": "Ho, Ho, Ho-Baller: Santa Shaq erobert Fortnites Winterfest",
+    "teaser": "Shaquille O'Neal zieht sich in Fortnite den Weihnachtsmann-Anzug an. Wir zeigen, wie ihr den Santa-Shaq-Skin bekommt und was die Community dazu sagt.",
+    "cat": "konsole",
+    "game": "fortnite",
+    "genre": "shooter",
+    "date": "27. July 2026",
+    "hype": 42
+  },
+  {
+    "id": "9048bbe8ca",
+    "title": "Speicher-Hammer: Final Fantasy 14 frisst fast die Hälfte der Switch 2 auf",
+    "teaser": "Mit satten 117 GB wird das MMORPG zum größten Einzelspiel auf Nintendos neuer Konsole – und lässt Spieler:innen schon jetzt über microSD-Karten nachdenken.",
+    "cat": "konsole",
+    "game": null,
+    "genre": "rpg",
+    "date": "27. July 2026",
+    "hype": 62
+  },
+  {
+    "id": "27301f2276",
+    "title": "30 Jahre Prügel-Geschichte: Wie Marvel die Fighting-Game-Szene eroberte",
+    "teaser": "Von Arcade-Automaten bis zum aktuellen Beta-Chaos um Marvel Tōkon: Fighting Souls – die Marvel-Prügelspiele haben eine wilde Reise hinter sich.",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "date": "27. July 2026",
+    "hype": 72
+  },
+  {
+    "id": "b880ac1fea",
+    "title": "Magic: The Gathering trifft Star Trek – Vorbestellungen für Sci-Fi-Crossover sind gestartet",
+    "teaser": "Wizards of the Coast schickt Magic: The Gathering auf die Enterprise: Ein komplettes Star-Trek-Set mit eigenen Commander-Decks ist ab sofort vorbestellbar.",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "date": "27. July 2026",
+    "hype": 72
+  },
+  {
     "id": "05afbd9a1a",
     "title": "Ender Dragon im Browser: Minecraft wird jetzt direkt auf YouTube spielbar",
     "teaser": "Zwei YouTuber haben Minecraft in ein interaktives 360-Grad-Video verwandelt – spielbar direkt auf YouTube, ganz ohne Download.",
