@@ -1,5 +1,90 @@
 [
   {
+    "id": "71dbea2fda",
+    "cat": "pc",
+    "game": "minecraft",
+    "genre": null,
+    "title": "Minecraft zieht die Reißleine: Java Edition verlangt erstmals seit 17 Jahren stärkere PCs",
+    "teaser": "Mojang erhöht zum ersten Mal seit dem Release die Mindestanforderungen für Minecraft: Java Edition – Grund ist der große Umstieg auf Vulkan.",
+    "body": [
+      "Minecraft galt fast zwei Jahrzehnte lang als das Spiel, das auf so gut wie jedem Rechner lief – vom Uralt-Büro-PC bis zum günstigen Laptop mit Onboard-Grafik. Damit ist jetzt zumindest offiziell Schluss: Mojang hat am 21. Juli 2026 zum ersten Mal seit dem Launch von Java Edition die empfohlenen und minimalen Systemanforderungen nach oben geschraubt. <cite index=\"6-3\">Mojang updated die offiziellen Systemanforderungen für Minecraft: Java Edition am 21. Juli und markierte damit die erste Änderung seit dem Release vor über 17 Jahren.</cite> Wer bislang mit einem betagten Rechner durch seine Blockwelten gestreift ist, sollte jetzt genau hinschauen.",
+      "Konkret verlangt die neue Mindestanforderung <cite index=\"5-6\">ein 64-Bit-System, 8 GB RAM mit einer dedizierten GPU oder 12 GB mit integrierter Grafik, einen 4-Kern-Prozessor und eine Vulkan-1.3-fähige Grafikkarte mit mindestens 2 GB VRAM</cite>, ausgelegt auf 1080p bei 30 FPS im Fast-Preset. Wer flüssige 60 FPS im Fancy-Preset will, braucht laut Empfehlung deutlich mehr Power: <cite index=\"17-5\">16 GB Arbeitsspeicher und einen Prozessor vergleichbar mit einem Intel Core i5-12400 oder AMD Ryzen 5 5600, dazu eine GPU auf dem Niveau einer RTX 2060 oder AMD Radeon RX 5600 XT</cite>. Der Auslöser dafür ist kein Zufall: <cite index=\"1-13,1-14\">die neuen Anforderungen hängen auch mit Mojangs laufendem Wechsel von OpenGL zu Vulkan-Rendering zusammen, da die alte Grafik-API zunehmend schwer zu pflegen und zu modernisieren wurde, während Vulkan die grafischen Möglichkeiten stärken soll.</cite> Passend dazu hat Minecraft gerade erst das große Grafik-Update Vibrant Visuals erhalten, das realistischere Beleuchtung, Reflexionen und volumetrische Wolken bringt – Effekte, die eben auch mehr Rechenleistung fordern.",
+      "Wer schon jetzt unter den neuen Werten liegt, muss aber nicht sofort in Panik verfallen: <cite index=\"1-4\">Mojang erklärt, dass Computer unterhalb der überarbeiteten Mindestanforderungen Java Edition weiterhin starten können, garantiert aber keine ordentliche Performance oder Bildqualität mehr und warnt vor niedrigen Bildraten und längeren Ladezeiten.</cite> Die Fachpresse reagiert überwiegend nüchtern-zustimmend: Mehrere Tech-Portale loben, dass Mojang damit endlich ehrlicher kommuniziert, was für ein wirklich spielbares Erlebnis nötig ist, anstatt nur die reine Startfähigkeit zu garantieren – <cite index=\"2-8,2-9\">das sei eine willkommene Ehrlichkeit, denn jahrelang habe ein PC die veröffentlichten Anforderungen technisch erfüllt und trotzdem ruckelige Erkundung, lange Ladepausen oder unschöne Optik geliefert</cite>. Kritischer wird vor allem der Zeitpunkt gesehen: <cite index=\"16-7\">die Preise für Arbeitsspeicher sind 2026 stark gestiegen, weil die Chipfabriken lieber KI-Speicher produzieren als klassisches DDR5/DDR4 – wodurch das Erreichen der neuen 8-16-GB-RAM-Schwelle deutlich teurer geworden ist als noch vor einem Jahr.</cite> In der Modding-Community wiederum macht vor allem die langfristige Vulkan-Umstellung Sorgen, denn ältere Grafikkarten ohne Vulkan-1.3-Support könnten irgendwann komplett außen vor bleiben, auch wenn Mojang betont, betroffene Spieler rechtzeitig vorzuwarnen."
+    ],
+    "editorial_take": "Dass Mojang nach 17 Jahren endlich die Reißleine zieht, ist überfällig und ehrlich gedacht – ein Spiel, das mittlerweile Raytracing-ähnliche Effekte und riesige Multiplayer-Welten stemmen soll, kann nicht ewig auf Hardware aus der Steinzeit Rücksicht nehmen. Ärgerlich ist allerdings das Timing: Ausgerechnet jetzt, wo RAM-Preise durch die Decke gehen, Spieler:innen zum Aufrüsten zu drängen, fühlt sich für viele wie ein teurer Zwang an. Für die Zukunft von Minecraft ist der Schritt trotzdem der richtige – Hauptsache, Mojang hält sein Versprechen, alte Hardware nicht ohne Vorwarnung fallen zu lassen.",
+    "source_title": "Minecraft Officially Raises Recommended PC Specs",
+    "date": "28. July 2026",
+    "platform": "GameRant - Minecraft News",
+    "hype": 62,
+    "source": "https://gamerant.com/minecraft-java-edition-vulkan-pc-specs/",
+    "sourceLabel": "GameRant - Minecraft News",
+    "image": "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2026/07/minecraft-officially-raises-recommended-pc-specs.jpg?w=1600&amp;h=900&amp;fit=crop"
+  },
+  {
+    "id": "1238db45c6",
+    "cat": "konsole",
+    "game": "cod",
+    "genre": "shooter",
+    "title": "15 Jahre später: Fans entdecken geheimen Tower-Defense-Modus in Black Ops Zombies",
+    "teaser": "In den neuen PS4-Ports von Call of Duty: Black Ops ist ein nie veröffentlichter Tower-Defense-Zombies-Modus aufgetaucht. Ein Blick hinter die Kulissen einer Kult-Reihe.",
+    "body": [
+      "Manchmal dauert es eben etwas länger, bis alte Geheimnisse ans Licht kommen: Fast anderthalb Jahrzehnte nach dem Release von Call of Duty: Black Ops haben Fans einen komplett unbekannten Zombies-Modus in den Spieldateien entdeckt. Der YouTuber JTAG stieß in einem aktuellen PS4-Port des Originaltitels auf einen Tower-Defense-Ansatz für die Untoten-Horden, der es offenbar niemals ins fertige Spiel schaffte.",
+      "Konkret hätten Spielende in diesem Modus <cite index=\"15-3\">Türme aufstellen können, um die Zombiehorden davon abzuhalten, sich durch eine labyrinthartige Karte vorzuarbeiten</cite>. Besonders spannend: <cite index=\"15-4\">Man hätte das Geschehen offenbar aus der Vogelperspektive betrachten können, ähnlich wie bei Bloons Tower Defense, gleichzeitig aber auch klassisch am Boden mitkämpfen und schießen können</cite>. Fertig war das Ganze nie – die Berichterstattung beschreibt den Fund als sichtlich unpoliert und experimentell. Vermutet wird, dass der Modus letztlich <cite index=\"15-5\">zugunsten von Dead Ops Arcade fallengelassen wurde, dem geheimen Zombies-Modus im ursprünglichen Black Ops</cite>, der bis heute als Kultklassiker gilt und <cite index=\"15-6,15-7\">über eine geheime Computer-Konsole im Hauptmenü zugänglich war und in zahlreichen späteren Black-Ops-Titeln zurückkehrte</cite>.",
+      "Für die Community ist so ein Fund natürlich Gold: Der ursprüngliche Zombies-Modus war schließlich selbst schon eine Underdog-Geschichte, entstanden aus einem inoffiziellen Passionsprojekt eines kleinen Entwicklerteams innerhalb von Treyarch, das dafür recycelte Assets aus World at War nutzte. Dass ausgerechnet dieser experimentierfreudige Ursprung jetzt einen weiteren, komplett vergessenen Prototyp offenbart, passt ins Bild einer Marke, die von Anfang an mit ihrem eigenen Format herumgespielt hat. Manche Stimmen in der Szene sehen in solchen Funden vor allem nostalgischen Wert, andere hoffen insgeheim, dass Treyarch alte Ideen wie diese eines Tages recycelt – zumal die Studio-DNA bis heute erkennbar experimentierfreudig bleibt, wie sich am kommenden Black Ops 7 zeigt, das mit gleich mehreren unterschiedlichen Zombies-Spielmodi aufwartet."
+    ],
+    "editorial_take": "Für uns ist das genau die Art von Fund, die Call of Duty: Black Ops so besonders macht – ein Spiel, dessen Zombies-Modus von Anfang an ein Experimentierfeld abseits der offiziellen Linie war. Dass ein cruder Tower-Defense-Prototyp erst durch einen aktuellen PS4-Port ans Licht kommt, zeigt, wie viel ungenutztes Material in alten CoD-Titeln noch schlummert. Wir hoffen, Treyarch lässt sich davon zumindest für ein zukünftiges Community-Event inspirieren, denn die Idee hat definitiv Charme.",
+    "source_title": "Call of Duty: Black Ops Fans Discover Cut Zombies Content Over 15 Years After Release",
+    "date": "28. July 2026",
+    "platform": "IGN Articles",
+    "hype": 45,
+    "source": "https://www.ign.com/articles/call-of-duty-black-ops-fans-discover-cut-zombies-content-over-15-years-after-release",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/07/27/black-ops-zombies-1785192840551.jpg"
+  },
+  {
+    "id": "696df95d75",
+    "cat": "konsole",
+    "game": null,
+    "genre": null,
+    "title": "Ubisoft verschenkt PC-Versionen an Xbox-Besitzer – mit einem dicken Haken",
+    "teaser": "13 Ubisoft-Titel gibt's ab sofort gratis auf PC dazu, wenn man sie auf Xbox besitzt. Doch die Freude wird durch Ubisoft Connect und fehlende Play-Anywhere-Features gedämpft.",
+    "body": [
+      "Wer auf der Xbox schon eine ordentliche Ubisoft-Sammlung angehäuft hat, darf sich freuen: Ab sofort bekommen Besitzer:innen digitaler Kopien von 13 ausgewählten Titeln die passende PC-Version kostenlos dazu. Betroffen sind unter anderem Assassin's Creed Mirage und Valhalla, Far Cry 6, Avatar: Frontiers of Pandora, Watch Dogs Legion, Rainbow Six Siege sowie die Crew-Reihe. Wer eines dieser Spiele digital auf Xbox besitzt, bekommt Zugriff auf die PC-Fassung über Ubisofts eigenen Launcher Ubisoft Connect – vorausgesetzt, Xbox- und Ubisoft-Account sind miteinander verknüpft. Neukäufe schalten die Doppel-Lizenz ab sofort automatisch frei, Bestandsbesitzer:innen erhalten ihre PC-Kopie über einen gestaffelten Rollout, der bis zum 4. August läuft.",
+      "Ganz uneigennützig ist der Deal aber nicht gestrickt: Die Aktion funktioniert ausschließlich in eine Richtung. Wer eines der Spiele zuerst auf dem PC kauft, bekommt daraus keinen Anspruch auf die Xbox-Version. Auch bei Zusatzinhalten gibt es Einschränkungen – zwar wandern die meisten gekauften Editionen und DLCs mit auf den PC, doch Verbrauchsgüter wie Ingame-Währungen oder einmalige Items bleiben außen vor, sofern das jeweilige Spiel kein Cross-Progression-System bietet. Parallel zur Aktion hat Ubisoft zudem sein Angebot in der Xbox-PC-App erweitert und bietet dort nun Premium-Editionen und Zusatzinhalte für Titel wie Assassin's Creed Shadows, Star Wars Outlaws und Prince of Persia: The Lost Crown an.",
+      "In der Fachpresse überwiegt trotz des grundsätzlich netten Gestus die Ernüchterung. Mehrere Portale weisen darauf hin, dass die verschenkten PC-Versionen nicht Teil des offiziellen Xbox-Play-Anywhere-Programms sind – es fehlen Achievements, Cloud-Saves und die nahtlose Speicherstand-Synchronisation, die man von Microsofts eigenen Cross-Buy-Titeln kennt. Windows Central bringt es besonders deutlich auf den Punkt: Die Ubisoft-Fassungen auf Xbox-PC seien ohne Erfolge, Speicher-Synchronisierung oder andere Xbox-typische Funktionen ausgestattet, weshalb man diesen Schritt lediglich als kleines Trostpflaster wertet. Erschwerend kommt hinzu, dass die Spiele nicht direkt in der gewohnten Xbox-App laufen, sondern zwingend über Ubisoft Connect gestartet werden müssen – einen Launcher, der in der PC-Community traditionell einen denkbar schlechten Ruf genießt und regelmäßig für Login-Probleme, Zwangsupdates und DRM-Ärger kritisiert wird. Andere Stimmen wie The Outerhaven sehen den Schritt trotz der Einschränkungen positiv: Wer bereits fürs Spiel bezahlt hat und heute lieber am PC zockt, bekommt hier immerhin einen echten Mehrwert ohne Aufpreis.",
+      "Dass Ubisoft überhaupt in Verbraucherfreundlichkeit investiert, überrascht angesichts der wirtschaftlichen Lage des Konzerns wenig – schließlich hat das Unternehmen zuletzt einen Rekordverlust von 1,3 Milliarden Euro sowie einen Einbruch der Net Bookings um 17,4 Prozent vermelden müssen und kämpft parallel mit Studioschließungen und Stellenabbau. Die engere Verzahnung mit Xbox dürfte also auch strategisch motiviert sein: Mehr Plattform-Flexibilität soll Kund:innen enger an die eigenen Marken binden, während sich der Konzern mit der Tencent-finanzierten Vantage Studios auf seine großen Zugpferde wie Assassin's Creed, Far Cry und Rainbow Six konzentriert."
+    ],
+    "editorial_take": "Grundsätzlich freuen wir uns über jedes Angebot, das Spieler:innen Plattformfreiheit schenkt, ohne dass sie erneut zur Kasse gebeten werden. Aber ganz ehrlich: Wenn man am Ende doch wieder durch Ubisoft Connect muss und auf Achievements sowie Cloud-Saves verzichtet, fühlt sich das eher nach einem netten PR-Move als nach einem echten Play-Anywhere-Erlebnis an. Ubisoft hätte hier die Chance gehabt, mit einer saubereren Umsetzung richtig zu punkten – stattdessen bleibt ein Bonus mit Fußnote.",
+    "source_title": "Ubisoft Gives Free PC Copies to Xbox Owners of Select Games",
+    "date": "28. July 2026",
+    "platform": "IGN Articles",
+    "hype": 45,
+    "source": "https://www.ign.com/articles/ubisoft-gives-free-pc-copies-to-xbox-owners-of-select-games",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2025/12/04/avbr-1764891639099.jpg"
+  },
+  {
+    "id": "98527ff3fe",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "title": "MTG x Marvel: Lohnen sich die teuren Collector-Commander-Decks wirklich?",
+    "teaser": "Die Marvel-Super-Heroes-Collector-Decks von Magic: The Gathering sind bei Amazon zurück – doch der Preis lässt selbst Hardcore-Fans schlucken.",
+    "body": [
+      "Wer schon immer mal Captain America, Doctor Doom oder das Fantastic-Four-Team über den heimischen Spieltisch schicken wollte, bekommt mit den Marvel-Super-Heroes-Commander-Decks von Magic: The Gathering genau das – allerdings nicht zum Schnäppchenpreis. Die regulären Decks kosten laut Hersteller je 74,99 Dollar, doch wer die glitzernde Collector's-Edition mit durchgehendem Surge-Foil-Finish will, zahlt satte 159,99 Dollar pro Deck. Zur Wahl stehen vier Varianten: Avengers Assemble mit Captain America an der Spitze, das Wakanda-Forever-Deck rund um Black Panther, die Fantastic Four sowie das Bösewicht-Deck Doom Prevails mit Doctor Doom im Zentrum.",
+      "Auf dem Sekundärmarkt wird es noch teurer: Fachmedien beobachteten schon vor Release, dass die Collector-Decks auf TCGPlayer <cite index=\"1-2\">zwischen 155 und 240 Dollar</cite> kosteten, wobei <cite index=\"1-4\">das Doom-Prevails-Deck das teuerste der vier war, während Wakanda Forever am günstigsten ausfiel</cite>. Wer sich gleich das komplette Quartett sichern wollte, musste laut Berichten über die Vorbestellungs-Bundles <cite index=\"2-1\">stolze 639,96 Dollar hinlegen, bei durchschnittlich rund 160 Dollar pro Deck</cite>. Damit reihen sich die Decks nahtlos in eine Reihe immer teurerer Universes-Beyond-Crossover-Produkte ein, die Wizards of the Coast in den letzten Jahren auf den Markt gebracht hat – nach der Spider-Man-Kollaboration im Vorjahr ist Marvel Super Heroes bereits der zweite große Marvel-Ausflug für MTG.",
+      "In der Community und Fachpresse gehen die Meinungen erwartungsgemäß auseinander. Manche Analysten winken direkt ab: Ein Kaufratgeber merkte an, dass sich der Aufpreis kaum rechtfertigen lässt, solange nicht klar ist, wie werthaltig die einzelnen Karten überhaupt sind, denn <cite index=\"17-1\">solange die Kartenwerte im Deck unklar sind, könnte der Gesamtwert selbst mit Foil-Behandlung gering ausfallen</cite>. Auf der anderen Seite gibt es durchaus Fans, die trotz Marvel-Übersättigung wieder Lust auf das Franchise bekommen haben – ein Redakteur beschrieb, dass er <cite index=\"18-4,18-5\">inzwischen über die Marvel-Müdigkeit hinweg sei und wieder gerne mit dem Franchise interagiere, weshalb ihn die Commander-Decks neu für die Marke begeisterten</cite>. Auch bei der Spielstärke gibt es Diskussionen: Obwohl das Doom-Prevails-Deck auf dem Papier die stärkste Commander-Kombination bietet, wurde es von mehreren Deckbau-Analysen als schwächstes der vier Decks eingestuft, weil <cite index=\"14-3,14-5\">es trotz hohem Nachdruckwert von einer merkwürdigen Kreaturenauswahl ausgebremst wird</cite>."
+    ],
+    "editorial_take": "Aus unserer Sicht sind die Surge-Foil-Collector-Decks ein klassisches Sammlerprodukt, kein Pflichtkauf für Commander-Spieler:innen. Die reguläre Version für rund 75 Dollar bietet spielerisch dasselbe Erlebnis, ohne dass man für den Glitzer-Faktor gleich das Doppelte oder mehr zahlen muss. Wer Marvel-Comics liebt und die Decks als Regal-Deko sieht, wird trotzdem glücklich – wer einfach nur Magic spielen will, sollte sich das Geld sparen und zur Standard-Version greifen.",
+    "source_title": "Are MTG x Marvel Collector Commander Decks Worth the High Price?",
+    "date": "28. July 2026",
+    "platform": "IGN Articles",
+    "hype": 55,
+    "source": "https://www.ign.com/articles/mtg-marvel-collector-commander-decks-where-to-buy",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/02/02/magics-marvel-super-hero-crossover-includes-four-new-commander-decks-1770044335363.png"
+  },
+  {
     "id": "d42b05db72",
     "cat": "konsole",
     "game": "fortnite",
