@@ -1,5 +1,45 @@
 [
   {
+    "id": "00263880af",
+    "title": "GTA 6: Insider verspricht dicke News schon im August",
+    "teaser": "Ein bekannter Leaker ist sich sicher: Rockstar bricht sein Schweigen bald – und der 19. November bleibt trotz aller Zweifel weiter Zieldatum.",
+    "cat": "konsole",
+    "game": "gta",
+    "genre": "action",
+    "date": "29. July 2026",
+    "hype": 88
+  },
+  {
+    "id": "8e0fb86d86",
+    "title": "Silent Hill: Townfall – Wird die Ego-Perspektive zur Rettung der Kult-Reihe?",
+    "teaser": "IGN hat Silent Hill: Townfall angespielt und sieht darin das, was P.T. hätte werden können. Auch andere Fachmedien sind angetan von der neuen Ego-Perspektive.",
+    "cat": "konsole",
+    "game": null,
+    "genre": "horror",
+    "date": "29. July 2026",
+    "hype": 78
+  },
+  {
+    "id": "e138943fd4",
+    "title": "GTA Online: Rockstar zieht Australien den Stecker für Casino-Gambling",
+    "teaser": "Kein Roulette, kein Blackjack, kein Glücksrad mehr: Rockstar hat das Diamond Casino für australische Spieler:innen abgeschaltet – ganz ohne Vorwarnung.",
+    "cat": "konsole",
+    "game": "gta",
+    "genre": "action",
+    "date": "29. July 2026",
+    "hype": 46
+  },
+  {
+    "id": "2931b0eec3",
+    "title": "Rockstar-Erbe in der Krise: Lightspeed LA entlässt 80 Mitarbeiter und krempelt Last Sentinel um",
+    "teaser": "Das Tencent-Studio hinter dem ambitionierten Dystopie-Actionspiel Last Sentinel zieht die Notbremse: Nach internen Reviews wird die kreative Richtung geändert – mit schmerzhaften Konsequenzen fürs Team.",
+    "cat": "industrie",
+    "game": null,
+    "genre": "action",
+    "date": "29. July 2026",
+    "hype": 42
+  },
+  {
     "id": "86d63dbeea",
     "title": "League of Legends Classic startet: Die besten Anfänger-Champions für die Nostalgie-Reise",
     "teaser": "Riot bringt mit League Classic die guten alten Season-3-Zeiten zurück. Wir zeigen, mit welchen Champions Neulinge und Nostalgiker am einfachsten reinkommen.",
