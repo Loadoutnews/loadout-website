@@ -212,9 +212,19 @@ Original-Link: {entry['link']}"""
     response = client.messages.create(
         model=MODEL,
         max_tokens=3500,
-        system=WRITER_SYSTEM_PROMPT,
+        # Prompt-Caching: Der System-Prompt ist bei JEDEM der bis zu 4 Aufrufe
+        # pro Lauf identisch (und läuft mehrmals täglich). Mit cache_control
+        # merkt sich Anthropic diesen Textblock für 5 Minuten — innerhalb
+        # eines Laufs (alle 4 Artikel kurz hintereinander) greift der Cache
+        # fast immer, was die Eingabe-Tokens für diesen Teil deutlich
+        # günstiger macht, ohne dass sich am Ergebnis irgendetwas ändert.
+        system=[{"type": "text", "text": WRITER_SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
         messages=[{"role": "user", "content": user_prompt}],
-        tools=[{"type": "web_search_20250305", "name": "web_search"}],
+        # max_uses begrenzt, wie oft die KI selbstständig nachsucht — weniger
+        # Suchdurchläufe bedeuten weniger (teure) Suchergebnis-Tokens im
+        # Kontext, ohne die Recherchequalität für einen einzelnen
+        # Artikel spürbar zu verschlechtern.
+        tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 3}],
     )
 
     # Bei aktivierter Websuche enthält die Antwort mehrere Blöcke (Suchanfragen,
