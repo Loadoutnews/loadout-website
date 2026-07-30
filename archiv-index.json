@@ -1,5 +1,45 @@
 [
   {
+    "id": "b936c03ab3",
+    "title": "GTA Online: Cayo Summer Special schickt Spieler zurück zu den Klassiker-Heists",
+    "teaser": "Neue Event-Woche vom 30. Juli bis 5. August boostet Fleeca, Pacific Standard & Co. – und wirft ein Schlaglicht auf den Cayo-Perico-Nerf-Streit.",
+    "cat": "konsole",
+    "game": "gta",
+    "genre": "action",
+    "date": "30. July 2026",
+    "hype": 42
+  },
+  {
+    "id": "a2f4ac1e83",
+    "title": "The Defiant: Neuer Shooter erzählt vergessenes Kapitel des Zweiten Weltkriegs",
+    "teaser": "Ein chinesisches Entwicklerstudio wagt sich an ein Thema, das im Gaming bisher kaum vorkam: den Krieg Chinas gegen Japan. IGN hat schon angespielt.",
+    "cat": "pc",
+    "game": null,
+    "genre": "shooter",
+    "date": "30. July 2026",
+    "hype": 58
+  },
+  {
+    "id": "bac831abe2",
+    "title": "Project Motor Racing: Großes Update bringt Holden-Commodore-DLC und Triple-Screen-Support",
+    "teaser": "Nach holprigem Start rüstet Straight4 Studios nach: Update 2.1 überarbeitet GT3/GT4-Handling, bringt Triple-Screen-Alpha und schenkt Fans einen kostenlosen Holden Commodore.",
+    "cat": "pc",
+    "game": null,
+    "genre": "rennspiel",
+    "date": "30. July 2026",
+    "hype": 46
+  },
+  {
+    "id": "0021068139",
+    "title": "38 Millionen Dollar für EA-Chef – während Battlefield-6-Entwickler ihren Job verloren",
+    "teaser": "Battlefield 6 wurde zum Verkaufsschlager des Jahres, doch die Entwickler:innen wurden entlassen. EA-CEO Andrew Wilson kassiert dafür satte 38,6 Millionen Dollar.",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "date": "30. July 2026",
+    "hype": 62
+  },
+  {
     "id": "7d3eb10185",
     "title": "Rockstar zieht Stecker für alte iPhones: iOS 17 wird Pflicht für mobile GTA-Titel",
     "teaser": "Wer noch mit iOS 16 oder älter unterwegs ist, bekommt für Rockstars mobile Games keine Updates und keinen Support mehr – betroffen sind unter anderem GTA-Klassiker und Red Dead Redemption.",
