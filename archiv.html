@@ -73,6 +73,7 @@
 
   <div class="footer-links mono">
     <a href="index.html">Zur Startseite</a>
+    <a href="ueber-uns.html">Über uns</a>
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
     <span>© 2026 LOADOUT-NEWS</span>
@@ -131,7 +132,6 @@ function renderList(){
 
   const visible = filtered.slice(0, visibleCount);
 
-  // Nach Monat gruppieren, damit man sich beim Browsen leichter orientiert
   let html = "";
   let lastMonth = null;
   visible.forEach(a => {
@@ -157,9 +157,6 @@ function renderList(){
 }
 
 function monthFromDateString(dateStr){
-  // Versucht, aus Datumsangaben wie "17. Juli 2026" oder "Juli 2026" grob
-  // den Monat fürs Gruppieren zu extrahieren; bei Unklarheit einfach den
-  // rohen String verwenden.
   const match = dateStr && dateStr.match(/([A-ZÄÖÜa-zäöü]+)\s+(\d{4})/);
   return match ? `${match[1]} ${match[2]}` : (dateStr || "Unbekannt");
 }
