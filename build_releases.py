@@ -82,7 +82,7 @@ Währungen bekannt sind, gib diese an. Sortiere nach Release-Datum, dann nach Hy
         max_tokens=16000,
         system=system_prompt,
         messages=[{"role": "user", "content": f"Recherchiere die Spiele-Releases für {month_label}."}],
-        tools=[{"type": "web_search_20250305", "name": "web_search"}],
+        tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 10}],
     )
 
     # Bei aktivierter Websuche enthält die Antwort mehrere Blöcke (Suchanfragen,
@@ -294,6 +294,7 @@ def render_html(month_label, releases):
   </div>
   <div class="footer-links mono">
     <a href="index.html">Zur Startseite</a>
+    <a href="ueber-uns.html">Über uns</a>
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
     <span>© 2026 LOADOUT-NEWS</span>
