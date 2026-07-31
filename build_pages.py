@@ -309,6 +309,7 @@ def render_article_page(a, all_articles):
   </div>
   <div class="footer-links mono">
     <a href="../index.html">Zur Startseite</a>
+    <a href="../ueber-uns.html">Über uns</a>
     <a href="../impressum.html">Impressum</a>
     <a href="../datenschutz.html">Datenschutz</a>
     <a href="#" onclick="openCookieSettings(); return false;">Cookie-Einstellungen</a>
@@ -619,7 +620,7 @@ def build():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     urls = [f"{SITE_URL}/index.html", f"{SITE_URL}/archiv.html",
-            f"{SITE_URL}/impressum.html", f"{SITE_URL}/datenschutz.html", f"{SITE_URL}/app.html", f"{SITE_URL}/nutzungsbedingungen.html"]
+            f"{SITE_URL}/impressum.html", f"{SITE_URL}/datenschutz.html", f"{SITE_URL}/app.html", f"{SITE_URL}/nutzungsbedingungen.html", f"{SITE_URL}/ueber-uns.html"]
 
     # Release- und Update-Kalender nur eintragen, wenn sie schon existieren
     # (beim allerersten Lauf, bevor die jeweiligen Skripte einmal gelaufen
