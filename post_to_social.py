@@ -13,10 +13,11 @@ Artikel als EINEN gesammelten Post pro Lauf — nicht einen Post pro Artikel:
     Link und Hashtags sind echte klickbare "Facets", nicht nur Text, und
     bekommen IMMER garantiert Platz — nur die Überschrift wird bei Bedarf
     gekürzt, nie der Link.
-  - Instagram: EIN Karussell-Post (mehrere Bilder zum Durchwischen in
-    einem einzigen Beitrag). JEDES Artikel-Bild wird automatisch über
-    wsrv.nl auf ein garantiert gültiges 1080×1080-JPEG zugeschnitten,
-    damit nie ein Bild wegen falschem Format/Seitenverhältnis fehlt.
+  - Instagram: EIN Karussell-Post, über den Drittanbieter Buffer
+    (buffer.com) statt direkt über Metas Graph API — Metas eigene
+    Entwicklerkonto-Verifizierung war bei uns dauerhaft blockiert, Buffer
+    hat dafür bereits eine eigene, freigeschaltete Meta-App. Buffers API
+    ist eine GraphQL-Schnittstelle.
   - Tumblr: EIN Post im "Neuen Post Format" mit Text- und Bild-Blöcken
     pro Artikel, mit echtem klickbarem Link. Hashtags landen zusätzlich
     im separaten Tags-Feld (Tumblrs wichtigster Hebel fürs eigene
@@ -33,8 +34,8 @@ Setup (als GitHub Secrets hinterlegen):
     DISCORD_WEBHOOK_URL
     BLUESKY_HANDLE
     BLUESKY_APP_PASSWORD
-    INSTAGRAM_ACCESS_TOKEN
-    INSTAGRAM_USER_ID
+    BUFFER_API_KEY
+    BUFFER_INSTAGRAM_CHANNEL_ID
     TUMBLR_CONSUMER_KEY
     TUMBLR_CONSUMER_SECRET
     TUMBLR_OAUTH_TOKEN
@@ -292,23 +293,21 @@ def post_bluesky_batch(articles):
     return ok
 
 
-# --- Instagram ------------------------------------------------------------------
-# Ein einziges Karussell (mehrere Bilder zum Durchwischen in einem Post) —
-# technisch ein zweistufiger Prozess: erst jedes Bild als "Karussell-Kind"
-# anlegen, dann alle zusammen als ein Karussell veröffentlichen.
-#
-# WICHTIG: Instagram lehnt Bilder mit falschem Seitenverhältnis/Format/zu
-# geringer Auflösung ab. Damit deshalb NIE ein Artikel-Bild einfach
-# wegfällt, wird hier JEDES Bild automatisch über wsrv.nl (ein etabliertes,
-# kostenloses Open-Source-Bild-Cache/Zuschneide-Service, seit 2011 aktiv,
-# von Cloudflare abgesichert) auf ein garantiert gültiges 1:1-Quadrat im
-# JPEG-Format zugeschnitten — unabhängig vom ursprünglichen Format der
-# Quelle. Jeder Artikel bekommt so zuverlässig sein eigenes Bild/Slide.
+# --- Instagram (über Buffer) --------------------------------------------------
+# Metas eigene Graph API scheiterte bei uns dauerhaft an einer blockierten
+# Entwicklerkonto-Verifizierung (bekanntes, weitverbreitetes Meta-Problem,
+# kein Fehler in unserem Code). Buffer (buffer.com) hat dafür bereits eine
+# eigene, freigeschaltete Meta-App: Wir verbinden unser Instagram-Konto
+# einmalig über Buffers eigene Weboberfläche, und posten danach über
+# Buffers GraphQL-API.
 
 def get_instagram_safe_image_url(original_url):
     """Schneidet ein beliebiges Bild automatisch auf ein für Instagram
-    garantiert gültiges Format zu (1080×1080, quadratisch, JPEG) — statt es
-    bei falschem Seitenverhältnis/Format einfach zu überspringen."""
+    sicheres Format zu (1080×1080, quadratisch, JPEG) — über wsrv.nl,
+    einen etablierten, kostenlosen Bild-Cache/Zuschneide-Dienst. Buffer
+    verarbeitet Bilder zwar bereits selbst, aber die zusätzliche
+    Vor-Zuschneidung stellt sicher, dass jedes Artikel-Bild garantiert im
+    richtigen Format ankommt, unabhängig vom Ausgangsformat der Quelle."""
     if not original_url:
         return None
     from urllib.parse import quote
@@ -316,115 +315,100 @@ def get_instagram_safe_image_url(original_url):
     return f"https://wsrv.nl/?url={encoded}&w=1080&h=1080&fit=cover&output=jpg&q=85"
 
 
-def post_instagram_carousel(articles):
-    access_token = env("INSTAGRAM_ACCESS_TOKEN")
-    ig_user_id = env("INSTAGRAM_USER_ID")
-    if not access_token or not ig_user_id:
-        print("  Instagram: ! INSTAGRAM_ACCESS_TOKEN oder INSTAGRAM_USER_ID ist komplett leer/nicht gesetzt.", file=sys.stderr)
-        return False
+BUFFER_CREATE_POST_QUERY = """
+mutation CreatePost($input: CreatePostInput!) {
+  createPost(input: $input) {
+    ... on PostActionSuccess {
+      post {
+        id
+        text
+      }
+    }
+    ... on MutationError {
+      message
+    }
+  }
+}
+"""
 
-    # Diagnose OHNE den Token selbst preiszugeben (GitHub würde ihn ohnehin
-    # automatisch als *** anzeigen) — nur Länge und auffällige Zeichen, um
-    # zu unterscheiden zwischen "Token kommt falsch/leer an" (Workflow-
-    # Problem) und "Token ist inhaltlich ungültig/abgelaufen" (Meta-Problem).
-    print(f"  Instagram: Diagnose — Token-Länge={len(access_token)} Zeichen, "
-          f"User-ID-Länge={len(ig_user_id)} Zeichen, "
-          f"enthält Anführungszeichen={'\"' in access_token or chr(39) in access_token}, "
-          f"enthält 'Bearer'={('Bearer' in access_token)}")
+
+def post_instagram_carousel(articles):
+    api_key = env("BUFFER_API_KEY")
+    channel_id = env("BUFFER_INSTAGRAM_CHANNEL_ID")
+    if not api_key or not channel_id:
+        return False
 
     articles_with_images = [a for a in articles if a.get("image")][:MAX_INSTAGRAM_CAROUSEL]
     if not articles_with_images:
         print("  Instagram: ! Keine Artikel mit Bild vorhanden — übersprungen.")
         return False
-    if len(articles_with_images) == 1:
-        return _post_instagram_single(articles_with_images[0], access_token, ig_user_id)
 
-    try:
-        # Schritt 1: für jeden Artikel ein "Karussell-Kind" (einzelnes Bild
-        # ohne eigene Bildunterschrift) anlegen.
-        child_ids = []
-        for a in articles_with_images:
-            child_resp = requests.post(
-                f"https://graph.instagram.com/v21.0/{ig_user_id}/media",
-                data={"image_url": get_instagram_safe_image_url(a["image"]), "is_carousel_item": "true", "access_token": access_token},
-                timeout=15,
-            )
-            if child_resp.status_code != 200:
-                print(f"  Instagram: ! Fehler beim Anlegen eines Karussell-Bilds ({child_resp.status_code}): {child_resp.text[:500]}", file=sys.stderr)
-                return False
-            child_ids.append(child_resp.json()["id"])
-
-        # Schritt 2: die gesammelte Bildunterschrift für das ganze Karussell
-        hashtags = generate_hashtags(articles_with_images, max_tags=15)
-        hashtag_block = " ".join(f"#{t}" for t in hashtags)
-        caption_lines = [f"🎮 {len(articles_with_images)} neue Artikel bei LOADOUT-NEWS!\n"]
-        for a in articles_with_images:
-            caption_lines.append(f"• {a['title']}")
-        caption_lines.append(f"\n👉 Alle Artikel über den Link in unserer Bio: {SITE_URL}\n\n{hashtag_block}")
-        caption = "\n".join(caption_lines)
-        if len(caption) > 2200:  # dokumentiertes Instagram-Limit für Bildunterschriften
-            caption = caption[:2197] + "..."
-
-        # Schritt 3: Karussell-Container mit allen Kindern anlegen
-        carousel_resp = requests.post(
-            f"https://graph.instagram.com/v21.0/{ig_user_id}/media",
-            data={
-                "media_type": "CAROUSEL",
-                "children": ",".join(child_ids),
-                "caption": caption,
-                "access_token": access_token,
-            },
-            timeout=15,
-        )
-        if carousel_resp.status_code != 200:
-            print(f"  Instagram: ! Fehler beim Anlegen des Karussells ({carousel_resp.status_code}): {carousel_resp.text[:500]}", file=sys.stderr)
-            return False
-        creation_id = carousel_resp.json()["id"]
-
-        # Schritt 4: veröffentlichen
-        publish_resp = requests.post(
-            f"https://graph.instagram.com/v21.0/{ig_user_id}/media_publish",
-            data={"creation_id": creation_id, "access_token": access_token},
-            timeout=15,
-        )
-        ok = publish_resp.status_code == 200
-        print(f"  Instagram: {'✓ 1 Karussell-Post mit ' + str(len(child_ids)) + ' Bildern' if ok else '! Fehler beim Veröffentlichen (' + str(publish_resp.status_code) + '): ' + publish_resp.text[:500]}")
-        return ok
-    except Exception as e:
-        print(f"  Instagram: ! Unerwarteter Fehler: {e}", file=sys.stderr)
-        return False
-
-
-def _post_instagram_single(article, access_token, ig_user_id):
-    """Fallback für den (seltenen) Fall, dass nur ein einziger neuer Artikel
-    mit Bild vorliegt — Instagram erlaubt kein Karussell mit nur 1 Bild."""
-    hashtags = generate_hashtags([article], max_tags=15)
+    hashtags = generate_hashtags(articles_with_images, max_tags=15)
     hashtag_block = " ".join(f"#{t}" for t in hashtags)
-    caption = f"{article['title']}\n\n{article['teaser']}\n\n👉 Den ganzen Artikel gibt's über den Link in unserer Bio: {SITE_URL}\n\n{hashtag_block}"
-    if len(caption) > 2200:
+    caption_lines = [f"🎮 {len(articles_with_images)} neue Artikel bei LOADOUT-NEWS!\n"]
+    for a in articles_with_images:
+        caption_lines.append(f"• {a['title']}")
+    caption_lines.append(f"\n👉 Alle Artikel über den Link in unserer Bio: {SITE_URL}\n\n{hashtag_block}")
+    caption = "\n".join(caption_lines)
+    if len(caption) > 2200:  # dokumentiertes Instagram-Limit für Bildunterschriften
         caption = caption[:2197] + "..."
 
+    # Buffer nimmt mehrere Bilder als "assets"-Liste entgegen — bei
+    # Instagram wird daraus automatisch ein Karussell (mehrere
+    # Bilder), bei nur einem Bild ein normaler Einzelbild-Post.
+    assets = [
+        {"image": {"url": get_instagram_safe_image_url(a["image"])}}
+        for a in articles_with_images
+    ]
+
+    # "customScheduled" mit einer Zielzeit von 2 Minuten in der Zukunft
+    # statt "addToQueue" — Letzteres würde sich nach Buffers eigenem,
+    # bei uns nicht kontrolliertem Warteschlangen-Zeitplan richten
+    # (könnte Stunden dauern). So posten wir zuverlässig zeitnah, ohne
+    # von Buffers Konto-Einstellungen abhängig zu sein.
+    due_at = (datetime.datetime.utcnow() + datetime.timedelta(minutes=2)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+    variables = {
+        "input": {
+            "text": caption,
+            "channelId": channel_id,
+            "schedulingType": "automatic",
+            "mode": "customScheduled",
+            "dueAt": due_at,
+            "assets": assets,
+        }
+    }
+
     try:
-        container_resp = requests.post(
-            f"https://graph.instagram.com/v21.0/{ig_user_id}/media",
-            data={"image_url": get_instagram_safe_image_url(article["image"]), "caption": caption, "access_token": access_token},
-            timeout=15,
+        resp = requests.post(
+            "https://api.buffer.com",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={"query": BUFFER_CREATE_POST_QUERY, "variables": variables},
+            timeout=30,
         )
-        if container_resp.status_code != 200:
-            print(f"  Instagram: ! Fehler beim Anlegen des Bilds ({container_resp.status_code}): {container_resp.text[:500]}", file=sys.stderr)
-            return False
-        creation_id = container_resp.json()["id"]
-        publish_resp = requests.post(
-            f"https://graph.instagram.com/v21.0/{ig_user_id}/media_publish",
-            data={"creation_id": creation_id, "access_token": access_token},
-            timeout=15,
-        )
-        ok = publish_resp.status_code == 200
-        print(f"  Instagram: {'✓ 1 Post (Einzelbild)' if ok else '! Fehler beim Veröffentlichen (' + str(publish_resp.status_code) + '): ' + publish_resp.text[:500]}")
-        return ok
     except Exception as e:
-        print(f"  Instagram: ! Unerwarteter Fehler: {e}", file=sys.stderr)
+        print(f"  Instagram (Buffer): ! Unerwarteter Fehler: {e}", file=sys.stderr)
         return False
+
+    if resp.status_code != 200:
+        print(f"  Instagram (Buffer): ! Fehler ({resp.status_code}): {resp.text[:500]}", file=sys.stderr)
+        return False
+
+    data = resp.json()
+
+    # Klassische GraphQL-Fehler (z. B. falscher API-Schlüssel, falsche Syntax)
+    if data.get("errors"):
+        print(f"  Instagram (Buffer): ! GraphQL-Fehler: {data['errors']}", file=sys.stderr)
+        return False
+
+    result = (data.get("data") or {}).get("createPost") or {}
+    # Buffers eigene "MutationError"-Antwortform (z. B. ungültige Kanal-ID)
+    if result.get("message"):
+        print(f"  Instagram (Buffer): ! {result['message']}", file=sys.stderr)
+        return False
+
+    print(f"  Instagram (Buffer): ✓ 1 Post mit {len(assets)} Bild(ern) eingeplant (in ~2 Min.)")
+    return True
 
 
 # --- Tumblr -------------------------------------------------------------------
