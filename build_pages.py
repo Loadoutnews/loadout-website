@@ -27,6 +27,7 @@ import json
 import os
 import html
 import datetime
+import re
 
 SITE_URL = "https://loadout-news.com"  # bereits auf die gewählte Domain eingestellt
 OUTPUT_DIR = "artikel"
@@ -47,6 +48,31 @@ GAMES = {
     "fifa": "FIFA / EA Sports FC",
 }
 
+GERMAN_MONTHS = {
+    "Januar": 1, "Februar": 2, "März": 3, "April": 4, "Mai": 5, "Juni": 6,
+    "Juli": 7, "August": 8, "September": 9, "Oktober": 10, "November": 11, "Dezember": 12,
+}
+
+
+def parse_german_date_to_iso(date_str):
+    """Artikel speichern ihr Datum als lesbaren deutschen Text (z. B. "17.
+    Juli 2026") — für schema.org-Strukturdaten wird aber ein maschinen-
+    lesbares ISO-Format (YYYY-MM-DD) verlangt. Gibt None zurück, falls das
+    Datum nicht im erwarteten Format vorliegt, statt abzustürzen."""
+    if not date_str:
+        return None
+    match = re.match(r"(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)\s*(\d{4})", date_str.strip())
+    if not match:
+        return None
+    day, month_name, year = match.groups()
+    month = GERMAN_MONTHS.get(month_name)
+    if not month:
+        return None
+    try:
+        return datetime.date(int(year), month, int(day)).isoformat()
+    except ValueError:
+        return None
+
 
 def article_image(article):
     if article.get("image"):
@@ -54,7 +80,64 @@ def article_image(article):
     return f"https://picsum.photos/seed/loadout-{article['id']}/900/500"
 
 
-def render_article_page(a):
+def related_articles(current, all_articles, count=3):
+    """Findet inhaltlich passende andere Artikel für die "Das könnte dich
+    auch interessieren"-Sektion — wichtig für SEO (interne Verlinkung
+    zwischen Artikeln hilft Suchmaschinen, den Seiten-Zusammenhang zu
+    verstehen) UND fürs Halten von Besucher:innen auf der Seite.
+
+    Priorität: zuerst dasselbe große Franchise (a['game']) — das ist die
+    engste inhaltliche Nähe — dann dieselbe Kategorie, jeweils die
+    neuesten zuerst. Der aktuelle Artikel selbst wird ausgeschlossen."""
+    others = [a for a in all_articles if a["id"] != current["id"]]
+
+    same_game = []
+    if current.get("game"):
+        same_game = [a for a in others if a.get("game") == current["game"]]
+
+    same_cat = [a for a in others if a["cat"] == current["cat"] and a not in same_game]
+
+    combined = same_game + same_cat
+    # Duplikate entfernen (falls ein Artikel aus irgendeinem Grund doppelt vorkäme)
+    seen_ids = set()
+    result = []
+    for a in combined:
+        if a["id"] in seen_ids:
+            continue
+        seen_ids.add(a["id"])
+        result.append(a)
+        if len(result) >= count:
+            break
+    return result
+
+
+def render_related_articles_html(related):
+    if not related:
+        return ""
+    cards = ""
+    for a in related:
+        img = article_image(a)
+        cat_label = CATS.get(a["cat"], a["cat"])
+        cards += f"""
+        <a href="{a['id']}.html" class="related-card">
+          <div class="related-card-art" style="background:url('{img}') center/cover;"></div>
+          <div class="related-card-body">
+            <span class="badge {a['cat']}" style="font-size:10px;">{cat_label}</span>
+            <h4>{html.escape(a['title'])}</h4>
+          </div>
+        </a>
+        """
+    return f"""
+    <div class="related-articles">
+      <h3 class="mono" style="font-size:13px; color:var(--muted); margin-bottom:14px;">DAS KÖNNTE DICH AUCH INTERESSIEREN</h3>
+      <div class="related-grid">
+        {cards}
+      </div>
+    </div>
+    """
+
+
+def render_article_page(a, all_articles):
     cat_label = CATS.get(a["cat"], a["cat"])
     game_label = GAMES.get(a.get("game"), "") if a.get("game") else ""
     badge_label = cat_label + (f" · {game_label}" if game_label else "")
@@ -70,23 +153,31 @@ def render_article_page(a):
     canonical = f"{SITE_URL}/artikel/{a['id']}.html"
     title = html.escape(a["title"])
     teaser = html.escape(a["teaser"])
+    related_html = render_related_articles_html(related_articles(a, all_articles))
 
     # schema.org NewsArticle — hilft Suchmaschinen, den Artikel korrekt
     # einzuordnen (Autor, Bild, Datum) und kann zu Rich-Snippets führen.
+    # datePublished/dateModified fehlten bisher — ein wichtiges Feld für
+    # NewsArticle-Strukturdaten, das Google explizit für die Einordnung als
+    # "echte", aktuelle Nachrichtenseite berücksichtigt.
+    date_iso = parse_german_date_to_iso(a.get("date"))
     json_ld = {
         "@context": "https://schema.org",
         "@type": "NewsArticle",
         "headline": a["title"],
         "description": a["teaser"],
         "image": [image],
-        "author": {"@type": "Organization", "name": "LOADOUT Redaktion"},
+        "author": {"@type": "Organization", "name": "LOADOUT-NEWS Redaktion", "url": SITE_URL},
         "publisher": {
             "@type": "Organization",
-            "name": "LOADOUT",
-            "logo": {"@type": "ImageObject", "url": f"{SITE_URL}/favicon.png"},
+            "name": "LOADOUT-NEWS",
+            "logo": {"@type": "ImageObject", "url": f"{SITE_URL}/logo-icon-192.png"},
         },
         "mainEntityOfPage": {"@type": "WebPage", "@id": canonical},
     }
+    if date_iso:
+        json_ld["datePublished"] = date_iso
+        json_ld["dateModified"] = date_iso
 
     return f"""<!DOCTYPE html>
 <html lang="de">
@@ -173,6 +264,8 @@ def render_article_page(a):
             <span id="dislikeCount">0</span>
           </button>
         </div>
+
+        {related_html}
 
         <div class="comments-section">
           <h3 class="mono">💬 Was denkst du dazu?</h3>
@@ -318,7 +411,7 @@ def render_article_page(a):
   }}
 
   // --- Google Analytics (GA4) — dieselbe Mess-ID wie in index.html ------
-  const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+  const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
   let analyticsLoaded = false;
 
   function loadGoogleAnalytics(){{
@@ -536,7 +629,7 @@ def build():
             urls.append(f"{SITE_URL}/{optional_page}")
 
     for a in articles:
-        page = render_article_page(a)
+        page = render_article_page(a, articles)
         path = os.path.join(OUTPUT_DIR, f"{a['id']}.html")
         with open(path, "w", encoding="utf-8") as f:
             f.write(page)
