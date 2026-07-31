@@ -238,10 +238,10 @@ def render_html(updates):
 </div>
 
 <main>
-  <div class="ad-slot ad-header">
-    <span class="ad-tag mono">Werbung</span>
-    <a rel="sponsored" href="https://www.awin1.com/cread.php?s=3562320&v=9862&q=417917&r=3000881" target="_blank">
-      <img src="https://www.awin1.com/cshow.php?s=3562320&v=9862&q=417917&r=3000881" border="0" alt="Kinguin – günstige Gaming-Keys" style="max-width:100%; height:auto; display:block; margin:0 auto; border-radius:8px;">
+  <div class="affiliate-header">
+    <span class="affiliate-label mono">Werbung</span>
+    <a rel="sponsored" href="https://www.awin1.com/cread.php?s=2096296&v=9351&q=329381&r=3000881" target="_blank">
+      <img src="https://www.awin1.com/cshow.php?s=2096296&v=9351&q=329381&r=3000881" alt="smava – Kredite vergleichen">
     </a>
   </div>
 
@@ -258,7 +258,16 @@ def render_html(updates):
     {cards if cards else '<p style="color:var(--muted);">Aktuell sind keine angekündigten Updates mit festem Termin bekannt.</p>'}
   </div>
 
-  <div class="ad-slot ad-footer" style="margin-top:30px;"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
+  <div class="affiliate-header" style="margin-top:30px; margin-bottom:0;">
+    <span class="affiliate-label mono">Werbung</span>
+    <a class="coupon-card" rel="sponsored" target="_blank" href="https://www.awin1.com/awclick.php?gid=560890&mid=91857&awinaffid=3000881&linkid=4296784&clickref=" style="display:inline-flex; text-align:left;">
+      <span class="coupon-icon">🔑</span>
+      <span class="coupon-text">
+        <b>20 % Rabatt</b> auf alle Software-Keys<br>
+        <span class="coupon-code">KSAS20</span>
+      </span>
+    </a>
+  </div>
 </main>
 
 <footer>
