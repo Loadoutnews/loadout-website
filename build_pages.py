@@ -619,8 +619,14 @@ def build():
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+    # Impressum, Datenschutz und Nutzungsbedingungen bewusst NICHT in der
+    # Sitemap — alle drei sind im <head> mit <meta name="robots"
+    # content="noindex"> markiert (reine Pflichtseiten ohne redaktionellen
+    # Mehrwert für die Google-Suche). Sie in der Sitemap zu listen würde
+    # Google widersprüchliche Signale geben ("bitte indexieren" vs. "bitte
+    # nicht indexieren").
     urls = [f"{SITE_URL}/index.html", f"{SITE_URL}/archiv.html",
-            f"{SITE_URL}/impressum.html", f"{SITE_URL}/datenschutz.html", f"{SITE_URL}/app.html", f"{SITE_URL}/nutzungsbedingungen.html", f"{SITE_URL}/ueber-uns.html"]
+            f"{SITE_URL}/app.html", f"{SITE_URL}/ueber-uns.html"]
 
     # Release- und Update-Kalender nur eintragen, wenn sie schon existieren
     # (beim allerersten Lauf, bevor die jeweiligen Skripte einmal gelaufen
