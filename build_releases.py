@@ -257,10 +257,10 @@ def render_html(month_label, releases):
 </div>
 
 <main>
-  <div class="ad-slot ad-header">
-    <span class="ad-tag mono">Werbung</span>
-    <a rel="sponsored" href="https://www.awin1.com/cread.php?s=3562320&v=9862&q=417917&r=3000881" target="_blank">
-      <img src="https://www.awin1.com/cshow.php?s=3562320&v=9862&q=417917&r=3000881" border="0" alt="Kinguin – günstige Gaming-Keys" style="max-width:100%; height:auto; display:block; margin:0 auto; border-radius:8px;">
+  <div class="affiliate-header">
+    <span class="affiliate-label mono">Werbung</span>
+    <a rel="sponsored" href="https://www.awin1.com/cread.php?s=2452325&v=9351&q=335698&r=3000881" target="_blank">
+      <img src="https://www.awin1.com/cshow.php?s=2452325&v=9351&q=335698&r=3000881" alt="smava – Kredite vergleichen">
     </a>
   </div>
 
@@ -274,7 +274,12 @@ def render_html(month_label, releases):
     {cards}
   </div>
 
-  <div class="ad-slot ad-footer" style="margin-top:30px;"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 728×90</div>
+  <div class="affiliate-header" style="margin-top:30px; margin-bottom:0;">
+    <span class="affiliate-label mono">Werbung</span>
+    <a rel="sponsored" href="https://www.awin1.com/cread.php?s=3562320&v=9862&q=417917&r=3000881" target="_blank">
+      <img src="https://www.awin1.com/cshow.php?s=3562320&v=9862&q=417917&r=3000881" alt="Kinguin – günstige Gaming-Keys">
+    </a>
+  </div>
 </main>
 
 <footer>
