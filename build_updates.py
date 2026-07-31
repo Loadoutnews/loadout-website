@@ -95,7 +95,7 @@ auftauchen: {known_list}"""
         max_tokens=10000,
         system=system_prompt,
         messages=[{"role": "user", "content": f"Recherchiere anstehende, angekündigte Spiele-Updates, Stand {today_label}."}],
-        tools=[{"type": "web_search_20250305", "name": "web_search"}],
+        tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 8}],
     )
 
     text_blocks = [block.text for block in response.content if block.type == "text"]
@@ -278,6 +278,7 @@ def render_html(updates):
   </div>
   <div class="footer-links mono">
     <a href="index.html">Zur Startseite</a>
+    <a href="ueber-uns.html">Über uns</a>
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
     <span>© 2026 LOADOUT-NEWS</span>
