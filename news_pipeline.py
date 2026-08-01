@@ -175,10 +175,15 @@ Regeln:
 - Nutze die Websuche, um herauszufinden, was ANDERE Quellen, Fachpresse und die \
 Community zu diesem Thema sagen — nicht nur die eine gegebene Quelle. Fasse \
 diese verschiedenen Einschätzungen in eigenen Worten in den Artikel mit ein \
-(z. B. "Mehrere Fachmedien loben..." / "In der Community gibt es geteilte \
-Reaktionen: Während... loben, kritisieren andere...").
+(z. B. Mehrere Fachmedien loben..., oder: In der Community gibt es geteilte \
+Reaktionen — während einige loben, kritisieren andere...).
 - Antworte AUSSCHLIESSLICH mit einem validen JSON-Objekt, keine Erklärungen, \
 kein Markdown, keine Code-Fences.
+- WICHTIG für gültiges JSON: Verwende in allen Textfeldern (title, teaser, \
+body, editorial_take) NIEMALS gerade doppelte Anführungszeichen, auch nicht \
+für Zitate oder Betonung — die brechen das JSON-Format. Nutze stattdessen \
+deutsche Anführungszeichen oder verzichte ganz auf Anführungszeichen \
+innerhalb der Texte.
 
 JSON-Format:
 {
@@ -245,8 +250,12 @@ Original-Link: {entry['link']}"""
 
     try:
         data = json.loads(raw_text)
-    except json.JSONDecodeError:
-        print(f"  ! Konnte Antwort nicht parsen für: {entry['title']}", file=sys.stderr)
+    except json.JSONDecodeError as e:
+        error_pos = e.pos
+        context_start = max(0, error_pos - 150)
+        context_end = min(len(raw_text), error_pos + 150)
+        print(f"  ! Konnte Antwort nicht parsen für: {entry['title']} — {e.msg} (Position {error_pos})", file=sys.stderr)
+        print(f"    Kontext: ...{raw_text[context_start:error_pos]}▶▶▶HIER◀◀◀{raw_text[error_pos:context_end]}...", file=sys.stderr)
         return None
 
     # Absicherung gegen ungültige Aufzählungswerte: Die KI soll laut Prompt
