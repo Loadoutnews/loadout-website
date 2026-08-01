@@ -183,7 +183,10 @@ kein Markdown, keine Code-Fences.
 body, editorial_take) NIEMALS gerade doppelte Anführungszeichen, auch nicht \
 für Zitate oder Betonung — die brechen das JSON-Format. Nutze stattdessen \
 deutsche Anführungszeichen oder verzichte ganz auf Anführungszeichen \
-innerhalb der Texte.
+innerhalb der Texte. Verwende außerdem KEINE rohen Zeilenumbrüche innerhalb \
+eines einzelnen Textfelds/Absatzes — jeder Absatz muss eine durchgehende \
+Zeile ohne Zeilenumbruch sein (für mehrere Absätze stattdessen mehrere \
+Einträge in der "body"-Liste verwenden).
 
 JSON-Format:
 {
@@ -249,7 +252,7 @@ Original-Link: {entry['link']}"""
         raw_text = raw_text[first_brace:]
 
     try:
-        data = json.loads(raw_text)
+        data = json.loads(raw_text, strict=False)
     except json.JSONDecodeError as e:
         error_pos = e.pos
         context_start = max(0, error_pos - 150)
