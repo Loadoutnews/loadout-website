@@ -76,6 +76,12 @@ einem echten, konkreten Datum — keine vagen "demnächst"-Ankündigungen.
 Antworte AUSSCHLIESSLICH mit einem validen JSON-Array, keine Erklärungen, \
 kein Markdown, keine Code-Fences. Jedes Element in diesem Format:
 
+WICHTIG für gültiges JSON: Verwende in allen Textfeldern (content usw.)
+NIEMALS gerade doppelte Anführungszeichen, auch nicht für Zitate oder
+Betonung — die brechen das JSON-Format. Nutze stattdessen deutsche
+Anführungszeichen oder verzichte ganz auf Anführungszeichen innerhalb
+der Texte.
+
 {{
   "game": "Spielname",
   "update_title": "z. B. 'Season 5: Aufbruch' oder 'Patch 2.3'",
@@ -116,12 +122,16 @@ auftauchen: {known_list}"""
 
     try:
         return json.loads(raw_text)
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as e:
         recovered = _recover_truncated_json_array(raw_text)
         if recovered:
             print(f"  ⚠ Antwort war abgeschnitten — {len(recovered)} vollständige Einträge gerettet.", file=sys.stderr)
         else:
-            print("! Antwort konnte nicht als JSON gelesen werden:", raw_text[:300], file=sys.stderr)
+            error_pos = e.pos
+            context_start = max(0, error_pos - 150)
+            context_end = min(len(raw_text), error_pos + 150)
+            print(f"! Antwort konnte nicht als JSON gelesen werden: {e.msg} (Position {error_pos})", file=sys.stderr)
+            print(f"  Kontext um die Fehlerstelle:\n  ...{raw_text[context_start:error_pos]}▶▶▶HIER◀◀◀{raw_text[error_pos:context_end]}...", file=sys.stderr)
         return recovered
 
 
