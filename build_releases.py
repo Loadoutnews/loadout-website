@@ -61,6 +61,12 @@ oder auf Reviews nach Release)?
 Antworte AUSSCHLIESSLICH mit einem validen JSON-Array, keine Erklärungen,
 kein Markdown, keine Code-Fences. Jedes Element im folgenden Format:
 
+WICHTIG für gültiges JSON: Verwende in allen Textfeldern (description,
+recommendation_reason, price usw.) NIEMALS gerade doppelte Anführungszeichen,
+auch nicht für Zitate oder Betonung — die brechen das JSON-Format. Nutze
+stattdessen deutsche Anführungszeichen oder verzichte ganz auf
+Anführungszeichen innerhalb der Texte.
+
 {{
   "title": "Spielname",
   "release_date": "YYYY-MM-DD",
@@ -108,7 +114,7 @@ Währungen bekannt sind, gib diese an. Sortiere nach Release-Datum, dann nach Hy
 
     try:
         releases = json.loads(raw_text)
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as e:
         # Falls die Antwort (z. B. durch ein Token-Limit) mitten im JSON
         # abgeschnitten wurde: die bereits vollständigen Objekte im Array
         # retten, statt alles zu verwerfen.
@@ -116,7 +122,16 @@ Währungen bekannt sind, gib diese an. Sortiere nach Release-Datum, dann nach Hy
         if releases:
             print(f"  ⚠ Antwort war abgeschnitten — {len(releases)} vollständige Einträge gerettet.", file=sys.stderr)
         else:
-            print("! Antwort konnte nicht als JSON gelesen werden:", raw_text[:300], file=sys.stderr)
+            # Zeigt die GENAUE Fehlerstelle mit etwas Kontext davor/danach,
+            # statt nur der ersten 300 Zeichen der Antwort — bei einem Fehler
+            # mitten im Text (z. B. ein nicht escaptes Anführungszeichen)
+            # waren die ersten 300 Zeichen bisher meist nutzlos, weil der
+            # eigentliche Fehler viel weiter hinten lag.
+            error_pos = e.pos
+            context_start = max(0, error_pos - 150)
+            context_end = min(len(raw_text), error_pos + 150)
+            print(f"! Antwort konnte nicht als JSON gelesen werden: {e.msg} (Position {error_pos})", file=sys.stderr)
+            print(f"  Kontext um die Fehlerstelle:\n  ...{raw_text[context_start:error_pos]}▶▶▶HIER◀◀◀{raw_text[error_pos:context_end]}...", file=sys.stderr)
             return []
 
     return releases[:MAX_RELEASES]
