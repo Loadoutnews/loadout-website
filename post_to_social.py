@@ -275,7 +275,7 @@ def post_bluesky_batch(articles):
     record = {
         "$type": "app.bsky.feed.post",
         "text": text,
-        "createdAt": datetime.datetime.utcnow().isoformat() + "Z",
+        "createdAt": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
     }
     if facets:
         record["facets"] = facets
@@ -366,7 +366,7 @@ def post_instagram_carousel(articles):
     # bei uns nicht kontrolliertem Warteschlangen-Zeitplan richten
     # (könnte Stunden dauern). So posten wir zuverlässig zeitnah, ohne
     # von Buffers Konto-Einstellungen abhängig zu sein.
-    due_at = (datetime.datetime.utcnow() + datetime.timedelta(minutes=2)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    due_at = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=2)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
     variables = {
         "input": {
@@ -376,6 +376,15 @@ def post_instagram_carousel(articles):
             "mode": "customScheduled",
             "dueAt": due_at,
             "assets": assets,
+            # Buffer verlangt für Instagram explizit einen Post-Typ
+            # (post/story/reel) — ohne dieses Feld schlägt der Aufruf mit
+            # "Instagram posts require a type" fehl. Wir wollen immer einen
+            # normalen Feed-/Karussell-Post, keine Story oder Reel.
+            "metadata": {
+                "instagram": {
+                    "type": "post",
+                },
+            },
         }
     }
 
