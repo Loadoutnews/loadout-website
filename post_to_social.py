@@ -55,6 +55,7 @@ Ausführen:
 import datetime
 import json
 import os
+import subprocess
 import sys
 
 import requests
@@ -300,19 +301,42 @@ def post_bluesky_batch(articles):
 # eigene, freigeschaltete Meta-App: Wir verbinden unser Instagram-Konto
 # einmalig über Buffers eigene Weboberfläche, und posten danach über
 # Buffers GraphQL-API.
+#
+# Die Karussell-Folien sind NICHT mehr die rohen Artikel-Bilder, sondern
+# eigens gebrandete Bilder (siehe generate_instagram_slides.py): eine feste
+# Intro-Folie mit Logo, eine Folie pro Artikel mit Titel-Überlagerung im
+# LOADOUT-Stil, und eine IMMER identische Werbe-Folie am Ende.
 
-def get_instagram_safe_image_url(original_url):
-    """Schneidet ein beliebiges Bild automatisch auf ein für Instagram
-    sicheres Format zu (1080×1080, quadratisch, JPEG) — über wsrv.nl,
-    einen etablierten, kostenlosen Bild-Cache/Zuschneide-Dienst. Buffer
-    verarbeitet Bilder zwar bereits selbst, aber die zusätzliche
-    Vor-Zuschneidung stellt sicher, dass jedes Artikel-Bild garantiert im
-    richtigen Format ankommt, unabhängig vom Ausgangsformat der Quelle."""
-    if not original_url:
-        return None
-    from urllib.parse import quote
-    encoded = quote(original_url, safe="")
-    return f"https://wsrv.nl/?url={encoded}&w=1080&h=1080&fit=cover&output=jpg&q=85"
+SLIDE_OUTPUT_DIR = "social-slides"
+OUTRO_SLIDE_PATH = "social-assets/outro-slide.jpg"
+
+
+def git_commit_and_push(paths, commit_message):
+    """Committet die übergebenen Dateien und pusht sie — nötig, damit die
+    frisch erzeugten Karussell-Folien über eine echte, öffentliche
+    raw.githubusercontent.com-URL abrufbar sind, BEVOR wir Buffer bitten,
+    sie zu laden. Nutzt dieselben Git-Zugriffsrechte, die der Workflow
+    ohnehin schon hat (siehe Push von social-posted.json am Skript-Ende)."""
+    try:
+        subprocess.run(["git", "config", "user.name", "github-actions"], check=True)
+        subprocess.run(["git", "config", "user.email", "actions@github.com"], check=True)
+        subprocess.run(["git", "add"] + paths, check=True)
+        commit_result = subprocess.run(["git", "commit", "-m", commit_message], capture_output=True, text=True)
+        if commit_result.returncode != 0 and "nothing to commit" not in commit_result.stdout:
+            print(f"  Instagram: ! Git-Commit fehlgeschlagen: {commit_result.stdout}{commit_result.stderr}", file=sys.stderr)
+            return False
+        subprocess.run(["git", "push"], check=True)
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"  Instagram: ! Git-Push fehlgeschlagen: {e}", file=sys.stderr)
+        return False
+
+
+def raw_github_url(path):
+    """Baut die öffentliche 'Rohdaten'-URL einer Datei im Repo — GITHUB_REPOSITORY
+    wird von GitHub Actions automatisch gesetzt (Format 'Besitzer/Repo-Name')."""
+    repo = os.environ.get("GITHUB_REPOSITORY", "Loadoutnews/loadout-website")
+    return f"https://raw.githubusercontent.com/{repo}/main/{path}"
 
 
 BUFFER_CREATE_POST_QUERY = """
@@ -338,10 +362,39 @@ def post_instagram_carousel(articles):
     if not api_key or not channel_id:
         return False
 
-    articles_with_images = [a for a in articles if a.get("image")][:MAX_INSTAGRAM_CAROUSEL]
+    # 2 Plätze im Karussell sind für Intro- und Outro-Folie reserviert
+    articles_with_images = [a for a in articles if a.get("image")][:MAX_INSTAGRAM_CAROUSEL - 2]
     if not articles_with_images:
         print("  Instagram: ! Keine Artikel mit Bild vorhanden — übersprungen.")
         return False
+
+    if not os.path.exists(OUTRO_SLIDE_PATH):
+        print(f"  Instagram: ! Feste Outro-Folie ({OUTRO_SLIDE_PATH}) fehlt im Repo — übersprungen.", file=sys.stderr)
+        return False
+
+    try:
+        import generate_instagram_slides as gis
+    except ImportError as e:
+        print(f"  Instagram: ! generate_instagram_slides.py konnte nicht geladen werden: {e}", file=sys.stderr)
+        return False
+
+    # Eindeutige Kennung pro Lauf — verhindert, dass GitHubs Rohdaten-Cache
+    # (raw.githubusercontent.com) Buffer versehentlich noch Bilder vom
+    # VORHERIGEN Lauf ausliefert, falls Dateinamen sich wiederholen würden.
+    run_id = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d%H%M%S")
+
+    try:
+        slide_paths = gis.generate_all_slides(articles_with_images, SLIDE_OUTPUT_DIR, run_id)
+    except Exception as e:
+        print(f"  Instagram: ! Folien-Generierung fehlgeschlagen: {e}", file=sys.stderr)
+        return False
+
+    all_local_paths = slide_paths + [OUTRO_SLIDE_PATH]
+
+    if not git_commit_and_push(slide_paths, f"Instagram-Karussell-Folien ({len(articles_with_images)} Artikel, {run_id})"):
+        return False
+
+    image_urls = [raw_github_url(p) for p in all_local_paths]
 
     hashtags = generate_hashtags(articles_with_images, max_tags=15)
     hashtag_block = " ".join(f"#{t}" for t in hashtags)
@@ -354,12 +407,10 @@ def post_instagram_carousel(articles):
         caption = caption[:2197] + "..."
 
     # Buffer nimmt mehrere Bilder als "assets"-Liste entgegen — bei
-    # Instagram wird daraus automatisch ein Karussell (mehrere
-    # Bilder), bei nur einem Bild ein normaler Einzelbild-Post.
-    assets = [
-        {"image": {"url": get_instagram_safe_image_url(a["image"])}}
-        for a in articles_with_images
-    ]
+    # Instagram wird daraus automatisch ein Karussell (mehrere Bilder).
+    # Reihenfolge: Intro-Folie, dann eine Folie pro Artikel, dann die feste
+    # Outro-Werbefolie ganz am Ende.
+    assets = [{"image": {"url": url}} for url in image_urls]
 
     # "customScheduled" mit einer Zielzeit von 2 Minuten in der Zukunft
     # statt "addToQueue" — Letzteres würde sich nach Buffers eigenem,
