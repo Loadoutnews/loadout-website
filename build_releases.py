@@ -65,7 +65,9 @@ WICHTIG für gültiges JSON: Verwende in allen Textfeldern (description,
 recommendation_reason, price usw.) NIEMALS gerade doppelte Anführungszeichen,
 auch nicht für Zitate oder Betonung — die brechen das JSON-Format. Nutze
 stattdessen deutsche Anführungszeichen oder verzichte ganz auf
-Anführungszeichen innerhalb der Texte.
+Anführungszeichen innerhalb der Texte. Verwende außerdem KEINE rohen
+Zeilenumbrüche innerhalb eines Textfelds — jeder Text muss eine
+durchgehende Zeile ohne Zeilenumbruch sein.
 
 {{
   "title": "Spielname",
@@ -113,7 +115,7 @@ Währungen bekannt sind, gib diese an. Sortiere nach Release-Datum, dann nach Hy
         raw_text = raw_text[first_bracket:]
 
     try:
-        releases = json.loads(raw_text)
+        releases = json.loads(raw_text, strict=False)
     except json.JSONDecodeError as e:
         # Falls die Antwort (z. B. durch ein Token-Limit) mitten im JSON
         # abgeschnitten wurde: die bereits vollständigen Objekte im Array
@@ -146,7 +148,7 @@ def _recover_truncated_json_array(raw_text):
         return []
     repaired = raw_text[: last_brace + 1] + "]"
     try:
-        return json.loads(repaired)
+        return json.loads(repaired, strict=False)
     except json.JSONDecodeError:
         return []
 
