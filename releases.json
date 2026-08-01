@@ -1,224 +1,142 @@
 {
-  "month": "Juli 2026",
-  "month_num": 7,
+  "month": "August 2026",
+  "month_num": 8,
   "year": 2026,
   "releases": [
     {
-      "title": "Granblue Fantasy: Relink – Endless Ragnarok",
-      "release_date": "2026-07-08",
-      "platforms": [
-        "PS5",
-        "Nintendo Switch 2",
-        "PC"
-      ],
-      "price": "USD 29.99 (Erweiterung für Besitzer des Hauptspiels) / USD 59.99 (Switch-2-Komplettpaket) – offizieller CHF-Preis noch nicht bestätigt",
-      "genre": "Action-RPG (Koop)",
-      "description": "Die erste grosse Erweiterung zum beliebten Koop-Action-RPG schickt die Grancypher-Crew erneut in den Zegagrande-Skydom, diesmal gegen die sogenannten Ragnalia. <cite index=\"92-1,92-3\">Für 29.99 Dollar verdoppelt Endless Ragnarok fast die Spielzeit und bringt sechs neue spielbare Charaktere direkt mit.</cite> <cite index=\"96-19\">Die Erweiterung baut das Endgame-System deutlich aus, wirkt aber vor allem auf eingefleischte Fans zugeschnitten.</cite>",
-      "hype": 68,
-      "recommendation": "ja",
-      "recommendation_reason": "<cite index=\"97-1,97-2\">Kritiker beschreiben Endless Ragnarok als die definitive Version des Action-JRPGs, die den Kern des Spiels durch neue Mastery-Systeme und Koop-Mechaniken spürbar verbessert.</cite> Wer die Base bereits durchgespielt hat, bekommt hier spürbar mehr fürs Geld – Neueinsteiger sollten aber zuerst das Hauptspiel spielen.",
-      "source_url": "https://www.rpgsite.net/review/20857-granblue-fantasy-relink-endless-ragnarok-review",
-      "image": "https://picsum.photos/seed/loadout-release-GranblueFantasyRelinkEndlessRagnarok/300/200"
-    },
-    {
-      "title": "Assassin's Creed Black Flag Resynced",
-      "release_date": "2026-07-09",
-      "platforms": [
-        "PS5",
-        "Xbox Series X/S",
-        "PC"
-      ],
-      "price": "ca. USD 69.99 (Standard) – Deluxe Edition mit Zusatzinhalten, offizieller CHF-Preis nicht final bestätigt",
-      "genre": "Action-Adventure / Open World",
-      "description": "Das komplette Remake des Piratenklassikers von 2013 lässt Spieler erneut als Edward Kenway die Karibik der Blütezeit der Piraterie erkunden. <cite index=\"37-9,37-11\">Die Neuauflage wurde auf der aktuellen Anvil-Engine komplett neu gebaut und bietet Raytracing, Mikropolygon-Rendering sowie neue exklusive Story-Inhalte rund um Blackbeard und Stede Bonnet.</cite> Kampf, Segeln und Parkour wurden spürbar überarbeitet, ohne den Charme des Originals zu verlieren.",
-      "hype": 85,
-      "recommendation": "ja",
-      "recommendation_reason": "<cite index=\"30-12,30-13\">Der Metascore liegt bei 84, OpenCritic vergibt die Bestnote „Mighty“ mit 86 Punkten im Schnitt und 94 % positiver Kritikerstimmen.</cite> Auch wenn einzelne Reviews technische Probleme und die 30-fps-Diskussion auf PC bemängeln, überwiegt der Eindruck eines liebevollen, spielerisch verbesserten Remakes – für Fans der Reihe ein klarer Kauf.",
-      "source_url": "https://store.steampowered.com/app/3751950/Assassins_Creed_Black_Flag_Resynced/",
-      "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3751950/9b046115b1663a4be2b252712328e4f6c162da68/header.jpg?t=1783617053"
-    },
-    {
-      "title": "EA Sports College Football 27",
-      "release_date": "2026-07-09",
-      "platforms": [
-        "PS5",
-        "Xbox Series X/S",
-        "PC"
-      ],
-      "price": "USD 69.99 (Standard) / USD 99.99 (Deluxe) / USD 149.99 (MVP Bundle inkl. Madden NFL 27)",
-      "genre": "Sportsimulation (American Football)",
-      "description": "Die zweite PC-fähige Ausgabe der wiederbelebten College-Football-Reihe bringt ein überarbeitetes Dynasty-System samt „Blueprint“-Mechanik sowie tiefere Verteidigungsoptionen. <cite index=\"100-3,100-4\">Das Spiel bietet deutlich mehr Tiefe in der Defensive mit 31 Playbooks und einem neuen Ermüdungssystem, dazu dynamisches Wetter und ein neues Broadcast-Team für die Präsentation.</cite> Road to Glory und Dynasty-Modus wurden ebenfalls erweitert.",
-      "hype": 75,
-      "recommendation": "abwarten",
-      "recommendation_reason": "<cite index=\"104-39,104-40\">Kurz nach Release wurde bekannt, dass Spieler In-Game-Fähigkeitspunkte per Echtgeld-Währung kaufen konnten, teils für umgerechnet rund 100 US-Dollar pro Charakter.</cite> <cite index=\"104-2,104-3\">Das führte zu „Mostly Negative“ Nutzerbewertungen auf Steam, woraufhin EA die bezahlten Fortschritts-Optionen kurzfristig wieder entfernte.</cite> Spielerisch ist es laut Fachpresse eines der besten Jahre der Serie, doch die Monetarisierungs-Kontroverse sollte man erst abklingen lassen, bevor man zugreift.",
-      "source_url": "https://www.forbes.com/sites/games/2026/07/04/ea-college-football-27-review-the-good-the-bad-and-the-bottom-line/",
-      "image": "https://imageio.forbes.com/specials-images/imageserve/6a49cab0b5712442f557d0bc/0x0.jpg?format=jpg&amp;height=900&amp;width=1600&amp;fit=bounds"
-    },
-    {
-      "title": "Echoes of Aincrad: Sword Art Online",
-      "release_date": "2026-07-10",
-      "platforms": [
-        "PS5",
-        "Xbox Series X/S",
-        "PC"
-      ],
-      "price": "Preis für Standard-, Deluxe- und Ultimate-Edition noch nicht abschliessend kommuniziert",
-      "genre": "Action-RPG",
-      "description": "Bandai Namcos neuestes Sword-Art-Online-Spiel lässt Spieler erstmals einen komplett eigenen Charakter durch die ersten beiden Etagen von Aincrad schicken. <cite index=\"46-14,46-15\">Im Zentrum steht ein Third-Person-Action-System, bei dem Magie und Fernkampfwaffen bewusst ausgeschlossen sind, dafür Nahkampf, Paraden und ein Ausweichsystem im Vordergrund stehen.</cite> Ein optionaler „Death Game Mode“ mit permanentem Tod sorgt für zusätzlichen Nervenkitzel.",
-      "hype": 70,
-      "recommendation": "abwarten",
-      "recommendation_reason": "<cite index=\"44-20,44-22\">Mehrere Preview-Redaktionen halten Echoes of Aincrad für den bislang stärksten Ausflug der Marke ins Gaming, bemängeln aber, dass bislang nur die ersten beiden von 100 Etagen zugänglich waren.</cite> Da noch keine vollständigen Testberichte vorliegen und frühere SAO-Spiele qualitativ stark schwankten, lohnt sich ein Blick auf die ersten Reviews, bevor man kauft.",
-      "source_url": "https://www.rpgsite.net/preview/20538-echoes-of-aincrad-pc-hands-on-preview-port-steam-deck-rog-ally",
-      "image": "https://picsum.photos/seed/loadout-release-EchoesofAincradSwordArtOnline/300/200"
-    },
-    {
-      "title": "Palworld 1.0",
-      "release_date": "2026-07-10",
-      "platforms": [
-        "PC",
-        "PS5",
-        "Xbox Series X/S",
-        "Xbox One"
-      ],
-      "price": "USD 29.99 (unverändert gegenüber Early Access)",
-      "genre": "Survival-Crafting / Creature-Collector / Action",
-      "description": "Nach über zwei Jahren Early Access erreicht das Überraschungsphänomen endlich Version 1.0 mit einem gigantischen Inhaltsupdate rund um den lang ersehnten Weltenbaum. <cite index=\"71-8\">Das Update bringt 72 neue Pals, davon 47 komplett neue Kreaturen, und hebt den Gesamtbestand auf 287.</cite> <cite index=\"67-8,67-12\">Als Dankeschön an die Community erhöht Entwickler Pocketpair den Preis trotz des riesigen Umfangs nicht.</cite>",
-      "hype": 90,
-      "recommendation": "ja",
-      "recommendation_reason": "<cite index=\"64-23,64-26\">Das 1.0-Update gilt als absolut empfehlenswert, zumal es für Bestandsbesitzer kostenlos ist und schon jetzt stabil genug für einen Einstieg wirkt.</cite> Bei weiterhin sehr positiven Nutzerbewertungen und unverändertem Preis ist das ein einfacher Kauf – auch für alle, die früher mal reingeschaut und wieder aufgehört haben.",
-      "source_url": "https://store.steampowered.com/app/1623730/Palworld/",
-      "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1623730/57df7aed61d65c9012a11d58e812aff275b7daed/capsule_616x353.jpg?t=1784190284"
-    },
-    {
-      "title": "Digimon Story: Time Stranger (Nintendo Switch 2 Edition)",
-      "release_date": "2026-07-10",
-      "platforms": [
-        "Nintendo Switch 2"
-      ],
-      "price": "USD 69.99 (Standard) / bis zu ca. USD 120 für die Complete/Ultimate Edition mit Season Pass",
-      "genre": "Monster-Sammel-RPG",
-      "description": "Der bereits 2025 auf anderen Plattformen erschienene Digimon-Ableger kommt nun auch nativ auf die Nintendo Switch 2. <cite index=\"72-13,72-14\">Das Rollenspiel dreht sich um die Bindung zwischen Menschen und Digimon und schickt Spieler auf eine epische Reise zwischen Menschenwelt und digitaler Welt mit rundenbasierten Kämpfen.</cite> Über 450 sammelbare Digimon und ein tiefes Digivolutions-System sollen für Langzeitmotivation sorgen.",
-      "hype": 55,
-      "recommendation": "abwarten",
-      "recommendation_reason": "<cite index=\"72-5,72-6\">Einige Kritiker bemängeln einen sehr langsamen Einstieg, einfache Kämpfe und eine eher belanglose Geschichte, auch wenn die bunte Digimon-Welt Spass macht.</cite> Da es sich um einen späten Vollpreis-Port ohne kostenloses Upgrade von der Switch-1-Version handelt, lohnt sich für die meisten eher ein Warten auf einen Sale.",
-      "source_url": "https://www.nintendolife.com/reviews/nintendo-switch-2/digimon-story-time-stranger",
-      "image": "https://images.nintendolife.com/0ac5e0cc92dc3/1280x720.jpg"
-    },
-    {
-      "title": "The Mound: Omen of Cthulhu",
-      "release_date": "2026-07-15",
+      "title": "Beast of Reincarnation",
+      "release_date": "2026-08-04",
       "platforms": [
         "PC",
         "PS5",
         "Xbox Series X/S"
       ],
-      "price": "USD 29.99",
-      "genre": "Koop-Survival-Horror",
-      "description": "Bis zu vier Spieler stürzen sich in dieses lose an H.P. Lovecraft angelehnte Koop-Horror-Abenteuer durch einen verfluchten Dschungel. <cite index=\"125-7,125-8\">Das Spiel schickt Spieler auf eine pulsierende Koop-Survival-Horror-Expedition für bis zu vier Personen in einen von Lovecraft'schen Schrecken bedrohten Dschungel.</cite> Ein Wahnsinns-System verzerrt dabei zunehmend die Wahrnehmung der eigenen Spielfigur.",
-      "hype": 58,
-      "recommendation": "abwarten",
-      "recommendation_reason": "<cite index=\"129-5,129-6\">Der Metascore liegt bislang bei 69, wobei Kritiker Atmosphäre und Optik loben, aber den repetitiven Spielablauf als Schwachpunkt nennen.</cite> Angesichts durchwachsener Nutzerkritiken zu Performance-Problemen und Design-Entscheidungen wie dem Verlust der Ausrüstung nach jeder Mission empfiehlt sich ein Blick auf Angebote statt Vollpreis.",
-      "source_url": "https://store.steampowered.com/app/2569760/The_Mound_Omen_of_Cthulhu/",
-      "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2569760/0a3d1867d5781f18cb4fd0b1151729605e892c6b/header.jpg?t=1784110925"
-    },
-    {
-      "title": "Splatoon Raiders",
-      "release_date": "2026-07-23",
-      "platforms": [
-        "Nintendo Switch 2"
-      ],
-      "price": "Preis noch nicht offiziell final bestätigt (Nintendo-Switch-2-Vollpreistitel erwartet)",
-      "genre": "Third-Person-Shooter / Looter (primär Einzelspieler, optionaler Koop)",
-      "description": "Nintendo wagt mit diesem Spin-off einen radikalen Bruch mit der PvP-Formel der Reihe: Statt gegen andere Tintenfische anzutreten, jagen Spieler mit dem Deep-Cut-Trio nach Schätzen auf den Spirhalite-Inseln. <cite index=\"85-10,85-11\">Splatoon Raiders richtet sich an Loot-Fans und ähnelt fortschrittslastigen Spielen wie Borderlands oder Destiny, bleibt dabei aber ein primär storygetriebenes Einzelspieler-Abenteuer mit optionalem Koop für bis zu vier Spieler.</cite>",
-      "hype": 82,
+      "price": "USD 59.99 (Standard) / USD 69.99 (Digital Deluxe) — Tag-1 auf Xbox Game Pass",
+      "genre": "Action-RPG",
+      "description": "Game Freaks erstes AAA-Projekt abseits von Pokémon schickt die Kriegerin Emma und ihren Begleithund Koo durch ein von der Seuche verwüstetes Japan im Jahr 4026. Kampf und Erkundung mischen Echtzeit-Schwertkämpfe mit taktischen Kommandos an den Hund, was in Vorschauen wiederholt mit Sekiro, NieR und Ghost of Yotei verglichen wurde. Die düstere Endzeit-Ästhetik erinnert dabei stark an Prinzessin Mononoke.",
+      "hype": 78,
       "recommendation": "ja",
-      "recommendation_reason": "<cite index=\"84-1,84-2\">Vorschauen beschreiben das Spiel als zugänglich, charmant und vor allem sehr unterhaltsam, egal ob solo oder mit Freunden gespielt.</cite> Mehrere unabhängige Hands-on-Berichte zeigen sich überraschend positiv von der Tiefe des Loot-Systems – ein vielversprechender neuer Ansatz für die Marke, der sich für Switch-2-Besitzer lohnen dürfte.",
-      "source_url": "https://checkpointgaming.net/features/2026/07/splatoon-raiders-hands-on-preview-an-island-adventure/",
-      "image": "https://cdn.checkpointgaming.net/wp-content/uploads/2026/06/28183947/16x9-SplatoonRaiders.jpg"
+      "recommendation_reason": "Vorschauberichte loben die ungewöhnliche Mensch-Hund-Kampfmechanik und die audiovisuelle Präsentation, gleichzeitig senkt der Day-One-Start auf Xbox Game Pass das Kaufrisiko erheblich. Für ein neues IP eines bislang auf Pokémon spezialisierten Studios ist das eine seltene Kombination aus Ambition und geringem finanziellen Risiko, weshalb wir zum Kauf beziehungsweise Ausprobieren via Game Pass raten.",
+      "source_url": "https://www.gamespot.com/articles/beast-of-reincarnation-release-date-trailer-news/1100-6539558/",
+      "image": "https://picsum.photos/seed/loadout-release-BeastofReincarnation/300/200"
     },
     {
-      "title": "Avatar Legends: The Fighting Game",
-      "release_date": "2026-07-23",
+      "title": "MARVEL Tōkon: Fighting Souls",
+      "release_date": "2026-08-06",
+      "platforms": [
+        "PS5",
+        "PC"
+      ],
+      "price": "noch nicht bekannt",
+      "genre": "Fighting Game (4v4 Tag-Team)",
+      "description": "Arc System Works, bekannt für Guilty Gear und Dragon Ball FighterZ, bringt mit Sony XDEV und Marvel Games einen Anime-inspirierten 4-gegen-4-Tag-Fighter mit 20 Charakteren an den Start, darunter Spider-Man, Captain America, Doctor Doom und Wolverine. Das Spiel bietet neben Online-Lobbys für bis zu 64 Spieler auch einen Story-Modus namens Episode Mode.",
+      "hype": 85,
+      "recommendation": "ja",
+      "recommendation_reason": "Sowohl die geschlossene als auch die offene Beta erhielten von mehreren Fachredaktionen durchweg positive Rückmeldungen, wobei besonders die visuelle Präsentation und das anfängerfreundliche, aber tiefgründige Kampfsystem gelobt wurden. Für Marvel-Fans und Genre-Einsteiger dürfte sich der Kauf lohnen, auch wenn Experten reinen Fighting-Game-Puristen empfehlen, die Feinjustierung nach Release abzuwarten.",
+      "source_url": "https://www.marvel.com/games/marvel-tokon-fighting-souls",
+      "image": "https://cdn.marvel.com/content/2x/marveltokonfightingsouls_lob_crd_01.webp"
+    },
+    {
+      "title": "Hell Let Loose: Vietnam",
+      "release_date": "2026-08-13",
+      "platforms": [
+        "PC",
+        "PS5",
+        "Xbox Series X/S"
+      ],
+      "price": "GBP 34.99 (Standard) / GBP 54.99 (Digital Deluxe)",
+      "genre": "Taktischer Multiplayer-Shooter",
+      "description": "Team17 und Entwickler Expression Games verlegen die realistische Großgefechts-Formel von Hell Let Loose vom Zweiten Weltkrieg in die Dschungel Vietnams, komplett mit Hubschraubern und 50-gegen-50-Schlachten. Das Spiel wurde bereits einmal von Juni auf August verschoben, um mehr Zeit für Feinschliff zu gewinnen.\n\n",
+      "hype": 60,
+      "recommendation": "abwarten",
+      "recommendation_reason": "Die Verschiebung des Release-Termins sowie durchwachsene Stimmen aus der offenen Beta deuten darauf hin, dass das Spiel noch Politur braucht, bevor es sein volles Potenzial entfaltet. Wer kein eingefleischter Hell-Let-Loose-Fan ist, sollte auf erste Reviews nach Launch warten, um Netzwerkstabilität und Balance einschätzen zu können.",
+      "source_url": "https://www.escapistmagazine.com/hell-let-loose-vietnam-release-details/",
+      "image": "https://www.escapistmagazine.com/wp-content/uploads/2025/12/Hell-Let-Loose-Vietnam-What-We-Know-So-Far.jpg"
+    },
+    {
+      "title": "The Sinking City 2",
+      "release_date": "2026-08-18",
+      "platforms": [
+        "PC",
+        "PS5",
+        "Xbox Series X/S"
+      ],
+      "price": "USD 49.99 (Standard) / USD 54.99 (Deluxe) / USD 59.99 (Premium)",
+      "genre": "Survival-Horror",
+      "description": "Frogwares kehrt mit einem neuen Protagonisten, dem Okkult-Abenteurer Calvin Rafferty, in das Lovecraft'sche Arkham zurück und verspricht gegenüber dem Original von 2019 deutlich mehr Kampf- und Survival-Horror-Elemente. Das ukrainische Studio veröffentlicht das Spiel diesmal in Eigenregie, nachdem die Rechtestreitigkeiten mit dem früheren Publisher beigelegt wurden.",
+      "hype": 65,
+      "recommendation": "ja",
+      "recommendation_reason": "Erste Hands-on-Eindrücke von Fachmedien fielen positiv aus und loben angespannte Encounter sowie clevere Rätsel, während der Preis bewusst unter dem AAA-Standard von 60 US-Dollar angesetzt wurde. Für Fans von Lovecraft-Horror und des ersten Teils ist das ein faires Angebot mit überzeugenden Vorab-Eindrücken.",
+      "source_url": "https://www.gamespew.com/2026/07/pre-orders-are-now-live-for-the-sinking-city-2-ahead-of-its-august-launch/",
+      "image": "https://picsum.photos/seed/loadout-release-TheSinkingCity2/300/200"
+    },
+    {
+      "title": "Metal Gear Solid: Master Collection Vol. 2",
+      "release_date": "2026-08-27",
       "platforms": [
         "PC",
         "PS5",
         "Xbox Series X/S",
-        "Nintendo Switch"
-      ],
-      "price": "USD 29.99 (Standard) / USD 49.99 (Digital Deluxe mit Jahr-1-Pass)",
-      "genre": "2D-Fighting-Game",
-      "description": "Ein komplett handgezeichnetes 1-gegen-1-Kampfspiel im Universum von Avatar: Der Herr der Elemente und Die Legende von Korra. <cite index=\"87-18\">Zwölf spielbare Charaktere treten in Modi wie Story, Arcade, Training und online mit Rollback-Netcode sowie Crossplay gegeneinander an.</cite> Das zentrale „Flow“-System soll dabei Tiefe und Zugänglichkeit miteinander verbinden.",
-      "hype": 78,
-      "recommendation": "ja",
-      "recommendation_reason": "<cite index=\"86-14,86-15\">Ein Vorschau-Autor, der Lizenzkämpfern eigentlich skeptisch gegenübersteht, bezeichnete die geschlossene Beta als eines der vielversprechendsten Kampfspiele überhaupt.</cite> Bei einem fairen Einstiegspreis von knapp 30 Dollar und durchweg begeisterten Beta-Eindrücken aus der Fighting-Game-Community ist das Risiko gering.",
-      "source_url": "https://store.steampowered.com/app/2424420/Avatar_Legends_The_Fighting_Game/",
-      "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2424420/f156d3b8b7864bff6b75ab9a676167633d05ecee/capsule_616x353.jpg?t=1784395409"
-    },
-    {
-      "title": "Final Fantasy X/X-2 HD Remaster (Nintendo Switch 2 Edition)",
-      "release_date": "2026-07-23",
-      "platforms": [
+        "Nintendo Switch",
         "Nintendo Switch 2"
       ],
       "price": "USD 49.99",
-      "genre": "JRPG (Remaster)",
-      "description": "Die beiden Spira-Klassiker erscheinen als eigenständige, technisch aufgewertete Fassung für die neue Nintendo-Konsole. <cite index=\"105-9,105-19\">Enthalten sind die Inhalte der internationalen Versionen beider Spiele sowie Komfortfunktionen wie ein Schnellmodus und die Möglichkeit, Zufallskämpfe abzuschalten.</cite> Über 100 Stunden Spielzeit warten allein in den Hauptgeschichten beider Titel.",
-      "hype": 60,
-      "recommendation": "abwarten",
-      "recommendation_reason": "<cite index=\"113-17,113-18\">Es gibt keinen kostenlosen Upgrade-Pfad von der Switch-1-Version, was in der Community als anti-verbraucherfreundliche Praxis kritisiert wird.</cite> Wer die Switch-1-Fassung schon besitzt oder für rund 20-30 Dollar gebraucht bekommt, spart sich besser den Vollpreis und wartet auf einen Rabatt.",
-      "source_url": "https://www.nintendo.com/us/store/products/final-fantasy-x-x-2-hd-remaster-switch-2/",
-      "image": "https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/store/software/switch2/70010000113865/1d64f4ba11f085404d1b255a1686683fa65a26117bee7b0d4d60d31985d25f2c"
+      "genre": "Remaster-Kompilation",
+      "description": "Konami bringt mit Metal Gear Solid 4: Guns of the Patriots erstmals seit der PS3-Ära einen Serienhöhepunkt auf moderne Plattformen, ergänzt um Metal Gear Solid: Peace Walker und das GBC-Spin-off Ghost Babel. Damit lässt sich die gesamte kanonische Metal-Gear-Zeitlinie erstmals auf einer einzigen Konsolengeneration durchspielen.",
+      "hype": 82,
+      "recommendation": "ja",
+      "recommendation_reason": "Dass MGS4 seit 2008 exklusiv an die PS3 gebunden war, macht diese Sammlung für Fans praktisch zum Pflichtkauf, zumal der Preis mit 49.99 US-Dollar für drei Spiele plus umfangreiches Bonusmaterial fair kalkuliert ist. Wer die Metal-Gear-Saga vervollständigen möchte, sollte hier ohne Zögern zugreifen.",
+      "source_url": "https://blog.playstation.com/2026/02/12/metal-gear-solid-master-collection-vol-2-launches-aug-27-2026-on-ps5/",
+      "image": "https://blog.playstation.com/tachyon/2026/02/907574ca511f747f092d00e63af1e738bbcbd13f.png"
     },
     {
-      "title": "Halo: Campaign Evolved",
-      "release_date": "2026-07-28",
+      "title": "Star Wars Zero Company",
+      "release_date": "2026-08-27",
       "platforms": [
         "PC",
-        "Xbox Series X/S",
-        "PS5"
+        "PS5",
+        "Xbox Series X/S"
       ],
-      "price": "USD 49.99 (Standard) / USD 69.99 (Premium mit Early Access)",
-      "genre": "First-Person-Shooter (Kampagne, Koop)",
-      "description": "Das komplette Unreal-Engine-5-Remake der Kampagne von Halo: Combat Evolved bringt Master Chief zum ersten Mal überhaupt auf PlayStation. <cite index=\"24-4,24-7\">Es handelt sich um einen reinen Kampagnen-Titel ohne kompetitiven Mehrspieler, ergänzt um eine neue Drei-Missionen-Geschichte und bis zu vier Spieler Online-Koop.</cite> Der Einstiegspreis liegt bewusst unter dem AAA-Standard von 69.99 Dollar.",
+      "price": "noch nicht bekannt",
+      "genre": "Rundenbasierte Taktik-Strategie",
+      "description": "Bit Reactor, gegründet von ehemaligen XCOM-Entwicklern, schickt eine Elite-Einheit aus Klonkriegern, Jedi und Mandalorianern in taktische Gefechte während der Klonkriege, garniert mit dritter-Person-Erkundung zwischen den Missionen. Die Geschichte dreht sich um die Jagd nach dem Anführer eines separatistennahen Kults, wobei sogar Anakin Skywalker eine Rolle spielt.",
+      "hype": 80,
+      "recommendation": "ja",
+      "recommendation_reason": "PC Gamer beschrieb nach einer mehrstündigen Hands-on-Session das Spiel als weit mehr als bloßes Star-Wars-XCOM und lobte insbesondere die Kombination aus taktischer Tiefe und erzählerischer Erkundung. Die durchweg positiven Voreindrücke ehemaliger XCOM-Entwickler machen das Spiel für Strategie- und Star-Wars-Fans zu einem klaren Kauftipp.",
+      "source_url": "https://www.pcgamer.com/games/strategy/star-wars-zero-company-is-more-than-just-star-wars-xcom-it-feels-like-mass-effect-but-with-turn-based-tactics-and-permadeath/",
+      "image": "https://cdn.mos.cms.futurecdn.net/oL4QohSGvRjsZGw7hzpApN-2560-80.jpg"
+    },
+    {
+      "title": "Resonance: A Plague Tale Legacy",
+      "release_date": "2026-08-27",
+      "platforms": [
+        "PC",
+        "PS5",
+        "Xbox Series X/S"
+      ],
+      "price": "USD 49.99 (PC) / USD 59.99 (Konsolen)",
+      "genre": "Action-Adventure",
+      "description": "Asobo Studio erzählt mit der jungen Plünderin Sophia ein eigenständiges Prequel, das 15 Jahre vor A Plague Tale: Requiem spielt und stärker auf actionreiche Kämpfe statt auf reines Ratten-Stealth setzt. Die Reise führt zur mythischen Insel des Minotaurus, wo Rätsel, Verfolgungsjagden und eine mysteriöse uralte Kreatur aufeinandertreffen.",
+      "hype": 75,
+      "recommendation": "ja",
+      "recommendation_reason": "Die Vorfreude wird durch eine Nominierung als Most Wanted Game bei den Golden Joystick Awards gestützt, und die Verlagerung hin zu mehr Action dürfte dem beliebten Universum frischen Wind verleihen. Da das Spiel zudem am Tag eins im Xbox Game Pass verfügbar ist, überwiegt für uns ein klares Ja, auch wenn Kritiker anmerken, dass die Kampf-Neuausrichtung von Fans der ruhigeren Vorgänger kontrovers aufgenommen werden könnte.",
+      "source_url": "https://news.xbox.com/en-us/2026/06/08/resonance-plague-tale-story-combat-details-xbox-games-showcase-2026/",
+      "image": "https://xboxwire.thesourcemediaassets.com/sites/2/2026/06/RESONANCE_LOGO-8e7b6d7d4a5b2a4f0331.jpg"
+    },
+    {
+      "title": "Elden Ring: Tarnished Edition",
+      "release_date": "2026-08-28",
+      "platforms": [
+        "Nintendo Switch 2"
+      ],
+      "price": "USD 79.99 (Switch 2) / ca. USD 4 (Tarnished Pack DLC für Bestandsbesitzer auf anderen Plattformen)",
+      "genre": "Action-RPG (Souls-like)",
+      "description": "FromSoftwares gefeiertes Open-World-Meisterwerk samt Shadow-of-the-Erdtree-Erweiterung erscheint erstmals auf einer Nintendo-Konsole, ergänzt um neue Startklassen und Anpassungsoptionen für das Reittier Torrent. Der Release kommt kurz vor der Preiserhöhung der Switch 2 selbst und markiert das Ende einer wegen Performance-Problemen mehrfach verschobenen Portierung.",
       "hype": 88,
       "recommendation": "abwarten",
-      "recommendation_reason": "<cite index=\"26-14,26-15\">Ein Hands-on-Vorschaubericht kommt zu dem Schluss, dass sich vieles wie das immer wieder gespielte Halo anfühlt – nur etwas hübscher als zuvor.</cite> Da es sich zudem um einen reinen Kampagnen-Titel ohne Multiplayer handelt und die bisherigen Eindrücke gemischt ausfallen, würden wir auf die ersten vollständigen Testberichte nach Release warten, bevor man zuschlägt – zumal der Titel direkt in Game Pass enthalten ist.",
-      "source_url": "https://store.steampowered.com/app/2806050/Halo_Campaign_Evolved/",
-      "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2806050/70b74783e3c5b70276bd015c7662af1b6dd819f4/capsule_616x353.jpg?t=1783544553"
-    },
-    {
-      "title": "Mistfall Hunter",
-      "release_date": "2026-07-29",
-      "platforms": [
-        "PC",
-        "PS5",
-        "Xbox Series X/S"
-      ],
-      "price": "USD 24.99 (Standard) / USD 39.99 (Deluxe)",
-      "genre": "Extraction-Action-RPG",
-      "description": "In dieser dunklen Fantasy-Welt kämpfen sich Spieler als wiederbelebte Krieger solo oder im Team durch nebelverhangene Ruinen, um mit möglichst viel Beute zu entkommen. <cite index=\"47-1,47-2\">Das Spiel kombiniert klassenbasierte Fähigkeiten, Talente und Ausrüstung zu einem actionreichen Extraction-Kampfsystem.</cite> Nach mehreren offenen Betatests und Steam-Next-Fest-Auftritten ist nun der volle Release geplant.",
-      "hype": 65,
-      "recommendation": "abwarten",
-      "recommendation_reason": "<cite index=\"48-28,48-37\">Die Entwickler selbst räumen ein, dass das Spiel noch weit von perfekt entfernt ist und man weiterhin auf Basis von Community-Feedback nachbessern will.</cite> Der günstige Einstiegspreis ist verlockend, aber im hart umkämpften Extraction-Genre lohnt es sich, zunächst die Reaktionen der ersten Spielerwochen abzuwarten.",
-      "source_url": "https://store.steampowered.com/app/3282300/Mistfall_Hunter/",
-      "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3282300/407a220d4e503778aa3292f381283b49c9ff58eb/capsule_616x353_alt_assets_7.jpg?t=1784520993"
-    },
-    {
-      "title": "The Relic: First Guardian",
-      "release_date": "2026-07-31",
-      "platforms": [
-        "PC",
-        "PS5",
-        "Xbox Series X/S"
-      ],
-      "price": "ca. USD 39.99 (nicht abschliessend offiziell bestätigt)",
-      "genre": "Action-RPG / Souls-like",
-      "description": "In diesem von asiatischer Folklore inspirierten Souls-like sammeln Spieler als letzter Wächter Fragmente eines zerstörten Relikts, um die apokalyptische Welt Arsilthus zu retten. <cite index=\"58-11,58-14\">Ausdauer wird ausschliesslich für Verteidigung und Ausweichen benötigt, während Angriffe frei einsetzbar sind und Fähigkeiten über Cooldowns statt Ressourcen funktionieren.</cite> Über 70 einzigartige Relikt-Effekte sollen für Build-Vielfalt sorgen.",
-      "hype": 45,
-      "recommendation": "abwarten",
-      "recommendation_reason": "<cite index=\"60-13,60-14\">Ein Hands-on-Bericht bezeichnet das Spiel als bestenfalls vergessenswert und schlimmstenfalls frustrierend, mit einer Umsetzung, die komplett durcheinander wirkt.</cite> Andere Stimmen loben dagegen Stil und Kampfsystem – bei derart widersprüchlichen Voreindrücken sollte man unbedingt auf die ersten vollständigen Reviews nach Release warten.",
-      "source_url": "https://store.steampowered.com/app/2827820/The_Relic_First_Guardian/",
-      "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2827820/f69db39f8b5f17ff5f19b8c3324b652284062120/capsule_616x353.jpg?t=1784291583"
+      "recommendation_reason": "Die Vorgeschichte mit einer katastrophalen 15-fps-Demo auf der Gamescom 2025 nährt berechtigte Zweifel, ob die Switch-2-Portierung eines derart anspruchsvollen Spiels tatsächlich rund läuft. Wer Elden Ring bereits auf PC oder Konsole besitzt, fährt ohnehin günstiger mit dem separaten Klassen-DLC für rund vier US-Dollar, weshalb wir bei der vollen 79.99-Dollar-Fassung raten, zunächst unabhängige Performance-Tests nach Release abzuwarten.",
+      "source_url": "https://en.bandainamcoent.eu/elden-ring/news/elden-ring-tarnished-edition-coming-nintendo-switch-2-august",
+      "image": "https://static.bandainamcoent.eu/high/elden-ring/elden-ring-tarnished-edition/01-news/ER_TE_Thumbnail-announcement.jpg"
     }
   ]
 }
