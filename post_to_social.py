@@ -376,13 +376,15 @@ def post_instagram_carousel(articles):
             "mode": "customScheduled",
             "dueAt": due_at,
             "assets": assets,
-            # Buffer verlangt für Instagram explizit einen Post-Typ
-            # (post/story/reel) — ohne dieses Feld schlägt der Aufruf mit
-            # "Instagram posts require a type" fehl. Wir wollen immer einen
-            # normalen Feed-/Karussell-Post, keine Story oder Reel.
+            # Buffer verlangt für Instagram zusätzlich explizit, ob der Post
+            # im normalen Feed erscheinen soll — ohne dieses Feld schlägt
+            # der Aufruf mit "Field shouldShareToFeed... was not provided"
+            # fehl. Wir wollen immer im Feed erscheinen (kein reiner
+            # Story-only-Post).
             "metadata": {
                 "instagram": {
                     "type": "post",
+                    "shouldShareToFeed": True,
                 },
             },
         }
