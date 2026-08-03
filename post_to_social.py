@@ -22,10 +22,11 @@ Artikel als EINEN gesammelten Post pro Lauf — nicht einen Post pro Artikel:
     pro Artikel, mit echtem klickbarem Link. Hashtags landen zusätzlich
     im separaten Tags-Feld (Tumblrs wichtigster Hebel fürs eigene
     Empfehlungssystem).
-  - Reddit: EIN Galerie-Post im EIGENEN Subreddit (nicht in fremden
-    Gaming-Subreddits — dort gilt automatisiertes Posten schnell als
-    Spam und riskiert eine Kontosperrung). Titel nennt den gehyptesten
-    Artikel konkret statt nur eine Zahl.
+  - Reddit: EIN Galerie-Post im EIGENEN Subreddit, über den Drittanbieter
+    Zernio (zernio.com) — Reddits eigene Entwickler-App-Registrierung war
+    bei uns dauerhaft blockiert (siehe frühere Versuche). Zernio hat
+    Reddit direkt eingebunden, keine eigene App-Registrierung nötig.
+    Titel nennt den gehyptesten Artikel konkret statt nur eine Zahl.
 
 Merkt sich in social-posted.json, was schon gepostet wurde, damit nichts
 doppelt gepostet wird.
@@ -41,10 +42,8 @@ Setup (als GitHub Secrets hinterlegen):
     TUMBLR_OAUTH_TOKEN
     TUMBLR_OAUTH_TOKEN_SECRET
     TUMBLR_BLOG_NAME
-    REDDIT_CLIENT_ID
-    REDDIT_CLIENT_SECRET
-    REDDIT_USERNAME
-    REDDIT_PASSWORD
+    ZERNIO_API_KEY
+    ZERNIO_REDDIT_ACCOUNT_ID
     REDDIT_SUBREDDIT
     PUSH_SECRET
 
@@ -532,24 +531,32 @@ def post_tumblr_batch(articles):
     return ok
 
 
-# --- Reddit --------------------------------------------------------------------
+# --- Reddit (über Zernio) -------------------------------------------------------
+# Reddits eigene Entwickler-App-Registrierung blockierte bei uns dauerhaft
+# ("you must also register to use the API"-Fehler, nie erfolgreich
+# abgeschlossen). Zernio (zernio.com) hat Reddit bereits direkt
+# eingebunden — keine eigene App-Registrierung bei Reddit nötig, einfach
+# das Konto über Zernios eigene Oberfläche verbinden und über deren
+# API posten.
+#
 # Ein einziger Galerie-Post im EIGENEN Subreddit (nicht in fremden
 # Gaming-Subreddits — dort würde automatisiertes Posten schnell als Spam
 # gewertet und riskiert eine Kontosperrung).
+#
+# Ehrlicher Hinweis: Laut Zernios eigener Dokumentation hat Reddit dort
+# plattformweit eine auffällig hohe Fehlerquote (Reddits eigene, strenge
+# Anti-Spam-Regeln pro Subreddit) — das liegt an Reddit selbst, nicht an
+# unserem Code. Ein gelegentlicher Fehlschlag ist also nicht unbedingt
+# ein Zeichen für ein Konfigurationsproblem.
+
+ZERNIO_CREATE_POST_URL = "https://zernio.com/api/v1/posts"
+
 
 def post_reddit_batch(articles):
-    client_id = env("REDDIT_CLIENT_ID")
-    client_secret = env("REDDIT_CLIENT_SECRET")
-    username = env("REDDIT_USERNAME")
-    password = env("REDDIT_PASSWORD")
+    api_key = env("ZERNIO_API_KEY")
+    account_id = env("ZERNIO_REDDIT_ACCOUNT_ID")
     subreddit_name = env("REDDIT_SUBREDDIT")  # z. B. "LoadoutNews", ohne "r/"
-    if not all([client_id, client_secret, username, password, subreddit_name]):
-        return False
-
-    try:
-        import praw
-    except ImportError:
-        print("  Reddit: ! Bibliothek 'praw' fehlt.", file=sys.stderr)
+    if not api_key or not account_id or not subreddit_name:
         return False
 
     articles_with_images = [a for a in articles if a.get("image")]
@@ -557,59 +564,52 @@ def post_reddit_batch(articles):
         print("  Reddit: ! Keine Artikel mit Bild vorhanden — übersprungen.")
         return False
 
-    tmp_paths = []
+    # Ein konkreter, neugierig machender Titel performt auf Reddit
+    # erfahrungsgemäß deutlich besser als eine reine Zahlenangabe — daher
+    # wird der gehypteste Artikel der Auswahl im Titel genannt. Bei Zernio
+    # wird die ERSTE ZEILE des "content"-Felds automatisch zum Reddit-Titel,
+    # der Rest zum Beitragstext.
+    top_article = max(articles_with_images, key=lambda a: a.get("hype", 0))
+    if len(articles_with_images) == 1:
+        title = f"🎮 {top_article['title']}"
+    else:
+        title = f"🎮 {top_article['title']} (+{len(articles_with_images) - 1} weitere News)"
+    title = title[:290]  # Reddit-Titel-Limit liegt bei 300 Zeichen, etwas Puffer lassen
+
+    body_lines = [a["title"] for a in articles_with_images]
+    body_lines.append(f"\nAlle Artikel: {SITE_URL}")
+    content = title + "\n\n" + "\n".join(body_lines)
+
+    media_items = [{"type": "image", "url": a["image"]} for a in articles_with_images]
+
+    payload = {
+        "content": content,
+        "mediaItems": media_items,
+        "platforms": [{
+            "platform": "reddit",
+            "accountId": account_id,
+            "platformSpecificData": {"subreddit": subreddit_name},
+        }],
+        "publishNow": True,
+    }
+
     try:
-        reddit = praw.Reddit(
-            client_id=client_id,
-            client_secret=client_secret,
-            username=username,
-            password=password,
-            user_agent="loadout-news-bot/1.0",
+        resp = requests.post(
+            ZERNIO_CREATE_POST_URL,
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json=payload,
+            timeout=30,
         )
-        subreddit = reddit.subreddit(subreddit_name)
-
-        # Bilder herunterladen — PRAWs Galerie-Funktion braucht lokale Dateien, keine URLs
-        gallery_images = []
-        for i, a in enumerate(articles_with_images):
-            img_resp = requests.get(a["image"], timeout=10)
-            if img_resp.status_code != 200:
-                continue
-            tmp_path = f"/tmp/reddit_img_{i}.jpg"
-            with open(tmp_path, "wb") as f:
-                f.write(img_resp.content)
-            tmp_paths.append(tmp_path)
-            gallery_images.append({"image_path": tmp_path, "caption": a["title"][:180]})
-
-        if not gallery_images:
-            print("  Reddit: ! Keine Bilder konnten heruntergeladen werden.")
-            return False
-
-        # Ein konkreter, neugierig machender Titel performt auf Reddit
-        # erfahrungsgemäß deutlich besser als eine reine Zahlenangabe —
-        # daher wird der gehypteste Artikel der Auswahl im Titel genannt.
-        top_article = max(articles_with_images, key=lambda a: a.get("hype", 0))
-        if len(articles_with_images) == 1:
-            title = f"🎮 {top_article['title']}"
-        else:
-            title = f"🎮 {top_article['title']} (+{len(articles_with_images) - 1} weitere News)"
-
-        if len(gallery_images) == 1:
-            # Reddit erlaubt keine Galerie mit nur 1 Bild — normaler Bild-Post stattdessen
-            subreddit.submit_image(title=title, image_path=gallery_images[0]["image_path"])
-        else:
-            subreddit.submit_gallery(title=title, images=gallery_images)
-
-        print(f"  Reddit: ✓ 1 Post mit {len(gallery_images)} Bildern in r/{subreddit_name}")
-        return True
     except Exception as e:
-        print(f"  Reddit: ! Fehlgeschlagen: {e}", file=sys.stderr)
+        print(f"  Reddit (Zernio): ! Unerwarteter Fehler: {e}", file=sys.stderr)
         return False
-    finally:
-        for path in tmp_paths:
-            try:
-                os.remove(path)
-            except OSError:
-                pass
+
+    ok = resp.status_code in (200, 201)
+    if ok:
+        print(f"  Reddit (Zernio): ✓ 1 Post mit {len(media_items)} Bild(ern) in r/{subreddit_name}")
+    else:
+        print(f"  Reddit (Zernio): ! Fehler ({resp.status_code}): {resp.text[:500]}", file=sys.stderr)
+    return ok
 
 
 def main():
