@@ -4,8 +4,12 @@ LOADOUT-NEWS — Instagram-Karussell-Folien-Generator
 Erzeugt professionell gestaltete, gebrandete Bilder für den Instagram-
 Karussell-Post, statt einfach nur die rohen Artikel-Bilder zu verwenden:
 
-  - Folie 1 (Intro):    Fester LOADOUT-Marken-Hintergrund + Logo +
-                         dynamischer Text ("X neue Artikel", Top-Artikel)
+  - Folie 1 (Intro):    Obere 75% = 2×2-Bildraster aus allen 4 Artikelbildern
+                         (epische Vorschau, macht Lust auf alle Folien),
+                         mit dem LOADOUT-Logo mittig im Kreuz der vier
+                         Bilder. Untere 25% = Text ("X neue Artikel",
+                         Top-Artikel-Teaser, Swipe-Hinweis) — exakt wie
+                         beim bisherigen Design, nur kompakter.
   - Folie 2..N (Artikel): Artikel-Bild im Hintergrund, dunkler Verlauf für
                          Lesbarkeit, Kategorie-Badge, Artikel-Überschrift
                          in Marken-Typografie im Vordergrund
@@ -22,12 +26,12 @@ stattdessen werden Symbole/Akzente selbst gezeichnet (Punkte, Linien).
 
 import io
 import os
-import textwrap
 
 import requests
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 SIZE = 1080  # Instagram-Quadrat-Format
+GRID_HEIGHT = int(SIZE * 0.75)  # obere 75% der Intro-Folie = Bildraster
 
 # --- Marken-Farben — exakt wie in styles.css -------------------------------
 BG = (10, 12, 22)          # --bg
@@ -64,6 +68,15 @@ def wrap_text_to_width(draw, text, font, max_width):
     if current:
         lines.append(current)
     return lines
+
+
+def truncate_to_width(draw, text, font, max_width):
+    """Kürzt eine einzelne Textzeile mit '…', bis sie in max_width passt."""
+    if draw.textlength(text, font=font) <= max_width:
+        return text
+    while len(text) > 1 and draw.textlength(text + "…", font=font) > max_width:
+        text = text[:-1].rstrip()
+    return text + "…"
 
 
 def draw_centered_text(draw, text, font, y, fill):
@@ -132,58 +145,104 @@ def draw_wordmark_centered(canvas, cy, size=64):
     draw.text((x + 8, small_y), "-NEWS", font=f_small, fill=MUTED)
 
 
-def cover_crop(img, size):
-    """Skaliert und beschneidet ein Bild mittig auf ein Quadrat
+def cover_crop(img, w, h):
+    """Skaliert und beschneidet ein Bild mittig auf eine feste Zielgröße
     (entspricht CSS background-size:cover)."""
-    w, h = img.size
-    scale = max(size / w, size / h)
-    new_w, new_h = int(w * scale), int(h * scale)
-    img = img.resize((new_w, new_h), Image.LANCZOS)
-    left = (new_w - size) // 2
-    top = (new_h - size) // 2
-    return img.crop((left, top, left + size, top + size))
+    iw, ih = img.size
+    scale = max(w / iw, h / ih)
+    nw, nh = int(iw * scale), int(ih * scale)
+    img = img.resize((nw, nh), Image.LANCZOS)
+    left, top = (nw - w) // 2, (nh - h) // 2
+    return img.crop((left, top, left + w, top + h))
 
 
-# --- Folie 1: Intro ---------------------------------------------------------
+def _decode_image(image_bytes, w, h, fallback_color):
+    if image_bytes:
+        try:
+            img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+            return cover_crop(img, w, h)
+        except Exception:
+            pass
+    return Image.new("RGB", (w, h), fallback_color)
 
-def make_intro_slide(article_count, top_title):
-    bg = make_brand_background(glow_top_right=True)
-    draw = ImageDraw.Draw(bg)
 
-    icon_scale = 1.9
-    icon_w = int(120 * icon_scale)
-    draw_logo_icon(bg, (SIZE - icon_w) // 2, 190, scale=icon_scale)
-    draw_wordmark_centered(bg, 420, size=62)
+# --- Folie 1: Intro — 2×2-Bildraster + Logo im Kreuz + Text unten -----------
 
-    draw.line([(SIZE // 2 - 60, 545), (SIZE // 2 + 60, 545)], fill=MAGENTA, width=4)
+def make_intro_slide(image_bytes_list, article_count, top_title):
+    """image_bytes_list: Liste der rohen Bild-Bytes der (bis zu 4) neuen
+    Artikel, in Anzeige-Reihenfolge (oben-links, oben-rechts, unten-links,
+    unten-rechts). Fehlt ein Bild oder sind es weniger als 4 Artikel, wird
+    die jeweilige Kachel mit einer dezenten Marken-Ersatzfarbe gefüllt,
+    damit das Raster nie kaputt aussieht."""
+    canvas = Image.new("RGB", (SIZE, SIZE), BG)
 
-    f_headline = poppins(72, "Bold")
-    draw_centered_text(draw, f"{article_count} NEUE", f_headline, 600, TEXT)
-    draw_centered_text(draw, "ARTIKEL", f_headline, 690, MAGENTA)
+    cell_w, cell_h = SIZE // 2, GRID_HEIGHT // 2
+    positions = [(0, 0), (cell_w, 0), (0, cell_h), (cell_w, cell_h)]
+    fallback_colors = [(28, 20, 46), (20, 30, 46), (40, 22, 34), (22, 36, 32)]
 
-    f_teaser = poppins(30, "Medium")
-    lines = wrap_text_to_width(draw, f"u. a. {top_title}", f_teaser, SIZE - 200)
-    ty = 820
-    for line in lines[:2]:
-        draw_centered_text(draw, line, f_teaser, ty, MUTED)
-        ty += 42
+    for i, pos in enumerate(positions):
+        image_bytes = image_bytes_list[i] if i < len(image_bytes_list) else None
+        cell_img = _decode_image(image_bytes, cell_w, cell_h, fallback_colors[i])
+        # Dezente Abdunklung jeder Kachel — sorgt für ein einheitliches,
+        # ruhigeres Gesamtbild statt 4 grell unterschiedlicher Fotos, und
+        # hält Trennlinien/Logo in der Mitte gut lesbar.
+        dark_overlay = Image.new("RGB", (cell_w, cell_h), BG)
+        cell_img = Image.blend(cell_img, dark_overlay, 0.28)
+        canvas.paste(cell_img, pos)
 
-    f_swipe = poppins(26, "Bold")
-    draw_centered_text(draw, "SWIPE FÜR ALLE ARTIKEL  →", f_swipe, 980, VIOLET)
+    # Dünne, dunkle Trennlinien im Kreuz zwischen den 4 Bildern
+    draw = ImageDraw.Draw(canvas)
+    line_w = 6
+    draw.rectangle([cell_w - line_w // 2, 0, cell_w + line_w // 2, GRID_HEIGHT], fill=BG)
+    draw.rectangle([0, cell_h - line_w // 2, SIZE, cell_h + line_w // 2], fill=BG)
 
-    return bg
+    # Weicher Verlauf am unteren Rand des Rasters — sanfter Übergang zur
+    # Textzone statt einer harten Kante
+    fade_h = 90
+    fade = Image.new("L", (1, fade_h))
+    for y in range(fade_h):
+        fade.putpixel((0, y), int(255 * (y / fade_h)))
+    fade = fade.resize((SIZE, fade_h))
+    dark_strip = Image.new("RGB", (SIZE, fade_h), BG)
+    region = canvas.crop((0, GRID_HEIGHT - fade_h, SIZE, GRID_HEIGHT))
+    region = Image.composite(dark_strip, region, fade)
+    canvas.paste(region, (0, GRID_HEIGHT - fade_h))
+
+    # LOADOUT-Logo mittig im Kreuz der vier Bilder — mit einem dunklen,
+    # runden Hintergrund-Plättchen, damit es über jedem beliebigen
+    # Bild-Motiv gut lesbar bleibt, ohne die Bilder grossflächig zu verdecken.
+    logo_scale = 1.35
+    logo_icon_w = int(120 * logo_scale)
+    badge_pad = 22
+    badge_size = logo_icon_w + badge_pad * 2
+    badge = Image.new("RGBA", (badge_size, badge_size), (0, 0, 0, 0))
+    ImageDraw.Draw(badge).ellipse([0, 0, badge_size, badge_size], fill=(*BG, 235))
+    canvas.paste(badge, (cell_w - badge_size // 2, cell_h - badge_size // 2), badge)
+    draw_logo_icon(canvas, cell_w - logo_icon_w // 2, cell_h - logo_icon_w // 2, scale=logo_scale)
+
+    # --- Untere 25%: Text — "X neue Artikel", Top-Artikel-Teaser, Swipe-Hinweis ---
+    draw = ImageDraw.Draw(canvas)
+    ty = GRID_HEIGHT + 24
+
+    f_headline = poppins(46, "Bold")
+    draw_centered_text(draw, f"{article_count} NEUE ARTIKEL", f_headline, ty, TEXT)
+    ty += 60
+
+    f_teaser = poppins(24, "Medium")
+    teaser = truncate_to_width(draw, f"u. a. {top_title}", f_teaser, SIZE - 140)
+    draw_centered_text(draw, teaser, f_teaser, ty, MUTED)
+    ty += 48
+
+    f_swipe = poppins(22, "Bold")
+    draw_centered_text(draw, "SWIPE FÜR ALLE ARTIKEL  →", f_swipe, ty, VIOLET)
+
+    return canvas
 
 
 # --- Folie 2..N: Artikel -----------------------------------------------------
 
 def make_article_slide(image_bytes, title, cat, slide_num, total_slides):
-    try:
-        source = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-        bg = cover_crop(source, SIZE)
-    except Exception:
-        bg = Image.new("RGB", (SIZE, SIZE), BG)
-
-    bg = bg.convert("RGBA")
+    bg = _decode_image(image_bytes, SIZE, SIZE, BG).convert("RGBA")
 
     # Dunkler Verlauf von oben (dezent) nach unten (stark) für Lesbarkeit
     gradient = Image.new("L", (1, SIZE))
@@ -302,11 +361,24 @@ def make_outro_slide():
 
 # --- Orchestrierung: alle Folien für einen Post erzeugen ---------------------
 
+def _download_image(url):
+    if not url:
+        return b""
+    try:
+        resp = requests.get(url, timeout=15)
+        if resp.status_code == 200:
+            return resp.content
+    except Exception:
+        pass
+    return b""
+
+
 def generate_all_slides(articles, output_dir, run_id):
-    """Erzeugt Intro-Folie + eine Folie pro Artikel und speichert sie lokal.
-    Die Outro-Folie wird bewusst NICHT hier erzeugt — die ist ein fester,
-    einmalig erstellter Bestandteil des Repos (siehe social-assets/), damit
-    sie garantiert bei jedem Post exakt identisch bleibt.
+    """Erzeugt Intro-Folie (mit 2×2-Bildraster aller Artikel) + eine Folie
+    pro Artikel und speichert sie lokal. Die Outro-Folie wird bewusst NICHT
+    hier erzeugt — die ist ein fester, einmalig erstellter Bestandteil des
+    Repos (siehe social-assets/), damit sie garantiert bei jedem Post exakt
+    identisch bleibt.
 
     run_id wird Teil jedes Dateinamens — GitHubs Rohdaten-Auslieferung
     (raw.githubusercontent.com) cached Inhalte kurzzeitig. Mit immer
@@ -316,22 +388,18 @@ def generate_all_slides(articles, output_dir, run_id):
     os.makedirs(output_dir, exist_ok=True)
     paths = []
 
+    # Jedes Artikel-Bild wird nur EINMAL heruntergeladen und sowohl fürs
+    # Intro-Raster als auch für die eigene Artikel-Folie wiederverwendet.
+    image_bytes_by_article = [_download_image(a.get("image")) for a in articles]
+
     top_article = max(articles, key=lambda a: a.get("hype", 0))
-    intro = make_intro_slide(len(articles), top_article["title"])
+    intro = make_intro_slide(image_bytes_by_article, len(articles), top_article["title"])
     intro_path = os.path.join(output_dir, f"{run_id}-00-intro.jpg")
     intro.save(intro_path, quality=90)
     paths.append(intro_path)
 
     total = len(articles) + 2  # + Intro + Outro
-    for i, a in enumerate(articles, start=1):
-        image_bytes = b""
-        if a.get("image"):
-            try:
-                resp = requests.get(a["image"], timeout=15)
-                if resp.status_code == 200:
-                    image_bytes = resp.content
-            except Exception:
-                pass
+    for i, (a, image_bytes) in enumerate(zip(articles, image_bytes_by_article), start=1):
         slide = make_article_slide(image_bytes, a["title"], a.get("cat"), i + 1, total)
         slide_path = os.path.join(output_dir, f"{run_id}-{i:02d}-artikel.jpg")
         slide.save(slide_path, quality=90)
@@ -344,6 +412,6 @@ if __name__ == "__main__":
     # Manueller Test-/Vorschau-Modus: erzeugt alle Folien-Typen mit
     # Beispieldaten in /tmp, ohne echte Artikel oder Netzwerkzugriff nötig.
     os.makedirs("/tmp/slide-preview", exist_ok=True)
-    make_intro_slide(4, "GTA 6 hat jetzt einen Preis").save("/tmp/slide-preview/intro.jpg", quality=92)
+    make_intro_slide([], 4, "GTA 6 hat jetzt einen Preis").save("/tmp/slide-preview/intro.jpg", quality=92)
     make_outro_slide().save("/tmp/slide-preview/outro.jpg", quality=92)
     print("Vorschau-Folien in /tmp/slide-preview/ gespeichert")
