@@ -55,10 +55,6 @@ GERMAN_MONTHS = {
 
 
 def parse_german_date_to_iso(date_str):
-    """Artikel speichern ihr Datum als lesbaren deutschen Text (z. B. "17.
-    Juli 2026") — für schema.org-Strukturdaten wird aber ein maschinen-
-    lesbares ISO-Format (YYYY-MM-DD) verlangt. Gibt None zurück, falls das
-    Datum nicht im erwarteten Format vorliegt, statt abzustürzen."""
     if not date_str:
         return None
     match = re.match(r"(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)\s*(\d{4})", date_str.strip())
@@ -81,24 +77,12 @@ def article_image(article):
 
 
 def related_articles(current, all_articles, count=3):
-    """Findet inhaltlich passende andere Artikel für die "Das könnte dich
-    auch interessieren"-Sektion — wichtig für SEO (interne Verlinkung
-    zwischen Artikeln hilft Suchmaschinen, den Seiten-Zusammenhang zu
-    verstehen) UND fürs Halten von Besucher:innen auf der Seite.
-
-    Priorität: zuerst dasselbe große Franchise (a['game']) — das ist die
-    engste inhaltliche Nähe — dann dieselbe Kategorie, jeweils die
-    neuesten zuerst. Der aktuelle Artikel selbst wird ausgeschlossen."""
     others = [a for a in all_articles if a["id"] != current["id"]]
-
     same_game = []
     if current.get("game"):
         same_game = [a for a in others if a.get("game") == current["game"]]
-
     same_cat = [a for a in others if a["cat"] == current["cat"] and a not in same_game]
-
     combined = same_game + same_cat
-    # Duplikate entfernen (falls ein Artikel aus irgendeinem Grund doppelt vorkäme)
     seen_ids = set()
     result = []
     for a in combined:
@@ -141,6 +125,10 @@ def render_article_page(a, all_articles):
     cat_label = CATS.get(a["cat"], a["cat"])
     game_label = GAMES.get(a.get("game"), "") if a.get("game") else ""
     badge_label = cat_label + (f" · {game_label}" if game_label else "")
+    original_badge_html = (
+        '<span class="badge badge-original">✦ LOADOUT-Original</span>'
+        if a.get("content_type") == "analysis" else ""
+    )
     body_html = "\n".join(f'<p class="body">{html.escape(p)}</p>' for p in a["body"])
     if a.get("editorial_take"):
         body_html += f'''
@@ -155,11 +143,6 @@ def render_article_page(a, all_articles):
     teaser = html.escape(a["teaser"])
     related_html = render_related_articles_html(related_articles(a, all_articles))
 
-    # schema.org NewsArticle — hilft Suchmaschinen, den Artikel korrekt
-    # einzuordnen (Autor, Bild, Datum) und kann zu Rich-Snippets führen.
-    # datePublished/dateModified fehlten bisher — ein wichtiges Feld für
-    # NewsArticle-Strukturdaten, das Google explizit für die Einordnung als
-    # "echte", aktuelle Nachrichtenseite berücksichtigt.
     date_iso = parse_german_date_to_iso(a.get("date"))
     json_ld = {
         "@context": "https://schema.org",
@@ -238,6 +221,7 @@ def render_article_page(a, all_articles):
         <a href="../index.html" class="back-btn mono" style="text-decoration:none; display:inline-flex;">← ZURÜCK ZUM FEED</a>
         <div class="detail-art" style="background:url('{image}') center/cover;"></div>
         <span class="badge {a['cat']}">{badge_label}</span>
+        {original_badge_html}
         <h1 class="display">{title}</h1>
         <div class="byline">
           <div class="avatar"></div>
@@ -353,8 +337,6 @@ def render_article_page(a, all_articles):
 </div>
 
 <script>
-  // --- Cookie-Consent (dieselbe Logik/Speicherung wie auf der Startseite,
-  // damit eine einmal getroffene Wahl seitenübergreifend gilt) -----------
   let cookieConsent = null;
   let consentDetails = {{ analytics: false, marketing: false }};
   try {{
@@ -411,7 +393,6 @@ def render_article_page(a, all_articles):
     showCookieDetails();
   }}
 
-  // --- Google Analytics (GA4) — dieselbe Mess-ID wie in index.html ------
   const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
   let analyticsLoaded = false;
 
@@ -428,7 +409,6 @@ def render_article_page(a, all_articles):
     window.gtag('config', GA_MEASUREMENT_ID);
   }}
 
-  // --- Google AdSense — dieselben IDs wie in index.html eintragen -------
   const ADSENSE_CLIENT_ID = 'ca-pub-8080055429345245';
   const AD_PLACEMENTS = {{
     leaderboard: {{ slot: 'HIER_SLOT_ID_LEADERBOARD', format: 'horizontal' }},
@@ -467,8 +447,6 @@ def render_article_page(a, all_articles):
 
   initCookieBanner();
 
-  // PWA: Service Worker registrieren (funktioniert von jeder Seite aus,
-  // Pfad ist absolut).
   if("serviceWorker" in navigator){{
     window.addEventListener("load", () => {{
       navigator.serviceWorker.register("/sw.js").catch(() => {{}});
@@ -477,9 +455,6 @@ def render_article_page(a, all_articles):
 </script>
 
 <script>
-  // Zählt einen echten Seitenaufruf für diesen Artikel — auch wenn jemand
-  // direkt über einen geteilten Link oder eine Google-Suche hierher kommt,
-  // nicht nur über die Startseite.
   fetch('/api/track-view', {{
     method: 'POST',
     headers: {{ 'Content-Type': 'application/json' }},
@@ -494,7 +469,6 @@ def render_article_page(a, all_articles):
 </script>
 
 <script>
-  // --- Reaktionen (Like/Dislike) -----------------------------------------
   const ARTICLE_ID = '{a['id']}';
   let myReactions = {{}};
   try {{ myReactions = JSON.parse(localStorage.getItem('loadout_reactions') || '{{}}'); }} catch(e) {{}}
@@ -531,7 +505,6 @@ def render_article_page(a, all_articles):
       .catch(() => {{}});
   }}
 
-  // --- Kommentare -----------------------------------------------------------
   function loadComments(){{
     fetch(`/api/comments?articleId=${{encodeURIComponent(ARTICLE_ID)}}`)
       .then(res => res.json())
@@ -605,10 +578,6 @@ ARCHIVE_FILE = "archive.json"     # unbegrenztes Archiv, siehe news_pipeline.py
 
 
 def build():
-    # Seiten werden aus dem KOMPLETTEN Archiv erzeugt (nicht nur aus der für
-    # die Startseite gekürzten articles.json) — so bleibt jeder je
-    # geschriebene Artikel über seine eigene URL erreichbar und in der
-    # Sitemap gelistet, auch wenn er von der Startseite verschwunden ist.
     source_file = ARCHIVE_FILE if os.path.exists(ARCHIVE_FILE) else ARTICLES_FILE
     if not os.path.exists(source_file):
         print(f"! Weder {ARCHIVE_FILE} noch {ARTICLES_FILE} gefunden — nichts zu bauen.")
@@ -619,18 +588,9 @@ def build():
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-    # Impressum, Datenschutz und Nutzungsbedingungen bewusst NICHT in der
-    # Sitemap — alle drei sind im <head> mit <meta name="robots"
-    # content="noindex"> markiert (reine Pflichtseiten ohne redaktionellen
-    # Mehrwert für die Google-Suche). Sie in der Sitemap zu listen würde
-    # Google widersprüchliche Signale geben ("bitte indexieren" vs. "bitte
-    # nicht indexieren").
     urls = [f"{SITE_URL}/index.html", f"{SITE_URL}/archiv.html",
             f"{SITE_URL}/app.html", f"{SITE_URL}/ueber-uns.html"]
 
-    # Release- und Update-Kalender nur eintragen, wenn sie schon existieren
-    # (beim allerersten Lauf, bevor die jeweiligen Skripte einmal gelaufen
-    # sind, gäbe es sonst einen toten Link in der Sitemap).
     for optional_page in ["releases.html", "updates.html"]:
         if os.path.exists(optional_page):
             urls.append(f"{SITE_URL}/{optional_page}")
@@ -642,9 +602,6 @@ def build():
             f.write(page)
         urls.append(f"{SITE_URL}/artikel/{a['id']}.html")
 
-    # sitemap.xml — mit Aktualisierungsdatum (lastmod), damit Google
-    # erkennen kann, dass die Sitemap bei jedem Pipeline-Lauf frisch ist,
-    # was erneutes, zügigeres Crawlen begünstigt.
     today_iso = datetime.date.today().isoformat()
     sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
@@ -654,9 +611,6 @@ def build():
     with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write("\n".join(sitemap))
 
-    # archiv-index.json — eine schlanke Version des Archivs (ohne den
-    # vollständigen Artikeltext) für die durchsuchbare Archiv-Seite, damit
-    # sie auch bei tausenden Artikeln noch schnell lädt.
     archive_index = [
         {
             "id": a["id"], "title": a["title"], "teaser": a["teaser"],
@@ -668,7 +622,6 @@ def build():
     with open("archiv-index.json", "w", encoding="utf-8") as f:
         json.dump(archive_index, f, ensure_ascii=False, indent=2)
 
-    # robots.txt
     robots = f"""User-agent: *
 Allow: /
 
@@ -677,8 +630,6 @@ Sitemap: {SITE_URL}/sitemap.xml
     with open("robots.txt", "w", encoding="utf-8") as f:
         f.write(robots)
 
-    # ads.txt — Platzhalter; die echte Zeile bekommst du von deinem
-    # Anzeigennetzwerk (z. B. Google AdSense) nach der Kontoeröffnung.
     if not os.path.exists("ads.txt"):
         with open("ads.txt", "w", encoding="utf-8") as f:
             f.write(
