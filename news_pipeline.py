@@ -519,6 +519,13 @@ stattdessen deutsche Anführungszeichen oder verzichte ganz darauf. \
 Verwende außerdem KEINE rohen Zeilenumbrüche innerhalb eines einzelnen \
 Textfelds/Absatzes.
 
+- Suche im Rahmen deiner Websuche AKTIV nach einem thematisch wirklich \
+passenden Bild für diesen Artikel (z. B. offizielles Spiel-Artwork, ein \
+Screenshot, ein Pressebild) — nicht irgendein Diagramm oder Chart-Ausschnitt, \
+sondern ein Bild, das jemand auf den ersten Blick mit dem Thema/Spiel \
+verbindet. Achte darauf, dass die URL wirklich direkt auf eine Bilddatei \
+zeigt (endet meist auf .jpg/.png/.webp), nicht auf eine normale Webseite.
+
 JSON-Format:
 {{
   "cat": "pc" | "konsole" | "hardware" | "industrie",
@@ -529,6 +536,7 @@ JSON-Format:
   "body": ["Absatz 1", "Absatz 2", "Absatz 3", "..."],
   "editorial_take": "2-3 Sätze EIGENE redaktionelle Einschätzung/Meinung von LOADOUT, klar Position beziehend.",
   "hype": <Zahl 0-100, wie relevant/aufregend das Thema für Gaming-Fans ist>,
+  "image_url": "<direkte URL zu einem thematisch passenden Bild, siehe oben>",
   "primary_source_url": "<die EINE wichtigste/verlässlichste URL, auf die 'Zur Originalquelle' verlinken soll>",
   "primary_source_label": "<Name dieser Quelle, z. B. 'SteamDB' oder 'IGN'>"
 }}
@@ -595,6 +603,21 @@ def write_analysis_article(topic):
     source_url = data.get("primary_source_url") or SITE_URL
     source_label = data.get("primary_source_label") or topic["format_label"]
 
+    # Dreistufige Bild-Ermittlung — Analyse-Artikel haben (anders als
+    # normale RSS-Artikel) oft eine "Hauptquelle", die selbst kein gutes
+    # Bild hat (z. B. eine Chart-/Statistik-Seite oder ein Reddit-Thread).
+    # Deshalb: 1) das von der KI aktiv recherchierte, thematisch passende
+    # Bild verwenden, 2) falls das fehlt, das Vorschaubild der Hauptquelle
+    # versuchen, 3) falls auch das fehlschlägt, ein dezentes, themen-
+    # bezogenes Platzhalterbild (wie auch beim Release-/Update-Kalender) —
+    # so steht NIE ein Analyse-Artikel ganz ohne Bild da.
+    image = data.get("image_url")
+    if not image:
+        image = fetch_og_image(source_url)
+    if not image:
+        seed = re.sub(r"[^a-zA-Z0-9]", "", topic["working_title"]) or "analyse"
+        image = f"https://picsum.photos/seed/loadout-analysis-{seed}/900/500"
+
     return {
         "id": hashlib.sha1(f"analysis-{topic['working_title']}-{datetime.date.today()}".encode("utf-8")).hexdigest()[:10],
         "cat": cat,
@@ -613,7 +636,7 @@ def write_analysis_article(topic):
         "hype": int(data.get("hype", 50)),
         "source": source_url,
         "sourceLabel": source_label,
-        "image": fetch_og_image(source_url),
+        "image": image,
         # Zusätzliche, rein informative Felder — bestehender Code (Website,
         # Sitemap etc.) ignoriert unbekannte Felder einfach, nichts bricht.
         "content_type": "analysis",
