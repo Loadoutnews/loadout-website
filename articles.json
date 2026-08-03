@@ -1,5 +1,91 @@
 [
   {
+    "id": "f54f674980",
+    "cat": "konsole",
+    "game": "cod",
+    "genre": "shooter",
+    "title": "Black Ops 6 Zombies: So knackt ihr das Story-Rätsel von The Tomb",
+    "teaser": "Die Zombies-Map The Tomb schickt euch tief in ein Grabungsgebiet – wir zeigen den Weg zum Sentinel-Artefakt und was Fans über den harten Bosskampf sagen.",
+    "body": [
+      "Wer sich in Black Ops 6 Zombies durch die Story kämpft, landet mit The Tomb an einem der atmosphärischsten Schauplätze der Season bisher. Die Karte setzt direkt nach Citadelle des Morts an: Weaver, Grey, Carver und Maya folgen den Hinweisen von Gabriel Krafft zu einer alten Ausgrabungsstätte, um das sogenannte Sentinel-Artefakt zu sichern. Der Weg dorthin führt vom staubigen Dig Site über Katakomben bis hinunter in eine Art unterirdischen Tempel mit direktem Zugang zum Dark Aether Nexus.",
+      "Das Herzstück des Easter Eggs ist wie gewohnt eine Kette aus Rätseln, Sammelaufgaben und Kämpfen. Zentral dabei: der Wonder-Weapon-Klassiker Staff of Ice, der ursprünglich aus Origins in Black Ops 2 stammt und hier in neuer Form zurückkehrt. Um ihn zu bauen und aufzuwerten, müsst ihr mehrere Teile einsammeln, Symbol-Rätsel am Himmel lösen und euch durch Elite-Gegner kämpfen. Am Ende wartet der eigentliche Endgegner: das Sentinel-Artefakt selbst, das sich in mehreren Phasen aufteilt, Laserstrahlen über die Arena fegen lässt und Spieler zwingt, Adds schnell zu eliminieren, um wieder an die verwundbaren, violett aufleuchtenden Kernstücke heranzukommen.",
+      "Genau dieser Bosskampf sorgt aktuell für die hitzigsten Diskussionen in der Community. Mehrere Fanseiten berichten, dass die Auseinandersetzung mit dem Sentinel-Artefakt zu den anspruchsvollsten Herausforderungen zählt, die der Modus bislang gesehen hat, und Reddit-Nutzer bezeichneten den Kampf teilweise sogar als schlechtesten Bosskampf der gesamten Black-Ops-6-Zombies-Historie. Kritisiert wird vor allem, dass Wonder Weapons wie der Staff of Ice gegen das Artefakt selbst wirkungslos sind, was viele als unlogische Design-Entscheidung empfinden. Andere Fachmedien und Teile der Community sehen das entspannter und loben stattdessen die visuelle Gestaltung der Karte, etwa die detailreichen Statuen im Dig Site und den ungewöhnlich gestalteten Dark-Aether-Bereich mit riesigen Pilzen statt der üblichen violetten Kristalllandschaft. Kritischere Stimmen bemängeln zusätzlich, dass The Tomb im Vergleich zu Maps wie Liberty Falls oder Terminus recycelte Assets nutzt, etwa beim Eis-Stab oder bestimmten Gegnertypen, und dass die Haupt-Easter-Egg-Quest insgesamt spürbar kürzer ausfällt als frühere Story-Kapitel."
+    ],
+    "editorial_take": "Für uns ist The Tomb ein zweischneidiges Schwert: Optisch und atmosphärisch liefert Treyarch hier wieder richtig starke Arbeit ab, aber der Bosskampf fühlt sich unnötig frustrierend an, wenn ausgerechnet die coolste Waffe der Map gegen den Endgegner nutzlos ist. Wer Zombies-Lore-Fan ist, sollte die Karte trotzdem nicht auslassen, denn erzählerisch bringt sie die Sentinel-Artefakt-Storyline spürbar voran. Nur solltet ihr euch für den letzten Kampf lieber ein eingespieltes Team und ordentlich Geduld mitbringen.",
+    "source_title": "How to complete the Black Ops 6 Zombies The Tomb main story Easter egg",
+    "date": "03. August 2026",
+    "platform": "Charlie INTEL Latest Posts",
+    "hype": 62,
+    "source": "https://editors.charlieintel.com/call-of-duty/how-to-complete-the-black-ops-6-zombies-the-tomb-main-story-easter-egg-338163/",
+    "sourceLabel": "Charlie INTEL Latest Posts",
+    "image": "https://www.charlieintel.com/cdn-image/wp-content/uploads/2025/01/29/How-to-complete-the-Black-Ops-6-Zombies-The-Tomb-main-story-Easter-egg.jpg?width=1080&quality=75&format=auto"
+  },
+  {
+    "id": "9b5e232fae",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "title": "Bücher-Schredder für KI: Firma löscht Angebot und tut so, als hätte es das nie gegeben",
+    "teaser": "ISBNdb wollte KI-Konzernen massenhaft Bücher zum Scannen und Vernichten vermitteln. Nach dem Shitstorm heißt es plötzlich: Nie gehört, nie gemacht.",
+    "body": [
+      "Es ist eine Geschichte, die klingt wie aus einem dystopischen Roman: KI-Firmen kaufen alte Bücher im großen Stil auf, schneiden ihnen die Buchrücken ab, scannen die losen Seiten mit Hochgeschwindigkeitsmaschinen ein und werfen das, was übrig bleibt, weg. Genau das deckte das Investigativ-Portal 404 Media auf, als es die Firma ISBNdb ins Visier nahm. Auf deren Website prangte lange Zeit ein Angebot, das sich explizit an KI-Unternehmen richtete: Man könne bis zu eine Million Bücher aus Antiquariaten, Bibliotheken und Nachlassauflösungen beschaffen, <cite index=\"1-4\">tailored to your LLM training needs, delivered at the scale AI demands</cite>. Nach dem öffentlichen Aufschrei ist diese Seite jetzt spurlos verschwunden.",
+      "Der Hintergrund dieser fragwürdigen Praxis ist knallhart wirtschaftlich: Bücher aus der Zeit vor 2022 gelten als besonders wertvoll für KI-Training, weil sie garantiert nicht von generischem KI-Text verunreinigt sind, der mittlerweile das halbe Internet zuschüttet. Bekannt wurde das Prinzip erstmals durch Anthropics internes Projekt mit dem Codenamen Project Panama, bei dem der Konzern in großem Stil Bücher digitalisierte und anschließend vernichtete – eine Praxis, die zwar von einem US-Gericht als vom Fair-Use-Prinzip gedeckt eingestuft wurde, aber gleichzeitig zu einem 1,5-Milliarden-Dollar-Vergleich mit Autor:innen führte, weil zuvor massenhaft raubkopierte Bücher zum Training verwendet worden waren. Genau deshalb war den beteiligten Firmen die Öffentlichkeit so unangenehm: ISBNdb selbst schrieb einst unumwunden, dass <cite index=\"3-6,3-7\">die Optik ein echtes Problem sei, denn eine Schlagzeile über eine KI-Firma, die zwei Millionen Bücher zerstört, wecke kein Mitgefühl</cite>.",
+      "Nachdem der Druck durch die Berichterstattung wuchs, ging es für ISBNdb Schlag auf Schlag: Erst verschwanden die entsprechenden Unterseiten von der Website, dann folgte eine offizielle Klarstellung. Auf der Startseite behauptet die Firma inzwischen unmissverständlich, sie habe niemals ein Buch gekauft, gescannt oder verkauft – weder für KI-Training noch für irgendetwas anderes, und die Landingpage sei lediglich ein Test gewesen, um Marktinteresse auszuloten, wie ISBNdb es selbst formulierte: <cite index=\"19-1,19-2,19-3,19-4\">We don't train AI models, and we never have. The page was a test of market interest; no such service was ever brought to life. We've taken the page down. Our job is helping people find books.</cite> Die Fachpresse reagiert allerdings skeptisch: Tech Times etwa merkt an, dass die inzwischen gelöschten Seiten <cite index=\"17-9\">ein Detailniveau enthielten, das weit über eine beiläufige Marktanalyse hinausgeht</cite> – inklusive gestaffelter Bestellmengen, Geheimhaltungsvereinbarungen und einer eigenen rechtlichen Einschätzung zur aktuellen Urheberrechtslage. Auch unabhängig von ISBNdbs Dementi bleibt das eigentliche Problem bestehen: Antiquariate in den Niederlanden, Deutschland, der Schweiz und Spanien berichten weiterhin von völlig untypischen Großbestellungen obskurer Fachbücher, die nicht zum normalen Kund:innenverhalten passen. Ein niederländischer Buchhändler hielt eine Anfrage über fast 3.000 Titel zunächst schlicht für Spam.",
+      "Ob ISBNdb tatsächlich nur eine Testseite betrieben hat oder ob hier nachträglich Spuren verwischt werden sollen, lässt sich von außen kaum beweisen – die archivierte Version der Seite via Wayback Machine spricht aber eine andere Sprache als das aktuelle Dementi. Klar ist: Rechtlich hat sich durch die ganze Aufregung nichts geändert, denn US-Gerichte haben das Scannen und anschließende Vernichten rechtmäßig erworbener Bücher bereits mehrfach als Fair Use eingestuft. Die eigentliche Geschichte ist also nicht vorbei, sie hat nur ihr Gesicht verloren."
+    ],
+    "editorial_take": "Für uns riecht dieses hastige Herunterspielen einer eigenen Werbeseite ziemlich nach Schadensbegrenzung statt nach ehrlicher Aufklärung – wer monatelang detaillierte Preisstaffeln und NDA-Angebote online stehen hat, hat mehr getan als einen Testballon zu starten. Viel wichtiger als die PR-Peinlichkeit einer einzelnen Datenbank-Firma ist aber, dass die eigentliche Praxis völlig legal bleibt: Bücher kaufen, zerschneiden, scannen, wegwerfen. Bis Gesetzgeber oder Gerichte hier nachschärfen, wird sich am großen Bücher-Recycling für KI-Trainingsdaten kaum etwas ändern, egal wie viele Landingpages verschwinden.",
+    "source_title": "Company that said it could scan and destroy books for AI data-harvesting has deleted that part of its website: 'no such service was ever brought to life'",
+    "date": "03. August 2026",
+    "platform": "PCGamer latest",
+    "hype": 34,
+    "source": "https://www.pcgamer.com/software/ai/company-that-said-it-could-scan-and-destroy-books-for-ai-data-harvesting-has-deleted-that-part-of-its-website-no-such-service-was-ever-brought-to-life/",
+    "sourceLabel": "PCGamer latest",
+    "image": "https://cdn.mos.cms.futurecdn.net/oUBxWUE4FHQqMdJt8KvdzH-1280-80.jpg"
+  },
+  {
+    "id": "8f5453f9bf",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "title": "Vom 15-Mann-Team zum 600-Köpfe-Studio: Owlcat wagt den Sprung Richtung Mass Effect",
+    "teaser": "Owlcat feiert sein 10-jähriges Bestehen mit einer massiven Aufstockung auf 600 Mitarbeiter – und verspricht, CRPG-Fans trotz Mass-Effect-Ambitionen nicht zu vergessen.",
+    "body": [
+      "Zehn Jahre, zwei Großprojekte gleichzeitig und plötzlich eine Belegschaft, die es locker mit den Großen der Branche aufnehmen kann: Owlcat Games hat sich vom Nischen-Entwickler klassischer Rollenspiele zu einem ernstzunehmenden Studio-Schwergewicht gemausert. Wie unabhängig von PCGamesN und Wccftech berichtet wurde, zählt der Cyprus-Entwickler inzwischen rund 600 Angestellte. Damit liegt Owlcat sogar vor Larian Studios, das zuletzt bei über 500 Mitarbeitern lag, und weit vor Obsidian, das nach den jüngsten Microsoft-Kürzungen nur noch niedrige zweihundert Köpfe zählt. Selbst BioWare, einst mit 500 bis 600 Angestellten der Platzhirsch des Genres, ist nach den Entlassungswellen rund um Dragon Age: The Veilguard laut Schätzungen auf 100 oder weniger Mitarbeiter zusammengeschrumpft.",
+      "Angefangen hat alles winzig: Owlcat startete 2016 mit gerade einmal 15 Leuten, viele von ihnen ehemalige Nival-Entwickler, die zuvor an Heroes of Might and Magic V mitgewirkt hatten, ergänzt durch Kollegen aus den MMO-Projekten Allods Online und Skyforge. Über die Jahre wurde daraus mit Pathfinder: Kingmaker, Wrath of the Righteous und Warhammer 40.000: Rogue Trader eine feste Adresse für Fans dichter, textreicher Rollenspiele im Stil klassischer Infinity-Engine-Titel. Heute betreibt das ursprünglich in Moskau gegründete, inzwischen in Paphos auf Zypern beheimatete Studio zwei Großprojekte parallel: den isometrischen CRPG-Nachfolger Warhammer 40.000: Dark Heresy und mit The Expanse: Osiris Reborn erstmals ein actionorientiertes Third-Person-Rollenspiel, das unübersehbar Anleihen bei der Mass-Effect-Reihe nimmt.",
+      "Genau dieser Spagat zwischen altbekannter CRPG-Tiefe und cineastischer Action sorgt aktuell für Diskussionsstoff. Mitgründer und Creative Director Alexander Mishulin stellte gegenüber PCGamesN klar, dass Owlcat seinen Wurzeln treu bleiben will und die klassischen, rundenbasierten Rollenspiele nicht aufgeben wird, weil das Team einfach Leidenschaft dafür empfindet – zugleich wolle man aber nicht stehen bleiben und für jedes neue Projekt den passendsten Ansatz suchen, statt immer die gleiche Schablone zu wiederholen. In der Fachpresse kommt das bisher gut an: Hands-on-Berichte von PC Gamer, Neowin und Space.com zu The Expanse: Osiris Reborn loben unabhängig voneinander, wie überraschend souverän Owlcat den Sprung von der isometrischen Perspektive zu actionreichem Third-Person-Gameplay hinbekommt, inklusive spektakulärer Zero-G-Gefechte und stimmiger Gesichtsanimationen. Die Community reagiert unterdessen gespalten: Während viele Langzeitfans die Rückkehr zu Dark Heresy als Beweis werten, dass das Studio seine CRPG-Seele nicht verkauft, gibt es auch Stimmen, die skeptisch bleiben, ob ein Studio zwei derart unterschiedliche Großprojekte gleichzeitig auf hohem Niveau stemmen kann – zumal parallel auch noch Konkurrenzprojekte wie Archetype Entertainments Exodus mit ähnlichem Mass-Effect-Anspruch ins Rennen gehen."
+    ],
+    "editorial_take": "Wir finden es bemerkenswert, dass ein Studio, das vor zehn Jahren mit einer Kickstarter-Kampagne für ein Nischenspiel gestartet ist, heute größer ist als BioWare in dessen aktuellem Zustand – das sagt viel über die Verschiebungen in der Branche aus. Gleichzeitig ist die Doppelstrategie aus unserer Sicht ein echtes Wagnis: Wenn Owlcat sowohl hartgesottene CRPG-Fans als auch ein Mass-Effect-hungriges Massenpublikum bedienen will, muss beides überzeugen, sonst verliert man am Ende beide Zielgruppen statt beide zu gewinnen. Die bisherigen Previews zu Osiris Reborn machen uns aber vorsichtig optimistisch, dass Owlcat genau diesen Drahtseilakt schaffen könnte.",
+    "source_title": "Owlcat co-founder says the studio won't turn its back on hardcore RPGs as it hits 600 employees and preps its own Mass Effect killer",
+    "date": "03. August 2026",
+    "platform": "PCGamer latest",
+    "hype": 62,
+    "source": "https://www.pcgamer.com/games/rpg/owlcat-co-founder-says-the-studio-wont-turn-its-back-on-hardcore-rpgs-as-it-hits-600-employees-and-preps-its-own-mass-effect-killer/",
+    "sourceLabel": "PCGamer latest",
+    "image": "https://cdn.mos.cms.futurecdn.net/odxFePruai9kQYAKPmNxgj-1280-80.jpg"
+  },
+  {
+    "id": "7f4c6339ac",
+    "cat": "pc",
+    "game": null,
+    "genre": "rpg",
+    "title": "Drei Jahre nach Release: Warum sich der Build-Wahnsinn in Rogue Trader jetzt erst richtig lohnt",
+    "teaser": "Warhammer 40K: Rogue Trader war zum Launch holprig – nach zahllosen Patches und drei Erweiterungen ist Owlcats CRPG jetzt reif für den totalen Build-Rausch.",
+    "body": [
+      "Owlcat Games hat mit Warhammer 40.000: Rogue Trader ein typisches Muster wiederholt, das Fans des Studios nur zu gut kennen: Ein CRPG startet ambitioniert, aber technisch angeschlagen, und wird über Monate und Jahre hinweg zu einem völlig anderen, deutlich runderen Spiel weiterentwickelt. Ein PC-Gamer-Redakteur bringt es in seinem aktuellen Erfahrungsbericht auf den Punkt: Owlcats Spiele altern erstaunlich gut, weil der Support nach Release einfach nicht aufhört. Genau deshalb traut sich der Autor jetzt, gut drei Jahre nach dem Launch, erstmals so richtig tief in die Build-Mechaniken des Spiels einzutauchen.",
+      "Der Zeitpunkt ist kein Zufall. Erst im Juni erschien mit The Infinite Museion die jüngste Story-Erweiterung, begleitet von einem gewaltigen Balance-Patch. <cite index=\"1-1,1-2\">Im Fokus stand dabei eine Balance-Überarbeitung der bislang schwächsten Klassen des Spiels, der Operatives und Assassinen, die lange als die verwundbarsten Archetypen galten.</cite> <cite index=\"1-7\">Während Operatives bislang klar von den Soldier-Archetypen ausgestochen wurden und Assassinen nicht an die robusteren Executioner heranreichten, funktionieren die Schlüsselfähigkeiten beider Klassen jetzt auch während Bonusrunden, ähnlich wie beim Officer.</cite> Für ein Kampfsystem, das laut Fachpresse maßgeblich vom cleveren Ausreizen solcher Extra-Runden lebt, ist das ein handfester Grund, alte Builds noch einmal neu zu denken. Ganz nebenbei wurde auch der zuvor als schwach empfundene Begleiter Uralon the Cruel spürbar aufgewertet, unter anderem über Statuswerte, Skalierung und seinen Loot-Pool.",
+      "Die Community-Reaktionen fallen gemischt, aber insgesamt wohlwollend aus. Auf Steam kommt allein die neue Erweiterung auf eine größtenteils positive Bewertung von 77 Prozent, was für ein Spiel mit einer derart holprigen Historie durchaus respektabel ist. Ganz reibungslos verlief der Sommer für Owlcat trotzdem nicht: Kurz nach dem großen Update tauchten neue Bugs auf, die in mehreren Hotfixes ausgebessert werden mussten. Noch deutlicher zeigte sich das Owlcat-typische Muster bei der Switch-2-Fassung, die bei Nintendo Life zunächst mit gerade einmal 4 von 10 Punkten verrissen wurde, weil ruckelnde Framerates, lange Ladezeiten und harte Abstürze den Spielspaß trübten. Wenig später reagierte das Studio mit einem großen Update, das genau diese Probleme adressieren sollte – ein Vorgehen, das in der Community mittlerweile fast schon erwartet wird, wie Kommentare auf einschlägigen Fanseiten zeigen. Auch bei Textbugs, Lokalisierungsfehlern und sogar kuriosen Cutscene-Pannen blieb Owlcat über den Sommer aktiv am Feinschliff dran.",
+      "Für Owlcat selbst ist Rogue Trader dabei nur eines von mehreren Großprojekten gleichzeitig. Das Studio arbeitet parallel an gleich zwei neuen Titeln, darunter das als Mass-Effect-Konkurrent gehandelte The Expanse: Osiris Reborn sowie ein weiteres 40K-CRPG namens Warhammer 40K: Dark Heresy, während Rogue Trader munter mit neuen Erweiterungen und Patches versorgt wird."
+    ],
+    "editorial_take": "Wir bei LOADOUT mögen dieses Owlcat-Muster ehrlich gesagt sehr: lieber ein Studio, das drei Jahre lang nachbessert, buffed und zuhört, als eines, das ein fertiges Spiel nach dem Release einfach abhakt. Dass ausgerechnet jetzt, mit generalüberholten Klassen und frischen Epilogen, der perfekte Einstiegszeitpunkt für Build-Nerds gekommen ist, überrascht uns nicht – und macht gleichzeitig Hoffnung für das kommende Dark Heresy. Wer Rogue Trader wegen des holprigen Starts abgeschrieben hat, sollte es 2026 unbedingt noch einmal versuchen.",
+    "source_title": "One day Owlcat will make an RPG that's perfect out of the box, but 3 years after launch, it's time to get disgustingly into Warhammer 40K: Rogue Trader",
+    "date": "03. August 2026",
+    "platform": "PCGamer latest",
+    "hype": 62,
+    "source": "https://www.pcgamer.com/games/rpg/one-day-owlcat-will-make-an-rpg-thats-perfect-out-of-the-box-but-3-years-after-launch-its-time-to-get-disgustingly-into-warhammer-40k-rogue-trader/",
+    "sourceLabel": "PCGamer latest",
+    "image": "https://cdn.mos.cms.futurecdn.net/UXNTpRCyXixcXKbeDhp8w3-1280-80.jpg"
+  },
+  {
     "id": "2f93021f7a",
     "cat": "pc",
     "game": null,
@@ -1184,89 +1270,5 @@
     "source": "https://www.ign.com/articles/magic-the-gatherings-star-trek-expansion-where-to-buy",
     "sourceLabel": "IGN Articles",
     "image": "https://assets-prd.ignimgs.com/2026/07/14/star-trek-mtg-1784056778328.png"
-  },
-  {
-    "id": "05afbd9a1a",
-    "cat": "pc",
-    "game": "minecraft",
-    "genre": null,
-    "title": "Ender Dragon im Browser: Minecraft wird jetzt direkt auf YouTube spielbar",
-    "teaser": "Zwei YouTuber haben Minecraft in ein interaktives 360-Grad-Video verwandelt – spielbar direkt auf YouTube, ganz ohne Download.",
-    "body": [
-      "Minecraft kennt eigentlich keine Grenzen mehr: Das Sandbox-Phänomen läuft längst auf so ziemlich jeder erdenklichen Plattform, vom Smartphone bis zur Kaffeemaschine mit genug Rechenpower. Jetzt kommt ein Ort dazu, den wohl niemand auf der Bingo-Karte hatte: YouTube selbst. Die Content Creator Atlas Arcade und Animated Subtitles haben sich zusammengetan und eine verkleinerte, aber tatsächlich spielbare Version des Klassikers gebaut, die komplett im Videoplayer läuft – kein Emulator, keine Extra-App, einfach nur ein YouTube-Clip.",
-      "Möglich macht den Trick eine clevere Zweckentfremdung von YouTubes 360-Grad-Video-Feature, kombiniert mit animierten Untertiteln, die als HUD für Bogen und Schneebälle dienen. Auf dem PC steuert man mit WASD, mobil per Touch oder durch Neigen des Smartphones – das Ziel: den Enderdrachen erledigen, indem man zunächst die Enderkristalle mit Schneebällen zerstört und den Drachen anschließend mit Pfeilen vom Himmel holt. Wer es sportlicher mag, kann laut den Machern die Wiedergabegeschwindigkeit erhöhen, um sich selbst ein knackigeres Zeitfenster für die Treffer zu setzen.",
-      "Ganz neu ist die Idee eines 'spielbaren Videos' übrigens nicht: Dieselben Creator haben sich zuvor bereits an einer interaktiven Version von Five Nights at Freddy's versucht. Auch außerhalb dieses Duos hat die Minecraft-Community schon früher experimentiert, etwa mit einer 2D-Version des Spiels innerhalb einer einzigen Ingame-Truhe. Deutsche Fachmedien wie Playcentral greifen das Projekt ebenfalls auf und bezeichnen es als kleinen Meilenstein, auch wenn es sich technisch natürlich nicht um eine vollständige Portierung handelt, sondern eher um ein cleveres Experiment, das zeigt, wie flexibel sich YouTube als Plattform zweckentfremden lässt. Dass ausgerechnet Minecraft dafür herhält, wirkt fast folgerichtig: Kaum ein anderes Spiel ist so eng mit der Geschichte von Let's Plays, Speedruns und Redstone-Tutorials auf YouTube verwoben."
-    ],
-    "editorial_take": "Wir finden: Das ist genau die Art von verspieltem Nerd-Projekt, die zeigt, wie kreativ die Minecraft-Community nach über 15 Jahren immer noch mit dem Spiel umgeht. Als vollwertiges Gameplay-Erlebnis taugt das Ganze natürlich nicht, aber als technische Spielerei und popkulturelles Statement ist es einfach großer Spaß. Wer wissen will, wie tief Minecraft und YouTube inzwischen miteinander verwachsen sind, bekommt hier die perfekte Antwort.",
-    "source_title": "You Can Now Play Minecraft on YouTube",
-    "date": "27. July 2026",
-    "platform": "GameRant - Minecraft News",
-    "hype": 58,
-    "source": "https://gamerant.com/minecraft-youtube-playable/",
-    "sourceLabel": "GameRant - Minecraft News",
-    "image": "https://static0.gamerantimages.com/wordpress/wp-content/uploads/wm/2026/07/minecraft-youtube-playable.jpg?w=1600&amp;h=900&amp;fit=crop"
-  },
-  {
-    "id": "82146ae06f",
-    "cat": "industrie",
-    "game": null,
-    "genre": null,
-    "title": "#PSBlackout: Fans planen Boykott-Woche gegen Sonys Disc-Aus",
-    "teaser": "Ab 23. August wollen wütende PlayStation-Fans eine Woche lang komplett auf Sony verzichten – als Protest gegen das geplante Ende physischer Spiele-Discs ab 2028.",
-    "body": [
-      "Der Ärger kocht weiter hoch: Nachdem Sony Anfang Juli angekündigt hatte, ab Januar 2028 keine physischen Discs mehr für neue PlayStation-Spiele zu produzieren, formiert sich jetzt handfester Protest. Die Gruppe DoesItPlay, die sich für Spielebewahrung und Verbraucherrechte einsetzt, ruft unter dem Hashtag #PSBlackout zu einer einwöchigen Konsumverweigerung auf. <cite index=\"5-1\">Konkret sollen PlayStation-Nutzer vom 23. August um 19 Uhr bis zum 30. August um 19 Uhr Ortszeit komplett auf ökonomische Aktivitäten und das Zocken auf der Plattform verzichten.</cite> Das heißt: kein Login, kein Kauf, keine einzige Spielsitzung – egal ob PS5 oder PS Plus.",
-      "Die Organisatoren werfen Sony vor, sich seit Jahren zunehmend von der eigenen Community zu entfremden. In ihrem Aufruf listen sie eine ganze Reihe von Kritikpunkten auf, <cite index=\"1-3,1-4\">von der Schließung beliebter Studios wie Bluepoint über eine verfehlte Live-Service-Strategie bis hin zum Sterbenlassen der PS VR2 – das Ende der physischen Discs sei für viele nun der berühmte letzte Tropfen.</cite> Der Aufruf hat bereits ordentlich Zugkraft: <cite index=\"1-8\">Der ursprüngliche Post kommt inzwischen auf über 10.000 Likes und mehr als 3.700 Shares.</cite> Parallel dazu kursiert seit Wochen eine Petition, die Sony zum Umdenken bewegen soll – die Unterzeichner betonen darin sinngemäß, dass eine Disc echten Besitz bedeutet, während eine reine Downloadversion letztlich nur eine jederzeit widerrufbare Lizenz sei.",
-      "Dass die Community derart aufgebracht ist, überrascht Branchenbeobachter kaum. Forbes-Kolumnist Paul Tassi bezeichnete die Reaktionen auf Sonys Ankündigung als <cite index=\"6-3,6-4\">nicht nur schnell und heftig, sondern womöglich die wütendste Stimmung gegenüber PlayStation seit 20 Jahren.</cite> Selbst prominente Stimmen aus der Industrie melden sich zu Wort: <cite index=\"13-5\">Metal-Gear-Schöpfer Hideo Kojima nannte die Konsequenzen der Entscheidung bei einem Filmfestival-Panel in Italien \"beängstigend\", auch Händler wie Iam8bit und Ex-PlayStation-Chef Shawn Layden äußerten sich kritisch.</cite> Sony selbst verteidigt den Schritt weiterhin nüchtern mit Verweis auf Marktzahlen und Verbraucherverhalten – <cite index=\"14-4,14-5\">man folge lediglich einer natürlichen Entwicklung, da die allgemeine Präferenz für digitale Medien physische Discs deutlich überholt habe, was näher an das heranrücke, wie die Community heute tatsächlich spiele.</cite> In der Community selbst ist die Stimmung gespalten: Während viele den Boykott unterstützen wollen, zweifeln andere offen daran, dass eine einwöchige Aktion einen milliardenschweren Konzern überhaupt beeindrucken kann – zumal Sony bislang jede öffentliche Debatte weitgehend aussitzt."
-    ],
-    "editorial_take": "Wir bei LOADOUT verstehen den Frust total – eine Disc im Regal fühlt sich einfach anders an als eine Lizenz, die morgen verschwinden kann. Trotzdem glauben wir, dass ein einwöchiger Boykott Sony kaum zum Umdenken bewegen wird, solange digitale Verkäufe längst die überwältigende Mehrheit ausmachen. Realistischer wäre es, den Druck über Petitionen, Verbraucherschutz und mediale Dauerbeschallung aufrechtzuerhalten – denn kurzfristige Symbolaktionen verpuffen erfahrungsgemäß schnell, sobald der nächste große Blockbuster erscheint.",
-    "source_title": "Critics of Sony's Decision to Kill Physical Discs Call on Gamers to Boycott PlayStation for a Week Next Month, but Will Anyone Listen?",
-    "date": "27. July 2026",
-    "platform": "IGN Articles",
-    "hype": 62,
-    "source": "https://www.ign.com/articles/critics-of-sonys-decision-to-kill-physical-discs-call-on-gamers-to-boycott-playstation-for-a-week-next-month-but-will-anyone-listen",
-    "sourceLabel": "IGN Articles",
-    "image": "https://assets-prd.ignimgs.com/2026/07/27/gettyimages-2285443146-1785155377393.jpg"
-  },
-  {
-    "id": "68e02a6425",
-    "cat": "pc",
-    "game": null,
-    "genre": "rpg",
-    "title": "Baldur's Gate 3 bekommt waschechte Third-Person-Kamera per Mod – und die Community streitet",
-    "teaser": "Ein neuer Mod verwandelt Larians RPG-Hit in ein waschechtes Third-Person-Erlebnis à la Dragon Age. Fans feiern die Immersion, andere fürchten um die Seele des Spiels.",
-    "body": [
-      "Drei Jahre nach Release ist Baldur's Gate 3 immer noch für Überraschungen gut – diesmal nicht durch ein offizielles Update, sondern durch die Modding-Community. Der Modder Relysia hat auf Nexus Mods die 'True Third-Person Camera' veröffentlicht, die dem eigentlich isometrischen Taktik-RPG eine waschechte Über-die-Schulter-Perspektive verpasst. Statt aus der Vogelperspektive zu klicken, steuert man seine Heldin oder seinen Helden plötzlich hautnah wie in einem waschechten Action-Adventure.",
-      "Der Mod baut auf dem bereits bekannten Native Camera Tweaks-Plugin auf, bringt aber deutlich mehr Feinschliff mit. <cite index=\"1-1\">Die True Third-Person Camera Mod gibt Spielern die Option, eine actionreichere Sicht auf die Welt zu bekommen, mit einem Wechsel von der ausgezoomten taktischen Ansicht zu einer Über-die-Schulter-Perspektive.</cite> Dabei passt sich das Sichtfeld dynamisch an, etwa beim Rennen oder Ducken, und auch nervige Kamera-Bugs sollen der Vergangenheit angehören: <cite index=\"2-1\">Während die klassische Kameraansicht in engen Passagen oft hängen bleibt und durch Wände clippt, sorgen die dynamischen Höhenanpassungen des Mods für einen deutlich flüssigeren Ablauf.</cite> Wer es installieren will, braucht neben dem eigentlichen Mod-Paket auch den Script Extender sowie das Mod Configuration Menu, da zentrale Funktionen wie die automatische Erkennung des Rundenmodus darauf zurückgreifen.",
-      "In der Fachpresse fällt das Echo überwiegend positiv aus. PC Gamer bringt die Sache auf den Punkt und beschreibt das Gefühl, dass <cite index=\"4-1\">ein CRPG in der Tradition von Baldur's Gate ohne Vogelperspektive eigentlich völlig falsch klingt, sich aber genau richtig anfühlt</cite>. Gamingbible zieht Vergleiche zu Dragon Age: Origins und sogar Resident Evil 4 und ordnet den Trend in eine größere Entwicklung ein, bei der immer mehr moderne Rollenspiele auf nahbarere Kameraperspektiven setzen. Ganz neu ist der Wunsch nach einer solchen Ansicht ohnehin nicht: Schon kurz nach Release beschwerten sich Fans in den Steam-Foren lautstark über die eingeschränkte Standardkamera und forderten Larian auf, endlich eine echte Third-Person-Option offiziell einzubauen. Auch Studio-Chef Swen Vincke selbst hat sich in der Vergangenheit begeistert über ähnliche Mod-Kombinationen geäußert und angemerkt, er wolle das unbedingt selbst ausprobieren. In der Community gibt es aber auch geteiltere Stimmen: Kritiker auf Plattformen wie NeoGAF monieren, dass Kämpfe mit der neuen Perspektive schlicht nicht funktionieren, weil das Spiel nie für dieses Kamerasystem designt wurde – wer taktisch planen will, brauche den Überblick von oben, nicht die Nahsicht auf Schulterhöhe."
-    ],
-    "editorial_take": "Wir finden: Genau diese Vielseitigkeit macht BG3 auch drei Jahre nach Release noch zu einem der spannendsten Modding-Spielplätze überhaupt. Für Erkundungstouren und Rollenspiel-Momente dürfte die Third-Person-Ansicht ein echter Gewinn sein, in hitzigen Kämpfen mit vielen Gegnern würden wir aber klar bei der gewohnten taktischen Draufsicht bleiben. Am Ende zeigt die Debatte vor allem eins: Larian hat mit seiner offenen Modding-Politik alles richtig gemacht, denn so kann jede und jeder selbst entscheiden, wie man sein Faerûn erleben möchte.",
-    "source_title": "Baldur's Gate 3 True Third-Person Camera Mod Goes Viral, Sparks Debate About Whether It Erases the Game's Identity",
-    "date": "27. July 2026",
-    "platform": "IGN Articles",
-    "hype": 62,
-    "source": "https://www.ign.com/articles/baldurs-gate-3-true-third-person-camera-mod-goes-viral-sparks-debate-about-whether-it-erases-the-games-identity",
-    "sourceLabel": "IGN Articles",
-    "image": "https://assets-prd.ignimgs.com/2026/07/27/bg3-1785145978983.jpg"
-  },
-  {
-    "id": "969ca2f363",
-    "cat": "pc",
-    "game": null,
-    "genre": "shooter",
-    "title": "Stalker 2 bekommt im August Engine-Upgrade und erste Story-Erweiterung „Cost of Hope“",
-    "teaser": "Fast zwei Jahre nach Release rüstet GSC Game World die Zone technisch auf und liefert die erste große Story-DLC nach.",
-    "body": [
-      "Wer seit dem Release von Stalker 2 im November 2024 auf den großen technischen Feinschliff gewartet hat, darf jetzt aufatmen: Am 20. August erscheint die erste Story-Erweiterung des postapokalyptischen Shooters, Cost of Hope – und zwar zeitgleich mit dem lange angekündigten Update 2.0, das die Engine des Spiels grundlegend modernisiert. <cite index=\"1-2\">Fast zwei Jahre nach dem Release des Basisspiels bekommt Stalker 2 damit seine erste Erweiterung namens Cost of Hope.</cite> Für viele Fans ist das der Moment, auf den sie seit Monaten gewartet haben.",
-      "Inhaltlich schickt Cost of Hope die Spieler:innen mitten in den schwelenden Konflikt zwischen den Fraktionen Duty und Freedom. <cite index=\"1-8\">Die DLC konzentriert sich auf die verfeindeten Fraktionen Duty, die die Zone als bedrohlich ansehen und bekämpfen wollen, und Freedom, die sie als wundersamen Ort verstehen, den man teilen sollte.</cite> Neben einer waschechten neuen Story erwarten Spieler:innen auch handfeste Neuerungen: <cite index=\"14-10\">Mit Cost of Hope lassen sich zwei lange herbeigesehnte Regionen erkunden, die jahrelang abgeriegelt waren – der Iron Forest und das Kernkraftwerk Tschernobyl.</cite> Dazu kommen neue Waffen, neue Ausrüstung und laut GSC dutzende Stunden an zusätzlichem Content. Wichtig für alle, die technisch aufgerüstet zocken wollen: Das parallel erscheinende Update 2.0 hievt das Spiel <cite index=\"1-11\">von Unreal Engine 5.1 auf Version 5.5.4</cite> und soll damit für spürbar mehr Stabilität und Performance sorgen.",
-      "Die Fachpresse ordnet die Ankündigung als konsequenten nächsten Schritt eines ungewöhnlich transparenten Entwicklerteams ein. GSC Game World, das Studio mit Sitz in Kiew, hatte Stalker 2 trotz Krieg und widrigster Umstände fertiggestellt – <cite index=\"21-18,21-19\">das Spiel startete mit positiver Resonanz auf Steam und einer Million verkaufter Exemplare, ein Erfolg für das ukrainische Studio angesichts der Umstände nach der russischen Invasion 2022.</cite> Der Launch selbst war jedoch alles andere als makellos: Kritiker:innen und Community bemängelten vor allem das ausgehöhlte A-Life-System, das eigentlich für lebendige NPC-Verhalten in der Zone sorgen sollte. Auf Steam beschreiben Spieler:innen den Start rückblickend als einen der seltsamsten Launches überhaupt – <cite index=\"23-8,23-9\">die Hälfte der YouTuber hasse das Spiel, die andere Hälfte lobe es in den Himmel, während Metacritic einen User-Score von 7,7 und Steam eine 80-Prozent-Bewertung ausweise.</cite> Genau deshalb wird das kommende 2.0-Update in vielen Community-Foren als überfällige Chance gesehen, alte Wunden zu heilen. Andere Medien loben zudem die Update-Politik des Studios: GSC habe gezeigt, dass man einen holprigen Start durch konsequente Nachbesserung wieder ausbügeln kann, statt das Spiel wie viele große Publisher einfach in seinem fehlerhaften Zustand zu belassen."
-    ],
-    "editorial_take": "Für uns ist das eine der spannendsten Post-Launch-Geschichten der letzten Jahre: Ein Studio, das mitten im Krieg ein AAA-Spiel fertigstellt und trotz holprigem Start beharrlich nachliefert, statt die Community abzuspeisen. Der Zeitpunkt – Engine-Sprung und Story-DLC gemeinsam – wirkt clever gewählt, weil er Neueinsteiger:innen und enttäuschte Day-One-Käufer:innen gleichermaßen zurück in die Zone locken dürfte. Ob Cost of Hope tatsächlich das A-Life-Problem endgültig löst, wird sich erst zeigen, aber allein die Kombination aus technischem Feinschliff und handfestem neuen Content macht den 20. August zu einem Pflichttermin für alle Stalker-Fans.",
-    "source_title": "Stalker 2's engine upgrade and first story expansion are due out in August",
-    "date": "27. July 2026",
-    "platform": "PCGamer latest",
-    "hype": 72,
-    "source": "https://www.pcgamer.com/games/fps/stalker-2s-engine-upgrade-and-first-story-expansion-are-due-out-in-august/",
-    "sourceLabel": "PCGamer latest",
-    "image": "https://cdn.mos.cms.futurecdn.net/XaneWEcSn7sm765nWxjBJS-1280-80.jpg"
   }
 ]
