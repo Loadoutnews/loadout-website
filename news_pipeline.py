@@ -22,6 +22,10 @@ import requests
 from anthropic import Anthropic
 
 MODEL = "claude-sonnet-5"
+# Günstiges, schnelles Modell nur für die reine Ja/Nein-Klassifikation bei
+# der Duplikat-Prüfung (siehe semantic_duplicate_filter) — dafür braucht es
+# kein großes, teures Modell wie beim eigentlichen Artikel-Schreiben.
+DEDUP_MODEL = "claude-haiku-4-5-20251001"
 SITE_URL = "https://loadout-news.com"
 
 FEEDS = [
@@ -36,17 +40,16 @@ FEEDS = [
     {"url": "https://www.vg247.com/feed", "priority": False},
     {"url": "https://www.pcgamesn.com/feed", "priority": False},
     {"url": "https://www.gamesradar.com/feeds/rss", "priority": False},
-
     # Spezialisierte Feeds für die 6 großen Franchise-Hubs (GTA, Minecraft,
     # Fortnite, Call of Duty, Valorant/LoL, FIFA/EA Sports FC). Diese werden
     # unten über PRIORITY_QUOTA bevorzugt behandelt, damit jeder Lauf
     # gezielt Artikel für diese Hubs liefert statt zufällig darauf zu warten.
-    {"url": "https://rockstarintel.com/feed/", "priority": True},           # GTA
+    {"url": "https://rockstarintel.com/feed/", "priority": True},          # GTA
     {"url": "https://gamerant.com/feed/minecraft-news", "priority": True},  # Minecraft
     {"url": "https://gamerant.com/feed/fortnite-news", "priority": True},   # Fortnite
-    {"url": "https://charlieintel.com/feed", "priority": True},            # Call of Duty
-    {"url": "https://dotesports.com/feed", "priority": True},              # Valorant/LoL
-    {"url": "https://realsport101.com/feed.xml", "priority": True},        # FIFA/EA Sports FC
+    {"url": "https://charlieintel.com/feed", "priority": True},             # Call of Duty
+    {"url": "https://dotesports.com/feed", "priority": True},               # Valorant/LoL
+    {"url": "https://realsport101.com/feed.xml", "priority": True},         # FIFA/EA Sports FC
 ]
 
 # Wie viele der pro Lauf geschriebenen Artikel mindestens aus den
@@ -54,8 +57,8 @@ FEEDS = [
 # Gaming-News aufgefüllt).
 PRIORITY_QUOTA = 1
 
-MAX_ARTICLES_PER_RUN = 4          # wie viele neue Artikel pro Durchlauf geschrieben werden
-MAX_ARTICLES_TOTAL = 60           # wie viele Artikel maximal in articles.json stehen (Homepage-Cache)
+MAX_ARTICLES_PER_RUN = 4    # wie viele neue Artikel pro Durchlauf geschrieben werden
+MAX_ARTICLES_TOTAL = 60     # wie viele Artikel maximal in articles.json stehen (Homepage-Cache)
 
 ARTICLES_FILE = "articles.json"
 ARCHIVE_FILE = "archive.json"
@@ -82,17 +85,15 @@ def titles_similar(a, b, threshold=TITLE_SIMILARITY_THRESHOLD):
 
 
 def filter_duplicate_topics(entries, already_covered_titles):
-    """Entfernt Meldungen, deren (englischer Original-)Titel einem bereits
-    verarbeiteten Thema zu ähnlich ist — sowohl im Vergleich zu kürzlich
-    geschriebenen Artikeln (verschiedene Läufe) als auch zu anderen
-    Einträgen im selben Lauf (verschiedene Quellen, gleiches Thema, z. B.
-    IGN und PCGamer berichten beide über dasselbe GTA-Update).
+    """ERSTE, GÜNSTIGE Stufe der Duplikat-Prüfung: reiner Text-Abgleich,
+    kostet keinen API-Aufruf. Fängt offensichtliche Fälle ab (z. B. exakt
+    derselbe oder fast identisch formulierte Titel) und verkleinert damit
+    die Kandidatenliste, bevor die teurere, aber deutlich zuverlässigere
+    KI-gestützte Prüfung (semantic_duplicate_filter) läuft.
 
-    WICHTIG: already_covered_titles muss ebenfalls die ENGLISCHEN
-    Original-Quelltitel enthalten, nicht die fertigen deutschen
-    Artikeltitel — sonst vergleicht die Ähnlichkeitsprüfung Äpfel mit
-    Birnen (Englisch gegen Deutsch) und schlägt praktisch nie an, egal
-    wie ähnlich die Themen wirklich sind."""
+    WICHTIG: already_covered_titles muss die ENGLISCHEN Original-Quelltitel
+    enthalten, nicht die fertigen deutschen Artikeltitel — sonst vergleicht
+    die Prüfung Äpfel mit Birnen (Englisch gegen Deutsch)."""
     kept = []
     seen_titles = list(already_covered_titles)
     for entry in entries:
@@ -101,6 +102,77 @@ def filter_duplicate_topics(entries, already_covered_titles):
         kept.append(entry)
         seen_titles.append(entry["title"])
     return kept
+
+
+def semantic_duplicate_filter(entries, recent_titles, max_recent=40):
+    """ZWEITE, KI-GESTÜTZTE Stufe der Duplikat-Prüfung — der eigentliche
+    Kern der Lösung. Reiner Text-Abgleich (filter_duplicate_topics oben)
+    erkennt zuverlässig NUR fast identisch formulierte Titel. In der Praxis
+    berichten aber z. B. IGN und PCGamer oft über dieselbe Meldung mit
+    KOMPLETT unterschiedlichen Überschriften — das schlägt bei reinem
+    Text-Vergleich so gut wie nie an, obwohl es inhaltlich dasselbe Thema
+    ist. Deshalb lässt diese Stufe die KI selbst beurteilen, ob der
+    inhaltliche KERN übereinstimmt, unabhängig vom Wortlaut.
+
+    Prüft dabei sowohl gegen bereits veröffentlichte Themen als auch
+    INNERHALB des aktuellen Kandidaten-Pools (falls z. B. zwei
+    verschiedene Feeds im selben Lauf dieselbe Meldung liefern).
+
+    Nutzt bewusst ein günstiges, schnelles Modell (Haiku) statt Sonnet —
+    das ist eine reine Klassifikationsaufgabe, kein kreatives Schreiben,
+    dafür genügt ein kleineres Modell locker, und es hält die Kosten
+    niedrig (siehe Kostenoptimierung an anderer Stelle der Pipeline)."""
+    if not entries:
+        return entries
+
+    recent = [t for t in recent_titles if t][-max_recent:]
+    candidates_block = "\n".join(f"{i}: {e['title']}" for i, e in enumerate(entries))
+    recent_block = "\n".join(f"- {t}" for t in recent) if recent else "(keine)"
+
+    prompt = f"""Bereits kürzlich veröffentlichte Themen:
+{recent_block}
+
+Neue Kandidaten (nummeriert, 0-basiert):
+{candidates_block}
+
+Aufgabe: Finde alle Kandidaten, die INHALTLICH DASSELBE THEMA behandeln
+wie entweder (a) eines der bereits veröffentlichten Themen, ODER (b) einen
+ANDEREN Kandidaten in der obigen Liste (z. B. wenn zwei verschiedene
+Quellen dieselbe Meldung nur unterschiedlich formuliert haben). Es zählt
+der inhaltliche Kern, nicht der Wortlaut — unterschiedliche Quellen
+formulieren dieselbe Meldung oft komplett anders.
+
+Antworte AUSSCHLIESSLICH mit einem JSON-Array der Nummern, die als
+Duplikat AUSSORTIERT werden sollen (bei mehreren Kandidaten zum selben
+Thema: alle bis auf den ERSTEN in der Liste aussortieren). Beispiel:
+[2, 5, 6]. Falls keine Duplikate gefunden wurden: []. Keine Erklärung,
+kein Markdown, nur das JSON-Array."""
+
+    try:
+        response = client.messages.create(
+            model=DEDUP_MODEL,
+            max_tokens=500,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text_blocks = [b.text for b in response.content if b.type == "text"]
+        if not text_blocks:
+            print("  ⚠ Semantische Duplikat-Prüfung: keine Antwort erhalten — überspringe diese Stufe.", file=sys.stderr)
+            return entries
+        raw = text_blocks[-1].strip()
+        raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        first_bracket = raw.find("[")
+        if first_bracket > 0:
+            raw = raw[first_bracket:]
+        duplicate_indices = set(json.loads(raw, strict=False))
+    except Exception as e:
+        print(f"  ⚠ Semantische Duplikat-Prüfung fehlgeschlagen ({e}) — überspringe diese Stufe für diesen Lauf.", file=sys.stderr)
+        return entries  # im Zweifel nichts wegfiltern, lieber ein seltenes Duplikat als fälschlich Artikel verlieren
+
+    filtered = [e for i, e in enumerate(entries) if i not in duplicate_indices]
+    removed = len(entries) - len(filtered)
+    if removed:
+        print(f"  {removed} weitere(s) Duplikat(e) durch KI-Prüfung erkannt (unterschiedlicher Wortlaut, gleiches Thema)")
+    return filtered
 
 
 def fetch_og_image(url, timeout=8):
@@ -242,6 +314,7 @@ Original-Link: {entry['link']}"""
     if not text_blocks:
         print(f"  ! Keine Textantwort erhalten für: {entry['title']}", file=sys.stderr)
         return None
+
     raw_text = text_blocks[-1].strip()
     raw_text = raw_text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
@@ -326,21 +399,29 @@ def main():
     existing_ids = {a["id"] for a in archive} | {a["id"] for a in existing}
     new_raw = [e for e in raw_entries if article_id(e["link"]) not in existing_ids]
 
-    # Themen-Dopplung verhindern: Titel gegen die zuletzt geschriebenen
-    # Artikel vergleichen — WICHTIG: hier werden die ENGLISCHEN
-    # Original-Quelltitel verglichen (source_title), NICHT die fertigen
-    # deutschen Artikeltitel! Ein Vergleich Englisch-gegen-Deutsch würde
-    # so gut wie nie anschlagen, selbst bei exakt demselben Thema, weil
-    # die KI die Meldung ja komplett neu auf Deutsch formuliert.
+    # Themen-Dopplung verhindern — ZWEISTUFIG:
+    # 1) Günstiger Text-Abgleich (fängt offensichtliche Fälle kostenlos ab)
+    # 2) KI-gestützte inhaltliche Prüfung (fängt Fälle ab, in denen
+    #    verschiedene Quellen dieselbe Meldung unterschiedlich formulieren
+    #    — das war die eigentliche Lücke der bisherigen, rein textbasierten
+    #    Prüfung)
+    #
+    # WICHTIG: hier werden die ENGLISCHEN Original-Quelltitel verglichen
+    # (source_title), NICHT die fertigen deutschen Artikeltitel! Ein
+    # Vergleich Englisch-gegen-Deutsch würde so gut wie nie anschlagen,
+    # selbst bei exakt demselben Thema, weil die KI die Meldung ja komplett
+    # neu auf Deutsch formuliert.
     recent_source_titles = [
         a.get("source_title", a.get("title", ""))  # Fallback für ältere Artikel ohne source_title
         for a in (archive[-40:] + existing)
     ]
+
     before_count = len(new_raw)
     new_raw = filter_duplicate_topics(new_raw, recent_source_titles)
+    new_raw = semantic_duplicate_filter(new_raw, recent_source_titles)
     skipped = before_count - len(new_raw)
     if skipped:
-        print(f"  {skipped} Meldung(en) als Themen-Duplikat übersprungen")
+        print(f"  {skipped} Meldung(en) insgesamt als Themen-Duplikat übersprungen")
 
     # Auswahl mit garantierter Franchise-Quote UND garantierter Gesamtzahl:
     # Es wird so lange der jeweils nächste Kandidat aus dem Pool probiert,
@@ -366,7 +447,7 @@ def main():
             written.append(article)
             used_links.add(entry["link"])
             return True
-        print("  ⚠ Fehlgeschlagen — probiere nächsten Kandidaten aus dem Pool.")
+        print("    ⚠ Fehlgeschlagen — probiere nächsten Kandidaten aus dem Pool.")
         return False
 
     franchise_written = 0
