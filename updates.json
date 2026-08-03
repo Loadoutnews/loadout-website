@@ -129,22 +129,6 @@
     "image": "https://images.nintendolife.com/3fe6c49429a0e/large.jpg"
   },
   {
-    "game": "Zenless Zone Zero",
-    "update_title": "Version 3.1: The Long Goodbye",
-    "update_date": "2026-07-29",
-    "platforms": [
-      "PC",
-      "PS5",
-      "iOS",
-      "Android"
-    ],
-    "content": "Passend zum zweiten Jahrestag des Spiels bringt HoYoverse mit Version 3.1 die neuen S-Rang-Agenten Remielle und Sigrid ins Spiel, dazu den neuen Lumiflux-Attributtyp und den Endgame-Modus 'Enigma of the Labyrinth: Operation Bage'. Zur Jubiläumsfeier gibt es umfangreiche Login-Belohnungen sowie erste Details zu einem kommenden Crossover mit Honkai: Star Rail. Der Termin wurde im offiziellen Livestream am 17. Juli bestätigt.",
-    "hype": 60,
-    "source_url": "https://www.sportskeeda.com/esports/zenless-zone-zero-zzz-3-1-livestream-summary-release-date-banners-events-anniversary-rewards",
-    "id": "73174604bb",
-    "image": "https://picsum.photos/seed/loadout-update-ZenlessZoneZeroVersion31TheLongGoodbye/300/200"
-  },
-  {
     "game": "Valorant",
     "update_title": "Season 2026: Act 5",
     "update_date": "2026-08-19",
@@ -156,5 +140,18 @@
     "source_url": "https://www.esportstales.com/valorant/season-end-date",
     "id": "a566b19a80",
     "image": "http://static1.squarespace.com/static/59af2189c534a58c97bd63b3/5ea9a22bfa38715761c42d79/6633a5972212af59d8991b6a/1782311163521/Valorant.jpeg?format=1500w"
+  },
+  {
+    "game": "World of Warcraft",
+    "update_title": "Patch 12.1: Curse of Ula'tek",
+    "update_date": "2026-08-11",
+    "platforms": [
+      "PC"
+    ],
+    "content": "Blizzard bringt mit Patch 12.1 die neue Zone Coiled Isle sowie den achtstufigen Raid Venomous Abyss und das neue Dungeon Altar of Fangs ins Spiel. Eine Woche später, am 18. August, startet zusätzlich Midnight Season 2 mit neuem Gear-Reset, weiteren Delves und Housing-Erweiterungen.",
+    "hype": 78,
+    "source_url": "https://www.wowhead.com/news/midnight-season-2-launches-august-18th-382287",
+    "id": "fa78876ed1",
+    "image": "https://picsum.photos/seed/loadout-update-WorldofWarcraftPatch121CurseofUlatek/300/200"
   }
 ]
