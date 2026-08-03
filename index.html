@@ -115,6 +115,12 @@
       <h2 class="mono" style="font-size:11px; color:var(--muted);">Große Titel</h2>
     </div>
     <div class="chips" id="gameChips" style="margin-bottom:12px;"></div>
+
+    <div class="section-head" style="margin: 4px 0 12px;">
+      <h2 class="mono" style="font-size:11px; color:var(--muted);">Redaktion</h2>
+    </div>
+    <div class="chips" id="originalChips" style="margin-bottom:12px;"></div>
+
     <a href="releases.html" class="chip" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:linear-gradient(90deg, var(--violet), var(--magenta)); color:#0A0C16; font-weight:700; border:none; margin-bottom:10px;">
       📅 Release-Kalender öffnen
     </a>
@@ -515,6 +521,16 @@ function getLocalized(a){
 
 function catLabel(key){ return CATS[key] ? CATS[key].label[currentLang] : ""; }
 function genreLabel(key){ return GENRES[key] ? GENRES[key].label[currentLang] : ""; }
+// Sicherer Zugriff auf GAMES — gibt bei unbekanntem/ungültigem Wert einen
+// leeren String zurück statt abzustürzen (siehe frühere Fehleranalyse: ein
+// ungültiger game-Wert hätte sonst die ganze Seite zum Absturz gebracht).
+function gameLabel(key){ return GAMES[key] ? GAMES[key].label : ""; }
+// Kleines Abzeichen für eigenständige Analyse-/Recherche-Artikel (siehe
+// news_pipeline.py: content_type "analysis") — zusätzlich zur normalen
+// Kategorie, nicht anstelle davon.
+function originalBadgeHtml(a){
+  return a.content_type === "analysis" ? '<span class="badge badge-original">✦ LOADOUT-Original</span>' : '';
+}
 
 let articles = [
   {
@@ -743,6 +759,7 @@ let articles = [
 let activeCat = "alle";
 let activeGame = "alle";
 let activeGenre = "alle";
+let activeOriginalOnly = false;
 let showSavedOnly = false;
 const savedIds = new Set();
 const readIds = new Set();
@@ -759,7 +776,7 @@ const HOMEPAGE_MAX_SHOWN = 30;
 
 function isDefaultUnfilteredView(){
   return activeCat === "alle" && activeGame === "alle" && activeGenre === "alle" &&
-         !showSavedOnly && !document.getElementById('searchInput').value.trim();
+         !activeOriginalOnly && !showSavedOnly && !document.getElementById('searchInput').value.trim();
 }
 let activeSort = "date";
 
@@ -822,6 +839,12 @@ function renderChips(){
   gameChips.innerHTML = games.map(g =>
     `<button class="chip ${activeGame===g.key?'active':''}" onclick="setGame('${g.key}')">${g.label}</button>`
   ).join('');
+
+  // Eigener Filter-Button für eigenständige LOADOUT-Original-Analyse-
+  // Artikel — bewusst als einzelner Umschalter, nicht als "Alle/X"-Reihe
+  // wie bei Kategorie/Genre/Titel, da es hier nur "an" oder "aus" gibt.
+  const originalChips = document.getElementById('originalChips');
+  originalChips.innerHTML = `<button class="chip chip-original ${activeOriginalOnly?'active':''}" onclick="setOriginalOnly(${!activeOriginalOnly})">✦ Nur LOADOUT-Original</button>`;
 }
 
 let archiveMerged = false;
@@ -879,6 +902,14 @@ function setCat(cat){
 function setGame(game){
   activeGame = game;
   if(game !== "alle") ensureArchiveMerged();
+  visibleGridCount = GRID_BATCH_SIZE;
+  renderChips();
+  renderGrid();
+}
+
+function setOriginalOnly(value){
+  activeOriginalOnly = value;
+  if(value) ensureArchiveMerged();
   visibleGridCount = GRID_BATCH_SIZE;
   renderChips();
   renderGrid();
@@ -1020,7 +1051,8 @@ function renderHero(){
           <span class="trending-tag">🔥 Trending</span>
         </div>
         <div class="hero-content">
-          <span class="badge ${top.cat}">${catLabel(top.cat)}${top.game && GAMES[top.game] ? ' · ' + GAMES[top.game].label : ''}</span>
+          <span class="badge ${top.cat}">${catLabel(top.cat)}${top.game && GAMES[top.game] ? ' · ' + gameLabel(top.game) : ''}</span>
+          ${originalBadgeHtml(top)}
           <h1 class="display">${top.title}</h1>
           <p>${top.teaser}</p>
           <div class="hype">
@@ -1456,12 +1488,13 @@ function renderGrid(){
     const matchesCat = activeCat === "alle" || a.cat === activeCat;
     const matchesGame = activeGame === "alle" || a.game === activeGame;
     const matchesGenre = activeGenre === "alle" || a.genre === activeGenre;
+    const matchesOriginal = !activeOriginalOnly || a.content_type === "analysis";
     const searchableText = [
       a.title, a.teaser, ...(Array.isArray(a.body) ? a.body : []), a.platform, a.sourceLabel
     ].filter(Boolean).join(" ").toLowerCase();
     const matchesQuery = queryWords.length === 0 || queryWords.every(w => searchableText.includes(w));
     const matchesSaved = !showSavedOnly || savedIds.has(a.id);
-    return matchesCat && matchesGame && matchesGenre && matchesQuery && matchesSaved;
+    return matchesCat && matchesGame && matchesGenre && matchesOriginal && matchesQuery && matchesSaved;
   });
 
   const grid = document.getElementById('grid');
@@ -1502,7 +1535,8 @@ function renderGrid(){
           ${a.hype >= 85 ? `<span class="trending-tag">🔥 Trending</span>` : ''}
         </div>
         <div class="card-body">
-          <span class="badge ${a.cat}">${catLabel(a.cat)}${a.genre && GENRES[a.genre] ? ' · ' + genreLabel(a.genre) : ''}${a.game && GAMES[a.game] ? ' · ' + GAMES[a.game].label : ''}</span>
+          <span class="badge ${a.cat}">${catLabel(a.cat)}${a.genre && GENRES[a.genre] ? ' · ' + genreLabel(a.genre) : ''}${a.game && GAMES[a.game] ? ' · ' + gameLabel(a.game) : ''}</span>
+          ${originalBadgeHtml(a)}
           <h3>${a.title}</h3>
           <p>${a.teaser}</p>
           <div class="meta"><span class="mono">${a.date}</span><span class="mono">${a.platform}${a.views ? ' · 👁 ' + a.views.toLocaleString('de-CH') : ''}</span></div>
@@ -1562,11 +1596,24 @@ function openArticleView(id){
 
   document.getElementById('detailArt').style.cssText = articleArtStyle(a) + '; background-size:cover; background-position:center;';
   document.getElementById('detailBadge').className = `badge ${a.cat}`;
-  document.getElementById('detailBadge').textContent = catLabel(a.cat) + (a.genre && GENRES[a.genre] ? ' · ' + genreLabel(a.genre) : '') + (a.game && GAMES[a.game] ? ' · ' + GAMES[a.game].label : '');
+  document.getElementById('detailBadge').textContent = catLabel(a.cat) + (a.genre && GENRES[a.genre] ? ' · ' + genreLabel(a.genre) : '') + (a.game && GAMES[a.game] ? ' · ' + gameLabel(a.game) : '');
   document.getElementById('detailTitle').textContent = a.title;
   document.getElementById('detailHypeFill').style.width = a.hype + '%';
   document.getElementById('detailHypePct').textContent = a.hype + '%';
   document.getElementById('detailMeta').textContent = `${a.date} · ${a.platform}${a.views ? ' · 👁 ' + a.views.toLocaleString('de-CH') + (a.views === 1 ? ' Aufruf' : ' Aufrufe') : ''}`;
+
+  // LOADOUT-Original-Abzeichen im Detail einblenden (falls Analyse-Artikel)
+  const existingOriginalTag = document.getElementById('detailOriginalTag');
+  if(existingOriginalTag) existingOriginalTag.remove();
+  if(a.content_type === "analysis"){
+    const tag = document.createElement('span');
+    tag.id = 'detailOriginalTag';
+    tag.className = 'badge badge-original';
+    tag.style.marginLeft = '8px';
+    tag.textContent = '✦ LOADOUT-Original';
+    document.getElementById('detailBadge').insertAdjacentElement('afterend', tag);
+  }
+
   document.getElementById('detailBody').innerHTML = a.body.map(p => `<p class="body">${p}</p>`).join('')
     + (a.editorial_take ? `
       <div class="editorial-box">
