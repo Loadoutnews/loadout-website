@@ -142,29 +142,122 @@ def filter_duplicate_topics(entries, already_covered_titles):
     return kept
 
 
-def semantic_duplicate_filter(entries, recent_titles, max_recent=40):
-    """ZWEITE, KI-GESTÜTZTE Stufe der Duplikat-Prüfung — der eigentliche
-    Kern der Lösung. Reiner Text-Abgleich (filter_duplicate_topics oben)
-    erkennt zuverlässig NUR fast identisch formulierte Titel. In der Praxis
-    berichten aber z. B. IGN und PCGamer oft über dieselbe Meldung mit
-    KOMPLETT unterschiedlichen Überschriften — das schlägt bei reinem
-    Text-Vergleich so gut wie nie an, obwohl es inhaltlich dasselbe Thema
-    ist. Deshalb lässt diese Stufe die KI selbst beurteilen, ob der
-    inhaltliche KERN übereinstimmt, unabhängig vom Wortlaut.
+def filter_candidates_combined(entries, recent_titles, max_recent=40, max_batch=40):
+    """Kombiniert semantic_duplicate_filter UND filter_by_relevance in
+    EINEM einzigen KI-Aufruf statt zwei separaten — spart die doppelten
+    Anweisungs-/Kandidatenlisten-Tokens und einen kompletten Aufruf pro
+    Lauf ein, bei GENAU denselben beiden Prüfungen wie zuvor (inhaltliche
+    Duplikat-Erkennung + Relevanz-Kriterien), nur zusammengefasst
+    abgefragt. Wird für die Haupt-Kandidatenliste aus den RSS-Feeds
+    genutzt (dort laufen beide Prüfungen ohnehin immer nacheinander auf
+    derselben Liste — ideal zum Zusammenlegen).
 
-    Prüft dabei sowohl gegen bereits veröffentlichte Themen als auch
-    INNERHALB des aktuellen Kandidaten-Pools (falls z. B. zwei
-    verschiedene Feeds im selben Lauf dieselbe Meldung liefern).
-
-    Nutzt bewusst ein günstiges, schnelles Modell (Haiku) statt Sonnet —
-    das ist eine reine Klassifikationsaufgabe, kein kreatives Schreiben,
-    dafür genügt ein kleineres Modell locker, und es hält die Kosten
-    niedrig (siehe Kostenoptimierung an anderer Stelle der Pipeline)."""
+    Für Analyse-Artikel-Themenvorschläge (nur EIN Kandidat, andere
+    Aufrufstelle) bleibt semantic_duplicate_filter separat im Einsatz —
+    dort lohnt sich das Zusammenlegen nicht, weil dort ohnehin nur ein
+    einzelnes Thema geprüft wird, nicht dutzende Kandidaten gleichzeitig."""
     if not entries:
         return entries
 
+    auto_pass = [e for e in entries if e.get("priority")]
+    to_check = [e for e in entries if not e.get("priority")]
+    if not to_check:
+        return auto_pass
+
+    to_check = to_check[:max_batch]
     recent = [t for t in recent_titles if t][-max_recent:]
-    candidates_block = "\n".join(f"{i}: {e['title']}" for i, e in enumerate(entries))
+    candidates_block = "\n".join(f"{i}: {e['title']}" for i, e in enumerate(to_check))
+    recent_block = "\n".join(f"- {t}" for t in recent) if recent else "(keine)"
+
+    prompt = f"""Bereits kürzlich veröffentlichte Themen:
+{recent_block}
+
+Neue Kandidaten (nummeriert, 0-basiert):
+{candidates_block}
+
+Prüfe JEDEN Kandidaten auf ZWEI unabhängige Kriterien:
+
+(A) DUPLIKAT: Behandelt der Kandidat inhaltlich dasselbe Thema wie eines
+der bereits veröffentlichten Themen ODER wie ein ANDERER Kandidat in
+dieser Liste (auch bei komplett unterschiedlichem Wortlaut — es zählt
+der inhaltliche Kern)? Bei mehreren Kandidaten zum selben neuen Thema:
+alle bis auf den ERSTEN als Duplikat zählen.
+
+(B) IRRELEVANT: Erfüllt der Kandidat KEINES der folgenden Relevanz-
+Kriterien (schon eines reicht, um NICHT irrelevant zu sein)?
+{RELEVANCE_CRITERIA}
+
+Antworte AUSSCHLIESSLICH mit einem validen JSON-Objekt, keine Erklärung,
+kein Markdown:
+{{"duplicates": [<Nummern, die Kriterium A erfüllen>], "irrelevant": [<Nummern, die Kriterium B erfüllen, also KEIN Relevanz-Kriterium>]}}
+
+Beispiel: {{"duplicates": [2, 5], "irrelevant": [1, 7]}}. Falls eine der
+beiden Listen leer ist: []."""
+
+    try:
+        response = client.messages.create(
+            model=DEDUP_MODEL,
+            max_tokens=700,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text_blocks = [b.text for b in response.content if b.type == "text"]
+        if not text_blocks:
+            print("  ⚠ Kombinierte Duplikat-/Relevanz-Prüfung: keine Antwort erhalten — lasse alle Kandidaten durch.", file=sys.stderr)
+            return entries
+        raw = text_blocks[-1].strip()
+        raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        first_brace = raw.find("{")
+        if first_brace > 0:
+            raw = raw[first_brace:]
+        data = json.loads(raw, strict=False)
+        reject_indices = set(data.get("duplicates", [])) | set(data.get("irrelevant", []))
+    except Exception as e:
+        print(f"  ⚠ Kombinierte Duplikat-/Relevanz-Prüfung fehlgeschlagen ({e}) — lasse alle Kandidaten durch (im Zweifel nicht zu streng filtern).", file=sys.stderr)
+        return entries
+
+    kept = [e for i, e in enumerate(to_check) if i not in reject_indices]
+    duplicate_count = len(set(data.get("duplicates", [])) - set()) if "data" in dir() else 0
+    try:
+        dup_n = len(set(data.get("duplicates", [])))
+        irr_n = len(set(data.get("irrelevant", [])))
+        if dup_n:
+            print(f"  {dup_n} Meldung(en) als inhaltliches Duplikat aussortiert")
+        if irr_n:
+            print(f"  {irr_n} Meldung(en) als zu klein/nischig aussortiert (kein Relevanz-Kriterium erfüllt)")
+    except Exception:
+        pass
+    return auto_pass + kept
+
+
+def semantic_duplicate_filter(entries, recent_titles, max_recent=40):
+    """Eigenständige Duplikat-Prüfung (ohne Relevanz-Check) — wird für
+    Analyse-Artikel-Themenvorschläge genutzt, wo jeweils nur EIN einzelnes
+    Thema geprüft wird (die Relevanz ist dort bereits durch die Kriterien
+    im Themenvorschlags-Prompt selbst abgedeckt, ein zusätzlicher
+    Relevanz-Check wäre hier redundant). Für die Haupt-Kandidatenliste aus
+    den RSS-Feeds wird stattdessen filter_candidates_combined() genutzt,
+    die Duplikat- UND Relevanz-Prüfung in einem einzigen Aufruf kombiniert.
+
+    Reiner Text-Abgleich (filter_duplicate_topics) erkennt zuverlässig NUR
+    fast identisch formulierte Titel. In der Praxis berichten aber z. B.
+    IGN und PCGamer oft über dieselbe Meldung mit KOMPLETT unterschiedlichen
+    Überschriften — das schlägt bei reinem Text-Vergleich so gut wie nie
+    an, obwohl es inhaltlich dasselbe Thema ist. Deshalb lässt diese
+    Funktion die KI selbst beurteilen, ob der inhaltliche KERN
+    übereinstimmt, unabhängig vom Wortlaut.
+
+    Nutzt bewusst ein günstiges, schnelles Modell (Haiku) statt Sonnet —
+    das ist eine reine Klassifikationsaufgabe, kein kreatives Schreiben."""
+    if not entries:
+        return entries
+
+    # Batch-Größe begrenzen (Sicherheitsnetz) — verhindert unnötig lange
+    # Prompts, falls diese Funktion je mit einer sehr großen Liste
+    # aufgerufen wird, statt wie aktuell üblich mit nur einem Kandidaten.
+    entries_to_check = entries[:40]
+
+    recent = [t for t in recent_titles if t][-max_recent:]
+    candidates_block = "\n".join(f"{i}: {e['title']}" for i, e in enumerate(entries_to_check))
     recent_block = "\n".join(f"- {t}" for t in recent) if recent else "(keine)"
 
     prompt = f"""Bereits kürzlich veröffentlichte Themen:
@@ -206,7 +299,9 @@ kein Markdown, nur das JSON-Array."""
         print(f"  ⚠ Semantische Duplikat-Prüfung fehlgeschlagen ({e}) — überspringe diese Stufe für diesen Lauf.", file=sys.stderr)
         return entries  # im Zweifel nichts wegfiltern, lieber ein seltenes Duplikat als fälschlich Artikel verlieren
 
-    filtered = [e for i, e in enumerate(entries) if i not in duplicate_indices]
+    filtered = [e for i, e in enumerate(entries_to_check) if i not in duplicate_indices]
+    # Kandidaten jenseits der Batch-Grenze (falls vorhanden) unangetastet anhängen
+    filtered += entries[40:]
     removed = len(entries) - len(filtered)
     if removed:
         print(f"  {removed} weitere(s) Duplikat(e) durch KI-Prüfung erkannt (unterschiedlicher Wortlaut, gleiches Thema)")
@@ -252,68 +347,6 @@ unabhängig davon, ob das Spiel/Studio dir bereits bekannt vorkommt
 
 Trifft KEINES dieser Kriterien zu, gilt das Thema als zu klein/nischig \
 für LOADOUT-NEWS."""
-
-RELEVANCE_BATCH_SIZE = 30  # Kandidaten pro Prüf-Aufruf (hält Prompt-Länge/Kosten im Rahmen)
-
-
-def filter_by_relevance(entries):
-    """Sortiert Kandidaten aus, die KEINES der RELEVANCE_CRITERIA erfüllen
-    — typischerweise Nischenspiele ohne nennenswerte Spielerbasis/Community.
-    Franchise-Feed-Einträge (priority=True) bestehen automatisch, da sie per
-    Definition schon Kriterium 1 erfüllen — dafür ist keine KI-Prüfung nötig.
-
-    Nutzt bewusst das günstige Haiku-Modell — auch das ist eine reine
-    Klassifikationsaufgabe, kein kreatives Schreiben."""
-    if not entries:
-        return entries
-
-    auto_pass = [e for e in entries if e.get("priority")]
-    to_check = [e for e in entries if not e.get("priority")]
-    if not to_check:
-        return auto_pass
-
-    # Batch-Größe begrenzen — wir brauchen ohnehin nur wenige zusätzliche
-    # Artikel pro Lauf, ein Prüfen von potenziell hunderten Kandidaten wäre
-    # unnötig teuer.
-    to_check = to_check[:RELEVANCE_BATCH_SIZE]
-    candidates_block = "\n".join(f"{i}: {e['title']}" for i, e in enumerate(to_check))
-
-    prompt = f"""{RELEVANCE_CRITERIA}
-
-Kandidaten (nummeriert, 0-basiert):
-{candidates_block}
-
-Antworte AUSSCHLIESSLICH mit einem JSON-Array der Nummern, die MINDESTENS
-EIN Kriterium erfüllen und damit relevant genug sind (z. B. [0, 2, 5]).
-Falls keiner der Kandidaten relevant ist: []. Keine Erklärung, kein
-Markdown, nur das JSON-Array."""
-
-    try:
-        response = client.messages.create(
-            model=DEDUP_MODEL,
-            max_tokens=500,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        text_blocks = [b.text for b in response.content if b.type == "text"]
-        if not text_blocks:
-            print("  ⚠ Relevanz-Prüfung: keine Antwort erhalten — lasse alle Kandidaten durch.", file=sys.stderr)
-            return entries
-        raw = text_blocks[-1].strip()
-        raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-        first_bracket = raw.find("[")
-        if first_bracket > 0:
-            raw = raw[first_bracket:]
-        relevant_indices = set(json.loads(raw, strict=False))
-    except Exception as e:
-        print(f"  ⚠ Relevanz-Prüfung fehlgeschlagen ({e}) — lasse alle Kandidaten durch (im Zweifel nicht zu streng filtern).", file=sys.stderr)
-        return entries
-
-    relevant = [e for i, e in enumerate(to_check) if i in relevant_indices]
-    filtered_out = len(to_check) - len(relevant)
-    if filtered_out:
-        print(f"  {filtered_out} Meldung(en) als zu nischig/irrelevant aussortiert (kein Relevanz-Kriterium erfüllt)")
-    return auto_pass + relevant
-
 
 def fetch_og_image(url, timeout=8):
     """Robuste og:image-Extraktion von der Original-Artikel-Seite, falls
@@ -533,15 +566,22 @@ def propose_analysis_topic(recent_titles, max_recent=40):
     """Lässt die KI aus einer zufälligen Auswahl von Formaten EIN Format +
     ein konkretes, aktuelles Thema dafür vorschlagen — noch OHNE den vollen
     Artikel zu recherchieren/schreiben. Gibt None zurück, falls kein
-    sinnvoller Vorschlag zustande kam."""
+    sinnvoller Vorschlag zustande kam.
+
+    RELEVANCE_CRITERIA wandert bewusst in einen zwischengespeicherten
+    System-Block: Diese Funktion kann pro Analyse-Artikel-Platz bis zu
+    3x hintereinander aufgerufen werden (siehe try_write_analysis_article),
+    falls ein Thema als Duplikat abgelehnt wird. Ab dem 2. Versuch
+    innerhalb desselben Laufs wird der (recht lange) Kriterien-Text dann
+    günstig aus dem Zwischenspeicher geladen, statt jedes Mal neu als
+    volle Eingabe-Tokens gezählt zu werden."""
     format_choices = random.sample(ANALYSIS_FORMATS, min(ANALYSIS_FORMAT_CHOICES_PER_RUN, len(ANALYSIS_FORMATS)))
     formats_block = "\n".join(f"- {key}: {label} — {desc}" for key, label, desc in format_choices)
     recent = [t for t in recent_titles if t][-max_recent:]
     recent_block = "\n".join(f"- {t}" for t in recent) if recent else "(noch keine)"
 
     prompt = f"""Wähle EINES der folgenden Artikel-Formate aus und schlage dafür \
-ein konkretes, aktuelles Thema vor, über das es sich JETZT lohnt zu schreiben. \
-Beachte dabei auch: {RELEVANCE_CRITERIA}
+ein konkretes, aktuelles Thema vor, über das es sich JETZT lohnt zu schreiben:
 
 {formats_block}
 
@@ -561,6 +601,8 @@ kein Markdown:
         response = client.messages.create(
             model=DEDUP_MODEL,  # günstiges Modell — reine Themenfindung, kein finaler Artikeltext
             max_tokens=400,
+            system=[{"type": "text", "text": f"Beachte bei deinem Themenvorschlag auch: {RELEVANCE_CRITERIA}",
+                     "cache_control": {"type": "ephemeral"}}],
             messages=[{"role": "user", "content": prompt}],
             tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 2}],
         )
@@ -830,19 +872,14 @@ def main():
 
     before_count = len(new_raw)
     new_raw = filter_duplicate_topics(new_raw, recent_source_titles)
-    new_raw = semantic_duplicate_filter(new_raw, recent_source_titles)
+    # Kombinierte Duplikat- UND Relevanz-Prüfung in einem einzigen
+    # KI-Aufruf (siehe filter_candidates_combined) statt zwei getrennter
+    # Aufrufe — spart Tokens/Kosten, prüft aber inhaltlich exakt dieselben
+    # zwei Kriterien wie zuvor.
+    new_raw = filter_candidates_combined(new_raw, recent_source_titles)
     skipped = before_count - len(new_raw)
     if skipped:
-        print(f"  {skipped} Meldung(en) insgesamt als Themen-Duplikat übersprungen")
-
-    # Relevanz-Filter: sortiert Nischenthemen aus, die keines der
-    # RELEVANCE_CRITERIA erfüllen (siehe oben) — läuft NACH der
-    # Duplikat-Prüfung, damit wir nur noch wirklich neue Kandidaten prüfen
-    # müssen, nicht auch schon aussortierte Duplikate.
-    before_relevance = len(new_raw)
-    new_raw = filter_by_relevance(new_raw)
-    if before_relevance - len(new_raw):
-        print(f"  {before_relevance - len(new_raw)} Meldung(en) als zu klein/nischig übersprungen")
+        print(f"  {skipped} Meldung(en) insgesamt aussortiert (Duplikat oder zu klein/nischig)")
 
     # Auswahl mit garantierter Franchise-Quote UND garantierter Gesamtzahl:
     # Es wird so lange der jeweils nächste Kandidat aus dem Pool probiert,
