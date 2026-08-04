@@ -408,6 +408,179 @@ def generate_all_slides(articles, output_dir, run_id):
     return paths
 
 
+# --- Kalender-Posts (Release-/Update-Kalender) ------------------------------
+# Dasselbe visuelle Grundprinzip wie bei den Artikel-Folien (2×2-Bildraster
+# + Logo im Kreuz auf der Intro-Folie, dann eine Folie pro Eintrag, feste
+# Outro-Folie) — aber mit frei wählbarem Text statt der festen
+# "X neue Artikel"-Formel, damit dieselbe Optik auch für Release-/Update-
+# Meldungen funktioniert. Bewusst als EIGENE Funktionen statt die
+# bestehenden make_intro_slide/make_article_slide zu verändern — so bleibt
+# das bereits laufende Artikel-Karussell garantiert unangetastet.
+
+def make_calendar_intro_slide(image_bytes_list, line1, line2, line3):
+    """Generalisierte Intro-Folie für Kalender-Posts: identisches 2×2-
+    Bildraster + Logo-im-Kreuz-Design wie make_intro_slide, aber mit 3 frei
+    wählbaren Textzeilen statt der festen Artikel-Anzahl-Formel — z. B.
+    für den Update-Kalender: ("3 NEUE UPDATES", "u. a. GTA 6 Season 5",
+    "SWIPE FÜR ALLE UPDATES →"), oder für den Release-Kalender:
+    ("TOP-RELEASES AUGUST", "+8 weitere Releases diesen Monat",
+    "SWIPE FÜR ALLE RELEASES →")."""
+    canvas = Image.new("RGB", (SIZE, SIZE), BG)
+
+    cell_w, cell_h = SIZE // 2, GRID_HEIGHT // 2
+    positions = [(0, 0), (cell_w, 0), (0, cell_h), (cell_w, cell_h)]
+    fallback_colors = [(28, 20, 46), (20, 30, 46), (40, 22, 34), (22, 36, 32)]
+
+    for i, pos in enumerate(positions):
+        image_bytes = image_bytes_list[i] if i < len(image_bytes_list) else None
+        cell_img = _decode_image(image_bytes, cell_w, cell_h, fallback_colors[i])
+        dark_overlay = Image.new("RGB", (cell_w, cell_h), BG)
+        cell_img = Image.blend(cell_img, dark_overlay, 0.28)
+        canvas.paste(cell_img, pos)
+
+    draw = ImageDraw.Draw(canvas)
+    line_w = 6
+    draw.rectangle([cell_w - line_w // 2, 0, cell_w + line_w // 2, GRID_HEIGHT], fill=BG)
+    draw.rectangle([0, cell_h - line_w // 2, SIZE, cell_h + line_w // 2], fill=BG)
+
+    fade_h = 90
+    fade = Image.new("L", (1, fade_h))
+    for y in range(fade_h):
+        fade.putpixel((0, y), int(255 * (y / fade_h)))
+    fade = fade.resize((SIZE, fade_h))
+    dark_strip = Image.new("RGB", (SIZE, fade_h), BG)
+    region = canvas.crop((0, GRID_HEIGHT - fade_h, SIZE, GRID_HEIGHT))
+    region = Image.composite(dark_strip, region, fade)
+    canvas.paste(region, (0, GRID_HEIGHT - fade_h))
+
+    logo_scale = 1.35
+    logo_icon_w = int(120 * logo_scale)
+    badge_pad = 22
+    badge_size = logo_icon_w + badge_pad * 2
+    badge = Image.new("RGBA", (badge_size, badge_size), (0, 0, 0, 0))
+    ImageDraw.Draw(badge).ellipse([0, 0, badge_size, badge_size], fill=(*BG, 235))
+    canvas.paste(badge, (cell_w - badge_size // 2, cell_h - badge_size // 2), badge)
+    draw_logo_icon(canvas, cell_w - logo_icon_w // 2, cell_h - logo_icon_w // 2, scale=logo_scale)
+
+    draw = ImageDraw.Draw(canvas)
+    ty = GRID_HEIGHT + 24
+
+    f_headline = poppins(42, "Bold")
+    headline = truncate_to_width(draw, line1, f_headline, SIZE - 100)
+    draw_centered_text(draw, headline, f_headline, ty, TEXT)
+    ty += 56
+
+    f_sub = poppins(24, "Medium")
+    sub = truncate_to_width(draw, line2, f_sub, SIZE - 140)
+    draw_centered_text(draw, sub, f_sub, ty, MUTED)
+    ty += 48
+
+    f_swipe = poppins(22, "Bold")
+    draw_centered_text(draw, line3, f_swipe, ty, VIOLET)
+
+    return canvas
+
+
+def make_calendar_item_slide(image_bytes, title, badge_text, badge_color, slide_num, total_slides):
+    """Generalisierte Item-Folie für Kalender-Posts: identischer Aufbau wie
+    make_article_slide (Bild-Hintergrund, dunkler Verlauf, Titel groß im
+    Vordergrund, Logo-Wasserzeichen, Folien-Zähler), aber mit frei
+    wählbarem Badge-Text/-Farbe statt einer festen Kategorie aus CAT_LABELS
+    — z. B. dem Genre eines Release-Titels oder dem Spielnamen bei einem
+    Update."""
+    bg = _decode_image(image_bytes, SIZE, SIZE, BG).convert("RGBA")
+
+    gradient = Image.new("L", (1, SIZE))
+    for y in range(SIZE):
+        t = y / SIZE
+        gradient.putpixel((0, y), min(int(90 + t * 165), 255))
+    gradient = gradient.resize((SIZE, SIZE))
+    dark_layer = Image.new("RGBA", (SIZE, SIZE), (*BG, 255))
+    bg = Image.composite(dark_layer, bg, gradient)
+
+    top_shade = Image.new("L", (1, 260))
+    for y in range(260):
+        top_shade.putpixel((0, y), int(120 * (1 - y / 260)))
+    top_shade = top_shade.resize((SIZE, 260))
+    top_dark = Image.new("RGBA", (SIZE, 260), (*BG, 255))
+    top_region = Image.composite(top_dark, bg.crop((0, 0, SIZE, 260)), top_shade)
+    bg.paste(top_region, (0, 0))
+
+    draw = ImageDraw.Draw(bg)
+
+    f_badge = poppins(24, "Bold")
+    badge_text = (badge_text or "").upper()
+    bbox = draw.textbbox((0, 0), badge_text, font=f_badge)
+    bw, bh = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    pad_x, pad_y = 20, 12
+    badge_bg = Image.new("RGBA", (bw + pad_x * 2, bh + pad_y * 2), (0, 0, 0, 0))
+    ImageDraw.Draw(badge_bg).rounded_rectangle(
+        [0, 0, bw + pad_x * 2, bh + pad_y * 2], radius=(bh + pad_y * 2) // 2, fill=(*badge_color, 235)
+    )
+    bg.paste(badge_bg, (60, 60), badge_bg)
+    draw.text((60 + pad_x, 60 + pad_y - bbox[1]), badge_text, font=f_badge, fill=BG)
+
+    draw_logo_icon(bg, SIZE - 60 - 64, 60, scale=0.53)
+    f_counter = poppins(22, "Medium")
+    counter_text = f"{slide_num} / {total_slides}"
+    cbbox = draw.textbbox((0, 0), counter_text, font=f_counter)
+    draw.text((SIZE - 60 - (cbbox[2] - cbbox[0]), 145), counter_text, font=f_counter, fill=MUTED)
+
+    f_title = poppins(56, "Bold")
+    max_text_width = SIZE - 120
+    lines = wrap_text_to_width(draw, title, f_title, max_text_width)
+    while len(lines) > 4 and f_title.size > 36:
+        f_title = poppins(f_title.size - 4, "Bold")
+        lines = wrap_text_to_width(draw, title, f_title, max_text_width)
+
+    line_height = int(f_title.size * 1.18)
+    total_text_h = line_height * len(lines)
+    y_start = SIZE - 100 - total_text_h
+    y = y_start
+    for line in lines:
+        draw.text((60, y), line, font=f_title, fill=TEXT)
+        y += line_height
+
+    draw.rounded_rectangle([60, y_start - 26, 110, y_start - 18], radius=4, fill=MAGENTA)
+
+    return bg.convert("RGB")
+
+
+def generate_calendar_slides(items, output_dir, run_id, line1, line2, line3,
+                              title_fn, badge_fn, badge_color=VIOLET, image_fn=None):
+    """Orchestriert eine komplette Kalender-Karussell-Folienserie (Intro +
+    eine Folie pro Eintrag), analog zu generate_all_slides() für Artikel.
+
+    items: Liste der anzuzeigenden Release-/Update-Einträge (bereits von
+    der aufrufenden Stelle auf die gewünschte Auswahl reduziert, z. B. die
+    Top 4 nach Hype).
+    title_fn/badge_fn: Funktionen, die aus einem Eintrag den Anzeige-Titel
+    bzw. Badge-Text ableiten (unterschiedlich für Releases vs. Updates).
+    image_fn: optionale Funktion zur Bild-URL-Ermittlung, Standard ist
+    einfach item.get('image')."""
+    os.makedirs(output_dir, exist_ok=True)
+    paths = []
+    image_fn = image_fn or (lambda item: item.get("image"))
+
+    image_bytes_by_item = [_download_image(image_fn(item)) for item in items]
+
+    intro = make_calendar_intro_slide(image_bytes_by_item, line1, line2, line3)
+    intro_path = os.path.join(output_dir, f"{run_id}-00-intro.jpg")
+    intro.save(intro_path, quality=90)
+    paths.append(intro_path)
+
+    total = len(items) + 2  # + Intro + Outro
+    for i, (item, image_bytes) in enumerate(zip(items, image_bytes_by_item), start=1):
+        slide = make_calendar_item_slide(
+            image_bytes, title_fn(item), badge_fn(item), badge_color, i + 1, total
+        )
+        slide_path = os.path.join(output_dir, f"{run_id}-{i:02d}-kalender.jpg")
+        slide.save(slide_path, quality=90)
+        paths.append(slide_path)
+
+    return paths
+
+
 if __name__ == "__main__":
     # Manueller Test-/Vorschau-Modus: erzeugt alle Folien-Typen mit
     # Beispieldaten in /tmp, ohne echte Artikel oder Netzwerkzugriff nötig.
