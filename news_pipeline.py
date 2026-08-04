@@ -229,6 +229,22 @@ beiden Listen leer ist: []."""
     return auto_pass + kept
 
 
+SEMANTIC_DEDUP_INSTRUCTIONS = """Du prüfst Themen-Kandidaten auf inhaltliche Duplikate. Du bekommst \
+eine Liste bereits veröffentlichter Themen und eine Liste neuer \
+Kandidaten. Finde alle Kandidaten, die INHALTLICH DASSELBE THEMA \
+behandeln wie entweder (a) eines der bereits veröffentlichten Themen, \
+ODER (b) einen ANDEREN Kandidaten in derselben Liste (z. B. wenn zwei \
+verschiedene Quellen dieselbe Meldung nur unterschiedlich formuliert \
+haben). Es zählt der inhaltliche Kern, nicht der Wortlaut — \
+unterschiedliche Quellen formulieren dieselbe Meldung oft komplett anders.
+
+Antworte AUSSCHLIESSLICH mit einem JSON-Array der Nummern, die als \
+Duplikat AUSSORTIERT werden sollen (bei mehreren Kandidaten zum selben \
+Thema: alle bis auf den ERSTEN in der Liste aussortieren). Beispiel: \
+[2, 5, 6]. Falls keine Duplikate gefunden wurden: []. Keine Erklärung, \
+kein Markdown, nur das JSON-Array."""
+
+
 def semantic_duplicate_filter(entries, recent_titles, max_recent=40):
     """Eigenständige Duplikat-Prüfung (ohne Relevanz-Check) — wird für
     Analyse-Artikel-Themenvorschläge genutzt, wo jeweils nur EIN einzelnes
@@ -247,7 +263,15 @@ def semantic_duplicate_filter(entries, recent_titles, max_recent=40):
     übereinstimmt, unabhängig vom Wortlaut.
 
     Nutzt bewusst ein günstiges, schnelles Modell (Haiku) statt Sonnet —
-    das ist eine reine Klassifikationsaufgabe, kein kreatives Schreiben."""
+    das ist eine reine Klassifikationsaufgabe, kein kreatives Schreiben.
+
+    Die statischen Anweisungen (SEMANTIC_DEDUP_INSTRUCTIONS) liegen
+    bewusst in einem zwischengespeicherten System-Block statt im
+    User-Prompt: Diese Funktion kann pro Analyse-Artikel-Platz bis zu 3x
+    hintereinander aufgerufen werden (bei jedem abgelehnten
+    Themenvorschlag, siehe try_write_analysis_article). Ab dem 2. Aufruf
+    innerhalb desselben Laufs wird der Anweisungstext dann günstig aus
+    dem Zwischenspeicher geladen statt neu als Eingabe-Tokens gezählt."""
     if not entries:
         return entries
 
@@ -264,25 +288,13 @@ def semantic_duplicate_filter(entries, recent_titles, max_recent=40):
 {recent_block}
 
 Neue Kandidaten (nummeriert, 0-basiert):
-{candidates_block}
-
-Aufgabe: Finde alle Kandidaten, die INHALTLICH DASSELBE THEMA behandeln
-wie entweder (a) eines der bereits veröffentlichten Themen, ODER (b) einen
-ANDEREN Kandidaten in der obigen Liste (z. B. wenn zwei verschiedene
-Quellen dieselbe Meldung nur unterschiedlich formuliert haben). Es zählt
-der inhaltliche Kern, nicht der Wortlaut — unterschiedliche Quellen
-formulieren dieselbe Meldung oft komplett anders.
-
-Antworte AUSSCHLIESSLICH mit einem JSON-Array der Nummern, die als
-Duplikat AUSSORTIERT werden sollen (bei mehreren Kandidaten zum selben
-Thema: alle bis auf den ERSTEN in der Liste aussortieren). Beispiel:
-[2, 5, 6]. Falls keine Duplikate gefunden wurden: []. Keine Erklärung,
-kein Markdown, nur das JSON-Array."""
+{candidates_block}"""
 
     try:
         response = client.messages.create(
             model=DEDUP_MODEL,
             max_tokens=500,
+            system=[{"type": "text", "text": SEMANTIC_DEDUP_INSTRUCTIONS, "cache_control": {"type": "ephemeral"}}],
             messages=[{"role": "user", "content": prompt}],
         )
         text_blocks = [b.text for b in response.content if b.type == "text"]
