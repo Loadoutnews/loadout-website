@@ -348,6 +348,37 @@ unabhängig davon, ob das Spiel/Studio dir bereits bekannt vorkommt
 Trifft KEINES dieser Kriterien zu, gilt das Thema als zu klein/nischig \
 für LOADOUT-NEWS."""
 
+def is_valid_image_url(url, timeout=8):
+    """Prüft ECHT per HTTP-Anfrage, ob eine Bild-URL wirklich lädt und
+    tatsächlich ein Bild liefert — nicht nur, ob irgendein Text vorhanden
+    ist. Das war die eigentliche Fehlerquelle bei den Analyse-Artikeln:
+    Eine von der KI vorgeschlagene oder von einer Quellseite abgeschnittene
+    Bild-URL kann kaputt/nicht mehr erreichbar sein, ohne dass das vorher
+    auffiel — dann zeigte die Website einfach eine leere, dunkle Fläche
+    statt eines echten Bildes, WEIL die Rückfallebenen (Quellseiten-Bild,
+    Platzhalter) nie zum Einsatz kamen, da die kaputte URL ja formal
+    "vorhanden" war.
+
+    Erst ein leichter HEAD-Aufruf (schnell), bei Bedarf (manche Server
+    unterstützen HEAD nicht richtig) ein GET-Aufruf als Rückfall."""
+    if not url:
+        return False
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+    try:
+        resp = requests.head(url, timeout=timeout, allow_redirects=True, headers=headers)
+        content_type = resp.headers.get("Content-Type", "")
+        if resp.status_code == 200 and content_type.startswith("image/"):
+            return True
+        # HEAD nicht eindeutig (manche Server liefern hier falsche/keine
+        # Content-Type-Angabe) — mit einem echten GET nachprüfen, bevor
+        # die URL verworfen wird.
+        resp = requests.get(url, timeout=timeout, stream=True, headers=headers)
+        content_type = resp.headers.get("Content-Type", "")
+        return resp.status_code == 200 and content_type.startswith("image/")
+    except Exception:
+        return False
+
+
 def fetch_og_image(url, timeout=8):
     """Robuste og:image-Extraktion von der Original-Artikel-Seite, falls
     der RSS-Feed selbst kein Bild mitliefert."""
@@ -413,6 +444,13 @@ englischsprachigen News-Meldung und schreibst daraus einen eigenständigen, \
 spannend geschriebenen deutschen Artikel.
 
 Regeln:
+- ABSOLUT ENTSCHEIDEND: Der GESAMTE Artikel (Titel, Teaser, jeder einzelne \
+Absatz, redaktionelle Einschätzung) muss zu 100 % auf Deutsch geschrieben \
+sein. Auch wenn die Quelle komplett auf Englisch ist: übersetze und \
+formuliere IMMER vollständig auf Deutsch. Verwende KEINE englischen Sätze \
+oder Satzteile — auch nicht als Zitat, in Anführungszeichen oder zur \
+Verdeutlichung. Eigennamen bleiben selbstverständlich im Original \
+(Spieltitel wie "GTA 6", Firmennamen wie "Rockstar Games", Personennamen).
 - Schreibe komplett in eigenen Worten. Übersetze NICHT wörtlich, formuliere neu.
 - Keine wörtlichen Zitate aus der Quelle übernehmen.
 - Ton: informativ, aber lebendig und für Gaming-Fans geschrieben, nicht trocken.
@@ -644,6 +682,15 @@ Dein konkretes Thema für diesen Artikel: {working_title}
 Dein Blickwinkel/These: {angle}
 
 Regeln:
+- ABSOLUT ENTSCHEIDEND: Der GESAMTE Artikel (Titel, Teaser, jeder \
+einzelne Absatz, redaktionelle Einschätzung) muss zu 100 % auf Deutsch \
+geschrieben sein — auch wenn deine recherchierten Quellen (Presseberichte, \
+Reddit-Threads, Steam-Charts, Twitch-Statistiken) komplett auf Englisch \
+sind. Übersetze und formuliere IMMER vollständig auf Deutsch. Verwende an \
+KEINER Stelle englische Sätze oder Satzteile — auch nicht als Zitat, in \
+Anführungszeichen oder zur Verdeutlichung. Eigennamen bleiben \
+selbstverständlich im Original (Spieltitel wie "GTA 6", Firmennamen wie \
+"Rockstar Games", Personennamen, Plattformnamen wie "Steam" oder "Twitch").
 - Recherchiere aktiv mit der Websuche über MEHRERE unabhängige Quellen \
 (z. B. mehrere Presseberichte, Verkaufscharts-Seiten, Foren/Reddit, \
 Streaming-Statistiken — je nach Thema passend). Ein einzelner Artikel \
@@ -752,13 +799,22 @@ def write_analysis_article(topic):
     # normale RSS-Artikel) oft eine "Hauptquelle", die selbst kein gutes
     # Bild hat (z. B. eine Chart-/Statistik-Seite oder ein Reddit-Thread).
     # Deshalb: 1) das von der KI aktiv recherchierte, thematisch passende
-    # Bild verwenden, 2) falls das fehlt, das Vorschaubild der Hauptquelle
-    # versuchen, 3) falls auch das fehlschlägt, ein dezentes, themen-
-    # bezogenes Platzhalterbild (wie auch beim Release-/Update-Kalender) —
-    # so steht NIE ein Analyse-Artikel ganz ohne Bild da.
+    # Bild verwenden, 2) falls das fehlt ODER nicht wirklich lädt, das
+    # Vorschaubild der Hauptquelle versuchen, 3) falls auch das fehlschlägt,
+    # ein dezentes, themenbezogenes Platzhalterbild (wie auch beim
+    # Release-/Update-Kalender) — so steht NIE ein Analyse-Artikel ganz
+    # ohne (oder mit einem kaputten) Bild da.
+    #
+    # WICHTIG: Jede Ebene wird per echtem HTTP-Aufruf verifiziert (siehe
+    # is_valid_image_url), nicht nur auf "ist überhaupt ein Text vorhanden"
+    # geprüft — genau das war zuvor die Fehlerquelle: eine kaputte/nicht
+    # erreichbare Bild-URL wurde als "vorhanden" akzeptiert und landete
+    # unverifiziert auf der Seite, wo sie als leere, dunkle Fläche erschien,
+    # statt dass die nächste Rückfallebene ausprobiert wurde.
     image = data.get("image_url")
-    if not image:
-        image = fetch_og_image(source_url)
+    if not image or not is_valid_image_url(image):
+        candidate = fetch_og_image(source_url)
+        image = candidate if candidate and is_valid_image_url(candidate) else None
     if not image:
         seed = re.sub(r"[^a-zA-Z0-9]", "", topic["working_title"]) or "analyse"
         image = f"https://picsum.photos/seed/loadout-analysis-{seed}/900/500"
@@ -896,8 +952,21 @@ def main():
     used_links = set()
 
     def try_write(entry):
+        # Dieselbe echte Erreichbarkeits-Prüfung wie bei den Analyse-
+        # Artikeln: Ein vom RSS-Feed geliefertes Bild ODER ein per
+        # og:image gefundenes Bild kann kaputt/nicht erreichbar sein —
+        # ohne Prüfung würde das unbemerkt als leere, dunkle Fläche auf
+        # der Seite landen. Erst wird das vom Feed gelieferte Bild
+        # geprüft, dann og:image von der Quellseite, zuletzt ein
+        # themenbezogener Platzhalter als letzte Absicherung.
+        if entry.get("image") and not is_valid_image_url(entry["image"]):
+            entry["image"] = None
         if not entry.get("image"):
-            entry["image"] = fetch_og_image(entry["link"])
+            candidate = fetch_og_image(entry["link"])
+            entry["image"] = candidate if candidate and is_valid_image_url(candidate) else None
+        if not entry.get("image"):
+            seed = re.sub(r"[^a-zA-Z0-9]", "", entry["title"]) or "artikel"
+            entry["image"] = f"https://picsum.photos/seed/loadout-{seed}/900/500"
         print(f"  ✎ Schreibe: {entry['title'][:70]}")
         article = write_article(entry)
         if article:
