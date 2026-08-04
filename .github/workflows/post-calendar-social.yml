@@ -1,0 +1,41 @@
+name: Post Calendar Updates to Social Media
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'releases.json'
+      - 'updates.json'
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python post_calendar_social.py
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_INSTAGRAM_CHANNEL_ID: ${{ secrets.BUFFER_INSTAGRAM_CHANNEL_ID }}
+          PUSH_SECRET: ${{ secrets.PUSH_SECRET }}
+          TUMBLR_CONSUMER_KEY: ${{ secrets.TUMBLR_CONSUMER_KEY }}
+          TUMBLR_CONSUMER_SECRET: ${{ secrets.TUMBLR_CONSUMER_SECRET }}
+          TUMBLR_OAUTH_TOKEN: ${{ secrets.TUMBLR_OAUTH_TOKEN }}
+          TUMBLR_OAUTH_TOKEN_SECRET: ${{ secrets.TUMBLR_OAUTH_TOKEN_SECRET }}
+          TUMBLR_BLOG_NAME: ${{ secrets.TUMBLR_BLOG_NAME }}
+          ZERNIO_API_KEY: ${{ secrets.ZERNIO_API_KEY }}
+          ZERNIO_REDDIT_ACCOUNT_ID: ${{ secrets.ZERNIO_REDDIT_ACCOUNT_ID }}
+          REDDIT_SUBREDDIT: ${{ secrets.REDDIT_SUBREDDIT }}
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add calendar-posted.json
+          git diff --staged --quiet || git commit -m "Kalender-Social-Post-Verlauf aktualisiert"
+          git push
