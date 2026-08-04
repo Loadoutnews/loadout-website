@@ -57,6 +57,7 @@
         <a href="../index.html" class="back-btn mono" style="text-decoration:none; display:inline-flex;">← ZURÜCK ZUM FEED</a>
         <div class="detail-art" style="background:url('https://assets-prd.ignimgs.com/2026/07/10/palworld-review-blogroll-03-1783652633647.jpg') center/cover;"></div>
         <span class="badge pc">PC</span>
+        
         <h1 class="display">Palworld im großen Check: Vom viralen &#x27;Pokémon mit Waffen&#x27;-Meme zum fertigen 1.0-Release</h1>
         <div class="byline">
           <div class="avatar"></div>
@@ -96,27 +97,27 @@
       <h3 class="mono" style="font-size:13px; color:var(--muted); margin-bottom:14px;">DAS KÖNNTE DICH AUCH INTERESSIEREN</h3>
       <div class="related-grid">
         
+        <a href="bac69bee11.html" class="related-card">
+          <div class="related-card-art" style="background:url('https://cdn.akamai.steamstatic.com/steam/apps/3527290/header.jpg') center/cover;"></div>
+          <div class="related-card-body">
+            <span class="badge pc" style="font-size:10px;">PC</span>
+            <h4>Peak vs. AAA: Wie ein 8-Euro-Kletterspiel die Steam-Charts pulverisiert</h4>
+          </div>
+        </a>
+        
+        <a href="a55ea4b9ea.html" class="related-card">
+          <div class="related-card-art" style="background:url('https://www.charlieintel.com/cdn-image/wp-content/uploads/2024/12/20/marvel-rivals-leaked-characters.jpg?width=1080&quality=75&format=auto') center/cover;"></div>
+          <div class="related-card-body">
+            <span class="badge pc" style="font-size:10px;">PC</span>
+            <h4>Marvel Rivals: Diese Helden verraten die Leaks als Nächstes</h4>
+          </div>
+        </a>
+        
         <a href="7f4c6339ac.html" class="related-card">
           <div class="related-card-art" style="background:url('https://cdn.mos.cms.futurecdn.net/UXNTpRCyXixcXKbeDhp8w3-1280-80.jpg') center/cover;"></div>
           <div class="related-card-body">
             <span class="badge pc" style="font-size:10px;">PC</span>
             <h4>Drei Jahre nach Release: Warum sich der Build-Wahnsinn in Rogue Trader jetzt erst richtig lohnt</h4>
-          </div>
-        </a>
-        
-        <a href="2f93021f7a.html" class="related-card">
-          <div class="related-card-art" style="background:url('https://www.charlieintel.com/cdn-image/wp-content/uploads/2024/12/23/iron-man-marvel-rivals.jpg?width=1080&quality=75&format=auto') center/cover;"></div>
-          <div class="related-card-body">
-            <span class="badge pc" style="font-size:10px;">PC</span>
-            <h4>Iron Man in Marvel Rivals: So holt ihr das Maximum aus Tony Starks Rüstung</h4>
-          </div>
-        </a>
-        
-        <a href="2df460dc98.html" class="related-card">
-          <div class="related-card-art" style="background:url('https://assets-prd.ignimgs.com/2026/07/30/twp2-1785444140393.jpg') center/cover;"></div>
-          <div class="related-card-body">
-            <span class="badge pc" style="font-size:10px;">PC</span>
-            <h4>Thimbleweed Park 2 angekündigt: Ron Gilbert bringt seine Mördermystery zurück</h4>
           </div>
         </a>
         
@@ -210,8 +211,6 @@
 </div>
 
 <script>
-  // --- Cookie-Consent (dieselbe Logik/Speicherung wie auf der Startseite,
-  // damit eine einmal getroffene Wahl seitenübergreifend gilt) -----------
   let cookieConsent = null;
   let consentDetails = { analytics: false, marketing: false };
   try {
@@ -268,7 +267,6 @@
     showCookieDetails();
   }
 
-  // --- Google Analytics (GA4) — dieselbe Mess-ID wie in index.html ------
   const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
   let analyticsLoaded = false;
 
@@ -285,7 +283,6 @@
     window.gtag('config', GA_MEASUREMENT_ID);
   }
 
-  // --- Google AdSense — dieselben IDs wie in index.html eintragen -------
   const ADSENSE_CLIENT_ID = 'ca-pub-8080055429345245';
   const AD_PLACEMENTS = {
     leaderboard: { slot: 'HIER_SLOT_ID_LEADERBOARD', format: 'horizontal' },
@@ -324,8 +321,6 @@
 
   initCookieBanner();
 
-  // PWA: Service Worker registrieren (funktioniert von jeder Seite aus,
-  // Pfad ist absolut).
   if("serviceWorker" in navigator){
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
@@ -334,9 +329,6 @@
 </script>
 
 <script>
-  // Zählt einen echten Seitenaufruf für diesen Artikel — auch wenn jemand
-  // direkt über einen geteilten Link oder eine Google-Suche hierher kommt,
-  // nicht nur über die Startseite.
   fetch('/api/track-view', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -351,7 +343,6 @@
 </script>
 
 <script>
-  // --- Reaktionen (Like/Dislike) -----------------------------------------
   const ARTICLE_ID = '35f692f57d';
   let myReactions = {};
   try { myReactions = JSON.parse(localStorage.getItem('loadout_reactions') || '{}'); } catch(e) {}
@@ -388,7 +379,6 @@
       .catch(() => {});
   }
 
-  // --- Kommentare -----------------------------------------------------------
   function loadComments(){
     fetch(`/api/comments?articleId=${encodeURIComponent(ARTICLE_ID)}`)
       .then(res => res.json())

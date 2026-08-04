@@ -57,6 +57,7 @@
         <a href="../index.html" class="back-btn mono" style="text-decoration:none; display:inline-flex;">← ZURÜCK ZUM FEED</a>
         <div class="detail-art" style="background:url('https://media.dotesports.com/wp-content/uploads/2025/12/bo7-warzone-apocalypse-camo-m15-mod-0.jpg') center/cover;"></div>
         <span class="badge konsole">Konsolen · Call of Duty</span>
+        
         <h1 class="display">BO7-Camo-Grind in Warzone: Season 4 macht die Jagd nach goldenen Waffen härter (und fairer)</h1>
         <div class="byline">
           <div class="avatar"></div>
@@ -210,8 +211,6 @@
 </div>
 
 <script>
-  // --- Cookie-Consent (dieselbe Logik/Speicherung wie auf der Startseite,
-  // damit eine einmal getroffene Wahl seitenübergreifend gilt) -----------
   let cookieConsent = null;
   let consentDetails = { analytics: false, marketing: false };
   try {
@@ -268,7 +267,6 @@
     showCookieDetails();
   }
 
-  // --- Google Analytics (GA4) — dieselbe Mess-ID wie in index.html ------
   const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
   let analyticsLoaded = false;
 
@@ -285,7 +283,6 @@
     window.gtag('config', GA_MEASUREMENT_ID);
   }
 
-  // --- Google AdSense — dieselben IDs wie in index.html eintragen -------
   const ADSENSE_CLIENT_ID = 'ca-pub-8080055429345245';
   const AD_PLACEMENTS = {
     leaderboard: { slot: 'HIER_SLOT_ID_LEADERBOARD', format: 'horizontal' },
@@ -324,8 +321,6 @@
 
   initCookieBanner();
 
-  // PWA: Service Worker registrieren (funktioniert von jeder Seite aus,
-  // Pfad ist absolut).
   if("serviceWorker" in navigator){
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
@@ -334,9 +329,6 @@
 </script>
 
 <script>
-  // Zählt einen echten Seitenaufruf für diesen Artikel — auch wenn jemand
-  // direkt über einen geteilten Link oder eine Google-Suche hierher kommt,
-  // nicht nur über die Startseite.
   fetch('/api/track-view', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -351,7 +343,6 @@
 </script>
 
 <script>
-  // --- Reaktionen (Like/Dislike) -----------------------------------------
   const ARTICLE_ID = '602b909e60';
   let myReactions = {};
   try { myReactions = JSON.parse(localStorage.getItem('loadout_reactions') || '{}'); } catch(e) {}
@@ -388,7 +379,6 @@
       .catch(() => {});
   }
 
-  // --- Kommentare -----------------------------------------------------------
   function loadComments(){
     fetch(`/api/comments?articleId=${encodeURIComponent(ARTICLE_ID)}`)
       .then(res => res.json())

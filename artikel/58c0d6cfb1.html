@@ -57,6 +57,7 @@
         <a href="../index.html" class="back-btn mono" style="text-decoration:none; display:inline-flex;">← ZURÜCK ZUM FEED</a>
         <div class="detail-art" style="background:url('https://assets-prd.ignimgs.com/2025/09/12/videoframe-5014890-1757686111723.png') center/cover;"></div>
         <span class="badge konsole">Konsolen</span>
+        
         <h1 class="display">Fire Emblem: Fortune&#x27;s Weave bekommt eigenen Nintendo Direct – das steckt dahinter</h1>
         <div class="byline">
           <div class="avatar"></div>
@@ -96,6 +97,14 @@
       <h3 class="mono" style="font-size:13px; color:var(--muted); margin-bottom:14px;">DAS KÖNNTE DICH AUCH INTERESSIEREN</h3>
       <div class="related-grid">
         
+        <a href="3962bdd6f5.html" class="related-card">
+          <div class="related-card-art" style="background:url('https://assets-prd.ignimgs.com/2026/06/02/wolverine-main-1780437427510.jpg') center/cover;"></div>
+          <div class="related-card-body">
+            <span class="badge konsole" style="font-size:10px;">Konsolen</span>
+            <h4>Marvel&#x27;s Wolverine: ESRB-Rating verspricht Blutbad, Kraftausdrücke – und nackte Hinterteile</h4>
+          </div>
+        </a>
+        
         <a href="b318ab9072.html" class="related-card">
           <div class="related-card-art" style="background:url('https://www.charlieintel.com/cdn-image/wp-content/uploads/2025/01/28/How-to-unlock-Feng-82-in-Black-Ops-6-Warzone.jpg?width=1080&quality=75&format=auto') center/cover;"></div>
           <div class="related-card-body">
@@ -109,14 +118,6 @@
           <div class="related-card-body">
             <span class="badge konsole" style="font-size:10px;">Konsolen</span>
             <h4>Black Ops 6 Zombies: So knackt ihr das Story-Rätsel von The Tomb</h4>
-          </div>
-        </a>
-        
-        <a href="8c8a50a621.html" class="related-card">
-          <div class="related-card-art" style="background:url('https://assets-prd.ignimgs.com/2026/06/26/megamanthumb-1782486210510.png') center/cover;"></div>
-          <div class="related-card-body">
-            <span class="badge konsole" style="font-size:10px;">Konsolen</span>
-            <h4>Schnäppchen-Alarm: Saros, Mega Man Star Force und Death Stranding 2 stark reduziert</h4>
           </div>
         </a>
         
@@ -210,8 +211,6 @@
 </div>
 
 <script>
-  // --- Cookie-Consent (dieselbe Logik/Speicherung wie auf der Startseite,
-  // damit eine einmal getroffene Wahl seitenübergreifend gilt) -----------
   let cookieConsent = null;
   let consentDetails = { analytics: false, marketing: false };
   try {
@@ -268,7 +267,6 @@
     showCookieDetails();
   }
 
-  // --- Google Analytics (GA4) — dieselbe Mess-ID wie in index.html ------
   const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
   let analyticsLoaded = false;
 
@@ -285,7 +283,6 @@
     window.gtag('config', GA_MEASUREMENT_ID);
   }
 
-  // --- Google AdSense — dieselben IDs wie in index.html eintragen -------
   const ADSENSE_CLIENT_ID = 'ca-pub-8080055429345245';
   const AD_PLACEMENTS = {
     leaderboard: { slot: 'HIER_SLOT_ID_LEADERBOARD', format: 'horizontal' },
@@ -324,8 +321,6 @@
 
   initCookieBanner();
 
-  // PWA: Service Worker registrieren (funktioniert von jeder Seite aus,
-  // Pfad ist absolut).
   if("serviceWorker" in navigator){
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
@@ -334,9 +329,6 @@
 </script>
 
 <script>
-  // Zählt einen echten Seitenaufruf für diesen Artikel — auch wenn jemand
-  // direkt über einen geteilten Link oder eine Google-Suche hierher kommt,
-  // nicht nur über die Startseite.
   fetch('/api/track-view', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -351,7 +343,6 @@
 </script>
 
 <script>
-  // --- Reaktionen (Like/Dislike) -----------------------------------------
   const ARTICLE_ID = '58c0d6cfb1';
   let myReactions = {};
   try { myReactions = JSON.parse(localStorage.getItem('loadout_reactions') || '{}'); } catch(e) {}
@@ -388,7 +379,6 @@
       .catch(() => {});
   }
 
-  // --- Kommentare -----------------------------------------------------------
   function loadComments(){
     fetch(`/api/comments?articleId=${encodeURIComponent(ARTICLE_ID)}`)
       .then(res => res.json())
