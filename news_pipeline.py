@@ -612,32 +612,58 @@ Original-Link: {entry['link']}"""
 # Thema kostet uns so nur den günstigen Vorschlags-Aufruf, nicht den vollen
 # Recherche- und Schreib-Aufwand.
 
-def propose_analysis_topic(recent_titles, max_recent=40):
-    """Lässt die KI aus einer zufälligen Auswahl von Formaten EIN Format +
-    ein konkretes, aktuelles Thema dafür vorschlagen — noch OHNE den vollen
+def propose_analysis_topic(recent_titles, rejected_this_run=None, show_all_formats=False, max_recent=40):
+    """Lässt die KI aus einer Auswahl von Formaten EIN Format + ein
+    konkretes, aktuelles Thema dafür vorschlagen — noch OHNE den vollen
     Artikel zu recherchieren/schreiben. Gibt None zurück, falls kein
     sinnvoller Vorschlag zustande kam.
 
+    show_all_formats: Bei den ersten Versuchen wird nur eine zufällige
+    Auswahl von Formaten gezeigt (mehr Abwechslung über viele Läufe
+    hinweg). Schlagen mehrere Versuche fehl, werden ALLE 11 Formate auf
+    einmal angeboten — maximiert die Trefferchance, damit garantiert ein
+    Analyse-Artikel pro Lauf zustande kommt.
+
+    rejected_this_run: Arbeits-Titel, die in FRÜHEREN Versuchen in
+    DEMSELBEN Lauf bereits als Duplikat abgelehnt wurden — werden der KI
+    explizit mitgeteilt, damit sie nicht denselben (bereits gescheiterten)
+    Vorschlag nochmal macht, sondern wirklich etwas anderes probiert.
+
     RELEVANCE_CRITERIA wandert bewusst in einen zwischengespeicherten
-    System-Block: Diese Funktion kann pro Analyse-Artikel-Platz bis zu
-    3x hintereinander aufgerufen werden (siehe try_write_analysis_article),
-    falls ein Thema als Duplikat abgelehnt wird. Ab dem 2. Versuch
-    innerhalb desselben Laufs wird der (recht lange) Kriterien-Text dann
-    günstig aus dem Zwischenspeicher geladen, statt jedes Mal neu als
-    volle Eingabe-Tokens gezählt zu werden."""
-    format_choices = random.sample(ANALYSIS_FORMATS, min(ANALYSIS_FORMAT_CHOICES_PER_RUN, len(ANALYSIS_FORMATS)))
+    System-Block: Diese Funktion kann pro Analyse-Artikel-Platz mehrfach
+    hintereinander aufgerufen werden. Ab dem 2. Versuch innerhalb
+    desselben Laufs wird der (recht lange) Kriterien-Text dann günstig
+    aus dem Zwischenspeicher geladen, statt jedes Mal neu als volle
+    Eingabe-Tokens gezählt zu werden."""
+    if show_all_formats:
+        format_choices = ANALYSIS_FORMATS
+    else:
+        format_choices = random.sample(ANALYSIS_FORMATS, min(ANALYSIS_FORMAT_CHOICES_PER_RUN, len(ANALYSIS_FORMATS)))
     formats_block = "\n".join(f"- {key}: {label} — {desc}" for key, label, desc in format_choices)
     recent = [t for t in recent_titles if t][-max_recent:]
     recent_block = "\n".join(f"- {t}" for t in recent) if recent else "(noch keine)"
 
+    rejected_block = ""
+    if rejected_this_run:
+        rejected_list = "\n".join(f"- {t}" for t in rejected_this_run)
+        rejected_block = f"""
+
+Diese Vorschläge hast DU SELBST in diesem Lauf bereits gemacht, sie \
+wurden aber als Duplikat abgelehnt — schlage jetzt etwas WIRKLICH \
+ANDERES vor, nicht nur leicht umformuliert:
+{rejected_list}"""
+
     prompt = f"""Wähle EINES der folgenden Artikel-Formate aus und schlage dafür \
-ein konkretes, aktuelles Thema vor, über das es sich JETZT lohnt zu schreiben:
+ein konkretes, aktuelles Thema vor, über das es sich JETZT lohnt zu schreiben. \
+Das Thema soll eine ECHTE, catchy Schlagzeile hergeben — etwas, das \
+Leser:innen wirklich als Neuigkeit wahrnehmen, nicht nur als "irgendeine \
+Datenauswertung".
 
 {formats_block}
 
 Bereits kürzlich behandelte Themen (NICHT nochmal vorschlagen, auch nicht \
 in einem anderen Format):
-{recent_block}
+{recent_block}{rejected_block}
 
 Antworte AUSSCHLIESSLICH mit einem validen JSON-Objekt, keine Erklärung, \
 kein Markdown:
@@ -735,13 +761,7 @@ JSON-Format:
   "cat": "pc" | "konsole" | "hardware" | "industrie",
   "game": "gta" | "minecraft" | "fortnite" | "cod" | "valorant" | "fifa" | null,
   "genre": "action" | "adventure" | "rpg" | "strategie" | "simulation" | "shooter" | "sport" | "rennspiel" | "horror" | "puzzle" | null,
-  "title": "Deutscher, knackiger Titel (max. 90 Zeichen)",
-  "teaser": "1-2 Sätze Anreißer (max. 200 Zeichen)",
-  "body": ["Absatz 1", "Absatz 2", "Absatz 3", "..."],
-  "editorial_take": "2-3 Sätze EIGENE redaktionelle Einschätzung/Meinung von LOADOUT, klar Position beziehend.",
-  "hype": <Zahl 0-100, wie relevant/aufregend das Thema für Gaming-Fans ist>,
-  "image_url": "<direkte URL zu einem thematisch passenden Bild, siehe oben>",
-  "primary_source_url": "<die EINE wichtigste/verlässlichste URL, auf die 'Zur Originalquelle' verlinken soll>",
+  "title": "Deutscher, catchy Titel wie eine ECHTE News-Schlagzeile (max. 90 Zeichen) — muss neugierig machen und eine konkrete, eigenständig herausgearbeitete Erkenntnis/News transportieren, NICHT einfach nur das Format benennen (schlecht: 'Verkaufszahlen-Analyse: GTA 6'; gut: 'GTA 6 stellt schon vor Release einen Rekord auf, den kein Spiel zuvor schaffte')",
   "primary_source_label": "<Name dieser Quelle, z. B. 'SteamDB' oder 'IGN'>"
 }}
 
@@ -857,13 +877,31 @@ def write_analysis_article(topic):
     }
 
 
-def try_write_analysis_article(recent_source_titles, max_attempts=3):
+def try_write_analysis_article(recent_source_titles, max_attempts=8):
     """Versucht bis zu max_attempts-mal, ein NEUES (nicht dupliziertes)
-    Analyse-Thema zu finden und vollständig zu schreiben. Gibt None zurück,
-    falls das nach mehreren Versuchen nicht gelingt — dann füllt die
-    normale RSS-Auswahl den entsprechenden Artikel-Platz stattdessen."""
+    Analyse-Thema zu finden und vollständig zu schreiben.
+
+    WICHTIG: Es gibt hier BEWUSST KEINEN Fallback, der im Zweifel ein
+    mögliches Duplikat einfach durchlässt — der LOADOUT-Original-Artikel
+    soll IMMER ein echtes, eigenständiges Thema sein, niemals eine
+    Wiederholung. Stattdessen wird die Themenfindung selbst robust genug
+    gemacht, dass ein kompletter Fehlschlag praktisch nicht vorkommt:
+    - Deutlich mehr Versuche (Standard: 8 statt früher 3)
+    - Ab Versuch 4 werden ALLE 11 Formate zur Auswahl gestellt statt nur
+      einer zufälligen Auswahl von 4 — maximiert die Trefferchance
+    - Bereits abgelehnte eigene Vorschläge aus diesem Lauf werden der KI
+      explizit mitgeteilt, damit sie wirklich etwas anderes probiert,
+      statt denselben Vorschlag nur leicht umzuformulieren
+
+    Gibt None zurück NUR im (bei dieser Robustheit extrem unwahrscheinlichen)
+    Fall, dass wirklich alle Versuche fehlschlagen — dann füllt die normale
+    RSS-Auswahl den Artikel-Platz stattdessen, und es wird LAUT gewarnt
+    (nicht nur eine Zeile im Protokoll), damit das auffällt."""
+    rejected_this_run = []
+
     for attempt in range(1, max_attempts + 1):
-        topic = propose_analysis_topic(recent_source_titles)
+        show_all_formats = attempt > 3
+        topic = propose_analysis_topic(recent_source_titles, rejected_this_run, show_all_formats=show_all_formats)
         if not topic or not topic.get("working_title"):
             continue
 
@@ -874,10 +912,12 @@ def try_write_analysis_article(recent_source_titles, max_attempts=3):
         after_text_filter = filter_duplicate_topics([fake_entry], recent_source_titles)
         if not after_text_filter:
             print(f"  ⚠ Analyse-Thema '{topic['working_title']}' ist Text-Duplikat — neuer Versuch ({attempt}/{max_attempts}).")
+            rejected_this_run.append(topic["working_title"])
             continue
         after_semantic_filter = semantic_duplicate_filter([fake_entry], recent_source_titles)
         if not after_semantic_filter:
             print(f"  ⚠ Analyse-Thema '{topic['working_title']}' ist inhaltliches Duplikat — neuer Versuch ({attempt}/{max_attempts}).")
+            rejected_this_run.append(topic["working_title"])
             continue
 
         print(f"  ✎ Schreibe Analyse-Artikel [{topic['format_label']}]: {topic['working_title'][:70]}")
@@ -885,8 +925,11 @@ def try_write_analysis_article(recent_source_titles, max_attempts=3):
         if article:
             return article
         print("    ⚠ Schreiben fehlgeschlagen — neuer Themenversuch.")
+        rejected_this_run.append(topic["working_title"])
 
-    print(f"  ⚠ Kein neues Analyse-Thema nach {max_attempts} Versuchen gefunden — Platz wird stattdessen mit normalem Artikel gefüllt.")
+    print(f"  ‼️ WARNUNG: Kein neues Analyse-Thema nach {max_attempts} Versuchen gefunden — "
+          f"LOADOUT-Original fehlt in diesem Lauf! Bitte prüfen (z. B. ob die RSS-Feeds/Websuche "
+          f"gerade erreichbar sind). Platz wird stattdessen mit normalem Artikel gefüllt.", file=sys.stderr)
     return None
 
 
