@@ -213,6 +213,108 @@ kein Markdown, nur das JSON-Array."""
     return filtered
 
 
+# --- Relevanz-Filter: nur wirklich große Spiele/Themen ---------------------
+# Bewusst als "ODER"-Kriterienliste aufgebaut, nicht als "UND": Ein Kandidat
+# muss NICHT alle Kriterien erfüllen — schon EIN einziges reicht, damit ein
+# Thema als relevant genug gilt. Das verhindert, dass echte, aber ungewöhnlich
+# eingeordnete große Themen fälschlich aussortiert werden, weil sie zufällig
+# nur eines der vielen möglichen "großen" Merkmale zeigen.
+RELEVANCE_CRITERIA = """Ein Thema/Spiel gilt als relevant genug für einen LOADOUT-Artikel, \
+wenn es MINDESTENS EINES der folgenden Kriterien erfüllt (nicht alle nötig \
+— schon eines reicht):
+
+1. Das Spiel gehört zu den 6 großen Haupt-Franchises: GTA, Minecraft, \
+Fortnite, Call of Duty, Valorant/League of Legends, FIFA/EA Sports FC
+2. Das Spiel/die Marke stammt von einem großen, bekannten AAA-Studio/ \
+Publisher (z. B. Rockstar, Nintendo, Sony, Microsoft/Xbox Game Studios, \
+Valve, Epic Games, Activision Blizzard, EA, Ubisoft, CD Projekt Red, \
+FromSoftware, Bethesda, Square Enix, Capcom, Bandai Namco, Riot Games)
+3. Das Spiel gehört zu einer weiteren, wirklich etablierten großen \
+Franchise (auch außerhalb der 6 Haupt-Franchises), z. B. Zelda, Pokémon, \
+Elden Ring/Dark Souls, Assassin's Creed, Final Fantasy, Resident Evil, \
+Diablo, World of Warcraft, Overwatch, Apex Legends, PUBG, Halo, \
+God of War, Spider-Man, The Last of Us, Roblox, Among Us, Palworld
+4. Das Spiel hat nachweislich Millionen aktive Spieler:innen oder eine \
+sehr große, aktive Online-Community (großer Subreddit/Discord)
+5. Die Meldung betrifft eine ganze Plattform/Konsole (PlayStation, Xbox, \
+Nintendo Switch, Steam, Epic Games Store) statt eines einzelnen, kleinen \
+Nischenspiels
+6. Es handelt sich um eine bedeutende Branchen-Meldung (große Übernahme, \
+große Entlassungswelle, wichtige Regulierung/Gesetzesänderung) — \
+unabhängig davon, wie groß das konkret betroffene Spiel ist
+7. Es handelt sich um einen aktuellen, großen Esport-Wettbewerb mit \
+erheblichem Preisgeld oder großer Zuschauerzahl
+8. Das Spiel hat kürzlich einen bedeutenden Award gewonnen oder war für \
+einen großen Award nominiert (z. B. The Game Awards)
+9. Mehrere unabhängige, große Fachmedien berichten gleichzeitig über \
+dasselbe Thema — das ist selbst schon ein starkes Relevanz-Signal, \
+unabhängig davon, ob das Spiel/Studio dir bereits bekannt vorkommt
+
+Trifft KEINES dieser Kriterien zu, gilt das Thema als zu klein/nischig \
+für LOADOUT-NEWS."""
+
+RELEVANCE_BATCH_SIZE = 30  # Kandidaten pro Prüf-Aufruf (hält Prompt-Länge/Kosten im Rahmen)
+
+
+def filter_by_relevance(entries):
+    """Sortiert Kandidaten aus, die KEINES der RELEVANCE_CRITERIA erfüllen
+    — typischerweise Nischenspiele ohne nennenswerte Spielerbasis/Community.
+    Franchise-Feed-Einträge (priority=True) bestehen automatisch, da sie per
+    Definition schon Kriterium 1 erfüllen — dafür ist keine KI-Prüfung nötig.
+
+    Nutzt bewusst das günstige Haiku-Modell — auch das ist eine reine
+    Klassifikationsaufgabe, kein kreatives Schreiben."""
+    if not entries:
+        return entries
+
+    auto_pass = [e for e in entries if e.get("priority")]
+    to_check = [e for e in entries if not e.get("priority")]
+    if not to_check:
+        return auto_pass
+
+    # Batch-Größe begrenzen — wir brauchen ohnehin nur wenige zusätzliche
+    # Artikel pro Lauf, ein Prüfen von potenziell hunderten Kandidaten wäre
+    # unnötig teuer.
+    to_check = to_check[:RELEVANCE_BATCH_SIZE]
+    candidates_block = "\n".join(f"{i}: {e['title']}" for i, e in enumerate(to_check))
+
+    prompt = f"""{RELEVANCE_CRITERIA}
+
+Kandidaten (nummeriert, 0-basiert):
+{candidates_block}
+
+Antworte AUSSCHLIESSLICH mit einem JSON-Array der Nummern, die MINDESTENS
+EIN Kriterium erfüllen und damit relevant genug sind (z. B. [0, 2, 5]).
+Falls keiner der Kandidaten relevant ist: []. Keine Erklärung, kein
+Markdown, nur das JSON-Array."""
+
+    try:
+        response = client.messages.create(
+            model=DEDUP_MODEL,
+            max_tokens=500,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text_blocks = [b.text for b in response.content if b.type == "text"]
+        if not text_blocks:
+            print("  ⚠ Relevanz-Prüfung: keine Antwort erhalten — lasse alle Kandidaten durch.", file=sys.stderr)
+            return entries
+        raw = text_blocks[-1].strip()
+        raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        first_bracket = raw.find("[")
+        if first_bracket > 0:
+            raw = raw[first_bracket:]
+        relevant_indices = set(json.loads(raw, strict=False))
+    except Exception as e:
+        print(f"  ⚠ Relevanz-Prüfung fehlgeschlagen ({e}) — lasse alle Kandidaten durch (im Zweifel nicht zu streng filtern).", file=sys.stderr)
+        return entries
+
+    relevant = [e for i, e in enumerate(to_check) if i in relevant_indices]
+    filtered_out = len(to_check) - len(relevant)
+    if filtered_out:
+        print(f"  {filtered_out} Meldung(en) als zu nischig/irrelevant aussortiert (kein Relevanz-Kriterium erfüllt)")
+    return auto_pass + relevant
+
+
 def fetch_og_image(url, timeout=8):
     """Robuste og:image-Extraktion von der Original-Artikel-Seite, falls
     der RSS-Feed selbst kein Bild mitliefert."""
@@ -438,7 +540,8 @@ def propose_analysis_topic(recent_titles, max_recent=40):
     recent_block = "\n".join(f"- {t}" for t in recent) if recent else "(noch keine)"
 
     prompt = f"""Wähle EINES der folgenden Artikel-Formate aus und schlage dafür \
-ein konkretes, aktuelles Thema vor, über das es sich JETZT lohnt zu schreiben:
+ein konkretes, aktuelles Thema vor, über das es sich JETZT lohnt zu schreiben. \
+Beachte dabei auch: {RELEVANCE_CRITERIA}
 
 {formats_block}
 
@@ -731,6 +834,15 @@ def main():
     skipped = before_count - len(new_raw)
     if skipped:
         print(f"  {skipped} Meldung(en) insgesamt als Themen-Duplikat übersprungen")
+
+    # Relevanz-Filter: sortiert Nischenthemen aus, die keines der
+    # RELEVANCE_CRITERIA erfüllen (siehe oben) — läuft NACH der
+    # Duplikat-Prüfung, damit wir nur noch wirklich neue Kandidaten prüfen
+    # müssen, nicht auch schon aussortierte Duplikate.
+    before_relevance = len(new_raw)
+    new_raw = filter_by_relevance(new_raw)
+    if before_relevance - len(new_raw):
+        print(f"  {before_relevance - len(new_raw)} Meldung(en) als zu klein/nischig übersprungen")
 
     # Auswahl mit garantierter Franchise-Quote UND garantierter Gesamtzahl:
     # Es wird so lange der jeweils nächste Kandidat aus dem Pool probiert,
