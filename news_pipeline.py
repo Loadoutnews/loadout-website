@@ -142,7 +142,7 @@ def filter_duplicate_topics(entries, already_covered_titles):
     return kept
 
 
-def filter_candidates_combined(entries, recent_titles, max_recent=40, max_batch=40):
+def filter_candidates_combined(entries, recent_titles, max_recent=40, max_batch=12):
     """Kombiniert semantic_duplicate_filter UND filter_by_relevance in
     EINEM einzigen KI-Aufruf statt zwei separaten — spart die doppelten
     Anweisungs-/Kandidatenlisten-Tokens und einen kompletten Aufruf pro
@@ -151,6 +151,15 @@ def filter_candidates_combined(entries, recent_titles, max_recent=40, max_batch=
     abgefragt. Wird für die Haupt-Kandidatenliste aus den RSS-Feeds
     genutzt (dort laufen beide Prüfungen ohnehin immer nacheinander auf
     derselben Liste — ideal zum Zusammenlegen).
+
+    max_batch bewusst knapp bemessen (12 statt früher 40): Pro Lauf werden
+    ohnehin nur MAX_ARTICLES_PER_RUN Artikel geschrieben (davon einer ein
+    Analyse-Artikel), also braucht es realistisch nur ~3 verwendbare
+    RSS-Kandidaten. 12 geprüfte Kandidaten geben reichlich Reserve, falls
+    einzelne beim Schreiben fehlschlagen oder aussortiert werden — jeder
+    darüber hinaus geprüfte Kandidat würde aber nur Tokens kosten, ohne je
+    verwendet zu werden. Die Prioritäts-Einträge (Franchise-Feeds) sind
+    davon nicht betroffen, die bestehen ohnehin automatisch.
 
     Für Analyse-Artikel-Themenvorschläge (nur EIN Kandidat, andere
     Aufrufstelle) bleibt semantic_duplicate_filter separat im Einsatz —
@@ -360,6 +369,15 @@ unabhängig davon, ob das Spiel/Studio dir bereits bekannt vorkommt
 Trifft KEINES dieser Kriterien zu, gilt das Thema als zu klein/nischig \
 für LOADOUT-NEWS."""
 
+# Merkt sich innerhalb EINES Laufs, welche Bild-URLs bereits geprüft
+# wurden. Dieselbe URL kann in einem Lauf mehrfach auftauchen (z. B. wenn
+# das RSS-Bild und das og:image einer Quellseite identisch sind, oder wenn
+# mehrere Meldungen auf dasselbe Pressebild verweisen) — ohne diesen
+# Zwischenspeicher würde dafür jedes Mal erneut eine echte HTTP-Anfrage
+# rausgehen, was Laufzeit kostet und die Quellserver unnötig belastet.
+_image_validation_cache = {}
+
+
 def is_valid_image_url(url, timeout=8):
     """Prüft ECHT per HTTP-Anfrage, ob eine Bild-URL wirklich lädt und
     tatsächlich ein Bild liefert — nicht nur, ob irgendein Text vorhanden
@@ -372,28 +390,49 @@ def is_valid_image_url(url, timeout=8):
     "vorhanden" war.
 
     Erst ein leichter HEAD-Aufruf (schnell), bei Bedarf (manche Server
-    unterstützen HEAD nicht richtig) ein GET-Aufruf als Rückfall."""
+    unterstützen HEAD nicht richtig) ein GET-Aufruf als Rückfall.
+    Ergebnisse werden pro Lauf zwischengespeichert (siehe
+    _image_validation_cache oben)."""
     if not url:
         return False
+    if url in _image_validation_cache:
+        return _image_validation_cache[url]
+
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+    result = False
     try:
         resp = requests.head(url, timeout=timeout, allow_redirects=True, headers=headers)
         content_type = resp.headers.get("Content-Type", "")
         if resp.status_code == 200 and content_type.startswith("image/"):
-            return True
-        # HEAD nicht eindeutig (manche Server liefern hier falsche/keine
-        # Content-Type-Angabe) — mit einem echten GET nachprüfen, bevor
-        # die URL verworfen wird.
-        resp = requests.get(url, timeout=timeout, stream=True, headers=headers)
-        content_type = resp.headers.get("Content-Type", "")
-        return resp.status_code == 200 and content_type.startswith("image/")
+            result = True
+        else:
+            # HEAD nicht eindeutig (manche Server liefern hier falsche/keine
+            # Content-Type-Angabe) — mit einem echten GET nachprüfen, bevor
+            # die URL verworfen wird. stream=True, damit nur die Kopfdaten
+            # geladen werden und nicht das komplette Bild.
+            resp = requests.get(url, timeout=timeout, stream=True, headers=headers)
+            content_type = resp.headers.get("Content-Type", "")
+            result = resp.status_code == 200 and content_type.startswith("image/")
+            resp.close()
     except Exception:
-        return False
+        result = False
+
+    _image_validation_cache[url] = result
+    return result
 
 
-def fetch_og_image(url, timeout=8):
+def fetch_og_image(url, timeout=8, max_bytes=200_000):
     """Robuste og:image-Extraktion von der Original-Artikel-Seite, falls
-    der RSS-Feed selbst kein Bild mitliefert."""
+    der RSS-Feed selbst kein Bild mitliefert.
+
+    Lädt die Seite BEWUSST nur teilweise: Das gesuchte og:image-Meta-Tag
+    steht immer im <head>, also in den ersten Kilobytes des Dokuments.
+    Grosse Nachrichtenseiten sind aber oft mehrere hundert Kilobyte gross
+    (Artikeltext, eingebettete Skripte, Kommentare) — die komplett
+    herunterzuladen, nur um die ersten paar Zeilen auszulesen, verschwendet
+    bei jedem einzelnen Artikel unnötig Zeit und Datenverkehr. Deshalb wird
+    stückweise gelesen und der Download abgebrochen, sobald entweder das
+    </head> erreicht ist oder max_bytes überschritten wurden."""
     if not url:
         return None
     from urllib.parse import urljoin
@@ -406,7 +445,7 @@ def fetch_og_image(url, timeout=8):
     ]
     try:
         resp = requests.get(
-            url, timeout=timeout,
+            url, timeout=timeout, stream=True,
             headers={
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
                 "Accept-Language": "de-DE,de;q=0.9,en;q=0.8",
@@ -414,8 +453,22 @@ def fetch_og_image(url, timeout=8):
         )
         if resp.status_code != 200:
             return None
+
+        html_head = ""
+        for chunk in resp.iter_content(chunk_size=16_384, decode_unicode=True):
+            if not chunk:
+                continue
+            # decode_unicode kann je nach Server-Antwort weiterhin Bytes
+            # liefern — dann selbst dekodieren, damit die Suche funktioniert.
+            if isinstance(chunk, bytes):
+                chunk = chunk.decode(resp.encoding or "utf-8", errors="ignore")
+            html_head += chunk
+            if "</head>" in html_head.lower() or len(html_head) >= max_bytes:
+                break
+        resp.close()
+
         for pattern in patterns:
-            match = re.search(pattern, resp.text, re.I)
+            match = re.search(pattern, html_head, re.I)
             if match:
                 return urljoin(url, match.group(1))
     except Exception:
@@ -975,11 +1028,13 @@ def main():
     # hinzugefügt, damit die RSS-Auswahl unten nicht versehentlich dasselbe
     # Thema nochmal aus einer Presse-Meldung heraus verarbeitet.
     print(f"→ Erstelle {ANALYSIS_ARTICLES_PER_RUN} eigenständige Analyse-Artikel...")
+    analysis_written = 0
     for _ in range(ANALYSIS_ARTICLES_PER_RUN):
         analysis_article = try_write_analysis_article(recent_source_titles)
         if analysis_article:
             written.append(analysis_article)
             recent_source_titles.append(analysis_article["source_title"])
+            analysis_written += 1
 
     before_count = len(new_raw)
     new_raw = filter_duplicate_topics(new_raw, recent_source_titles)
@@ -1069,8 +1124,12 @@ def main():
     with open(ARCHIVE_FILE, "w", encoding="utf-8") as f:
         json.dump(archive, f, ensure_ascii=False, indent=2)
 
-    print(f"✓ {len(written)} neue Artikel geschrieben. "
+    print(f"✓ {len(written)} neue Artikel geschrieben "
+          f"(davon {analysis_written} LOADOUT-Original). "
           f"{len(all_articles)} aktuell in articles.json, {len(archive)} insgesamt im Archiv.")
+    if analysis_written < ANALYSIS_ARTICLES_PER_RUN:
+        print(f"‼️ ACHTUNG: Es fehlt/fehlen {ANALYSIS_ARTICLES_PER_RUN - analysis_written} "
+              f"LOADOUT-Original-Artikel in diesem Lauf — siehe Warnung oben.", file=sys.stderr)
 
 
 if __name__ == "__main__":
