@@ -1,5 +1,88 @@
 [
   {
+    "id": "036a6cf129",
+    "cat": "industrie",
+    "game": "cod",
+    "genre": "shooter",
+    "title": "G2 Esports triumphiert in Paris – die 1,8-Millionen-Dollar-Jagd bei Black Ops 7 startet",
+    "teaser": "Paris ist in dieser Woche das Epizentrum der Call-of-Duty-Welt: G2 Esports hat sich mit einer dramatischen Aufholjagd die Warzone-Krone der Esports World Cup 2026 gesichert und schickt sich nun an, auch beim großen Black-Ops-7-Turnier mit 1,8 Millionen Dollar Preisgeld ein Wörtchen mitzureden. LOADOUT ordnet die wichtigsten Storylines der Woche ein.",
+    "body": [],
+    "editorial_take": "",
+    "source_title": "Call of Duty Black Ops 7 at Esports World Cup 2026",
+    "date": "05. August 2026",
+    "platform": "LOADOUT-Analyse",
+    "hype": 50,
+    "source": "https://loadout-news.com",
+    "sourceLabel": "Esports World Cup",
+    "image": "https://picsum.photos/seed/loadout-analysis-CallofDutyBlackOps7atEsportsWorldCup2026/900/500",
+    "content_type": "analysis",
+    "analysis_format": "esport_rueckblick"
+  },
+  {
+    "id": "c5d8dcd67e",
+    "cat": "pc",
+    "game": null,
+    "genre": "shooter",
+    "title": "The Division Resurgence: So funktioniert PvP in Dark Zone und Conflict",
+    "teaser": "Der Mobile-Ableger von The Division ist jetzt auch auf Steam – und bringt Dark Zone sowie Conflict als PvP-Kernmodi mit an den PC.",
+    "body": [
+      "The Division Resurgence war ursprünglich als reines Mobile-Spiel gestartet, hat sich aber inzwischen zu einem waschechten Cross-Platform-Titel gemausert. Wer auf PvP-Action steht, findet im Spiel zwei zentrale Wege, sich mit anderen Agenten zu messen: die berüchtigte Dark Zone und den Modus Conflict. Die offene Spielwelt selbst bleibt dabei komplett PvP-frei – wer sich duellieren will, muss aktiv über das Activity-Playlist-Menü in die entsprechenden Bereiche wechseln.",
+      "In der Dark Zone handelt es sich um eine klassische PvEvP-Extraktionszone: Spieler ziehen durch kontaminierte Gebiete, sammeln wertvolle Beute ein und müssen diese anschließend per Helikopter extrahieren. Wer dabei zum Rogue-Agenten wird, kann anderen die Beute klauen, riskiert aber selbst zur Zielscheibe für alle anderen Spieler in der Zone zu werden. Conflict funktioniert dagegen als reiner 4v4-Wettkampfmodus, angelehnt an klassische Domination-Formate, wie man sie etwa aus Call of Duty kennt: Zwei Teams kämpfen um die Kontrolle über strategische Punkte und sammeln dabei Erfahrung sowie Ausrüstung. Wichtig zu wissen: Der Erfolg in Conflict hängt stark von der eigenen Gear-Qualität ab, weshalb Neueinsteiger hier zunächst kaum Schaden anrichten, aber dennoch Fortschritt für Kommendationspunkte sammeln können.",
+      "Der Zeitpunkt der Guide-Veröffentlichung ist kein Zufall: Erst am 5. August 2026 ist The Division Resurgence offiziell auch auf Steam gestartet, nachdem es bereits seit Ende März auf iOS und Android sowie seit Ende April in der Early-Access-Phase über Ubisoft Connect für PC verfügbar war. Damit dürften gerade viele neue PC-Spieler zum ersten Mal in die Dark Zone und nach Conflict schauen. <cite index=\"18-1\">Das Spiel unterstützt vollständiges Cross-Play und Cross-Progression, sodass Spieler ihren Fortschritt nahtlos zwischen Mobile- und PC-Plattformen fortsetzen können.</cite>",
+      "Die Reaktionen auf den PC-Launch fallen allerdings gespalten aus. <cite index=\"19-2\">Auf Steam werden die Nutzerbewertungen aktuell als größtenteils negativ eingestuft, wobei nur 28 Prozent der 242 Rezensionen positiv ausfallen.</cite> In Community-Foren wie NeoGAF wird zudem häufig die Frage gestellt, warum man Resurgence spielen sollte, wenn Division 1 und 2 bereits verfügbar sind – Kritiker befürchten vor allem aggressive Mikrotransaktionen im Free-to-Play-Modell. Auf der Mobile-Seite sieht das Bild deutlich freundlicher aus: Dort sammelte das Spiel bereits Zehntausende positive Bewertungen, was zeigt, dass die Zielgruppen offenbar unterschiedlich auf das Spiel reagieren. Einige Fachmedien betonen dagegen, dass Resurgence trotz seines Mobile-Ursprungs spielerisch durchaus überzeugen kann und mit seinem taktischen Deckungssystem und der Loot-Extraktion an die Stärken der Hauptreihe anknüpft."
+    ],
+    "editorial_take": "Aus unserer Sicht ist die Idee, das mobile Division-Erlebnis samt PvP-Systemen wie Dark Zone und Conflict nahtlos auf den PC zu bringen, grundsätzlich clever – gerade Cross-Progression ist ein echtes Pfund. Die durchwachsenen Steam-Reviews zeigen aber deutlich, dass PC-Spieler höhere Ansprüche an ein Division-Spiel haben als mobile Nutzer, und dass die Skepsis gegenüber Free-to-Play-Mikrotransaktionen in einer etablierten Kernreihe nicht einfach verschwindet. Wer offen für ein etwas reduzierteres, aber kostenloses Division-Erlebnis ist, kann in Conflict und Dark Zone trotzdem spannende PvP-Duelle erleben – Wunder sollte man hier aber nicht erwarten.",
+    "source_title": "All PvP activities in The Division Resurgence",
+    "date": "05. August 2026",
+    "platform": "Dot Esports",
+    "hype": 48,
+    "source": "https://dotesports.com/mobile/guides/the-division-resurgence-pvp",
+    "sourceLabel": "Dot Esports",
+    "image": "https://media.dotesports.com/wp-content/uploads/2026/08/the-division-resurgence-street-gunfight.webp"
+  },
+  {
+    "id": "bc1ac5ca86",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "title": "Skandal um Pokémon-Firma: Ex-Manager soll Kameras in Bürotoiletten versteckt haben",
+    "teaser": "Ein früherer Engineering-Direktor der Pokémon Company soll jahrelang Frauen und Kinder in Bürotoiletten heimlich gefilmt haben. Jetzt steht das Unternehmen selbst vor Gericht.",
+    "body": [
+      "Was als vermeintlich harmlose Entdeckung in einer Starbucks-Toilette in Kirkland begann, hat sich zu einem der düstersten Skandale in der jüngeren Geschichte der Pokémon Company entwickelt. Laut übereinstimmenden Berichten mehrerer US-Medien fand eine Filialleiterin im Oktober 2025 eine kleine, unter dem Waschbecken versteckte Kamera, die direkt auf die Toilette gerichtet war. Über Sicherheitsaufnahmen und einen winzigen Kartenzahlungsbeleg über 7,89 US-Dollar führten die Ermittlungen zu Ben Tsai, damals 44 Jahre alt und Director of Engineering bei The Pokémon Company International am Firmensitz in Bellevue, Washington.",
+      "Was die Ermittler anschließend auf beschlagnahmten Geräten in Tsais Wohnung fanden, sprengt den ursprünglichen Verdacht bei weitem. <cite index=\"6-9,6-10\">Eine forensische Auswertung der Geräte förderte hunderte Aufnahmen von versteckten Kameras zutage, darunter 89 Videos, die angeblich in den Bürotoiletten der Pokémon-Niederlassung gefilmt und in Ordnern mit den Namen Pokémon 29 und Pokémon 27 gespeichert waren.</cite> <cite index=\"8-3\">Bislang wurden vier Opfer anhand des Materials identifiziert</cite>, doch Anwälte gehen davon aus, dass die tatsächliche Zahl deutlich höher liegen könnte. <cite index=\"6-8\">Tsai selbst soll gegenüber der Polizei angegeben haben, seit 2017 nicht mehr als fünfzig Mal heimlich gefilmt zu haben</cite> — eine Aussage, die angesichts der Fundmenge stark angezweifelt wird. Neben dem Pokémon-Büro wurden weitere Aufnahmen aus einer Starbucks-Filiale, einem Safeway-Supermarkt und aus seinem eigenen Zuhause sichergestellt. Tsai wurde inzwischen wegen Voyeurismus ersten Grades sowie mehrerer Anklagepunkte im Zusammenhang mit Missbrauchsdarstellungen von Minderjährigen angeklagt und sitzt derzeit gegen eine Kaution von 500.000 US-Dollar in Untersuchungshaft. Sein Anwalt betonte, sein Mandant werde sich in allen Punkten für nicht schuldig erklären.",
+      "Für die Pokémon Company selbst wird die Sache nun juristisch brisant: Eine ehemalige Mitarbeiterin, die unter dem Pseudonym Jane Doe klagt und laut Berichten fünf Jahre für das Unternehmen tätig war, hat vergangene Woche vor einem Gericht im King County eine Sammelklage eingereicht. Sie möchte damit alle Frauen und Mädchen vertreten, die zwischen 2017 und dem 25. Juli 2026 die Toiletten im Bellevue-Büro genutzt haben. Der Vorwurf an das Unternehmen lautet Fahrlässigkeit: Man habe es versäumt, Tsai angemessen zu schulen oder zu kontrollieren, obwohl es offenbar Warnzeichen gegeben habe. Ein Anwalt der Klägerseite äußerte gegenüber der Presse Zweifel daran, dass das gefundene Material tatsächlich nur für den Eigenbedarf gedacht war. In der Gaming- und Pokémon-Community sorgt der Fall für gemischte, aber überwiegend fassungslose Reaktionen — während viele hoffen, dass die Betroffenen vor Gericht Recht bekommen, hinterfragen andere, warum das gesamte Unternehmen für die Taten eines Einzelnen haftbar gemacht werden soll. Ein Pokémon-Sprecher erklärte lediglich, der Fokus liege weiterhin auf dem Wohlergehen der Belegschaft, wollte sich zu den laufenden Verfahren aber nicht näher äußern."
+    ],
+    "editorial_take": "Aus unserer Sicht zeigt dieser Fall schmerzhaft deutlich, dass selbst ein Milliarden-Franchise wie Pokémon vor internen Skandalen dieser Größenordnung nicht geschützt ist — und dass Unternehmenskultur mehr braucht als Hochglanz-PR, wenn es um den Schutz der eigenen Belegschaft geht. Die schiere Menge der gefundenen Aufnahmen und die lange Dauer der mutmaßlichen Taten werfen ernste Fragen auf, ob frühere Warnsignale im Betrieb ignoriert wurden. Wir werden die Entwicklung des Verfahrens weiter beobachten, denn hier geht es nicht um ein Nischenthema der Branche, sondern um handfeste Konsequenzen für reale Menschen.",
+    "source_title": "Former Pokémon Exec Accused of Hiding Video Cameras in Office Bathroom to Record Women and Girls",
+    "date": "05. August 2026",
+    "platform": "IGN Articles",
+    "hype": 45,
+    "source": "https://www.ign.com/articles/former-pokmon-exec-accused-of-hiding-video-cameras-in-office-bathroom-to-record-women-and-girls",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/08/05/gettyimages-1231388817-1785939011198.jpg"
+  },
+  {
+    "id": "6f69baee24",
+    "cat": "konsole",
+    "game": null,
+    "genre": "shooter",
+    "title": "Chaos hinter den Kulissen: Wie die Entwicklung von Halo: Campaign Evolved ein ganzes Multiplayer-Projekt kostete",
+    "teaser": "Ein neuer Insider-Bericht zeigt: Das Halo-Remake litt unter Engine-Wechsel und Outsourcing-Chaos – und begrub dabei ein unangekündigtes Multiplayer-Spiel.",
+    "body": [
+      "Halo: Campaign Evolved sollte die große Wiedergeburt der Reihe werden: ein liebevoll modernisiertes Remake des Kult-Shooters von 2001, erstmals auch für PlayStation-Spieler zugänglich. Doch laut einem neuen Bericht des bekannten Halo-Insiders Rebs Gaming lief die Entwicklung hinter den Kulissen alles andere als reibungslos. Halo Studios habe demnach mit erheblichen Problemen beim Engine-Wechsel, mit externen Studios und mit internem Führungschaos zu kämpfen gehabt.",
+      "Der Kern des Problems: Der Umstieg von der betagten Blam-Engine auf Unreal Engine 5 sollte die Entwicklung eigentlich vereinfachen, sorgte laut den Insider-Informationen aber für massive technische Reibung. <cite index=\"3-6,3-7\">Der Entwicklung sei intern gesagt worden, Assets aus Blam ließen sich problemlos in die Unreal Engine übertragen – tatsächlich mussten jedoch sämtliche Assets komplett neu erstellt werden, um mit Unreal Engine 5 kompatibel zu sein.</cite> Das Studio holte sich deshalb bereits 2023 die externe Firma Abstraction ins Boot, die einen Großteil der technischen Entwicklung und des Leveldesigns übernahm. Laut Berichten kam es jedoch zum Bruch: <cite index=\"1-8,1-9\">Abstraction habe mit einem aggressiven Zeitplan und wechselnden Erwartungen der Auftraggeber gekämpft, bevor der Vertrag mit Halo Studios mitten in der Entwicklung beendet wurde – ein Insider berichtete, das Studio sei eines Tages einfach verschwunden, wodurch ein Großteil der Arbeit neu gemacht werden musste.</cite> Auch geplante Echtzeit-Zwischensequenzen sollen dem Projekt zum Opfer gefallen sein, weil ein externer Partner die Erwartungen an die Cinematics nicht erfüllte.",
+      "Besonders brisant: Die Turbulenzen bei Campaign Evolved hatten offenbar direkte Konsequenzen für ein anderes, bislang unangekündigtes Projekt. <cite index=\"6-6,6-7\">Erst spät in der Entwicklung ließ Studioleiter Pierre Hintze eine Marktforschung zur Halo-Marke durchführen, die ergab, dass die meisten Fans keinen Battle-Royale-Titel wollten, sondern lieber ein klassisches Halo-Spiel – Probleme mit der Entwicklung von Campaign Evolved führten dazu, dass Hintze die meisten Entwickler auf das Remake umverteilte, wodurch das Multiplayer-Projekt Ekur unterbesetzt blieb und schließlich endgültig eingestellt wurde.</cite> Andere Berichte bestätigen: <cite index=\"1-1,1-2\">Gegen Ende der Produktion habe Halo Studios Entwickler von dem als Projekt Ekur bekannten Vorhaben abgezogen und auf Campaign Evolved umverteilt, was letztlich zur Absage des unangekündigten Multiplayer-Titels führte.</cite> Aktuellen Berichten zufolge hat Halo Studios derzeit weder ein neues Kampagnen- noch ein Multiplayer-Projekt in aktiver Entwicklung, sondern arbeitet an frischen Konzepten für den nächsten großen Wurf. In der Fachpresse und Community wird das Ergebnis unterdessen differenziert bewertet: Kritiker loben die audiovisuelle Überarbeitung und den nach wie vor packenden Shooter-Kern, gleichzeitig gilt das Remake mit einem Metacritic-Wert von rund 80 bis 81 Punkten als eine der schwächer bewerteten Veröffentlichungen der gesamten Halo-Reihe, während Spieler auf Plattformen wie Steam und PlayStation deutlich kritischer reagierten als die Fachpresse."
+    ],
+    "editorial_take": "Aus unserer Sicht zeigt dieser Fall exemplarisch, wie gefährlich ambitionierte Engine-Wechsel und aggressive Outsourcing-Strategien für große Franchise-Projekte sein können. Dass ein komplettes Multiplayer-Spiel den Produktionsproblemen eines Remakes geopfert wurde, wirkt wie ein Alarmsignal für das Management bei Halo Studios – auch wenn das fertige Campaign Evolved am Ende überraschend solide Kritiken einfahren konnte. Für Fans bleibt ein bitterer Nachgeschmack: Statt einer klaren Roadmap mit mehreren Halo-Projekten steht die Marke nun erneut ohne konkrete Zukunftspläne da.",
+    "source_title": "Halo: Campaign Evolved Reportedly Had a Troubled Development That Impacted a Now-Canceled Multiplayer Project",
+    "date": "05. August 2026",
+    "platform": "IGN Articles",
+    "hype": 62,
+    "source": "https://www.ign.com/articles/halo-campaign-evolved-reportedly-had-a-troubled-development-that-impacted-a-now-canceled-multiplayer-project",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/07/22/halocampaignevolved-review-blogroll-1784759127552.jpg"
+  },
+  {
     "id": "f4e5c1233c",
     "cat": "konsole",
     "game": null,
