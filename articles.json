@@ -1,5 +1,88 @@
 [
   {
+    "id": "036a6cf129",
+    "cat": "industrie",
+    "game": "cod",
+    "genre": "shooter",
+    "title": "G2 Esports triumphiert in Paris – die 1,8-Millionen-Dollar-Jagd bei Black Ops 7 startet",
+    "teaser": "Paris ist in dieser Woche das Epizentrum der Call-of-Duty-Welt: G2 Esports hat sich mit einer dramatischen Aufholjagd die Warzone-Krone der Esports World Cup 2026 gesichert und schickt sich nun an, auch beim großen Black-Ops-7-Turnier mit 1,8 Millionen Dollar Preisgeld ein Wörtchen mitzureden. LOADOUT ordnet die wichtigsten Storylines der Woche ein.",
+    "body": [],
+    "editorial_take": "",
+    "source_title": "Call of Duty Black Ops 7 at Esports World Cup 2026",
+    "date": "05. August 2026",
+    "platform": "LOADOUT-Analyse",
+    "hype": 50,
+    "source": "https://loadout-news.com",
+    "sourceLabel": "Esports World Cup",
+    "image": "https://picsum.photos/seed/loadout-analysis-CallofDutyBlackOps7atEsportsWorldCup2026/900/500",
+    "content_type": "analysis",
+    "analysis_format": "esport_rueckblick"
+  },
+  {
+    "id": "c5d8dcd67e",
+    "cat": "pc",
+    "game": null,
+    "genre": "shooter",
+    "title": "The Division Resurgence: So funktioniert PvP in Dark Zone und Conflict",
+    "teaser": "Der Mobile-Ableger von The Division ist jetzt auch auf Steam – und bringt Dark Zone sowie Conflict als PvP-Kernmodi mit an den PC.",
+    "body": [
+      "The Division Resurgence war ursprünglich als reines Mobile-Spiel gestartet, hat sich aber inzwischen zu einem waschechten Cross-Platform-Titel gemausert. Wer auf PvP-Action steht, findet im Spiel zwei zentrale Wege, sich mit anderen Agenten zu messen: die berüchtigte Dark Zone und den Modus Conflict. Die offene Spielwelt selbst bleibt dabei komplett PvP-frei – wer sich duellieren will, muss aktiv über das Activity-Playlist-Menü in die entsprechenden Bereiche wechseln.",
+      "In der Dark Zone handelt es sich um eine klassische PvEvP-Extraktionszone: Spieler ziehen durch kontaminierte Gebiete, sammeln wertvolle Beute ein und müssen diese anschließend per Helikopter extrahieren. Wer dabei zum Rogue-Agenten wird, kann anderen die Beute klauen, riskiert aber selbst zur Zielscheibe für alle anderen Spieler in der Zone zu werden. Conflict funktioniert dagegen als reiner 4v4-Wettkampfmodus, angelehnt an klassische Domination-Formate, wie man sie etwa aus Call of Duty kennt: Zwei Teams kämpfen um die Kontrolle über strategische Punkte und sammeln dabei Erfahrung sowie Ausrüstung. Wichtig zu wissen: Der Erfolg in Conflict hängt stark von der eigenen Gear-Qualität ab, weshalb Neueinsteiger hier zunächst kaum Schaden anrichten, aber dennoch Fortschritt für Kommendationspunkte sammeln können.",
+      "Der Zeitpunkt der Guide-Veröffentlichung ist kein Zufall: Erst am 5. August 2026 ist The Division Resurgence offiziell auch auf Steam gestartet, nachdem es bereits seit Ende März auf iOS und Android sowie seit Ende April in der Early-Access-Phase über Ubisoft Connect für PC verfügbar war. Damit dürften gerade viele neue PC-Spieler zum ersten Mal in die Dark Zone und nach Conflict schauen. <cite index=\"18-1\">Das Spiel unterstützt vollständiges Cross-Play und Cross-Progression, sodass Spieler ihren Fortschritt nahtlos zwischen Mobile- und PC-Plattformen fortsetzen können.</cite>",
+      "Die Reaktionen auf den PC-Launch fallen allerdings gespalten aus. <cite index=\"19-2\">Auf Steam werden die Nutzerbewertungen aktuell als größtenteils negativ eingestuft, wobei nur 28 Prozent der 242 Rezensionen positiv ausfallen.</cite> In Community-Foren wie NeoGAF wird zudem häufig die Frage gestellt, warum man Resurgence spielen sollte, wenn Division 1 und 2 bereits verfügbar sind – Kritiker befürchten vor allem aggressive Mikrotransaktionen im Free-to-Play-Modell. Auf der Mobile-Seite sieht das Bild deutlich freundlicher aus: Dort sammelte das Spiel bereits Zehntausende positive Bewertungen, was zeigt, dass die Zielgruppen offenbar unterschiedlich auf das Spiel reagieren. Einige Fachmedien betonen dagegen, dass Resurgence trotz seines Mobile-Ursprungs spielerisch durchaus überzeugen kann und mit seinem taktischen Deckungssystem und der Loot-Extraktion an die Stärken der Hauptreihe anknüpft."
+    ],
+    "editorial_take": "Aus unserer Sicht ist die Idee, das mobile Division-Erlebnis samt PvP-Systemen wie Dark Zone und Conflict nahtlos auf den PC zu bringen, grundsätzlich clever – gerade Cross-Progression ist ein echtes Pfund. Die durchwachsenen Steam-Reviews zeigen aber deutlich, dass PC-Spieler höhere Ansprüche an ein Division-Spiel haben als mobile Nutzer, und dass die Skepsis gegenüber Free-to-Play-Mikrotransaktionen in einer etablierten Kernreihe nicht einfach verschwindet. Wer offen für ein etwas reduzierteres, aber kostenloses Division-Erlebnis ist, kann in Conflict und Dark Zone trotzdem spannende PvP-Duelle erleben – Wunder sollte man hier aber nicht erwarten.",
+    "source_title": "All PvP activities in The Division Resurgence",
+    "date": "05. August 2026",
+    "platform": "Dot Esports",
+    "hype": 48,
+    "source": "https://dotesports.com/mobile/guides/the-division-resurgence-pvp",
+    "sourceLabel": "Dot Esports",
+    "image": "https://media.dotesports.com/wp-content/uploads/2026/08/the-division-resurgence-street-gunfight.webp"
+  },
+  {
+    "id": "bc1ac5ca86",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "title": "Skandal um Pokémon-Firma: Ex-Manager soll Kameras in Bürotoiletten versteckt haben",
+    "teaser": "Ein früherer Engineering-Direktor der Pokémon Company soll jahrelang Frauen und Kinder in Bürotoiletten heimlich gefilmt haben. Jetzt steht das Unternehmen selbst vor Gericht.",
+    "body": [
+      "Was als vermeintlich harmlose Entdeckung in einer Starbucks-Toilette in Kirkland begann, hat sich zu einem der düstersten Skandale in der jüngeren Geschichte der Pokémon Company entwickelt. Laut übereinstimmenden Berichten mehrerer US-Medien fand eine Filialleiterin im Oktober 2025 eine kleine, unter dem Waschbecken versteckte Kamera, die direkt auf die Toilette gerichtet war. Über Sicherheitsaufnahmen und einen winzigen Kartenzahlungsbeleg über 7,89 US-Dollar führten die Ermittlungen zu Ben Tsai, damals 44 Jahre alt und Director of Engineering bei The Pokémon Company International am Firmensitz in Bellevue, Washington.",
+      "Was die Ermittler anschließend auf beschlagnahmten Geräten in Tsais Wohnung fanden, sprengt den ursprünglichen Verdacht bei weitem. <cite index=\"6-9,6-10\">Eine forensische Auswertung der Geräte förderte hunderte Aufnahmen von versteckten Kameras zutage, darunter 89 Videos, die angeblich in den Bürotoiletten der Pokémon-Niederlassung gefilmt und in Ordnern mit den Namen Pokémon 29 und Pokémon 27 gespeichert waren.</cite> <cite index=\"8-3\">Bislang wurden vier Opfer anhand des Materials identifiziert</cite>, doch Anwälte gehen davon aus, dass die tatsächliche Zahl deutlich höher liegen könnte. <cite index=\"6-8\">Tsai selbst soll gegenüber der Polizei angegeben haben, seit 2017 nicht mehr als fünfzig Mal heimlich gefilmt zu haben</cite> — eine Aussage, die angesichts der Fundmenge stark angezweifelt wird. Neben dem Pokémon-Büro wurden weitere Aufnahmen aus einer Starbucks-Filiale, einem Safeway-Supermarkt und aus seinem eigenen Zuhause sichergestellt. Tsai wurde inzwischen wegen Voyeurismus ersten Grades sowie mehrerer Anklagepunkte im Zusammenhang mit Missbrauchsdarstellungen von Minderjährigen angeklagt und sitzt derzeit gegen eine Kaution von 500.000 US-Dollar in Untersuchungshaft. Sein Anwalt betonte, sein Mandant werde sich in allen Punkten für nicht schuldig erklären.",
+      "Für die Pokémon Company selbst wird die Sache nun juristisch brisant: Eine ehemalige Mitarbeiterin, die unter dem Pseudonym Jane Doe klagt und laut Berichten fünf Jahre für das Unternehmen tätig war, hat vergangene Woche vor einem Gericht im King County eine Sammelklage eingereicht. Sie möchte damit alle Frauen und Mädchen vertreten, die zwischen 2017 und dem 25. Juli 2026 die Toiletten im Bellevue-Büro genutzt haben. Der Vorwurf an das Unternehmen lautet Fahrlässigkeit: Man habe es versäumt, Tsai angemessen zu schulen oder zu kontrollieren, obwohl es offenbar Warnzeichen gegeben habe. Ein Anwalt der Klägerseite äußerte gegenüber der Presse Zweifel daran, dass das gefundene Material tatsächlich nur für den Eigenbedarf gedacht war. In der Gaming- und Pokémon-Community sorgt der Fall für gemischte, aber überwiegend fassungslose Reaktionen — während viele hoffen, dass die Betroffenen vor Gericht Recht bekommen, hinterfragen andere, warum das gesamte Unternehmen für die Taten eines Einzelnen haftbar gemacht werden soll. Ein Pokémon-Sprecher erklärte lediglich, der Fokus liege weiterhin auf dem Wohlergehen der Belegschaft, wollte sich zu den laufenden Verfahren aber nicht näher äußern."
+    ],
+    "editorial_take": "Aus unserer Sicht zeigt dieser Fall schmerzhaft deutlich, dass selbst ein Milliarden-Franchise wie Pokémon vor internen Skandalen dieser Größenordnung nicht geschützt ist — und dass Unternehmenskultur mehr braucht als Hochglanz-PR, wenn es um den Schutz der eigenen Belegschaft geht. Die schiere Menge der gefundenen Aufnahmen und die lange Dauer der mutmaßlichen Taten werfen ernste Fragen auf, ob frühere Warnsignale im Betrieb ignoriert wurden. Wir werden die Entwicklung des Verfahrens weiter beobachten, denn hier geht es nicht um ein Nischenthema der Branche, sondern um handfeste Konsequenzen für reale Menschen.",
+    "source_title": "Former Pokémon Exec Accused of Hiding Video Cameras in Office Bathroom to Record Women and Girls",
+    "date": "05. August 2026",
+    "platform": "IGN Articles",
+    "hype": 45,
+    "source": "https://www.ign.com/articles/former-pokmon-exec-accused-of-hiding-video-cameras-in-office-bathroom-to-record-women-and-girls",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/08/05/gettyimages-1231388817-1785939011198.jpg"
+  },
+  {
+    "id": "6f69baee24",
+    "cat": "konsole",
+    "game": null,
+    "genre": "shooter",
+    "title": "Chaos hinter den Kulissen: Wie die Entwicklung von Halo: Campaign Evolved ein ganzes Multiplayer-Projekt kostete",
+    "teaser": "Ein neuer Insider-Bericht zeigt: Das Halo-Remake litt unter Engine-Wechsel und Outsourcing-Chaos – und begrub dabei ein unangekündigtes Multiplayer-Spiel.",
+    "body": [
+      "Halo: Campaign Evolved sollte die große Wiedergeburt der Reihe werden: ein liebevoll modernisiertes Remake des Kult-Shooters von 2001, erstmals auch für PlayStation-Spieler zugänglich. Doch laut einem neuen Bericht des bekannten Halo-Insiders Rebs Gaming lief die Entwicklung hinter den Kulissen alles andere als reibungslos. Halo Studios habe demnach mit erheblichen Problemen beim Engine-Wechsel, mit externen Studios und mit internem Führungschaos zu kämpfen gehabt.",
+      "Der Kern des Problems: Der Umstieg von der betagten Blam-Engine auf Unreal Engine 5 sollte die Entwicklung eigentlich vereinfachen, sorgte laut den Insider-Informationen aber für massive technische Reibung. <cite index=\"3-6,3-7\">Der Entwicklung sei intern gesagt worden, Assets aus Blam ließen sich problemlos in die Unreal Engine übertragen – tatsächlich mussten jedoch sämtliche Assets komplett neu erstellt werden, um mit Unreal Engine 5 kompatibel zu sein.</cite> Das Studio holte sich deshalb bereits 2023 die externe Firma Abstraction ins Boot, die einen Großteil der technischen Entwicklung und des Leveldesigns übernahm. Laut Berichten kam es jedoch zum Bruch: <cite index=\"1-8,1-9\">Abstraction habe mit einem aggressiven Zeitplan und wechselnden Erwartungen der Auftraggeber gekämpft, bevor der Vertrag mit Halo Studios mitten in der Entwicklung beendet wurde – ein Insider berichtete, das Studio sei eines Tages einfach verschwunden, wodurch ein Großteil der Arbeit neu gemacht werden musste.</cite> Auch geplante Echtzeit-Zwischensequenzen sollen dem Projekt zum Opfer gefallen sein, weil ein externer Partner die Erwartungen an die Cinematics nicht erfüllte.",
+      "Besonders brisant: Die Turbulenzen bei Campaign Evolved hatten offenbar direkte Konsequenzen für ein anderes, bislang unangekündigtes Projekt. <cite index=\"6-6,6-7\">Erst spät in der Entwicklung ließ Studioleiter Pierre Hintze eine Marktforschung zur Halo-Marke durchführen, die ergab, dass die meisten Fans keinen Battle-Royale-Titel wollten, sondern lieber ein klassisches Halo-Spiel – Probleme mit der Entwicklung von Campaign Evolved führten dazu, dass Hintze die meisten Entwickler auf das Remake umverteilte, wodurch das Multiplayer-Projekt Ekur unterbesetzt blieb und schließlich endgültig eingestellt wurde.</cite> Andere Berichte bestätigen: <cite index=\"1-1,1-2\">Gegen Ende der Produktion habe Halo Studios Entwickler von dem als Projekt Ekur bekannten Vorhaben abgezogen und auf Campaign Evolved umverteilt, was letztlich zur Absage des unangekündigten Multiplayer-Titels führte.</cite> Aktuellen Berichten zufolge hat Halo Studios derzeit weder ein neues Kampagnen- noch ein Multiplayer-Projekt in aktiver Entwicklung, sondern arbeitet an frischen Konzepten für den nächsten großen Wurf. In der Fachpresse und Community wird das Ergebnis unterdessen differenziert bewertet: Kritiker loben die audiovisuelle Überarbeitung und den nach wie vor packenden Shooter-Kern, gleichzeitig gilt das Remake mit einem Metacritic-Wert von rund 80 bis 81 Punkten als eine der schwächer bewerteten Veröffentlichungen der gesamten Halo-Reihe, während Spieler auf Plattformen wie Steam und PlayStation deutlich kritischer reagierten als die Fachpresse."
+    ],
+    "editorial_take": "Aus unserer Sicht zeigt dieser Fall exemplarisch, wie gefährlich ambitionierte Engine-Wechsel und aggressive Outsourcing-Strategien für große Franchise-Projekte sein können. Dass ein komplettes Multiplayer-Spiel den Produktionsproblemen eines Remakes geopfert wurde, wirkt wie ein Alarmsignal für das Management bei Halo Studios – auch wenn das fertige Campaign Evolved am Ende überraschend solide Kritiken einfahren konnte. Für Fans bleibt ein bitterer Nachgeschmack: Statt einer klaren Roadmap mit mehreren Halo-Projekten steht die Marke nun erneut ohne konkrete Zukunftspläne da.",
+    "source_title": "Halo: Campaign Evolved Reportedly Had a Troubled Development That Impacted a Now-Canceled Multiplayer Project",
+    "date": "05. August 2026",
+    "platform": "IGN Articles",
+    "hype": 62,
+    "source": "https://www.ign.com/articles/halo-campaign-evolved-reportedly-had-a-troubled-development-that-impacted-a-now-canceled-multiplayer-project",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/07/22/halocampaignevolved-review-blogroll-1784759127552.jpg"
+  },
+  {
     "id": "f4e5c1233c",
     "cat": "konsole",
     "game": null,
@@ -1204,89 +1287,5 @@
     "source": "https://www.ign.com/articles/silent-hill-townfall-might-be-exactly-what-the-series-needs-ign-preview",
     "sourceLabel": "IGN Articles",
     "image": "https://assets-prd.ignimgs.com/2026/07/28/sh-townfall-blogroll-1785279883716.jpg"
-  },
-  {
-    "id": "e138943fd4",
-    "cat": "konsole",
-    "game": "gta",
-    "genre": "action",
-    "title": "GTA Online: Rockstar zieht Australien den Stecker für Casino-Gambling",
-    "teaser": "Kein Roulette, kein Blackjack, kein Glücksrad mehr: Rockstar hat das Diamond Casino für australische Spieler:innen abgeschaltet – ganz ohne Vorwarnung.",
-    "body": [
-      "Wer in GTA Online aus Australien einloggt, steht seit dieser Woche vor verschlossenen Türen im Diamond Casino & Resort. Rockstar Games hat sämtliche Glücksspiel-Features für das Land deaktiviert – betroffen sind Blackjack, Roulette, Three Card Poker, Inside Track, die Slots und sogar das kostenlose Glücksrad. Entdeckt wurde die Sperre zunächst von Spieler:innen auf Reddit, bevor der bekannte Datamainer Tex2 den entsprechenden Code im Spiel fand und bestätigte, dass es sich um eine gezielte, geografisch begrenzte Restriktion handelt.",
-      "Kaufen, verkaufen und gegen Chips eintauschen können Australier:innen zwar weiterhin, gespielt werden darf damit aber nicht mehr – wer es versucht, bekommt nur eine Meldung, dass die Funktion nicht verfügbar sei. Besonders bitter: Auch das tägliche Gratis-Drehen am Glücksrad, das seit dem Casino-Update 2019 Autos, Klamotten und andere Belohnungen ausschüttet, fällt der Sperre zum Opfer. Als möglicher Auslöser gilt Australiens neues Regelwerk der eSafety Commission, das seit März 2026 in Kraft ist und Minderjährige explizit vor simuliertem Glücksspiel schützen soll. Zwar ist GTA Online im Land ohnehin mit R18+ eingestuft, doch offenbar reicht Rockstar die Altersverifikation nicht aus, um sicherzustellen, dass wirklich nur Erwachsene Zugriff auf die Casino-Funktionen haben – die vorsichtigere Lösung war offenbar, das Feature komplett abzuschalten.",
-      "Ganz neu ist das Prinzip nicht: Schon seit dem Launch des Diamond Casino 2019 ist das virtuelle Glücksspiel in mehr als 50 Ländern gesperrt, darunter Polen, Griechenland, Israel, Portugal, China und Argentinien. Australien reiht sich nun als jüngstes Mitglied in diese Liste ein. Fachmedien wie PC Gamer und Kotaku ordnen die Sperre klar in den Kontext der neuen australischen Alterskontroll-Gesetze ein und verweisen zudem darauf, dass GTA Online kürzlich auf Xbox neu eingestuft wurde – ohne den Hinweis auf „high impact gambling“, was ebenfalls auf eine bewusste Abschaltung hindeutet. In der Community sorgt die Entscheidung vor allem für Kopfschütteln: Zahlreiche Spieler:innen auf GTA Forums und Reddit spotten, dass echtes Sportwetten-Advertising im Land völlig legal sei, während das Drehen an einem virtuellen Glücksrad plötzlich als zu riskant gilt. Andere befürchten bereits, dass ein möglicher Online-Modus von GTA 6 in Australien von Anfang an ohne Casino-Elemente auskommen müsste, sollte Rockstar hier keine bessere Lösung finden."
-    ],
-    "editorial_take": "Aus unserer Sicht zeigt dieser Fall exemplarisch, wie unausgereift viele Jugendschutz-Regelungen im Gaming-Bereich noch sind: Statt eine funktionierende Altersverifikation zu bauen, greift Rockstar lieber zur Brechstange und kappt eine Funktion, die es seit sieben Jahren gibt und die nie mit echtem Geld verknüpft war. Für uns ist das ein Warnsignal, das auch bei GTA 6 hellhörig machen sollte – wenn schon ein simples Glücksrad zum juristischen Minenfeld wird, dürfte Rockstars Umgang mit ähnlichen Features im Nachfolger für weit mehr Diskussionsstoff sorgen.",
-    "source_title": "GTA Online In-game Gambling Suddenly Disabled in Australia",
-    "date": "29. July 2026",
-    "platform": "IGN Articles",
-    "hype": 46,
-    "source": "https://www.ign.com/articles/gta-online-in-game-gambling-suddenly-disabled-in-australia",
-    "sourceLabel": "IGN Articles",
-    "image": "https://assets-prd.ignimgs.com/2026/07/29/gta-online-casino-australia-1280-1785297085640.png"
-  },
-  {
-    "id": "2931b0eec3",
-    "cat": "industrie",
-    "game": null,
-    "genre": "action",
-    "title": "Rockstar-Erbe in der Krise: Lightspeed LA entlässt 80 Mitarbeiter und krempelt Last Sentinel um",
-    "teaser": "Das Tencent-Studio hinter dem ambitionierten Dystopie-Actionspiel Last Sentinel zieht die Notbremse: Nach internen Reviews wird die kreative Richtung geändert – mit schmerzhaften Konsequenzen fürs Team.",
-    "body": [
-      "Es sollte der große Wurf werden: Ein neues, waschechtes Triple-A-Open-World-Spiel aus der Feder von Steve C. Martin, der einst maßgeblich an GTA V und Red Dead Redemption mitgewirkt hat. Doch aus dem Last-Sentinel-Traum wird gerade ein Weckruf. Lightspeed LA, das von Tencents Lightspeed Studios finanzierte Entwicklerstudio in Irvine, Kalifornien, hat angekündigt, seine kreative und technische Ausrichtung für das Projekt grundlegend zu ändern. Die Folge: Rund 80 Mitarbeitende verlieren ihren Job. Wie das Studio mitteilte, sei die Entscheidung nach ausführlichen internen Prüfungen und Playtests gefallen – <cite index=\"15-7\">nach umfangreichen internen Reviews und Playtests habe sich das Tencent-eigene Entwicklungsstudio entschieden, die kreative und technische Richtung seines Triple-A-Titels zu ändern, um das von den Spielern erwartete Erlebnis zu liefern.</cite>",
-      "Last Sentinel war ursprünglich bei den Game Awards 2023 mit großem Trara vorgestellt worden: ein dystopisches Open-World-Actionspiel im futuristischen Tokio, das die Freiheitskämpferin Hiromi Shoda in den Mittelpunkt stellt und mit Ex-Entwicklern von The Last of Us, Uncharted, Jedi: Fallen Order und God of War aufwarten sollte. Das Team hatte hohe Ambitionen – Lightspeed Studios positioniert sich generell als Studio-Sammelbecken für erfahrene Branchengrößen, darunter auch Devil-May-Cry-Regisseur Hideaki Itsuno, der mittlerweile das japanische Schwesterstudio leitet, und Synchron- und Performance-Ikone Troy Baker. Trotz des prominenten Personals scheint das Kernprojekt in der Praxis offenbar nicht die erhoffte Qualität erreicht zu haben – ein Umstand, der laut Studio nun durch eine Neuausrichtung korrigiert werden soll. Betont wird gleichzeitig, dass Lightspeed LA als Studio bestehen bleibt und weiter an Spielen arbeitet.",
-      "In der Fachpresse wird die Meldung vor allem als weiteres Beispiel für die anhaltende Krisenstimmung in der Spielebranche eingeordnet, in der große, gut finanzierte Projekte trotz Startalent immer wieder ins Straucheln geraten. Berichte betonen zudem den Kontrast zwischen den einstigen Ankündigungen – 2023 sprach man noch von einem massiv ambitionierten Debüttitel mit \"deeply developed experience\" – und der nun notwendigen Kurskorrektur, die zeigt, wie schwer sich selbst gut ausgestattete Studios mit neuer, unbekannter IP tun. In der Community reichen die Reaktionen von Mitgefühl für die betroffenen Entwickler:innen bis zu Skepsis, ob ein Studio, das erst zwei Jahre nach der Ankündigung offenbar grundlegend neu anfängt, sein AAA-Versprechen überhaupt noch einlösen kann. Manche verweisen auch darauf, dass Tencent als Konzern durchaus bereit ist, Projekte lieber neu auszurichten als sie scheitern zu lassen – was zumindest Hoffnung macht, dass Last Sentinel nicht komplett eingestellt wird."
-    ],
-    "editorial_take": "Aus unserer Sicht ist das ein Paradebeispiel dafür, wie riskant große, komplett neue IPs im aktuellen Markt geworden sind – selbst mit Rockstar-Pedigree im Führungsteam. Dass man sich traut, nach zwei Jahren Entwicklung nochmal an der kreativen Grundausrichtung zu drehen, kann man als mutig oder als Alarmsignal lesen; für die 80 betroffenen Mitarbeitenden ist es in jedem Fall bitterer Ernst. Wir hoffen, dass am Ende ein besseres Spiel steht – aber die Häufung solcher Neuausrichtungen in der Branche macht uns zunehmend skeptisch gegenüber vollmundigen Ankündigungen bei den Game Awards.",
-    "source_title": "Lightspeed LA Lays Off Staff as It Shifts Last Sentinel's Creative Direction",
-    "date": "29. July 2026",
-    "platform": "IGN Articles",
-    "hype": 42,
-    "source": "https://www.ign.com/articles/lightspeed-la-lays-off-staff-as-it-shifts-last-sentinels-creative-direction",
-    "sourceLabel": "IGN Articles",
-    "image": "https://assets-prd.ignimgs.com/2025/06/10/50b251c1f250fe20f2ed9d82b5ebfee5-1749585263129.jpg"
-  },
-  {
-    "id": "86d63dbeea",
-    "cat": "pc",
-    "game": "valorant",
-    "genre": "strategie",
-    "title": "League of Legends Classic startet: Die besten Anfänger-Champions für die Nostalgie-Reise",
-    "teaser": "Riot bringt mit League Classic die guten alten Season-3-Zeiten zurück. Wir zeigen, mit welchen Champions Neulinge und Nostalgiker am einfachsten reinkommen.",
-    "body": [
-      "Morgen ist es endlich so weit: Mit Patch 26.15 schaltet Riot Games den neuen Modus League of Legends Classic frei – direkt im normalen Client, ganz ohne separaten Download. Wer sich noch an Season 3 erinnert, darf sich auf alte Item-Builds, klassische Runen- und Mastery-Systeme sowie waschechte Pre-Rework-Kits freuen. Riot kopiert dabei nicht stur einen einzelnen Patch, sondern pickt sich die schönsten Erinnerungsstücke aus mehreren frühen Seasons heraus und verpackt sie in einen eigenen Modus mit eigenen Ranglisten, Fortschrittssystemen und einem 60-Champions-Roster zum Start.",
-      "Wer jetzt zum ersten Mal ins alte Summoner's Rift eintaucht – oder einfach seit Jahren nicht mehr gegen echte Season-3-Mechaniken gespielt hat – sollte nicht gleich mit den kompliziertesten Kits starten. Guides der Community empfehlen klassische Selbstläufer wie Garen, dessen Spielweise sich seit jeher auf simples Reinrennen, Spin und Exekution reduziert: Community-Guides betonen, dass er keine Mana-Leiste besitzt, keine Kombos verlangt, sondern nur einen Spin und einen True-Damage-Finisher liefert, und schon 2013 ein hervorragendes Lehrwerkzeug war und es heute noch ist. Auch Annie bleibt zeitlos einfach, denn ihr komplettes Kit besteht letztlich nur aus einem Stun, einer großen Nuke und einem Bären, wodurch das ganze Kit schon nach einer einzigen Partie im Kopf sitzt. Für die Fernkampf-Fraktion empfiehlt sich Ashe, deren Passiv-Slow einen Großteil der Lane-Arbeit übernimmt, sodass man nicht auf präzise Skillshots angewiesen ist, um Trades zu gewinnen. Abgerundet wird die Anfänger-Riege häufig durch Veigar als simplen, aber wirkungsvollen Burst-Mage.",
-      "Der Hype rund um den Modus ist deutlich spürbar. Bereits die Enthüllung während der MSI-2026-Finals sorgte für Aufsehen, und Fachmedien beschreiben, dass die Reaktionen von Casual-Spielern und ehemaligen Profis bei der MSI 2026 überraschend stark in Richtung echter Begeisterung statt Skepsis ausschlugen. Das liegt auch daran, dass Riot keine reine Nostalgie-Kosmetik abliefert, sondern tatsächliche alte Systeme wie Runenseiten, den alten Mastery-Baum und längst verschwundene Jungle-Items originalgetreu reaktiviert und in eigene Ranked-, Normal- und Koop-Warteschlangen packt. Parallel dazu erscheinen überall im Netz eigene Ranglisten für Classic-Einsteiger, die sich in der Auswahl klar überschneiden – Garen, Annie und Ashe tauchen praktisch überall als Top-Empfehlung auf, was zeigt, dass sich die Community schnell auf ein gemeinsames Verständnis geeinigt hat, wie man den Sprung ins alte League am entspanntesten schafft."
-    ],
-    "editorial_take": "Wir finden den Zeitpunkt für League Classic clever gewählt: Statt eines weiteren Nostalgie-Events mit Skins packt Riot ein komplettes, eigenständiges Ökosystem auf den Tisch, das echten alten LoL-Charme mit modernem Server-Komfort verbindet. Gerade für Neueinsteiger ist die Beginner-Champion-Liste Gold wert, weil Season-3-Kits im Vergleich zum heutigen, oft überladenen Champion-Pool angenehm übersichtlich sind. Bleibt abzuwarten, ob Riot den Modus langfristig pflegt oder ihn nach dem ersten Hype-Schub verkümmern lässt – aber der Start fühlt sich für uns nach einem der spannendsten LoL-Experimente seit Jahren an.",
-    "source_title": "Five best beginner champions to play in League Classic",
-    "date": "28. July 2026",
-    "platform": "Dot Esports",
-    "hype": 72,
-    "source": "https://dotesports.com/league-of-legends/guides/lol-league-classic-5-beginner-champions",
-    "sourceLabel": "Dot Esports",
-    "image": "https://media.dotesports.com/wp-content/uploads/2026/07/League-of-Legends-Classic-Key-Visual-scaled.jpg"
-  },
-  {
-    "id": "8e56f69aff",
-    "cat": "industrie",
-    "game": null,
-    "genre": null,
-    "title": "Warhammer-Hersteller Games Workshop holt sich Millionen von Trump zurück – doch der nächste Ärger droht",
-    "teaser": "Games Workshop bekommt 7,8 Millionen Pfund an Trump-Zöllen zurückerstattet – doch neue Zölle und der Iran-Krieg treiben die Kosten für Warhammer-Miniaturen weiter in die Höhe.",
-    "body": [
-      "Eigentlich hätte es ein ruhiges Geschäftsjahr werden sollen. Stattdessen erlebte Warhammer-Macher Games Workshop eine wahre Zoll-Achterbahnfahrt: Nachdem der US Supreme Court Donald Trumps sogenannte 'Liberation Day'-Zölle für rechtswidrig erklärt hatte, bekam das britische Unternehmen einen ordentlichen Teil seines Geldes zurück. <cite index=\"1-3,1-4\">Der Nottingham-ansässige Warhammer-Hersteller hatte zunächst 12 Millionen Pfund an US-Zöllen gezahlt, um den transatlantischen Handel aufrechtzuerhalten, konnte davon aber 7,8 Millionen Pfund zurückholen, nachdem der oberste US-Gerichtshof die Abgaben für unrechtmäßig erklärte.</cite> CEO Kevin Rountree brachte die turbulente Lage in seinem Kommentar an die Investor:innen ziemlich treffend auf den Punkt.",
-      "Die Freude währt allerdings nur kurz, denn die alten Zölle wurden längst durch neue ersetzt. <cite index=\"1-5\">Für das kommende Geschäftsjahr rechnet Games Workshop mit rund 13 Millionen Pfund an Zollkosten, um die von Trump nach dem Urteil eingeführten Ersatz-Importabgaben zu decken.</cite> Und damit nicht genug: Der Krieg im Iran sorgt für zusätzlichen Gegenwind, da er die globalen Energiemärkte durcheinanderwirbelt. <cite index=\"8-3\">Der Konzern rechnet durch Lieferkettenstörungen und inflationäre Effekte im Zusammenhang mit der Volatilität der globalen Energiemärkte mit einer zusätzlichen Belastung von rund 2 Millionen Pfund bei den Kunststoff-Rohstoffkosten.</cite> Kurios dabei: Trotz eines Rekordgewinns reagierte die Börse alles andere als begeistert. <cite index=\"8-1\">Die Aktien von Games Workshop fielen am Dienstag um bis zu 6,5 Prozent, nachdem der britische Miniaturen-Hersteller Zoll-Gegenwind und höhere Plastikpreise infolge des Iran-Kriegs anführte, was den Rekordjahresgewinn überschattete.</cite>",
-      "Zahlenmäßig steht der Konzern eigentlich glänzend da: <cite index=\"1-6\">Der Umsatz stieg um 11 Prozent auf 626,8 Millionen Pfund in den zwölf Monaten bis Juni, während der Gewinn um mehr als 16 Prozent zulegte.</cite> Etwas getrübt wird das Bild durch <cite index=\"1-8\">einen Rückgang im kleineren Lizenzgeschäft um 37 Prozent</cite> sowie eine leicht gekürzte Dividende. Fachmedien wie Wargamer und Bell of Lost Souls beobachten das Zoll-Thema schon seit Monaten kritisch und verweisen darauf, dass GW bereits in früheren Berichten Millionenbeträge an US-Zöllen eingeplant hatte und die Belastung der Gewinnmargen langfristig spürbar bleiben dürfte. In der Hobby-Community sorgen vor allem die Auswirkungen auf US-Kund:innen für Diskussionen: Sammler:innen und Fanseiten berichten seit dem vergangenen Jahr immer wieder von Lieferengpässen, Vorbestellungs-Pausen und steigenden Preisen, seit die Zollpolitik erstmals griff – ein Thema, das durch den Iran-Konflikt nun eine weitere Unsicherheitsebene erhält."
-    ],
-    "editorial_take": "Aus unserer Sicht zeigt der Fall Games Workshop exemplarisch, wie sehr globale Politik inzwischen auch das Hobby-Regal im Kinderzimmer erreicht – ein Gerichtsurteil in Washington und ein Konflikt im Nahen Osten können am Ende darüber entscheiden, was eine Space-Marine-Box in den USA kostet. Dass der Konzern trotz Rekordzahlen an der Börse abgestraft wird, zeigt zudem, wie nervös Investor:innen auf anhaltende geopolitische Unsicherheit reagieren. Für Warhammer-Fans dürfte die eigentliche Kernbotschaft aber simpel bleiben: Wer in den USA sammelt, sollte sich schon mal auf weitere Preisanpassungen einstellen.",
-    "source_title": "'I Thought This Would Be Drama Free, How Wrong I Was' — Games Workshop Secured a £7.8 Million Refund on Donald Trump's Tariffs, but Iran War Threatens Supply Chain",
-    "date": "28. July 2026",
-    "platform": "IGN Articles",
-    "hype": 35,
-    "source": "https://www.ign.com/articles/i-thought-this-would-be-drama-free-how-wrong-i-was-games-workshop-secured-a-78-million-refund-on-donald-trumps-tariffs-but-iran-war-threatens-supply-chain",
-    "sourceLabel": "IGN Articles",
-    "image": "https://assets-prd.ignimgs.com/2026/07/28/gettyimages-2259531591-1785237930861.jpg"
   }
 ]

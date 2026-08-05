@@ -1,5 +1,65 @@
 [
   {
+    "id": "036a6cf129",
+    "title": "G2 Esports triumphiert in Paris – die 1,8-Millionen-Dollar-Jagd bei Black Ops 7 startet",
+    "teaser": "Paris ist in dieser Woche das Epizentrum der Call-of-Duty-Welt: G2 Esports hat sich mit einer dramatischen Aufholjagd die Warzone-Krone der Esports World Cup 2026 gesichert und schickt sich nun an, auch beim großen Black-Ops-7-Turnier mit 1,8 Millionen Dollar Preisgeld ein Wörtchen mitzureden. LOADOUT ordnet die wichtigsten Storylines der Woche ein.",
+    "cat": "industrie",
+    "game": "cod",
+    "genre": "shooter",
+    "date": "05. August 2026",
+    "hype": 50
+  },
+  {
+    "id": "c5d8dcd67e",
+    "title": "The Division Resurgence: So funktioniert PvP in Dark Zone und Conflict",
+    "teaser": "Der Mobile-Ableger von The Division ist jetzt auch auf Steam – und bringt Dark Zone sowie Conflict als PvP-Kernmodi mit an den PC.",
+    "cat": "pc",
+    "game": null,
+    "genre": "shooter",
+    "date": "05. August 2026",
+    "hype": 48
+  },
+  {
+    "id": "bc1ac5ca86",
+    "title": "Skandal um Pokémon-Firma: Ex-Manager soll Kameras in Bürotoiletten versteckt haben",
+    "teaser": "Ein früherer Engineering-Direktor der Pokémon Company soll jahrelang Frauen und Kinder in Bürotoiletten heimlich gefilmt haben. Jetzt steht das Unternehmen selbst vor Gericht.",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "date": "05. August 2026",
+    "hype": 45
+  },
+  {
+    "id": "6f69baee24",
+    "title": "Chaos hinter den Kulissen: Wie die Entwicklung von Halo: Campaign Evolved ein ganzes Multiplayer-Projekt kostete",
+    "teaser": "Ein neuer Insider-Bericht zeigt: Das Halo-Remake litt unter Engine-Wechsel und Outsourcing-Chaos – und begrub dabei ein unangekündigtes Multiplayer-Spiel.",
+    "cat": "konsole",
+    "game": null,
+    "genre": "shooter",
+    "date": "05. August 2026",
+    "hype": 62
+  },
+  {
+    "id": "f4e5c1233c",
+    "title": "Leak: Microsoft bringt offenbar Xbox-360-Spiele auf den PC",
+    "teaser": "Ein durchgesickertes Dokument zeigt Pläne für Xbox-360-Backward-Compatibility auf PC, Handhelds und der kommenden Konsole Project Helix.",
+    "cat": "konsole",
+    "game": null,
+    "genre": null,
+    "date": "05. August 2026",
+    "hype": 78
+  },
+  {
+    "id": "4faab3f221",
+    "title": "Deal besiegelt: Electronic Arts gehört jetzt offiziell Saudi-Arabien",
+    "teaser": "Die 55-Milliarden-Dollar-Übernahme von EA durch ein Konsortium um den saudischen Staatsfonds PIF ist vollzogen. Der Publisher verschwindet von der Nasdaq.",
+    "cat": "industrie",
+    "game": "fifa",
+    "genre": null,
+    "date": "05. August 2026",
+    "hype": 78
+  },
+  {
     "id": "f597b511ae",
     "title": "The Hood betritt Marvel Rivals: Halb Dämon, halb Kanonenrohr – der neue Vanguard sorgt für Gänsehaut",
     "teaser": "Ab dem 7. August verwandelt sich Parker Robbins in Marvel Rivals in ein Waffen-Monster. Der neue Vanguard The Hood bringt Dämonenmagie und Maschinengewehr-Arme mit.",
