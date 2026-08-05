@@ -581,6 +581,281 @@ def generate_calendar_slides(items, output_dir, run_id, line1, line2, line3,
     return paths
 
 
+# --- LOADOUT-Original: eigenständiges Premium-Design ------------------------
+# Der LOADOUT-Original-Artikel bekommt einen KOMPLETT eigenen, deutlich
+# aufwendigeren Instagram-Post statt im gemeinsamen Artikel-Karussell
+# mitzulaufen — soll wie eine "richtige" Enthüllung/Analyse wirken, nicht
+# wie eine weitere Meldung unter vielen. Aufbau (bewusst als eigenständige
+# Funktionen, rühren die bestehenden Artikel-/Kalender-Folien nicht an):
+#
+#   1. Cover-Folie   — Artikelbild grossflächig, dramatischer Verlauf,
+#                       "LOADOUT ORIGINAL"-Siegel (Verlauf-Rand statt
+#                       flacher Kategorie-Pille), grosse Schlagzeile
+#   2. Hook-Folie     — Teaser als grosses, zentriertes Statement auf
+#                       Marken-Hintergrund, baut Spannung auf
+#   3. Insight-Folien — "Countdown"-Nummern (01, 02 …) im Verlaufsstil +
+#                       je eine Kernaussage aus dem Artikeltext — das
+#                       Muster, das Leser:innen zum Weiterwischen animiert
+#   4. Einschätzungs-Folie — die redaktionelle Meinung, zitatartig
+#                       inszeniert, vermittelt eigene Expertise
+#   5. Feste Outro-Folie — dieselbe wie bei allen anderen Posts (Wieder-
+#                       erkennung + "Folge uns"), wird vom aufrufenden
+#                       Code wie gehabt separat angehängt
+
+def _original_brand_background():
+    """Etwas dezenterer Marken-Hintergrund als make_brand_background() —
+    für die reinen Text-Folien (Hook/Insight/Einschätzung) des Original-
+    Posts, damit der Text im Vordergrund klar dominiert."""
+    glow1 = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    ImageDraw.Draw(glow1).ellipse([-200, -300, 700, 400], fill=(*VIOLET, 80))
+    glow1 = glow1.filter(ImageFilter.GaussianBlur(180))
+    glow2 = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    ImageDraw.Draw(glow2).ellipse([500, 650, 1300, 1350], fill=(*MAGENTA, 60))
+    glow2 = glow2.filter(ImageFilter.GaussianBlur(180))
+    base = Image.new("RGBA", (SIZE, SIZE), (*BG, 255))
+    base = Image.alpha_composite(base, glow1)
+    base = Image.alpha_composite(base, glow2)
+    return base.convert("RGB")
+
+
+def _draw_gradient_seal(canvas, cx, y, text, font):
+    """Verlauf-umrandete Pille fürs 'LOADOUT ORIGINAL'-Siegel — bewusst
+    edler als die flachen, einfarbigen Kategorie-Badges der normalen
+    Artikel-Folien, um den Original-Post visuell klar als "besonders"
+    abzuheben. Nutzt einen selbst gezeichneten Diamant-Akzent statt eines
+    Emojis (Poppins enthält keine Emoji-Glyphen, siehe frühere Tests)."""
+    draw = ImageDraw.Draw(canvas)
+    pad_x, pad_y = 22, 12
+    accent_w = 16
+    bbox = draw.textbbox((0, 0), text, font=font)
+    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    pill_w, pill_h = tw + accent_w + 10 + pad_x * 2, th + pad_y * 2
+    pill_x = cx - pill_w // 2
+
+    border = 2
+    outer = Image.new("RGBA", (pill_w, pill_h), (0, 0, 0, 0))
+    od = ImageDraw.Draw(outer)
+    for i in range(pill_w):
+        t = i / pill_w
+        c = tuple(int(VIOLET[k] + (MAGENTA[k] - VIOLET[k]) * t) for k in range(3))
+        od.line([(i, 0), (i, pill_h)], fill=(*c, 255))
+    mask = Image.new("L", (pill_w, pill_h), 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, pill_w, pill_h], radius=pill_h // 2, fill=255)
+    outer.putalpha(mask)
+    canvas.paste(outer, (pill_x, y), outer)
+
+    inner = Image.new("RGBA", (pill_w - border * 2, pill_h - border * 2), (0, 0, 0, 0))
+    ImageDraw.Draw(inner).rounded_rectangle(
+        [0, 0, pill_w - border * 2, pill_h - border * 2], radius=(pill_h - border * 2) // 2, fill=(*BG, 255)
+    )
+    canvas.paste(inner, (pill_x + border, y + border), inner)
+
+    diamond_cy = y + pill_h // 2
+    diamond_cx = pill_x + pad_x + accent_w // 2
+    r = 6
+    draw.polygon(
+        [(diamond_cx, diamond_cy - r), (diamond_cx + r, diamond_cy),
+         (diamond_cx, diamond_cy + r), (diamond_cx - r, diamond_cy)],
+        fill=MAGENTA,
+    )
+
+    tx = pill_x + pad_x + accent_w + 10
+    ty = y + (pill_h - th) / 2 - bbox[1]
+    draw.text((tx, ty), text, font=font, fill=TEXT)
+    return pill_h
+
+
+def _draw_gradient_line(canvas, cx, y, width=90, height=4):
+    grad_line = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(grad_line)
+    for i in range(width):
+        t = i / width
+        c = tuple(int(VIOLET[k] + (MAGENTA[k] - VIOLET[k]) * t) for k in range(3))
+        gd.line([(i, 0), (i, height)], fill=(*c, 255))
+    canvas.paste(grad_line, (cx - width // 2, y), grad_line)
+
+
+def make_original_cover_slide(image_bytes, title):
+    """Folie 1: Artikelbild grossflächig mit dramatischem Magazin-Verlauf
+    (dunkler oben fürs Siegel und unten für die Schlagzeile, dazwischen
+    dezenter, damit das Bild selbst erkennbar bleibt), plus Siegel und
+    grosser Schlagzeile."""
+    bg = _decode_image(image_bytes, SIZE, SIZE, BG).convert("RGBA")
+
+    gradient = Image.new("L", (1, SIZE))
+    for y in range(SIZE):
+        t = y / SIZE
+        if t < 0.15:
+            alpha = int(150 - (t / 0.15) * 90)
+        elif t < 0.55:
+            alpha = int(60 + ((t - 0.15) / 0.4) * 15)
+        else:
+            alpha = int(75 + ((t - 0.55) / 0.45) * 180)
+        gradient.putpixel((0, y), min(alpha, 255))
+    gradient = gradient.resize((SIZE, SIZE))
+    dark_layer = Image.new("RGBA", (SIZE, SIZE), (*BG, 255))
+    bg = Image.composite(dark_layer, bg, gradient)
+
+    draw = ImageDraw.Draw(bg)
+    f_seal = poppins(24, "Bold")
+    seal_h = _draw_gradient_seal(bg, SIZE // 2, 64, "LOADOUT ORIGINAL", f_seal)
+
+    line_y = 64 + seal_h + 24
+    _draw_gradient_line(bg, SIZE // 2, line_y)
+
+    f_title = poppins(64, "Bold")
+    max_w = SIZE - 120
+    lines = wrap_text_to_width(draw, title, f_title, max_w)
+    while len(lines) > 4 and f_title.size > 42:
+        f_title = poppins(f_title.size - 4, "Bold")
+        lines = wrap_text_to_width(draw, title, f_title, max_w)
+    line_height = int(f_title.size * 1.15)
+    total_h = line_height * len(lines)
+    y_start = SIZE - 110 - total_h
+    y = y_start
+    for line in lines:
+        draw.text((60, y), line, font=f_title, fill=TEXT)
+        y += line_height
+
+    f_hint = poppins(22, "Medium")
+    draw.text((60, SIZE - 62), "Eigene Recherche & Analyse von LOADOUT", font=f_hint, fill=MUTED)
+
+    return bg.convert("RGB")
+
+
+def make_original_hook_slide(teaser):
+    """Folie 2: Der Teaser als grosses, zentriertes Statement — baut
+    Spannung auf, bevor die Insight-Folien die konkreten Fakten liefern."""
+    canvas = _original_brand_background()
+    draw = ImageDraw.Draw(canvas)
+
+    f_quote_mark = poppins(120, "Bold")
+    draw_centered_text(draw, '"', f_quote_mark, 130, VIOLET)
+
+    f_teaser = poppins(46, "Bold")
+    max_w = SIZE - 160
+    lines = wrap_text_to_width(draw, teaser, f_teaser, max_w)
+    while len(lines) > 6 and f_teaser.size > 32:
+        f_teaser = poppins(f_teaser.size - 4, "Bold")
+        lines = wrap_text_to_width(draw, teaser, f_teaser, max_w)
+    line_height = int(f_teaser.size * 1.3)
+    total_h = line_height * len(lines)
+    y = (SIZE - total_h) / 2
+    for line in lines:
+        draw_centered_text(draw, line, f_teaser, y, TEXT)
+        y += line_height
+
+    f_hint = poppins(24, "Bold")
+    draw_centered_text(draw, "DIE FAKTEN  →", f_hint, SIZE - 100, VIOLET)
+    return canvas
+
+
+def make_original_insight_slide(text, index, total):
+    """Folie 3..N: grosse Verlaufs-Nummer ("01", "02" …) + eine konkrete
+    Kernaussage — das "Countdown"-Muster, das Leser:innen zum
+    Weiterwischen bis zum Ende animiert, statt alles auf einmal zu zeigen."""
+    canvas = _original_brand_background()
+    draw = ImageDraw.Draw(canvas)
+
+    num_text = f"{index:02d}"
+    f_num = poppins(140, "Bold")
+    bbox = draw.textbbox((0, 0), num_text, font=f_num)
+    nw, nh = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    num_img = Image.new("RGBA", (nw + 20, nh + 40), (0, 0, 0, 0))
+    nd = ImageDraw.Draw(num_img)
+    nd.text((0, -bbox[1]), num_text, font=f_num, fill=(255, 255, 255, 255))
+    grad = Image.new("RGBA", num_img.size, (0, 0, 0, 0))
+    gd = ImageDraw.Draw(grad)
+    for x in range(num_img.width):
+        t = x / num_img.width
+        c = tuple(int(VIOLET[k] + (MAGENTA[k] - VIOLET[k]) * t) for k in range(3))
+        gd.line([(x, 0), (x, num_img.height)], fill=(*c, 255))
+    grad.putalpha(num_img.split()[3])
+    canvas.paste(grad, (60, 90), grad)
+
+    f_total = poppins(24, "Medium")
+    canvas_draw = ImageDraw.Draw(canvas)
+    canvas_draw.text((64, 90 + nh + 50), f"ERKENNTNIS {index} VON {total}", font=f_total, fill=MUTED)
+
+    f_body = poppins(44, "Bold")
+    max_w = SIZE - 130
+    lines = wrap_text_to_width(canvas_draw, text, f_body, max_w)
+    while len(lines) > 6 and f_body.size > 30:
+        f_body = poppins(f_body.size - 3, "Bold")
+        lines = wrap_text_to_width(canvas_draw, text, f_body, max_w)
+    line_height = int(f_body.size * 1.35)
+    y = 90 + nh + 120
+    for line in lines:
+        canvas_draw.text((64, y), line, font=f_body, fill=TEXT)
+        y += line_height
+
+    return canvas
+
+
+def make_original_editorial_slide(editorial_take):
+    """Letzte Inhalts-Folie: die redaktionelle Einschätzung, zitatartig
+    und prominent inszeniert — vermittelt, dass hier eine eigene
+    Expertise/Meinung steckt, nicht nur eine Zusammenfassung von Fakten."""
+    canvas = _original_brand_background()
+    draw = ImageDraw.Draw(canvas)
+
+    f_label = poppins(26, "Bold")
+    draw_centered_text(draw, "LOADOUT-EINSCHÄTZUNG", f_label, 130, VIOLET)
+    _draw_gradient_line(canvas, SIZE // 2, 180, width=60)
+
+    f_take = poppins(40, "Medium")
+    max_w = SIZE - 160
+    lines = wrap_text_to_width(draw, editorial_take, f_take, max_w)
+    while len(lines) > 8 and f_take.size > 28:
+        f_take = poppins(f_take.size - 3, "Medium")
+        lines = wrap_text_to_width(draw, editorial_take, f_take, max_w)
+    line_height = int(f_take.size * 1.4)
+    total_h = line_height * len(lines)
+    y = (SIZE - total_h) / 2 + 40
+    for line in lines:
+        draw_centered_text(draw, line, f_take, y, TEXT)
+        y += line_height
+
+    return canvas
+
+
+def generate_original_slides(article, output_dir, run_id, max_insights=2):
+    """Orchestriert die komplette Premium-Folienserie für den LOADOUT-
+    Original-Artikel: Cover, Hook, bis zu max_insights Insight-Folien,
+    Einschätzung. Die feste Outro-Folie wird — wie beim normalen Artikel-
+    Karussell auch — NICHT hier erzeugt, sondern vom aufrufenden Code
+    separat angehängt (siehe social-assets/outro-slide.jpg)."""
+    os.makedirs(output_dir, exist_ok=True)
+    paths = []
+
+    image_bytes = _download_image(article.get("image"))
+
+    cover = make_original_cover_slide(image_bytes, article["title"])
+    cover_path = os.path.join(output_dir, f"{run_id}-00-cover.jpg")
+    cover.save(cover_path, quality=90)
+    paths.append(cover_path)
+
+    hook = make_original_hook_slide(article.get("teaser", ""))
+    hook_path = os.path.join(output_dir, f"{run_id}-01-hook.jpg")
+    hook.save(hook_path, quality=90)
+    paths.append(hook_path)
+
+    body = [p for p in article.get("body", []) if p and len(p) > 20][:max_insights]
+    for i, paragraph in enumerate(body, start=1):
+        insight = make_original_insight_slide(paragraph, i, len(body))
+        insight_path = os.path.join(output_dir, f"{run_id}-{i+1:02d}-insight.jpg")
+        insight.save(insight_path, quality=90)
+        paths.append(insight_path)
+
+    if article.get("editorial_take"):
+        editorial = make_original_editorial_slide(article["editorial_take"])
+        editorial_path = os.path.join(output_dir, f"{run_id}-{len(paths):02d}-einschaetzung.jpg")
+        editorial.save(editorial_path, quality=90)
+        paths.append(editorial_path)
+
+    return paths
+
+
 if __name__ == "__main__":
     # Manueller Test-/Vorschau-Modus: erzeugt alle Folien-Typen mit
     # Beispieldaten in /tmp, ohne echte Artikel oder Netzwerkzugriff nötig.
