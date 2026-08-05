@@ -896,10 +896,21 @@ def main():
         else:
             push_body = f"{len(combined)} neue Artikel sind online — jetzt reinschauen!"
             push_url = "/index.html"
+
+        # "Folge nur deinen Spielen": alle Spiele/Kategorien sammeln, die
+        # unter den gerade gepostetenen Artikeln vorkommen — wer in seinen
+        # Präferenzen (siehe api/push-subscribe.js) mindestens eines davon
+        # ausgewählt hat, bekommt diese Benachrichtigung; wer KEINE
+        # Präferenzen gesetzt hat, bekommt sie ohnehin (siehe api/send-push.js).
+        push_games = sorted({a["game"] for a in combined if a.get("game")})
+        push_categories = sorted({a["cat"] for a in combined if a.get("cat")})
+
         send_push_notification(
             title="🎮 Neue Artikel bei LOADOUT-NEWS",
             body=push_body,
             url=push_url,
+            games=push_games,
+            categories=push_categories,
         )
 
     for a in new_articles:
