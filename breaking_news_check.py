@@ -50,29 +50,44 @@ STATE_FILE = "breaking-state.json"        # Tages-Zähler fürs Limit
 MAX_BREAKING_PER_DAY = 2
 CHECK_BATCH_SIZE = 40  # wie viele frische Feed-Einträge pro Lauf klassifiziert werden — grosszügig, da diese Prüfung günstig ist
 
-BREAKING_CRITERIA = """Eine Meldung gilt als "Breaking News" — zeitkritisch genug, um SOFORT \
-gepostet zu werden, statt bis zum nächsten regulären Tages-Lauf zu warten \
-— wenn sie MINDESTENS EINES der folgenden Kriterien erfüllt:
+BREAKING_CRITERIA = """Eine Meldung gilt als "Breaking News" NUR dann, wenn das Warten bis \
+zum nächsten regulären Tages-Lauf (heute Abend, 19 Uhr) der Meldung \
+WIRKLICH schaden würde — z. B. weil die Information bis dahin veraltet, \
+längst überall bekannt oder für Leser:innen nicht mehr handlungsrelevant \
+wäre. Das ist eine SEHR HOHE Hürde — die grosse Mehrheit auch von \
+wichtigen, relevanten Gaming-News ist KEINE Breaking News.
 
-1. Eine überraschende Terminverschiebung (verschoben ODER überraschend \
-vorgezogen) eines grossen, bereits erwarteten Spiels
-2. Ein bedeutender, neuer Leak zu einem grossen, kommenden Spiel (z. B. \
-durchgesickerte Screenshots, Gameplay, ein Release-Termin), der noch \
-nicht offiziell bestätigt ist, aber von glaubwürdigen Quellen stammt
-3. Eine akute, grossflächige Server-/Plattform-Störung (PSN, Xbox Live, \
-Steam, ein sehr populäres Online-Spiel), die viele Spieler betrifft
-4. Eine überraschende, bedeutende Unternehmensmeldung (plötzliche \
-Studio-Schliessung, überraschende Übernahme, plötzlicher Rücktritt einer \
-Schlüsselperson)
-5. Eine dringende Sicherheitswarnung (Datenleck, Hack, kompromittierte \
-Accounts) bei einer grossen Plattform/einem grossen Spiel
-6. Eine offizielle Ankündigung, die eine bereits vorher kursierende, \
-grosse Erwartungshaltung abrupt bestätigt oder widerlegt
+Nur MINDESTENS eines dieser eng gefassten Kriterien reicht:
 
-WICHTIG: Eine normale, planmässige Ankündigung (ein regulärer Patch, ein \
-angekündigtes DLC, ein normaler Trailer) ist KEINE Breaking News, auch \
-wenn das Spiel/Thema an sich relevant ist — es muss ein echtes \
-Überraschungs- bzw. Dringlichkeits-Moment vorliegen."""
+1. Eine SOEBEN offiziell bestätigte Terminverschiebung (verschoben ODER \
+überraschend vorgezogen) eines der 6 Haupt-Franchises (GTA, Minecraft, \
+Fortnite, Call of Duty, Valorant/LoL, FIFA) oder eines vergleichbar \
+riesigen AAA-Titels — NICHT: Gerüchte über eine mögliche Verschiebung, \
+NICHT: kleinere Terminänderungen bei mittelgrossen Spielen
+2. Ein soeben aufgetauchter, grosser Leak zu einem der 6 Haupt-Franchises \
+mit greifbaren neuen Fakten (z. B. konkretes Datum, Gameplay-Material) \
+— NICHT: vage Gerüchte, NICHT: "Insider glaubt..."-Spekulation ohne \
+belastbare Quelle
+3. Eine GERADE JETZT laufende, grossflächige Server-/Plattform-Störung \
+(PSN, Xbox Live, Steam), die zum Zeitpunkt der Meldung noch aktuell ist \
+— NICHT: eine bereits behobene, vergangene Störung
+4. Eine SOEBEN bekannt gewordene, wirklich überraschende \
+Unternehmensmeldung (plötzliche Studio-Schliessung, Übernahme eines \
+grossen Publishers, überraschender Rücktritt einer sehr bekannten \
+Führungsperson) — NICHT: übliche Quartalszahlen, NICHT: normale \
+Personalveränderungen
+5. Eine akute Sicherheitswarnung (aktiver Hack, laufendes Datenleck) bei \
+einer der grossen Plattformen/einem der Haupt-Franchises, bei der \
+schnelles Handeln für betroffene Nutzer:innen wirklich einen Unterschied \
+macht
+
+Explizit KEINE Breaking News, selbst wenn interessant/relevant:
+- Ein neuer Trailer, auch zu einem grossen Spiel
+- Ein regulärer, angekündigter Patch oder ein DLC-Release
+- Verkaufszahlen, Chart-Platzierungen, Auszeichnungen
+- Allgemeine Branchen-Analysen oder Meinungsstücke
+- Alles, was schon vor Stunden/Tagen bekannt war und nur neu \
+zusammengefasst wird"""
 
 
 def load_json(path, default):
@@ -100,24 +115,41 @@ def classify_breaking(entries):
     Breaking News? Läuft nur auf frischen, noch nie geprüften Einträgen
     (siehe CHECKED_FILE) — das ist der Normalfall bei fast jedem
     stündlichen Lauf, und bewusst so günstig gehalten, dass häufiges
-    Ausführen kein Kostenproblem ist."""
+    Ausführen kein Kostenproblem ist.
+
+    Bekommt bewusst TITEL + Kurzbeschreibung (nicht nur den Titel) — eine
+    reine Überschrift lässt oft nicht erkennen, ob wirklich ein neues,
+    dringendes Ereignis vorliegt oder nur eine Zusammenfassung von etwas
+    längst Bekanntem. Verlangt ausserdem eine kurze Begründung pro
+    gefundenem Kandidaten (nicht nur eine blanke Nummer) — das zwingt das
+    Modell zu genauerer Prüfung, statt vorschnell "ja" zu antworten."""
     if not entries:
         return []
 
-    candidates_block = "\n".join(f"{i}: {e['title']}" for i, e in enumerate(entries))
+    candidates_block = "\n".join(
+        f"{i}: {e['title']} — {(e.get('summary') or '')[:200]}"
+        for i, e in enumerate(entries)
+    )
     prompt = f"""{BREAKING_CRITERIA}
 
-Kandidaten (nummeriert, 0-basiert):
+Kandidaten (nummeriert, 0-basiert, mit Kurzbeschreibung):
 {candidates_block}
 
-Antworte AUSSCHLIESSLICH mit einem JSON-Array der Nummern, die WIRKLICH \
-Breaking News sind (kann auch eine leere Liste sein: []). Keine \
-Erklärung, kein Markdown, nur das JSON-Array."""
+Prüfe JEDEN Kandidaten kritisch gegen die Kriterien oben. Im Zweifel: \
+NICHT als Breaking News einstufen — die Hürde ist bewusst hoch.
+
+Antworte AUSSCHLIESSLICH mit einem validen JSON-Array, keine Erklärung \
+ausserhalb des JSON, kein Markdown. Jedes Element (nur für WIRKLICH als \
+Breaking eingestufte Kandidaten) im Format:
+[{{"index": <Nummer>, "reason": "<1 kurzer Satz, warum genau JETZT, nicht bis heute Abend warten>"}}]
+
+Beispiel: [{{"index": 3, "reason": "Rockstar bestätigt soeben offiziell die Verschiebung von GTA 6"}}]
+Falls kein Kandidat wirklich Breaking News ist: []"""
 
     try:
         response = npl.client.messages.create(
             model=CLASSIFY_MODEL,
-            max_tokens=300,
+            max_tokens=500,
             messages=[{"role": "user", "content": prompt}],
         )
         text_blocks = [b.text for b in response.content if b.type == "text"]
@@ -128,7 +160,14 @@ Erklärung, kein Markdown, nur das JSON-Array."""
         first_bracket = raw.find("[")
         if first_bracket > 0:
             raw = raw[first_bracket:]
-        indices = set(json.loads(raw, strict=False))
+        parsed = json.loads(raw, strict=False)
+        indices = set()
+        for item in parsed:
+            if isinstance(item, dict) and "index" in item:
+                indices.add(item["index"])
+                print(f"    → Kandidat {item['index']} als Breaking eingestuft: {item.get('reason', '')}")
+            elif isinstance(item, int):  # Rückfall, falls das Modell doch nur Zahlen liefert
+                indices.add(item)
     except Exception as e:
         print(f"  ⚠ Breaking-Klassifikation fehlgeschlagen: {e}", file=sys.stderr)
         return []
@@ -299,15 +338,20 @@ def main():
 
     print(f"  {len(breaking_candidates)} Kandidat(en) erfüllen Breaking-News-Kriterien")
 
-    # Dieselbe zweistufige Duplikat-Prüfung wie bei der regulären Pipeline
-    # — nur weil etwas "breaking" wirkt, heisst das nicht, dass es nicht
-    # schon anderweitig behandelt wurde.
+    # Dieselbe kombinierte Duplikat- UND Relevanz-Prüfung wie bei der
+    # regulären Pipeline (siehe news_pipeline.py: filter_candidates_combined)
+    # — WICHTIG: nur weil etwas zeitlich dringend wirkt, heisst das nicht,
+    # dass es auch inhaltlich relevant genug ist (grosses Studio/Franchise/
+    # Community, siehe RELEVANCE_CRITERIA) oder nicht längst anderweitig
+    # abgedeckt wurde. Diese Prüfung fehlte bisher hier komplett — ein
+    # zeitkritischer, aber eigentlich zu kleiner Kandidat hätte sonst
+    # trotzdem als Breaking News durchrutschen können.
     recent_titles = [a.get("source_title", a.get("title", "")) for a in (archive[-40:] + existing)]
-    breaking_candidates = npl.filter_duplicate_topics(breaking_candidates, recent_titles)
-    breaking_candidates = npl.semantic_duplicate_filter(breaking_candidates, recent_titles)
+    breaking_candidates = npl.filter_duplicate_topics(breaking_candidates, recent_titles)  # günstige Textprüfung zuerst
+    breaking_candidates = npl.filter_candidates_combined(breaking_candidates, recent_titles)
 
     if not breaking_candidates:
-        print("→ Alle Breaking-Kandidaten waren bereits anderweitig abgedeckt — nichts zu tun.")
+        print("→ Alle Breaking-Kandidaten waren entweder bereits abgedeckt oder nicht relevant genug — nichts zu tun.")
         return
 
     written = []
