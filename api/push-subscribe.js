@@ -1,11 +1,19 @@
 // Vercel Serverless Function: verwaltet Push-Benachrichtigungs-Abos.
 // POST speichert ein neues Abo (wird aufgerufen, sobald jemand im Browser
-// zustimmt), DELETE entfernt eines wieder (falls jemand abbestellt oder der
-// Browser die Berechtigung zurückzieht).
+// zustimmt) ZUSAMMEN MIT den gewählten Präferenzen (welche Spiele/
+// Kategorien jemand folgen möchte — Teil des "Folge nur deinen Spielen"-
+// Features), DELETE entfernt eines wieder (falls jemand abbestellt oder
+// der Browser die Berechtigung zurückzieht).
 //
 // Abos werden als Redis-Hash gespeichert (Schlüssel = Endpoint-URL des
 // Abos, das ist pro Gerät/Browser eindeutig), damit sich ein Gerät nicht
-// mehrfach einträgt.
+// mehrfach einträgt. Gespeicherter Wert ist jetzt ein Objekt
+// { subscription, preferences } statt nur der rohen Subscription — so
+// lässt sich beim Versenden gezielt filtern (siehe send-push.js).
+//
+// Präferenzen sind bewusst OPTIONAL: Wer nichts auswählt (preferences
+// bleibt leer), bekommt weiterhin ALLE Benachrichtigungen — niemand wird
+// durch dieses Feature unbeabsichtigt stummgeschaltet.
 
 import { Redis } from '@upstash/redis';
 
@@ -16,13 +24,28 @@ const redis = new Redis({
 
 export default async function handler(request, response) {
   if (request.method === 'POST') {
-    const subscription = request.body;
+    // Abwärtskompatibel: akzeptiert sowohl das neue Format
+    // { subscription, preferences } als auch (falls irgendwo noch alter
+    // Frontend-Code aktiv ist) die rohe Subscription direkt im Body.
+    const body = request.body || {};
+    const subscription = body.subscription || body;
+    const preferences = body.preferences || {};
+
     if (!subscription || !subscription.endpoint) {
       return response.status(400).json({ error: 'Ungültiges Abo' });
     }
+
+    // Präferenzen normalisieren — immer Arrays, nie undefined, damit
+    // send-push.js sich beim Filtern nicht um fehlende Felder kümmern muss.
+    const normalizedPreferences = {
+      games: Array.isArray(preferences.games) ? preferences.games : [],
+      categories: Array.isArray(preferences.categories) ? preferences.categories : [],
+    };
+
     try {
+      const entry = { subscription, preferences: normalizedPreferences };
       // Der Endpoint selbst dient als eindeutiger Schlüssel im Hash.
-      await redis.hset('push-subscriptions', { [subscription.endpoint]: JSON.stringify(subscription) });
+      await redis.hset('push-subscriptions', { [subscription.endpoint]: JSON.stringify(entry) });
       return response.status(200).json({ success: true });
     } catch (err) {
       return response.status(500).json({ error: 'Konnte Abo nicht speichern' });
