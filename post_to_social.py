@@ -141,7 +141,7 @@ def save_json(path, data):
 # Ein einziger Post mit mehreren Embeds — Discord zeigt diese als mehrere
 # Vorschaukarten untereinander in EINER Nachricht an.
 
-def post_discord_batch(articles):
+def post_discord_batch(articles, is_breaking=False):
     webhook_url = env("DISCORD_WEBHOOK_URL")
     if not webhook_url:
         return False
@@ -153,15 +153,20 @@ def post_discord_batch(articles):
             "title": a["title"][:250],
             "description": a["teaser"][:300],
             "url": f"{SITE_URL}/artikel/{a['id']}.html",
-            "color": 0x7C5CFC,
+            "color": 0xFF3B30 if is_breaking else 0x7C5CFC,
             "footer": {"text": f"LOADOUT-NEWS · {cat_label}"},
         }
         if a.get("image"):
             embed["thumbnail"] = {"url": a["image"]}
         embeds.append(embed)
 
+    if is_breaking:
+        content = f"🚨 **BREAKING NEWS bei LOADOUT-NEWS!**"
+    else:
+        content = f"🎮 **{len(articles)} neue Artikel bei LOADOUT-NEWS!**"
+
     payload = {
-        "content": f"🎮 **{len(articles)} neue Artikel bei LOADOUT-NEWS!**",
+        "content": content,
         "embeds": embeds[:10],  # Discord erlaubt maximal 10 Embeds pro Nachricht
     }
     resp = requests.post(webhook_url, json=payload, timeout=10)
@@ -175,7 +180,7 @@ def post_discord_batch(articles):
 # Vorschaubildern. Link + Hashtags bekommen IMMER garantiert Platz — nur
 # die Überschrift wird bei Bedarf gekürzt, nie der Link.
 
-def post_bluesky_batch(articles):
+def post_bluesky_batch(articles, is_breaking=False):
     handle = env("BLUESKY_HANDLE")
     app_password = env("BLUESKY_APP_PASSWORD")
     if not handle or not app_password:
@@ -213,7 +218,9 @@ def post_bluesky_batch(articles):
     # — verhindert, dass der Post bei vielen/langen Titeln unkontrolliert
     # mitten im Text (oder sogar vor dem Link) abgeschnitten wird.
     top_article = max(articles, key=lambda a: a.get("hype", 0))
-    if len(articles) == 1:
+    if is_breaking:
+        headline = f"🚨 BREAKING: {top_article['title']}"
+    elif len(articles) == 1:
         headline = f"🎮 {top_article['title']}"
     else:
         headline = f"🎮 {len(articles)} neue Artikel bei LOADOUT-NEWS — u. a. {top_article['title']}"
@@ -581,6 +588,111 @@ def post_instagram_original(article):
     return True
 
 
+def post_instagram_breaking(article):
+    """Eigenständiger, alarmierender Instagram-Post NUR für Breaking-News-
+    Artikel (content_type=="breaking", siehe breaking_news_check.py).
+    Bewusst kurz (2 Folien statt 4-6) und in Rot/Amber statt der üblichen
+    Marken-Farben — soll sofort als "hier passiert gerade etwas
+    Dringendes" erkennbar sein, klar unterscheidbar von den normalen und
+    Original-Posts. Wird IMMER als eigener, sofortiger Post behandelt,
+    nie im gemeinsamen Karussell mitgeführt."""
+    api_key = env("BUFFER_API_KEY")
+    channel_id = env("BUFFER_INSTAGRAM_CHANNEL_ID")
+    if not api_key or not channel_id:
+        return False
+
+    if not article.get("image"):
+        print("  Instagram (Breaking): ! Artikel hat kein Bild — übersprungen.")
+        return False
+
+    if not os.path.exists(OUTRO_SLIDE_PATH):
+        print(f"  Instagram (Breaking): ! Feste Outro-Folie ({OUTRO_SLIDE_PATH}) fehlt im Repo — übersprungen.", file=sys.stderr)
+        return False
+
+    try:
+        import generate_instagram_slides as gis
+    except ImportError as e:
+        print(f"  Instagram (Breaking): ! generate_instagram_slides.py konnte nicht geladen werden: {e}", file=sys.stderr)
+        return False
+
+    run_id = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d%H%M%S") + "-breaking"
+
+    try:
+        slide_paths = gis.generate_breaking_slides(article, SLIDE_OUTPUT_DIR, run_id)
+    except Exception as e:
+        print(f"  Instagram (Breaking): ! Folien-Generierung fehlgeschlagen: {e}", file=sys.stderr)
+        return False
+
+    all_local_paths = slide_paths + [OUTRO_SLIDE_PATH]
+
+    if not git_commit_and_push(slide_paths, f"Breaking-News-Karussell-Folien ({run_id})"):
+        return False
+
+    image_urls = [raw_github_url(p) for p in all_local_paths]
+    assets = [{"image": {"url": url}} for url in image_urls]
+
+    hashtags = generate_hashtags([article], max_tags=12)
+    hashtag_block = " ".join(f"#{t}" for t in hashtags)
+    caption_lines = [
+        f"🚨 BREAKING — {article['title']}\n",
+        article.get("teaser", ""),
+        f"\n👉 Alle Details über den Link in unserer Bio: {SITE_URL}\n\n{hashtag_block} #breakingnews",
+    ]
+    caption = "\n".join(caption_lines)
+    if len(caption) > 2200:
+        caption = caption[:2197] + "..."
+
+    # Breaking News wird IMMER so schnell wie möglich veröffentlicht,
+    # nicht wie bei den anderen Post-Typen mit 2 Minuten Puffer geplant —
+    # Geschwindigkeit ist hier der ganze Punkt.
+    due_at = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=30)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+    variables = {
+        "input": {
+            "text": caption,
+            "channelId": channel_id,
+            "schedulingType": "automatic",
+            "mode": "customScheduled",
+            "dueAt": due_at,
+            "assets": assets,
+            "metadata": {
+                "instagram": {
+                    "type": "post",
+                    "shouldShareToFeed": True,
+                },
+            },
+        }
+    }
+
+    try:
+        resp = requests.post(
+            "https://api.buffer.com",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={"query": BUFFER_CREATE_POST_QUERY, "variables": variables},
+            timeout=30,
+        )
+    except Exception as e:
+        print(f"  Instagram (Breaking): ! Unerwarteter Fehler: {e}", file=sys.stderr)
+        return False
+
+    if resp.status_code != 200:
+        print(f"  Instagram (Breaking): ! Fehler ({resp.status_code}): {resp.text[:500]}", file=sys.stderr)
+        return False
+
+    data = resp.json()
+    if data.get("errors"):
+        print(f"  Instagram (Breaking): ! GraphQL-Fehler: {data['errors']}", file=sys.stderr)
+        return False
+
+    result = (data.get("data") or {}).get("createPost") or {}
+    if result.get("message"):
+        print(f"  Instagram (Breaking): ! {result['message']}", file=sys.stderr)
+        return False
+
+    print(f"  Instagram (Breaking): ✓ 1 Eilmeldungs-Post mit {len(assets)} Bild(ern) eingeplant (in ~30 Sek.)")
+    return True
+
+
 # --- Tumblr -------------------------------------------------------------------
 # Ein einziger Post im "Neuen Post Format" (NPF) von Tumblr, der pro Artikel
 # einen Text- und einen Bild-Block enthält — erscheint als durchlaufender
@@ -731,39 +843,64 @@ def main():
         print("Keine neuen Artikel seit dem letzten Social-Media-Post.")
         return
 
-    print(f"→ {len(new_articles)} neue Artikel gefunden — poste als EINEN gesammelten Post pro Plattform.")
+    print(f"→ {len(new_articles)} neue Artikel gefunden.")
 
-    # Instagram bekommt bewusst ZWEI getrennte Posts statt einem
-    # gemeinsamen: der LOADOUT-Original-Artikel bekommt sein eigenes,
-    # deutlich aufwendigeres Premium-Design (siehe post_instagram_original),
-    # die restlichen "normalen" Artikel laufen weiterhin im bewährten
-    # gemeinsamen Karussell (siehe post_instagram_carousel, unverändert).
-    # Alle anderen Plattformen (Discord/Bluesky/Tumblr/Reddit) posten
-    # weiterhin ALLE neuen Artikel zusammen, wie bisher.
+    # Drei Kategorien, jede bekommt ihre eigene Behandlung:
+    #   - breaking:  IMMER als eigener, sofortiger Post auf ALLEN
+    #                Plattformen — nie mit anderen Artikeln vermischt,
+    #                da Breaking News für sich stehen und schnell raus
+    #                soll (siehe breaking_news_check.py)
+    #   - analysis:  der LOADOUT-Original-Artikel, bekommt auf Instagram
+    #                sein eigenes Premium-Design (unverändert)
+    #   - alles andere: normale Artikel, laufen wie bisher gemeinsam im
+    #                Karussell/Batch-Post
+    breaking_articles = [a for a in new_articles if a.get("content_type") == "breaking"]
     original_articles = [a for a in new_articles if a.get("content_type") == "analysis"]
-    regular_articles = [a for a in new_articles if a.get("content_type") != "analysis"]
+    regular_articles = [a for a in new_articles if a.get("content_type") not in ("breaking", "analysis")]
 
-    post_discord_batch(new_articles)
-    post_bluesky_batch(new_articles)
-    if regular_articles:
-        post_instagram_carousel(regular_articles)
-    for original_article in original_articles:
-        post_instagram_original(original_article)
-    post_tumblr_batch(new_articles)
-    post_reddit_batch(new_articles)
+    if breaking_articles:
+        print(f"  🚨 {len(breaking_articles)} Breaking-News-Artikel — eigener Eilmeldungs-Post auf allen Plattformen.")
+        post_discord_batch(breaking_articles, is_breaking=True)
+        post_bluesky_batch(breaking_articles, is_breaking=True)
+        for breaking_article in breaking_articles:
+            post_instagram_breaking(breaking_article)
+        post_tumblr_batch(breaking_articles)
+        post_reddit_batch(breaking_articles)
 
-    # Push-Benachrichtigung: eine Sammel-Nachricht für alle neuen Artikel.
-    if len(new_articles) == 1:
-        push_body = new_articles[0]["title"][:120]
-        push_url = f"/artikel/{new_articles[0]['id']}.html"
-    else:
-        push_body = f"{len(new_articles)} neue Artikel sind online — jetzt reinschauen!"
-        push_url = "/index.html"
-    send_push_notification(
-        title="🎮 Neue Artikel bei LOADOUT-NEWS",
-        body=push_body,
-        url=push_url,
-    )
+    if regular_articles or original_articles:
+        print(f"  {len(regular_articles) + len(original_articles)} reguläre Artikel — gesammelter Post pro Plattform.")
+        post_discord_batch(regular_articles + original_articles)
+        post_bluesky_batch(regular_articles + original_articles)
+        if regular_articles:
+            post_instagram_carousel(regular_articles)
+        for original_article in original_articles:
+            post_instagram_original(original_article)
+        post_tumblr_batch(regular_articles + original_articles)
+        post_reddit_batch(regular_articles + original_articles)
+
+    # Push-Benachrichtigung: Breaking News bekommt IMMER eine eigene,
+    # dringliche Push-Nachricht — unabhängig davon, ob gleichzeitig auch
+    # reguläre Artikel gepostet wurden.
+    if breaking_articles:
+        top_breaking = max(breaking_articles, key=lambda a: a.get("hype", 0))
+        send_push_notification(
+            title="🚨 BREAKING NEWS",
+            body=top_breaking["title"][:120],
+            url=f"/artikel/{top_breaking['id']}.html",
+        )
+    if regular_articles or original_articles:
+        combined = regular_articles + original_articles
+        if len(combined) == 1:
+            push_body = combined[0]["title"][:120]
+            push_url = f"/artikel/{combined[0]['id']}.html"
+        else:
+            push_body = f"{len(combined)} neue Artikel sind online — jetzt reinschauen!"
+            push_url = "/index.html"
+        send_push_notification(
+            title="🎮 Neue Artikel bei LOADOUT-NEWS",
+            body=push_body,
+            url=push_url,
+        )
 
     for a in new_articles:
         posted_ids.add(a["id"])
