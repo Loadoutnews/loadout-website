@@ -472,6 +472,115 @@ def post_instagram_carousel(articles):
     return True
 
 
+def post_instagram_original(article):
+    """Eigenständiger, eigens gestalteter Instagram-Post NUR für den
+    LOADOUT-Original-Artikel — läuft NICHT im gemeinsamen Karussell mit
+    den normalen Artikeln mit, sondern bekommt sein eigenes, deutlich
+    aufwendigeres Premium-Design (siehe generate_instagram_slides.py:
+    generate_original_slides — Cover, Hook, Insight-Folien im
+    "Countdown"-Stil, redaktionelle Einschätzung, dieselbe feste Outro-
+    Folie wie überall). Soll wie eine eigenständige Enthüllung wirken,
+    nicht wie eine weitere Meldung im Stapel."""
+    api_key = env("BUFFER_API_KEY")
+    channel_id = env("BUFFER_INSTAGRAM_CHANNEL_ID")
+    if not api_key or not channel_id:
+        return False
+
+    if not article.get("image"):
+        print("  Instagram (Original): ! Artikel hat kein Bild — übersprungen.")
+        return False
+
+    if not os.path.exists(OUTRO_SLIDE_PATH):
+        print(f"  Instagram (Original): ! Feste Outro-Folie ({OUTRO_SLIDE_PATH}) fehlt im Repo — übersprungen.", file=sys.stderr)
+        return False
+
+    try:
+        import generate_instagram_slides as gis
+    except ImportError as e:
+        print(f"  Instagram (Original): ! generate_instagram_slides.py konnte nicht geladen werden: {e}", file=sys.stderr)
+        return False
+
+    run_id = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d%H%M%S") + "-original"
+
+    try:
+        slide_paths = gis.generate_original_slides(article, SLIDE_OUTPUT_DIR, run_id)
+    except Exception as e:
+        print(f"  Instagram (Original): ! Folien-Generierung fehlgeschlagen: {e}", file=sys.stderr)
+        return False
+
+    all_local_paths = slide_paths + [OUTRO_SLIDE_PATH]
+
+    if not git_commit_and_push(slide_paths, f"LOADOUT-Original-Karussell-Folien ({run_id})"):
+        return False
+
+    image_urls = [raw_github_url(p) for p in all_local_paths]
+    assets = [{"image": {"url": url}} for url in image_urls]
+
+    # Eigene, auf den Original-Artikel zugeschnittene Bildunterschrift —
+    # mit klarem Hinweis, dass es sich um eigene Recherche handelt (nicht
+    # eine weitere Presse-Meldung), plus dem redaktionellen Take als Teaser.
+    hashtags = generate_hashtags([article], max_tags=15)
+    hashtag_block = " ".join(f"#{t}" for t in hashtags)
+    caption_lines = [
+        f"🔍 LOADOUT ORIGINAL — Eigene Recherche & Analyse\n",
+        f"{article['title']}\n",
+        article.get("teaser", ""),
+    ]
+    if article.get("editorial_take"):
+        caption_lines.append(f"\n🗣️ Unsere Einschätzung: {article['editorial_take']}")
+    caption_lines.append(f"\n👉 Den ganzen Artikel gibt's über den Link in unserer Bio: {SITE_URL}\n\n{hashtag_block}")
+    caption = "\n".join(caption_lines)
+    if len(caption) > 2200:
+        caption = caption[:2197] + "..."
+
+    due_at = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=2)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+    variables = {
+        "input": {
+            "text": caption,
+            "channelId": channel_id,
+            "schedulingType": "automatic",
+            "mode": "customScheduled",
+            "dueAt": due_at,
+            "assets": assets,
+            "metadata": {
+                "instagram": {
+                    "type": "post",
+                    "shouldShareToFeed": True,
+                },
+            },
+        }
+    }
+
+    try:
+        resp = requests.post(
+            "https://api.buffer.com",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={"query": BUFFER_CREATE_POST_QUERY, "variables": variables},
+            timeout=30,
+        )
+    except Exception as e:
+        print(f"  Instagram (Original): ! Unerwarteter Fehler: {e}", file=sys.stderr)
+        return False
+
+    if resp.status_code != 200:
+        print(f"  Instagram (Original): ! Fehler ({resp.status_code}): {resp.text[:500]}", file=sys.stderr)
+        return False
+
+    data = resp.json()
+    if data.get("errors"):
+        print(f"  Instagram (Original): ! GraphQL-Fehler: {data['errors']}", file=sys.stderr)
+        return False
+
+    result = (data.get("data") or {}).get("createPost") or {}
+    if result.get("message"):
+        print(f"  Instagram (Original): ! {result['message']}", file=sys.stderr)
+        return False
+
+    print(f"  Instagram (Original): ✓ 1 eigenständiger Premium-Post mit {len(assets)} Bild(ern) eingeplant (in ~2 Min.)")
+    return True
+
+
 # --- Tumblr -------------------------------------------------------------------
 # Ein einziger Post im "Neuen Post Format" (NPF) von Tumblr, der pro Artikel
 # einen Text- und einen Bild-Block enthält — erscheint als durchlaufender
@@ -624,9 +733,22 @@ def main():
 
     print(f"→ {len(new_articles)} neue Artikel gefunden — poste als EINEN gesammelten Post pro Plattform.")
 
+    # Instagram bekommt bewusst ZWEI getrennte Posts statt einem
+    # gemeinsamen: der LOADOUT-Original-Artikel bekommt sein eigenes,
+    # deutlich aufwendigeres Premium-Design (siehe post_instagram_original),
+    # die restlichen "normalen" Artikel laufen weiterhin im bewährten
+    # gemeinsamen Karussell (siehe post_instagram_carousel, unverändert).
+    # Alle anderen Plattformen (Discord/Bluesky/Tumblr/Reddit) posten
+    # weiterhin ALLE neuen Artikel zusammen, wie bisher.
+    original_articles = [a for a in new_articles if a.get("content_type") == "analysis"]
+    regular_articles = [a for a in new_articles if a.get("content_type") != "analysis"]
+
     post_discord_batch(new_articles)
     post_bluesky_batch(new_articles)
-    post_instagram_carousel(new_articles)
+    if regular_articles:
+        post_instagram_carousel(regular_articles)
+    for original_article in original_articles:
+        post_instagram_original(original_article)
     post_tumblr_batch(new_articles)
     post_reddit_batch(new_articles)
 
