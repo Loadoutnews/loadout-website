@@ -15,12 +15,45 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python breaking_news_check.py
+
+      - name: Auf Breaking News prüfen und ggf. Artikel schreiben
+        run: python breaking_news_check.py
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      - run: |
+
+      # WICHTIG: post_to_social.py wird HIER, im selben Workflow-Lauf,
+      # direkt aufgerufen — nicht über den separaten "Post to Social
+      # Media"-Workflow. Ein automatischer git push (mit dem Standard-
+      # GITHUB_TOKEN) innerhalb eines Workflows löst laut GitHub bewusst
+      # KEINEN anderen Workflow aus (Schutz vor Endlosketten) — der
+      # articles.json-Push von breaking_news_check.py hätte den
+      # "Post to Social Media"-Workflow also nie automatisch angestossen.
+      # Läuft nur wirklich, wenn breaking_news_check.py auch tatsächlich
+      # einen neuen Artikel geschrieben hat (sonst ist articles.json
+      # unverändert, post_to_social.py findet dann einfach nichts Neues
+      # und beendet sich sofort ohne etwas zu tun).
+      - name: Social-Media-Post auslösen (falls ein Breaking-Artikel entstanden ist)
+        run: python post_to_social.py
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_INSTAGRAM_CHANNEL_ID: ${{ secrets.BUFFER_INSTAGRAM_CHANNEL_ID }}
+          PUSH_SECRET: ${{ secrets.PUSH_SECRET }}
+          TUMBLR_CONSUMER_KEY: ${{ secrets.TUMBLR_CONSUMER_KEY }}
+          TUMBLR_CONSUMER_SECRET: ${{ secrets.TUMBLR_CONSUMER_SECRET }}
+          TUMBLR_OAUTH_TOKEN: ${{ secrets.TUMBLR_OAUTH_TOKEN }}
+          TUMBLR_OAUTH_TOKEN_SECRET: ${{ secrets.TUMBLR_OAUTH_TOKEN_SECRET }}
+          TUMBLR_BLOG_NAME: ${{ secrets.TUMBLR_BLOG_NAME }}
+          ZERNIO_API_KEY: ${{ secrets.ZERNIO_API_KEY }}
+          ZERNIO_REDDIT_ACCOUNT_ID: ${{ secrets.ZERNIO_REDDIT_ACCOUNT_ID }}
+          REDDIT_SUBREDDIT: ${{ secrets.REDDIT_SUBREDDIT }}
+
+      - name: Restliche Änderungen committen
+        run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add articles.json archive.json breaking-checked.json breaking-state.json
+          git add articles.json archive.json breaking-checked.json breaking-state.json social-posted.json
           git diff --staged --quiet || git commit -m "Breaking-News-Prüfung"
           git push
