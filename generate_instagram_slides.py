@@ -856,6 +856,154 @@ def generate_original_slides(article, output_dir, run_id, max_insights=2):
     return paths
 
 
+# --- Breaking News: eigenständiges, alarmierendes Design --------------------
+# Bewusst NICHT die normalen Violett/Magenta-Markenfarben, sondern
+# Rot/Amber — signalisiert auf den ersten Blick "hier passiert gerade
+# etwas Dringendes", klar unterscheidbar von den normalen Artikel- und
+# Original-Posts. Kurz gehalten (2 Inhalts-Folien statt 4-5) — bei
+# Breaking News zählt Schnelligkeit und Klarheit, nicht epische Länge.
+
+BREAKING_RED = (255, 59, 48)
+BREAKING_AMBER = (255, 149, 0)
+
+
+def _breaking_background():
+    glow1 = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    ImageDraw.Draw(glow1).ellipse([-250, -350, 650, 350], fill=(*BREAKING_RED, 70))
+    glow1 = glow1.filter(ImageFilter.GaussianBlur(190))
+    glow2 = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    ImageDraw.Draw(glow2).ellipse([500, 700, 1300, 1400], fill=(*BREAKING_AMBER, 55))
+    glow2 = glow2.filter(ImageFilter.GaussianBlur(190))
+    base = Image.new("RGBA", (SIZE, SIZE), (*BG, 255))
+    base = Image.alpha_composite(base, glow1)
+    base = Image.alpha_composite(base, glow2)
+    return base.convert("RGB")
+
+
+def _draw_warning_triangle(draw, cx, cy, size, color):
+    """Selbst gezeichnetes Warndreieck statt Emoji — zuverlässig in jeder
+    Umgebung darstellbar (siehe frühere Emoji-Darstellungsprobleme)."""
+    h = size * 0.87
+    p1 = (cx, cy - h * 2 / 3)
+    p2 = (cx - size / 2, cy + h / 3)
+    p3 = (cx + size / 2, cy + h / 3)
+    draw.polygon([p1, p2, p3], outline=color, width=4)
+    draw.line([(cx, cy - h / 6), (cx, cy + h / 10)], fill=color, width=4)
+    draw.ellipse([cx - 3, cy + h / 6 - 3, cx + 3, cy + h / 6 + 3], fill=color)
+
+
+def make_breaking_cover_slide(image_bytes, headline):
+    """Folie 1: Artikelbild mit rötlich getöntem Alarm-Verlauf, blockiges
+    'BREAKING'-Badge (volltonrot statt der sonst üblichen Verlauf-Pillen),
+    grosse Schlagzeile."""
+    bg = _decode_image(image_bytes, SIZE, SIZE, BG).convert("RGBA")
+
+    gradient = Image.new("L", (1, SIZE))
+    for y in range(SIZE):
+        t = y / SIZE
+        if t < 0.22:
+            alpha = int(160 - (t / 0.22) * 70)
+        elif t < 0.55:
+            alpha = int(90 + ((t - 0.22) / 0.33) * 10)
+        else:
+            alpha = int(100 + ((t - 0.55) / 0.45) * 155)
+        gradient.putpixel((0, y), min(alpha, 255))
+    gradient = gradient.resize((SIZE, SIZE))
+    dark_layer = Image.new("RGBA", (SIZE, SIZE), (*BG, 255))
+    bg = Image.composite(dark_layer, bg, gradient)
+
+    # Roter Tönungsschleier übers ganze Bild — verstärkt den Alarm-Charakter
+    red_tint = Image.new("RGBA", (SIZE, SIZE), (*BREAKING_RED, 28))
+    bg = Image.alpha_composite(bg, red_tint)
+
+    draw = ImageDraw.Draw(bg)
+
+    f_badge = poppins(30, "Bold")
+    badge_text = "BREAKING"
+    bbox = draw.textbbox((0, 0), badge_text, font=f_badge)
+    bw, bh = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    pad_x, pad_y = 26, 14
+    badge_w, badge_h = bw + pad_x * 2, bh + pad_y * 2
+    badge_x = (SIZE - badge_w) // 2
+    badge_y = 56
+    draw.rectangle([badge_x, badge_y, badge_x + badge_w, badge_y + badge_h], fill=BREAKING_RED)
+    draw.text((badge_x + pad_x, badge_y + pad_y - bbox[1]), badge_text, font=f_badge, fill=(255, 255, 255))
+
+    f_sub = poppins(22, "Medium")
+    draw_centered_text(draw, "LOADOUT-NEWS EILMELDUNG", f_sub, badge_y + badge_h + 16, MUTED)
+
+    f_title = poppins(60, "Bold")
+    max_w = SIZE - 120
+    lines = wrap_text_to_width(draw, headline, f_title, max_w)
+    while len(lines) > 4 and f_title.size > 40:
+        f_title = poppins(f_title.size - 4, "Bold")
+        lines = wrap_text_to_width(draw, headline, f_title, max_w)
+    line_height = int(f_title.size * 1.15)
+    total_h = line_height * len(lines)
+    y_start = SIZE - 100 - total_h
+    y = y_start
+    for line in lines:
+        draw.text((60, y), line, font=f_title, fill=TEXT)
+        y += line_height
+
+    return bg.convert("RGB")
+
+
+def make_breaking_fact_slide(fact_text, label="WAS BISHER BEKANNT IST"):
+    """Folie 2: Warndreieck + die konkrete Kernaussage — klar, knapp,
+    ohne Ablenkung."""
+    canvas = _breaking_background()
+    draw = ImageDraw.Draw(canvas)
+
+    _draw_warning_triangle(draw, SIZE // 2, 170, 90, BREAKING_RED)
+
+    f_label = poppins(26, "Bold")
+    draw_centered_text(draw, label, f_label, 250, BREAKING_AMBER)
+
+    f_fact = poppins(46, "Bold")
+    max_w = SIZE - 150
+    lines = wrap_text_to_width(draw, fact_text, f_fact, max_w)
+    while len(lines) > 7 and f_fact.size > 30:
+        f_fact = poppins(f_fact.size - 3, "Bold")
+        lines = wrap_text_to_width(draw, fact_text, f_fact, max_w)
+    line_height = int(f_fact.size * 1.35)
+    total_h = line_height * len(lines)
+    y = (SIZE - total_h) / 2 + 60
+    for line in lines:
+        draw_centered_text(draw, line, f_fact, y, TEXT)
+        y += line_height
+
+    f_hint = poppins(22, "Medium")
+    draw_centered_text(draw, "Wir halten euch auf dem Laufenden", f_hint, SIZE - 90, MUTED)
+
+    return canvas
+
+
+def generate_breaking_slides(article, output_dir, run_id):
+    """Orchestriert die Breaking-News-Folienserie: Cover + 1 Fakt-Folie.
+    Bewusst kurz (2 Inhalts-Folien statt 4-5 wie beim Original-Post) —
+    bei Breaking News zählt Tempo. Die feste Outro-Folie wird wie überall
+    vom aufrufenden Code separat angehängt."""
+    os.makedirs(output_dir, exist_ok=True)
+    paths = []
+
+    image_bytes = _download_image(article.get("image"))
+
+    cover = make_breaking_cover_slide(image_bytes, article["title"])
+    cover_path = os.path.join(output_dir, f"{run_id}-00-cover.jpg")
+    cover.save(cover_path, quality=90)
+    paths.append(cover_path)
+
+    fact_source = article.get("teaser") or (article.get("body") or [""])[0]
+    if fact_source:
+        fact = make_breaking_fact_slide(fact_source)
+        fact_path = os.path.join(output_dir, f"{run_id}-01-fakt.jpg")
+        fact.save(fact_path, quality=90)
+        paths.append(fact_path)
+
+    return paths
+
+
 if __name__ == "__main__":
     # Manueller Test-/Vorschau-Modus: erzeugt alle Folien-Typen mit
     # Beispieldaten in /tmp, ohne echte Artikel oder Netzwerkzugriff nötig.
