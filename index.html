@@ -880,6 +880,7 @@ function persistReadIds(){
 // Backend-Logik (api/send-push.js) weiterhin "alles bekommen".
 const interestGames = new Set();
 const interestCategories = new Set();
+let interestRumors = true; // Push-Schalter für Leaks & Gerüchte, unabhängig von Spiel/Kategorie — Standard AN
 
 function persistInterests(){
   try {
