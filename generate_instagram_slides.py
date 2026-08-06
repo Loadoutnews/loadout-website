@@ -1045,6 +1045,154 @@ def generate_breaking_slides(article, output_dir, run_id):
     return paths
 
 
+# --- Gerüchte-Tracker: eigenständiges Design für "Neu"/"Abgeschlossen" ------
+# Weder die Marken-Farben (normale Artikel/Original) noch Rot/Amber
+# (Breaking News) — der Gerüchte-Tracker bekommt bewusst eine eigene,
+# "ermittlerische" Optik (Lupe statt Warndreieck) und je nach Ereignis eine
+# eigene Akzentfarbe: Violett bei einem neu eröffneten Tracker, Cyan bei
+# "bestätigt", das kräftige Breaking-Rot bei "dementiert" (Wiederverwendung
+# von BREAKING_RED — dieselbe klare "das stimmt nicht"-Signalwirkung).
+# Bewusst kurz gehalten (2 Folien, wie Breaking News) — der volle,
+# laufend aktualisierte Stand lebt auf der Website, nicht in der Bildunterschrift.
+
+def _draw_magnifier_icon(draw, cx, cy, size, color):
+    """Selbst gezeichnetes Lupen-Symbol statt Emoji (siehe frühere
+    Emoji-Darstellungsprobleme) — visuelle Eigenständigkeit gegenüber dem
+    Warndreieck bei Breaking News und den Verlauf-Siegeln beim Original-Post."""
+    r = size * 0.32
+    circle_cx = cx - size * 0.08
+    circle_cy = cy - size * 0.08
+    draw.ellipse([circle_cx - r, circle_cy - r, circle_cx + r, circle_cy + r], outline=color, width=5)
+    angle = math.radians(45)
+    hx1 = circle_cx + r * math.cos(angle)
+    hy1 = circle_cy + r * math.sin(angle)
+    hx2 = cx + size * 0.42
+    hy2 = cy + size * 0.42
+    draw.line([(hx1, hy1), (hx2, hy2)], fill=color, width=6)
+
+
+def make_rumor_cover_slide(image_bytes, headline, badge_text, badge_color, sub_label):
+    """Folie 1: Tracker-Bild mit Verlauf (ähnlich Breaking-News-Cover, aber
+    mit frei wählbarer Akzentfarbe statt fest Rot) + Badge + Unterzeile
+    (z. B. 'LOADOUT GERÜCHTE-TRACKER') + Titel."""
+    bg = _decode_image(image_bytes, SIZE, SIZE, BG).convert("RGBA")
+
+    gradient = Image.new("L", (1, SIZE))
+    for y in range(SIZE):
+        t = y / SIZE
+        if t < 0.22:
+            alpha = int(150 - (t / 0.22) * 80)
+        elif t < 0.55:
+            alpha = int(70 + ((t - 0.22) / 0.33) * 10)
+        else:
+            alpha = int(80 + ((t - 0.55) / 0.45) * 175)
+        gradient.putpixel((0, y), min(alpha, 255))
+    gradient = gradient.resize((SIZE, SIZE))
+    dark_layer = Image.new("RGBA", (SIZE, SIZE), (*BG, 255))
+    bg = Image.composite(dark_layer, bg, gradient)
+
+    draw = ImageDraw.Draw(bg)
+
+    f_badge = poppins(28, "Bold")
+    bbox = draw.textbbox((0, 0), badge_text, font=f_badge)
+    bw, bh = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    pad_x, pad_y = 24, 13
+    badge_w, badge_h = bw + pad_x * 2, bh + pad_y * 2
+    badge_x = (SIZE - badge_w) // 2
+    badge_y = 56
+    draw.rounded_rectangle([badge_x, badge_y, badge_x + badge_w, badge_y + badge_h],
+                            radius=badge_h // 2, fill=badge_color)
+    draw.text((badge_x + pad_x, badge_y + pad_y - bbox[1]), badge_text, font=f_badge, fill=BG)
+
+    f_sub = poppins(20, "Medium")
+    draw_centered_text(draw, sub_label, f_sub, badge_y + badge_h + 14, MUTED)
+
+    f_title = poppins(58, "Bold")
+    max_w = SIZE - 120
+    lines = wrap_text_to_width(draw, headline, f_title, max_w)
+    while len(lines) > 4 and f_title.size > 38:
+        f_title = poppins(f_title.size - 4, "Bold")
+        lines = wrap_text_to_width(draw, headline, f_title, max_w)
+    line_height = int(f_title.size * 1.15)
+    total_h = line_height * len(lines)
+    y_start = SIZE - 100 - total_h
+    y = y_start
+    for line in lines:
+        draw.text((60, y), line, font=f_title, fill=TEXT)
+        y += line_height
+
+    return bg.convert("RGB")
+
+
+def make_rumor_fact_slide(fact_text, label, accent_color):
+    """Folie 2: Lupen-Symbol + der aktuellste Zeitleisten-Text bzw. finale
+    Stand, in der jeweiligen Ereignis-Akzentfarbe."""
+    canvas = _original_brand_background()
+    draw = ImageDraw.Draw(canvas)
+
+    _draw_magnifier_icon(draw, SIZE // 2, 170, 90, accent_color)
+
+    f_label = poppins(26, "Bold")
+    draw_centered_text(draw, label, f_label, 250, accent_color)
+
+    f_fact = poppins(44, "Bold")
+    max_w = SIZE - 150
+    lines = wrap_text_to_width(draw, fact_text, f_fact, max_w)
+    while len(lines) > 7 and f_fact.size > 30:
+        f_fact = poppins(f_fact.size - 3, "Bold")
+        lines = wrap_text_to_width(draw, fact_text, f_fact, max_w)
+    line_height = int(f_fact.size * 1.35)
+    total_h = line_height * len(lines)
+    y = (SIZE - total_h) / 2 + 60
+    for line in lines:
+        draw_centered_text(draw, line, f_fact, y, TEXT)
+        y += line_height
+
+    f_hint = poppins(22, "Medium")
+    draw_centered_text(draw, "loadout-news.com/geruechte", f_hint, SIZE - 90, MUTED)
+
+    return canvas
+
+
+def generate_rumor_slides(tracker, event_type, output_dir, run_id):
+    """Orchestriert die Gerüchte-Tracker-Folienserie: Cover + 1 Fakt-Folie.
+    event_type ist "new" (neuer Tracker eröffnet) oder "resolved"
+    (Tracker als bestätigt/dementiert abgeschlossen) — bestimmt Badge-Text,
+    Akzentfarbe und welcher Zeitleisten-Text gezeigt wird. Die feste
+    Outro-Folie wird wie überall vom aufrufenden Code separat angehängt."""
+    os.makedirs(output_dir, exist_ok=True)
+    paths = []
+
+    image_bytes = _download_image(tracker.get("image"))
+    latest_text = (tracker.get("timeline") or [{}])[0].get("text", tracker.get("summary", ""))
+
+    if event_type == "new":
+        badge_text, badge_color = "NEUES GERÜCHT", VIOLET
+        sub_label = "LOADOUT GERÜCHTE-TRACKER"
+        fact_label, accent = "WAS GERADE AUFGETAUCHT IST", CYAN
+    else:
+        resolution = tracker.get("resolution")
+        if resolution == "bestaetigt":
+            badge_text, badge_color, accent = "GERÜCHT BESTÄTIGT", CYAN, CYAN
+        else:
+            badge_text, badge_color, accent = "GERÜCHT DEMENTIERT", BREAKING_RED, BREAKING_RED
+        sub_label = "LOADOUT GERÜCHTE-TRACKER · ABGESCHLOSSEN"
+        fact_label = "DER FINALE STAND"
+
+    cover = make_rumor_cover_slide(image_bytes, tracker["title"], badge_text, badge_color, sub_label)
+    cover_path = os.path.join(output_dir, f"{run_id}-00-cover.jpg")
+    cover.save(cover_path, quality=90)
+    paths.append(cover_path)
+
+    if latest_text:
+        fact = make_rumor_fact_slide(latest_text, fact_label, accent)
+        fact_path = os.path.join(output_dir, f"{run_id}-01-fakt.jpg")
+        fact.save(fact_path, quality=90)
+        paths.append(fact_path)
+
+    return paths
+
+
 if __name__ == "__main__":
     # Manueller Test-/Vorschau-Modus: erzeugt alle Folien-Typen mit
     # Beispieldaten in /tmp, ohne echte Artikel oder Netzwerkzugriff nötig.
