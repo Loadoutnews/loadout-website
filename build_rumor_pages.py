@@ -232,41 +232,184 @@ def page_shell(title, description, canonical, root, body_html, extra_head=""):
 """
 
 
-def render_tracker_card(t):
-    img = tracker_image(t)
-    cat_label = CATS.get(t["cat"], t["cat"])
-    game_label = GAMES.get(t.get("game"), "") if t.get("game") else ""
-    badge_line = cat_label + (f" · {game_label}" if game_label else "")
-    excerpt = t.get("summary", "")
-    if len(excerpt) > 160:
-        excerpt = excerpt[:157].rstrip() + "…"
-    return f"""
-<a href="geruechte/{t['id']}.html" class="rumor-list-card">
-  <div class="rumor-list-art" style="background-image:url('{img}');"></div>
-  <div class="rumor-list-body">
-    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-      <span class="badge {t['cat']}">{html.escape(badge_line)}</span>
-      {status_badge_html(t)}
-      {credibility_badge_html(t.get('credibility_category', 'unbestaetigt'), t.get('credibility_pct', 0), size='small')}
-    </div>
-    <h3>{html.escape(t['title'])}</h3>
-    <p style="color:var(--muted); font-size:13.5px; line-height:1.55; margin-bottom:8px;">{html.escape(excerpt)}</p>
-    <div class="rumor-list-meta">Zuletzt aktualisiert: {html.escape(t.get('updated_date', '?'))} · {len(t.get('timeline', []))} {'Eintrag' if len(t.get('timeline', [])) == 1 else 'Einträge'}</div>
-  </div>
-</a>"""
+RUMOR_INDEX_JS = """<script>
+const GAMES = {"gta":"GTA","minecraft":"Minecraft","fortnite":"Fortnite","cod":"Call of Duty","valorant":"Valorant / LoL","fifa":"FIFA / EA Sports FC"};
+const CATS = {"pc":"PC","konsole":"Konsolen","hardware":"Hardware","industrie":"Industrie"};
+const CREDIBILITY_META = {
+  "unbestaetigt": {label:"Unbestätigt", color:"#8D90AC"},
+  "wahrscheinlich": {label:"Wahrscheinlich", color:"#FFB74D"},
+  "sehr_wahrscheinlich": {label:"Sehr wahrscheinlich", color:"#7C5CFC"},
+  "bestaetigt": {label:"Bestätigt", color:"#34D9C9"},
+  "dementiert": {label:"Dementiert", color:"#FF3B30"}
+};
+const RESOLUTION_META = {
+  "bestaetigt": {label:"✓ Bestätigt", color:"#34D9C9"},
+  "dementiert": {label:"✕ Dementiert", color:"#FF3B30"}
+};
+const GERMAN_MONTHS = {"Januar":0,"Februar":1,"März":2,"April":3,"Mai":4,"Juni":5,"Juli":6,"August":7,"September":8,"Oktober":9,"November":10,"Dezember":11};
+
+const TRACKERS = __TRACKERS_JSON__;
+
+let activeGame = "alle";
+let activeCat = "alle";
+let activeStatus = "alle";
+
+function parseTrackerDate(dateStr){
+  if(!dateStr) return 0;
+  const m = dateStr.match(/(\\d{1,2})\\.\\s*([A-Za-zäöüÄÖÜ]+)\\s*(\\d{4})/);
+  if(!m) return 0;
+  const month = GERMAN_MONTHS[m[2]];
+  if(month === undefined) return 0;
+  return new Date(Number(m[3]), month, Number(m[1])).getTime();
+}
+
+function trackerImageUrl(t){
+  return t.image || ("https://picsum.photos/seed/loadout-rumor-" + t.id + "/900/500");
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+function credibilityBadgeHtml(category, pct){
+  const meta = CREDIBILITY_META[category] || CREDIBILITY_META["unbestaetigt"];
+  return '<span style="display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; background:' + meta.color + '22; border:1px solid ' + meta.color + '66; color:' + meta.color + '; font-weight:700; font-size:11px; white-space:nowrap;">' +
+    '<span style="width:7px; height:7px; border-radius:50%; background:' + meta.color + ';"></span>' +
+    escapeHtml(meta.label) + ' · ' + Number(pct || 0) + '%</span>';
+}
+
+function statusBadgeHtml(t){
+  if(t.status === "abgeschlossen"){
+    const meta = RESOLUTION_META[t.resolution] || {label:"Abgeschlossen", color:"#8D90AC"};
+    return '<span style="display:inline-flex; align-items:center; padding:4px 10px; border-radius:999px; background:' + meta.color + '22; border:1px solid ' + meta.color + '66; color:' + meta.color + '; font-weight:700; font-size:11px;">' + escapeHtml(meta.label) + '</span>';
+  }
+  return '<span style="display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; background:rgba(124,92,252,0.15); border:1px solid rgba(124,92,252,0.4); color:#7C5CFC; font-weight:700; font-size:11px;">' +
+    '<span style="width:7px; height:7px; border-radius:50%; background:#7C5CFC;"></span>Läuft noch</span>';
+}
+
+function renderChips(){
+  const gameChips = document.getElementById('rumorGameChips');
+  const games = [{key:"alle", label:"Alle Spiele"}].concat(Object.keys(GAMES).map(k => ({key:k, label:GAMES[k]})));
+  gameChips.innerHTML = games.map(g =>
+    '<button class="chip ' + (activeGame===g.key?'active':'') + '" onclick="setRumorGame(\\'' + g.key + '\\')">' + escapeHtml(g.label) + '</button>'
+  ).join('');
+
+  const catChips = document.getElementById('rumorCatChips');
+  const cats = [{key:"alle", label:"Alle Kategorien"}].concat(Object.keys(CATS).map(k => ({key:k, label:CATS[k]})));
+  catChips.innerHTML = cats.map(c =>
+    '<button class="chip ' + (activeCat===c.key?'active':'') + '" onclick="setRumorCat(\\'' + c.key + '\\')">' + escapeHtml(c.label) + '</button>'
+  ).join('');
+
+  const statusChips = document.getElementById('rumorStatusChips');
+  const statuses = [{key:"alle", label:"Alle"}, {key:"aktiv", label:"Läuft noch"}, {key:"abgeschlossen", label:"Abgeschlossen"}];
+  statusChips.innerHTML = statuses.map(s =>
+    '<button class="chip ' + (activeStatus===s.key?'active':'') + '" onclick="setRumorStatus(\\'' + s.key + '\\')">' + escapeHtml(s.label) + '</button>'
+  ).join('');
+}
+
+function renderGrid(){
+  const filtered = TRACKERS.filter(t =>
+    (activeGame === "alle" || t.game === activeGame) &&
+    (activeCat === "alle" || t.cat === activeCat) &&
+    (activeStatus === "alle" || t.status === activeStatus)
+  );
+
+  // Läuft noch zuerst, dann jeweils nach letztem Update absteigend —
+  // so bleibt bei "Alle" sofort sichtbar, was gerade aktiv ist, auch
+  // wenn abgeschlossene Gerüchte zum selben Spiel mitgelistet werden.
+  filtered.sort((a, b) => {
+    if(a.status !== b.status) return a.status === "aktiv" ? -1 : 1;
+    return parseTrackerDate(b.updated_date) - parseTrackerDate(a.updated_date);
+  });
+
+  const grid = document.getElementById('rumorGrid');
+  const empty = document.getElementById('rumorEmpty');
+
+  if(filtered.length === 0){
+    grid.innerHTML = "";
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+
+  grid.innerHTML = filtered.map(t => {
+    const catLabel = CATS[t.cat] || t.cat || "";
+    const gameLabel = t.game ? (GAMES[t.game] || "") : "";
+    const badgeLine = catLabel + (gameLabel ? " · " + gameLabel : "");
+    let excerpt = t.summary || "";
+    if(excerpt.length > 160) excerpt = excerpt.slice(0, 157).trimEnd() + "…";
+    const entryCount = t.entry_count || 0;
+    return '<a href="geruechte/' + t.id + '.html" class="rumor-list-card">' +
+      '<div class="rumor-list-art" style="background-image:url(\\'' + trackerImageUrl(t) + '\\');"></div>' +
+      '<div class="rumor-list-body">' +
+        '<div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">' +
+          '<span class="badge ' + t.cat + '">' + escapeHtml(badgeLine) + '</span>' +
+          statusBadgeHtml(t) +
+          credibilityBadgeHtml(t.credibility_category, t.credibility_pct) +
+        '</div>' +
+        '<h3>' + escapeHtml(t.title) + '</h3>' +
+        '<p style="color:var(--muted); font-size:13.5px; line-height:1.55; margin-bottom:8px;">' + escapeHtml(excerpt) + '</p>' +
+        '<div class="rumor-list-meta">Zuletzt aktualisiert: ' + escapeHtml(t.updated_date || '?') + ' · ' + entryCount + (entryCount === 1 ? ' Eintrag' : ' Einträge') + '</div>' +
+      '</div></a>';
+  }).join('');
+}
+
+function updateUrl(){
+  const params = new URLSearchParams();
+  if(activeGame !== "alle") params.set("game", activeGame);
+  if(activeCat !== "alle") params.set("cat", activeCat);
+  if(activeStatus !== "alle") params.set("status", activeStatus);
+  const qs = params.toString();
+  history.replaceState({}, '', qs ? ('?' + qs) : window.location.pathname);
+}
+
+function setRumorGame(g){ activeGame = g; renderChips(); renderGrid(); updateUrl(); }
+function setRumorCat(c){ activeCat = c; renderChips(); renderGrid(); updateUrl(); }
+function setRumorStatus(s){ activeStatus = s; renderChips(); renderGrid(); updateUrl(); }
+
+// Initiale Filter aus der URL übernehmen — z. B. von einem Detail-Seiten-
+// Link wie "Alle GTA-Gerüchte ansehen" (geruechte.html?game=gta), damit
+// sich der gewünschte Überblick auch direkt verlinken/teilen lässt.
+const initParams = new URLSearchParams(window.location.search);
+const initGame = initParams.get("game");
+const initCat = initParams.get("cat");
+const initStatus = initParams.get("status");
+if(initGame && GAMES[initGame]) activeGame = initGame;
+if(initCat && CATS[initCat]) activeCat = initCat;
+if(initStatus === "aktiv" || initStatus === "abgeschlossen") activeStatus = initStatus;
+
+renderChips();
+renderGrid();
+</script>"""
 
 
 def build_index_page(trackers):
-    active = sorted(
-        [t for t in trackers if t.get("status") == "aktiv"],
-        key=lambda t: parse_german_date(t.get("updated_date")) or datetime.date.min,
-        reverse=True,
-    )
-    closed = sorted(
-        [t for t in trackers if t.get("status") == "abgeschlossen"],
-        key=lambda t: parse_german_date(t.get("updated_date")) or datetime.date.min,
-        reverse=True,
-    )
+    # Nur die für Filterung/Kartenanzeige nötigen Felder einbetten (nicht
+    # die komplette Zeitleiste) — hält die Seite schlank, auch wenn später
+    # viele Tracker mit langer Historie existieren.
+    trackers_json_data = [
+        {
+            "id": t["id"],
+            "title": t["title"],
+            "cat": t.get("cat"),
+            "game": t.get("game"),
+            "status": t.get("status"),
+            "resolution": t.get("resolution"),
+            "credibility_category": t.get("credibility_category", "unbestaetigt"),
+            "credibility_pct": t.get("credibility_pct", 0),
+            "updated_date": t.get("updated_date"),
+            "image": t.get("image"),
+            "summary": t.get("summary", ""),
+            "entry_count": len(t.get("timeline", [])),
+        }
+        for t in trackers
+    ]
+    # "</script>" im JSON (z. B. falls ein Summary-Text das enthält) würde
+    # sonst das umschliessende <script>-Tag vorzeitig beenden.
+    trackers_json_str = json.dumps(trackers_json_data, ensure_ascii=False).replace("</", "<\\/")
+    js_block = RUMOR_INDEX_JS.replace("__TRACKERS_JSON__", trackers_json_str)
 
     intro = """
 <div class="section-head">
@@ -276,33 +419,34 @@ def build_index_page(trackers):
 <p style="color:var(--muted); font-size:14px; line-height:1.65; margin-bottom:8px; max-width:640px;">
   Statt für jedes neue Detail zu einem laufenden Leak einen weiteren Einzelartikel zu schreiben,
   führen wir hier EINE Seite pro großem Gerücht dauerhaft weiter — mit einer eigenen
-  Glaubwürdigkeits-Einschätzung, die sich mit jedem neuen Stand anpasst.
+  Glaubwürdigkeits-Einschätzung, die sich mit jedem neuen Stand anpasst. Nach Spiel, Kategorie
+  und Status filterbar — so siehst du z. B. auf einen Blick den kompletten Gerüchte-Stand zu GTA 6.
 </p>"""
 
-    active_html = "".join(render_tracker_card(t) for t in active) if active else \
-        '<p class="rumor-empty">Aktuell läuft kein Gerücht — schau bald wieder vorbei.</p>'
-
-    closed_section = ""
-    if closed:
-        closed_html = "".join(render_tracker_card(t) for t in closed)
-        closed_section = f"""
-<div class="rumor-section-head">
-  <h2 class="mono">Abgeschlossene Gerüchte</h2>
-  <div class="rule"></div>
-</div>
-{closed_html}"""
-
     body = f"""{intro}
-<div class="rumor-section-head" style="margin-top:8px;">
-  <h2 class="mono">Aktive Tracker</h2>
-  <div class="rule"></div>
+<div class="section-head" style="margin: 24px 0 12px;">
+  <h2 class="mono" style="font-size:11px; color:var(--muted);">Spiel</h2>
 </div>
-{active_html}
-{closed_section}"""
+<div class="chips" id="rumorGameChips"></div>
+
+<div class="section-head" style="margin: 18px 0 12px;">
+  <h2 class="mono" style="font-size:11px; color:var(--muted);">Kategorie</h2>
+</div>
+<div class="chips" id="rumorCatChips"></div>
+
+<div class="section-head" style="margin: 18px 0 12px;">
+  <h2 class="mono" style="font-size:11px; color:var(--muted);">Status</h2>
+</div>
+<div class="chips" id="rumorStatusChips" style="margin-bottom:22px;"></div>
+
+<div id="rumorGrid"></div>
+<p class="rumor-empty" id="rumorEmpty" style="display:none;">Keine Gerüchte zu dieser Auswahl gefunden — versuch's mit einem anderen Filter.</p>
+
+{js_block}"""
 
     return page_shell(
         title="Gerüchte-Tracker — LOADOUT-NEWS",
-        description="Alle laufenden Gaming-Gerüchte und Leaks im Überblick, mit Glaubwürdigkeits-Einschätzung — dauerhaft aktualisiert statt in Einzelartikeln verstreut.",
+        description="Alle laufenden Gaming-Gerüchte und Leaks im Überblick, filterbar nach Spiel, Kategorie und Status, mit Glaubwürdigkeits-Einschätzung.",
         canonical=f"{SITE_URL}/geruechte.html",
         root="",
         body_html=body,
@@ -350,8 +494,17 @@ def build_tracker_page(t):
     if date_modified:
         json_ld["dateModified"] = date_modified.isoformat()
 
+    game_filter_link = ""
+    if t.get("game") and t["game"] in GAMES:
+        game_filter_link = (
+            f'<a href="../geruechte.html?game={t["game"]}" class="chip" '
+            f'style="text-decoration:none; display:inline-flex; margin-bottom:18px;">'
+            f'Alle {html.escape(GAMES[t["game"]])}-Gerüchte ansehen →</a><br>'
+        )
+
     body = f"""
-<a href="../geruechte.html" class="back-btn mono" style="text-decoration:none; display:inline-flex; margin-bottom:18px;">← ZU ALLEN GERÜCHTEN</a>
+<a href="../geruechte.html" class="back-btn mono" style="text-decoration:none; display:inline-flex; margin-bottom:12px;">← ZU ALLEN GERÜCHTEN</a><br>
+{game_filter_link}
 <div class="detail-art" style="background:url('{img}') center/cover; height:280px; border-radius:16px;"></div>
 <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:18px 0 10px;">
   <span class="badge {t['cat']}">{html.escape(badge_line)}</span>
