@@ -935,6 +935,8 @@ function closeInterestsModal(){
 }
 
 async function saveInterests(){
+  const rumorsToggle = document.getElementById('interestRumorsToggle');
+  if(rumorsToggle) interestRumors = rumorsToggle.checked;
   persistInterests();
   updateInterestsBadge();
   document.getElementById('interestsModal').classList.remove('visible');
