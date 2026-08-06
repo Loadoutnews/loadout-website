@@ -41,9 +41,42 @@ jobs:
       - name: Build rumor tracker pages
         run: python build_rumor_pages.py
 
-      - name: Commit and push changes
+      - name: Commit and push page updates
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add rumors.json rumor-checked.json rumor-state.json geruechte.html geruechte/ sitemap.xml
           git diff --staged --quiet && echo "Keine Änderungen." || (git commit -m "Gerüchte-Tracker: automatisches Update" && git push)
+
+      # Postet NUR bei zwei Ereignissen pro Tracker (neu eröffnet /
+      # abgeschlossen), siehe post_to_social.py: main_rumors(). Läuft nach
+      # dem Seiten-Build, damit geruechte/<id>.html schon live ist, wenn
+      # die Social-Posts darauf verlinken. Committet bei Bedarf selbst
+      # (Instagram-Karussell-Folien, siehe git_commit_and_push in
+      # post_to_social.py) UND am Ende rumor-social-posted.json — daher
+      # der separate, zweite Commit-Schritt danach.
+      - name: Post rumor tracker events to social media
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_INSTAGRAM_CHANNEL_ID: ${{ secrets.BUFFER_INSTAGRAM_CHANNEL_ID }}
+          TUMBLR_CONSUMER_KEY: ${{ secrets.TUMBLR_CONSUMER_KEY }}
+          TUMBLR_CONSUMER_SECRET: ${{ secrets.TUMBLR_CONSUMER_SECRET }}
+          TUMBLR_OAUTH_TOKEN: ${{ secrets.TUMBLR_OAUTH_TOKEN }}
+          TUMBLR_OAUTH_TOKEN_SECRET: ${{ secrets.TUMBLR_OAUTH_TOKEN_SECRET }}
+          TUMBLR_BLOG_NAME: ${{ secrets.TUMBLR_BLOG_NAME }}
+          ZERNIO_API_KEY: ${{ secrets.ZERNIO_API_KEY }}
+          ZERNIO_REDDIT_ACCOUNT_ID: ${{ secrets.ZERNIO_REDDIT_ACCOUNT_ID }}
+          REDDIT_SUBREDDIT: ${{ secrets.REDDIT_SUBREDDIT }}
+          PUSH_SECRET: ${{ secrets.PUSH_SECRET }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python post_to_social.py --rumors
+
+      - name: Commit rumor social-posted state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add rumor-social-posted.json
+          git diff --staged --quiet && echo "Keine Änderungen." || (git commit -m "Gerüchte-Tracker: Social-Posting-Status aktualisiert" && git push)
