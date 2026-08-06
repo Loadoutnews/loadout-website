@@ -4,12 +4,18 @@ LOADOUT-NEWS — Instagram-Karussell-Folien-Generator
 Erzeugt professionell gestaltete, gebrandete Bilder für den Instagram-
 Karussell-Post, statt einfach nur die rohen Artikel-Bilder zu verwenden:
 
-  - Folie 1 (Intro):    Obere 75% = 2×2-Bildraster aus allen 4 Artikelbildern
+  - Folie 1 (Intro):    Obere 75% = Bildraster aus allen neuen Artikelbildern
                          (epische Vorschau, macht Lust auf alle Folien),
-                         mit dem LOADOUT-Logo mittig im Kreuz der vier
-                         Bilder. Untere 25% = Text ("X neue Artikel",
-                         Top-Artikel-Teaser, Swipe-Hinweis) — exakt wie
-                         beim bisherigen Design, nur kompakter.
+                         mit dem LOADOUT-Logo mittig. Bei GENAU 4 Bildern:
+                         2×2-Kreuz-Raster (rechteckige Kacheln). Bei jeder
+                         anderen Anzahl (typischerweise 3, seit der Original-
+                         Artikel einen eigenen Premium-Post bekommt): ein
+                         Kuchenstück-/Peace-Zeichen-Raster, das sich im
+                         Zentrum trifft — so bleibt nie eine Kachel leer,
+                         egal wie viele Artikel es gerade sind. Untere 25%
+                         = Text ("X neue Artikel", Top-Artikel-Teaser,
+                         Swipe-Hinweis) — exakt wie beim bisherigen Design,
+                         nur kompakter.
   - Folie 2..N (Artikel): Artikel-Bild im Hintergrund, dunkler Verlauf für
                          Lesbarkeit, Kategorie-Badge, Artikel-Überschrift
                          in Marken-Typografie im Vordergrund
@@ -25,6 +31,7 @@ stattdessen werden Symbole/Akzente selbst gezeichnet (Punkte, Linien).
 """
 
 import io
+import math
 import os
 
 import requests
@@ -44,6 +51,8 @@ MUTED = (141, 144, 172)    # --muted
 
 CAT_COLORS = {"pc": VIOLET, "konsole": MAGENTA, "hardware": CYAN, "industrie": AMBER}
 CAT_LABELS = {"pc": "PC", "konsole": "KONSOLEN", "hardware": "HARDWARE", "industrie": "INDUSTRIE"}
+
+GRID_FALLBACK_COLORS = [(28, 20, 46), (20, 30, 46), (40, 22, 34), (22, 36, 32), (30, 24, 40), (24, 30, 38)]
 
 FONT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts")
 
@@ -166,35 +175,85 @@ def _decode_image(image_bytes, w, h, fallback_color):
     return Image.new("RGB", (w, h), fallback_color)
 
 
-# --- Folie 1: Intro — 2×2-Bildraster + Logo im Kreuz + Text unten -----------
+# --- Gemeinsame Bildraster-Logik für Intro-Folien (Artikel- & Kalender-Posts) --
+#
+# Bei GENAU 4 Bildern: bewährtes 2×2-Kreuz-Raster (rechteckige Kacheln,
+# Trennlinien im Kreuz). Bei JEDER ANDEREN Anzahl (1, 2, 3, 5, 6 …): ein
+# Kuchenstück-Raster, bei dem sich alle Sektoren im Zentrum treffen — wie
+# die Speichen eines Peace-Zeichens. Das verhindert die leere, kaputt
+# aussehende Kachel, die entstand, als der Batch-Post von 4 auf 3 Artikel
+# (1 Original + 3 News → Original bekam einen eigenen Post) reduziert wurde.
 
-def make_intro_slide(image_bytes_list, article_count, top_title):
-    """image_bytes_list: Liste der rohen Bild-Bytes der (bis zu 4) neuen
-    Artikel, in Anzeige-Reihenfolge (oben-links, oben-rechts, unten-links,
-    unten-rechts). Fehlt ein Bild oder sind es weniger als 4 Artikel, wird
-    die jeweilige Kachel mit einer dezenten Marken-Ersatzfarbe gefüllt,
-    damit das Raster nie kaputt aussieht."""
-    canvas = Image.new("RGB", (SIZE, SIZE), BG)
+def _make_wedge_mask(cx, cy, radius, angle_start_deg, angle_end_deg, size):
+    """Graustufen-Maske für ein 'Kuchenstück' (Kreissektor) von
+    angle_start_deg bis angle_end_deg (0° = nach oben, im Uhrzeigersinn),
+    mit Mittelpunkt (cx, cy). Der Bogen wird durch ausreichend viele
+    Punkte angenähert, damit die Kante glatt wirkt."""
+    mask = Image.new("L", size, 0)
+    draw = ImageDraw.Draw(mask)
+    steps = max(8, int((angle_end_deg - angle_start_deg) / 3))
+    points = [(cx, cy)]
+    for i in range(steps + 1):
+        angle = math.radians(angle_start_deg + (angle_end_deg - angle_start_deg) * i / steps - 90)
+        points.append((cx + radius * math.cos(angle), cy + radius * math.sin(angle)))
+    draw.polygon(points, fill=255)
+    return mask
 
-    cell_w, cell_h = SIZE // 2, GRID_HEIGHT // 2
-    positions = [(0, 0), (cell_w, 0), (0, cell_h), (cell_w, cell_h)]
-    fallback_colors = [(28, 20, 46), (20, 30, 46), (40, 22, 34), (22, 36, 32)]
 
-    for i, pos in enumerate(positions):
-        image_bytes = image_bytes_list[i] if i < len(image_bytes_list) else None
-        cell_img = _decode_image(image_bytes, cell_w, cell_h, fallback_colors[i])
-        # Dezente Abdunklung jeder Kachel — sorgt für ein einheitliches,
-        # ruhigeres Gesamtbild statt 4 grell unterschiedlicher Fotos, und
-        # hält Trennlinien/Logo in der Mitte gut lesbar.
-        dark_overlay = Image.new("RGB", (cell_w, cell_h), BG)
-        cell_img = Image.blend(cell_img, dark_overlay, 0.28)
-        canvas.paste(cell_img, pos)
+def _compose_grid(canvas, image_bytes_list, grid_w=SIZE, grid_h=GRID_HEIGHT, grid_y_offset=0):
+    """Füllt eine Rasterfläche (Breite grid_w, Höhe grid_h, ab grid_y_offset
+    von oben) mit den übergebenen Bildern und zeichnet das LOADOUT-Logo
+    mittig in einem runden Plättchen darüber. Wählt automatisch das
+    passende Muster je nach Bildanzahl:
 
-    # Dünne, dunkle Trennlinien im Kreuz zwischen den 4 Bildern
-    draw = ImageDraw.Draw(canvas)
-    line_w = 6
-    draw.rectangle([cell_w - line_w // 2, 0, cell_w + line_w // 2, GRID_HEIGHT], fill=BG)
-    draw.rectangle([0, cell_h - line_w // 2, SIZE, cell_h + line_w // 2], fill=BG)
+    - genau 4 Bilder → 2×2-Kreuz-Raster (rechteckige Kacheln)
+    - jede andere Anzahl (>= 1) → Kuchenstück-Raster, alle Sektoren treffen
+      sich im Zentrum — keine leere Kachel, egal wie viele Bilder es sind
+    """
+    count = max(1, len(image_bytes_list))
+    cx, cy = grid_w // 2, grid_y_offset + grid_h // 2
+
+    if len(image_bytes_list) == 4:
+        cell_w, cell_h = grid_w // 2, grid_h // 2
+        positions = [
+            (0, grid_y_offset), (cell_w, grid_y_offset),
+            (0, grid_y_offset + cell_h), (cell_w, grid_y_offset + cell_h),
+        ]
+        for i, pos in enumerate(positions):
+            image_bytes = image_bytes_list[i] if i < len(image_bytes_list) else None
+            tile = _decode_image(image_bytes, cell_w, cell_h, GRID_FALLBACK_COLORS[i % len(GRID_FALLBACK_COLORS)])
+            dark_overlay = Image.new("RGB", (cell_w, cell_h), BG)
+            tile = Image.blend(tile, dark_overlay, 0.28)
+            canvas.paste(tile, pos)
+
+        draw = ImageDraw.Draw(canvas)
+        line_w = 6
+        draw.rectangle([cx - line_w // 2, grid_y_offset, cx + line_w // 2, grid_y_offset + grid_h], fill=BG)
+        draw.rectangle([0, cy - line_w // 2, grid_w, cy + line_w // 2], fill=BG)
+    else:
+        # Kuchenstück-Raster: jedes Bild deckt die komplette Rasterfläche
+        # ab und wird dann per Sektor-Maske auf sein "Tortenstück" beschnitten.
+        radius = int(math.hypot(grid_w / 2, grid_h / 2)) + 20
+        wedge_angle = 360 / count
+        for i in range(count):
+            image_bytes = image_bytes_list[i] if i < len(image_bytes_list) else None
+            tile = _decode_image(image_bytes, grid_w, grid_h, GRID_FALLBACK_COLORS[i % len(GRID_FALLBACK_COLORS)])
+            dark_overlay = Image.new("RGB", (grid_w, grid_h), BG)
+            tile = Image.blend(tile, dark_overlay, 0.28)
+
+            mask_local = _make_wedge_mask(grid_w // 2, grid_h // 2, radius, i * wedge_angle, (i + 1) * wedge_angle,
+                                           size=(grid_w, grid_h))
+            canvas.paste(tile, (0, grid_y_offset), mask_local)
+
+        if count > 1:
+            # Dünne, dunkle Speichen vom Zentrum zum Rand — wie bei einem
+            # Peace-Zeichen — für klare, saubere Kanten zwischen den Sektoren.
+            draw = ImageDraw.Draw(canvas)
+            for i in range(count):
+                angle = math.radians(i * wedge_angle - 90)
+                end_x = cx + radius * math.cos(angle)
+                end_y = cy + radius * math.sin(angle)
+                draw.line([(cx, cy), (end_x, end_y)], fill=BG, width=6)
 
     # Weicher Verlauf am unteren Rand des Rasters — sanfter Übergang zur
     # Textzone statt einer harten Kante
@@ -202,23 +261,38 @@ def make_intro_slide(image_bytes_list, article_count, top_title):
     fade = Image.new("L", (1, fade_h))
     for y in range(fade_h):
         fade.putpixel((0, y), int(255 * (y / fade_h)))
-    fade = fade.resize((SIZE, fade_h))
-    dark_strip = Image.new("RGB", (SIZE, fade_h), BG)
-    region = canvas.crop((0, GRID_HEIGHT - fade_h, SIZE, GRID_HEIGHT))
+    fade = fade.resize((grid_w, fade_h))
+    dark_strip = Image.new("RGB", (grid_w, fade_h), BG)
+    fade_top = grid_y_offset + grid_h - fade_h
+    region = canvas.crop((0, fade_top, grid_w, grid_y_offset + grid_h))
     region = Image.composite(dark_strip, region, fade)
-    canvas.paste(region, (0, GRID_HEIGHT - fade_h))
+    canvas.paste(region, (0, fade_top))
 
-    # LOADOUT-Logo mittig im Kreuz der vier Bilder — mit einem dunklen,
-    # runden Hintergrund-Plättchen, damit es über jedem beliebigen
-    # Bild-Motiv gut lesbar bleibt, ohne die Bilder grossflächig zu verdecken.
+    # LOADOUT-Logo mittig — mit einem dunklen, runden Hintergrund-Plättchen,
+    # damit es über jedem beliebigen Bild-Motiv gut lesbar bleibt, egal
+    # welches Muster (Kreuz oder Kuchenstücke) gerade verwendet wird.
     logo_scale = 1.35
     logo_icon_w = int(120 * logo_scale)
     badge_pad = 22
     badge_size = logo_icon_w + badge_pad * 2
     badge = Image.new("RGBA", (badge_size, badge_size), (0, 0, 0, 0))
     ImageDraw.Draw(badge).ellipse([0, 0, badge_size, badge_size], fill=(*BG, 235))
-    canvas.paste(badge, (cell_w - badge_size // 2, cell_h - badge_size // 2), badge)
-    draw_logo_icon(canvas, cell_w - logo_icon_w // 2, cell_h - logo_icon_w // 2, scale=logo_scale)
+    canvas.paste(badge, (cx - badge_size // 2, cy - badge_size // 2), badge)
+    draw_logo_icon(canvas, cx - logo_icon_w // 2, cy - logo_icon_w // 2, scale=logo_scale)
+
+
+# --- Folie 1: Intro — Bildraster (Kreuz bei 4, sonst Kuchenstücke) + Logo ---
+# + Text unten ---------------------------------------------------------------
+
+def make_intro_slide(image_bytes_list, article_count, top_title):
+    """image_bytes_list: Liste der rohen Bild-Bytes der neuen Artikel, in
+    Anzeige-Reihenfolge. Bei genau 4 Bildern entsteht das bewährte
+    2×2-Kreuz-Raster; bei jeder anderen Anzahl (typischerweise 3, siehe
+    Moduldoku oben) ein Kuchenstück-Raster ohne leere Kachel. Fehlt ein
+    einzelnes Bild, wird die jeweilige Kachel mit einer dezenten
+    Marken-Ersatzfarbe gefüllt, damit das Raster nie kaputt aussieht."""
+    canvas = Image.new("RGB", (SIZE, SIZE), BG)
+    _compose_grid(canvas, image_bytes_list)
 
     # --- Untere 25%: Text — "X neue Artikel", Top-Artikel-Teaser, Swipe-Hinweis ---
     draw = ImageDraw.Draw(canvas)
@@ -374,8 +448,8 @@ def _download_image(url):
 
 
 def generate_all_slides(articles, output_dir, run_id):
-    """Erzeugt Intro-Folie (mit 2×2-Bildraster aller Artikel) + eine Folie
-    pro Artikel und speichert sie lokal. Die Outro-Folie wird bewusst NICHT
+    """Erzeugt Intro-Folie (mit Bildraster aller Artikel) + eine Folie pro
+    Artikel und speichert sie lokal. Die Outro-Folie wird bewusst NICHT
     hier erzeugt — die ist ein fester, einmalig erstellter Bestandteil des
     Repos (siehe social-assets/), damit sie garantiert bei jedem Post exakt
     identisch bleibt.
@@ -409,8 +483,8 @@ def generate_all_slides(articles, output_dir, run_id):
 
 
 # --- Kalender-Posts (Release-/Update-Kalender) ------------------------------
-# Dasselbe visuelle Grundprinzip wie bei den Artikel-Folien (2×2-Bildraster
-# + Logo im Kreuz auf der Intro-Folie, dann eine Folie pro Eintrag, feste
+# Dasselbe visuelle Grundprinzip wie bei den Artikel-Folien (Bildraster +
+# Logo mittig auf der Intro-Folie, dann eine Folie pro Eintrag, feste
 # Outro-Folie) — aber mit frei wählbarem Text statt der festen
 # "X neue Artikel"-Formel, damit dieselbe Optik auch für Release-/Update-
 # Meldungen funktioniert. Bewusst als EIGENE Funktionen statt die
@@ -418,49 +492,16 @@ def generate_all_slides(articles, output_dir, run_id):
 # das bereits laufende Artikel-Karussell garantiert unangetastet.
 
 def make_calendar_intro_slide(image_bytes_list, line1, line2, line3):
-    """Generalisierte Intro-Folie für Kalender-Posts: identisches 2×2-
-    Bildraster + Logo-im-Kreuz-Design wie make_intro_slide, aber mit 3 frei
+    """Generalisierte Intro-Folie für Kalender-Posts: dasselbe Bildraster-
+    Verhalten wie make_intro_slide (2×2-Kreuz bei genau 4 Einträgen, sonst
+    Kuchenstücke ohne leere Kachel) + Logo mittig, aber mit 3 frei
     wählbaren Textzeilen statt der festen Artikel-Anzahl-Formel — z. B.
     für den Update-Kalender: ("3 NEUE UPDATES", "u. a. GTA 6 Season 5",
     "SWIPE FÜR ALLE UPDATES →"), oder für den Release-Kalender:
     ("TOP-RELEASES AUGUST", "+8 weitere Releases diesen Monat",
     "SWIPE FÜR ALLE RELEASES →")."""
     canvas = Image.new("RGB", (SIZE, SIZE), BG)
-
-    cell_w, cell_h = SIZE // 2, GRID_HEIGHT // 2
-    positions = [(0, 0), (cell_w, 0), (0, cell_h), (cell_w, cell_h)]
-    fallback_colors = [(28, 20, 46), (20, 30, 46), (40, 22, 34), (22, 36, 32)]
-
-    for i, pos in enumerate(positions):
-        image_bytes = image_bytes_list[i] if i < len(image_bytes_list) else None
-        cell_img = _decode_image(image_bytes, cell_w, cell_h, fallback_colors[i])
-        dark_overlay = Image.new("RGB", (cell_w, cell_h), BG)
-        cell_img = Image.blend(cell_img, dark_overlay, 0.28)
-        canvas.paste(cell_img, pos)
-
-    draw = ImageDraw.Draw(canvas)
-    line_w = 6
-    draw.rectangle([cell_w - line_w // 2, 0, cell_w + line_w // 2, GRID_HEIGHT], fill=BG)
-    draw.rectangle([0, cell_h - line_w // 2, SIZE, cell_h + line_w // 2], fill=BG)
-
-    fade_h = 90
-    fade = Image.new("L", (1, fade_h))
-    for y in range(fade_h):
-        fade.putpixel((0, y), int(255 * (y / fade_h)))
-    fade = fade.resize((SIZE, fade_h))
-    dark_strip = Image.new("RGB", (SIZE, fade_h), BG)
-    region = canvas.crop((0, GRID_HEIGHT - fade_h, SIZE, GRID_HEIGHT))
-    region = Image.composite(dark_strip, region, fade)
-    canvas.paste(region, (0, GRID_HEIGHT - fade_h))
-
-    logo_scale = 1.35
-    logo_icon_w = int(120 * logo_scale)
-    badge_pad = 22
-    badge_size = logo_icon_w + badge_pad * 2
-    badge = Image.new("RGBA", (badge_size, badge_size), (0, 0, 0, 0))
-    ImageDraw.Draw(badge).ellipse([0, 0, badge_size, badge_size], fill=(*BG, 235))
-    canvas.paste(badge, (cell_w - badge_size // 2, cell_h - badge_size // 2), badge)
-    draw_logo_icon(canvas, cell_w - logo_icon_w // 2, cell_h - logo_icon_w // 2, scale=logo_scale)
+    _compose_grid(canvas, image_bytes_list)
 
     draw = ImageDraw.Draw(canvas)
     ty = GRID_HEIGHT + 24
