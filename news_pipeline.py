@@ -63,6 +63,43 @@ MAX_ARTICLES_TOTAL = 60     # wie viele Artikel maximal in articles.json stehen 
 
 ARTICLES_FILE = "articles.json"
 ARCHIVE_FILE = "archive.json"
+RUMORS_FILE = "rumors.json"  # siehe rumor_tracker.py — für Cross-Pipeline-Dedup, siehe main()
+
+# Wie weit die Duplikat-Prüfung gegen bereits veröffentlichte Artikel im
+# Archiv zurückschaut (siehe recent_source_titles in main()). Zeitbasiert
+# statt einer festen Anzahl Einträge — robust unabhängig davon, wie viele
+# Artikel zwischenzeitlich veröffentlicht wurden (dieselbe Korrektur wie in
+# breaking_news_check.py: archive.json wird per "archive = written +
+# archive" immer VORNE ergänzt/neueste zuerst; ein fixes archive[-40:]
+# holte deshalb fälschlich die 40 ÄLTESTEN statt neuesten Einträge).
+RECENT_DEDUP_DAYS = 10
+
+GERMAN_MONTHS = {
+    "Januar": 1, "Februar": 2, "März": 3, "April": 4, "Mai": 5, "Juni": 6,
+    "Juli": 7, "August": 8, "September": 9, "Oktober": 10, "November": 11, "Dezember": 12,
+}
+
+
+def _parse_article_date(article):
+    """Wandelt das deutsche Datumsformat der Artikel (z. B. "05. August
+    2026") in ein vergleichbares datetime.date um. Gibt None zurück, wenn
+    das Format nicht erkannt wird — solche Artikel werden dann
+    sicherheitshalber TROTZDEM in die Duplikat-Prüfung aufgenommen (siehe
+    recent_source_titles in main()), statt sie stillschweigend zu
+    ignorieren."""
+    date_str = article.get("date", "")
+    match = re.match(r"(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)\s*(\d{4})", date_str.strip())
+    if not match:
+        return None
+    day, month_name, year = match.groups()
+    month = GERMAN_MONTHS.get(month_name)
+    if not month:
+        return None
+    try:
+        return datetime.date(int(year), month, int(day))
+    except ValueError:
+        return None
+
 
 # --- Eigenständige Analyse-Artikel ------------------------------------------
 # Ein Teil der täglichen Artikel soll NICHT aus einer einzelnen RSS-Meldung
@@ -1047,10 +1084,33 @@ def main():
     # Vergleich Englisch-gegen-Deutsch würde so gut wie nie anschlagen,
     # selbst bei exakt demselben Thema, weil die KI die Meldung ja komplett
     # neu auf Deutsch formuliert.
+    #
+    # KORREKTUR: archive[-40:] holte bisher fälschlich die 40 ÄLTESTEN statt
+    # neuesten Einträge (siehe RECENT_DEDUP_DAYS oben) — jetzt zeitbasiert
+    # gefiltert, robust unabhängig von der Lauf-Häufigkeit.
+    cutoff = datetime.date.today() - datetime.timedelta(days=RECENT_DEDUP_DAYS)
+    recent_from_archive = [
+        a for a in archive
+        if (_parse_article_date(a) is None) or (_parse_article_date(a) >= cutoff)
+    ]
     recent_source_titles = [
         a.get("source_title", a.get("title", ""))  # Fallback für ältere Artikel ohne source_title
-        for a in (archive[-40:] + existing)
+        for a in (recent_from_archive + existing)
     ]
+
+    # Cross-Pipeline-Dedup: Themen, die gerade als GERÜCHTE-TRACKER laufen
+    # (siehe rumor_tracker.py), werden hier mit in die Duplikat-Prüfung
+    # aufgenommen — verhindert, dass ein noch unbestätigtes Gerücht
+    # zusätzlich einen vollständigen, "bestätigt klingenden" regulären
+    # Artikel bekommt, während der Tracker dasselbe Thema noch als offen
+    # führt. Nur AKTIVE Tracker zählen — ein bereits abgeschlossener
+    # Tracker (bestätigt/dementiert) soll die reguläre Berichterstattung
+    # über die tatsächliche Bestätigung nicht blockieren.
+    if os.path.exists(RUMORS_FILE):
+        with open(RUMORS_FILE, "r", encoding="utf-8") as f:
+            rumor_trackers = json.load(f)
+        active_rumor_titles = [t.get("topic_name", "") for t in rumor_trackers if t.get("status") == "aktiv"]
+        recent_source_titles += active_rumor_titles
 
     written = []
 
