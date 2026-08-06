@@ -964,7 +964,7 @@ async function syncPushPreferencesIfSubscribed(){
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         subscription,
-        preferences: { games: [...interestGames], categories: [...interestCategories] },
+                preferences: { games: [...interestGames], categories: [...interestCategories], rumors: interestRumors },
       }),
     });
   } catch(e) {
@@ -1976,7 +1976,7 @@ async function enablePush(){
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         subscription,
-        preferences: { games: [...interestGames], categories: [...interestCategories] },
+                preferences: { games: [...interestGames], categories: [...interestCategories], rumors: interestRumors },
       }),
     });
     document.getElementById("pushPrompt").classList.remove("visible");
