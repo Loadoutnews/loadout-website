@@ -1,5 +1,26 @@
 [
   {
+    "id": "dabc8fbde0",
+    "cat": "konsole",
+    "game": null,
+    "genre": "action",
+    "title": "Leak: Diablo 4 kommt im September auf Nintendo Switch 2 – als Code-in-a-Box",
+    "teaser": "Laut einem neuen Leak erscheint Diablo 4 bereits im September für Nintendo Switch 2 – physisch aber ohne Modul.",
+    "body": [
+      "Ein neuer Leak des als zuverlässig geltenden Insiders billbil-kun von Dealabs bringt Bewegung in die Gerüchte um eine Switch-2-Version von Diablo 4. Demnach soll der Blizzard-Titel entweder am 15. oder am 18. September erscheinen. <cite index=\"7-3,7-4\">Laut dem Insider erscheint die Switch-2-Portierung von Diablo 4 entweder am 15. oder am 18. September, wobei man noch nicht garantieren könne, welches der beiden Daten korrekt sei, das Release aber definitiv an einem dieser Tage stattfinde.</cite> Preislich soll das Spiel <cite index=\"7-5\">für 69,99 US-Dollar, 69,99 Euro beziehungsweise 62,99 britische Pfund erhältlich sein</cite>. Auch eine physische Fassung ist geplant, allerdings ohne klassisches Modul: <cite index=\"3-2,3-3\">Eine physische Edition wird zwar erhältlich sein, jedoch ohne Modul in der Box – stattdessen erhalten Käufer einen Downloadcode für den Nintendo eShop</cite>, ein Format, das gemeinhin als Code-in-a-Box bekannt ist.",
+      "Wichtig: Offiziell bestätigt ist bislang nichts – <cite index=\"4-10\">Activision Blizzard hat sich zu einer Switch-2-Portierung von Diablo IV bislang nicht geäußert</cite>. Auch ob die zuletzt erschienene Erweiterung Lord of Hatred im Switch-2-Release enthalten sein wird, ist noch unklar. <cite index=\"7-6\">Es ist zudem noch nicht bestätigt, ob die Switch-2-Version das Lord-of-Hatred-DLC enthalten wird oder ob dieses separat erworben werden muss.</cite> Spekuliert wird zudem über eine mögliche offizielle Ankündigung im Rahmen der Gamescom: <cite index=\"5-8\">Der Leaker spekuliert über eine Ankündigung während Geoff Keighleys Gamescom 2026 Opening Night Live, die am 25. August um 20 Uhr MEZ aus Köln übertragen wird.</cite> Bis zu einer offiziellen Bestätigung durch Blizzard bleibt die Meldung daher mit Vorsicht zu genießen."
+    ],
+    "editorial_take": "",
+    "source_title": "Diablo 4 Leak Reveals Nintendo Switch 2 Release Date, Price and Code-in-a-Box Physical Release",
+    "date": "06. August 2026",
+    "platform": "IGN Articles",
+    "hype": 62,
+    "source": "https://www.ign.com/articles/diablo-4-leak-reveals-nintendo-switch-2-release-date-price-and-code-in-a-box-physical-release",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/04/28/diablothumb-1777408664411.png",
+    "content_type": "breaking"
+  },
+  {
     "id": "036a6cf129",
     "cat": "industrie",
     "game": "cod",
