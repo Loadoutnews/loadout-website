@@ -513,13 +513,31 @@ def fetch_og_image(url, timeout=8, max_bytes=200_000):
     return None
 
 
+FEED_FETCH_TIMEOUT = 15  # Sekunden — siehe fetch_raw_entries() unten
+
+
 def fetch_raw_entries():
     """Liest alle konfigurierten RSS-Feeds und gibt eine flache Liste aller
-    Einträge zurück (Titel, Link, Zusammenfassung, Quelle, Prioritäts-Flag)."""
+    Einträge zurück (Titel, Link, Zusammenfassung, Quelle, Prioritäts-Flag).
+
+    WICHTIG: feedparser.parse(url) — direkt mit einer URL aufgerufen — setzt
+    KEINEN eigenen Timeout. Antwortet ein einzelner Feed langsam oder gar
+    nicht (kommt bei RSS-Feeds gelegentlich vor), blieb die komplette
+    Pipeline dort bislang OHNE Fehlermeldung hängen, bis irgendwann der
+    GitHub-Actions-Runner selbst abbrach — sichtbares Symptom: der Lauf
+    läuft minutenlang, bricht dann ohne jede weitere Log-Zeile ab. Deshalb
+    wird hier jeder Feed zuerst über requests mit einem harten Timeout
+    geholt (schlägt er fehl, wird er einfach übersprungen, wie bisher schon
+    bei anderen Fehlern) und erst der bereits geladene Inhalt an feedparser
+    übergeben — feedparser selbst parst dann nur noch lokal im Speicher,
+    ohne eigene Netzwerk-Anfrage."""
     entries = []
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; LoadoutNewsBot/1.0; +https://loadout-news.com)"}
     for feed_cfg in FEEDS:
         try:
-            parsed = feedparser.parse(feed_cfg["url"])
+            resp = requests.get(feed_cfg["url"], timeout=FEED_FETCH_TIMEOUT, headers=headers)
+            resp.raise_for_status()
+            parsed = feedparser.parse(resp.content)
             source_name = parsed.feed.get("title", feed_cfg["url"]) if parsed.feed else feed_cfg["url"]
             for e in parsed.entries[:20]:
                 image = None
