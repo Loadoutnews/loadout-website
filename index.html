@@ -863,7 +863,7 @@ function loadPersistedState(){
   try {
     JSON.parse(localStorage.getItem('loadout_interestCategories') || '[]').forEach(k => interestCategories.add(k));
   } catch(e) { /* siehe oben */ }
-    try {
+  try {
     const storedRumors = localStorage.getItem('loadout_interestRumors');
     if(storedRumors !== null) interestRumors = storedRumors === 'true';
   } catch(e) { /* siehe oben */ }
