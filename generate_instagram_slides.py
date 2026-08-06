@@ -1045,7 +1045,7 @@ def generate_breaking_slides(article, output_dir, run_id):
     return paths
 
 
-# --- Gerüchte-Tracker: eigenständiges Design für "Neu"/"Abgeschlossen" ------
+# --- Leaks & Gerüchte-Tracker: eigenständiges Design für "Neu"/"Update" ------
 # Weder die Marken-Farben (normale Artikel/Original) noch Rot/Amber
 # (Breaking News) — der Gerüchte-Tracker bekommt bewusst eine eigene,
 # "ermittlerische" Optik (Lupe statt Warndreieck) und je nach Ereignis eine
@@ -1155,11 +1155,15 @@ def make_rumor_fact_slide(fact_text, label, accent_color):
 
 
 def generate_rumor_slides(tracker, event_type, output_dir, run_id):
-    """Orchestriert die Gerüchte-Tracker-Folienserie: Cover + 1 Fakt-Folie.
-    event_type ist "new" (neuer Tracker eröffnet) oder "resolved"
-    (Tracker als bestätigt/dementiert abgeschlossen) — bestimmt Badge-Text,
-    Akzentfarbe und welcher Zeitleisten-Text gezeigt wird. Die feste
-    Outro-Folie wird wie überall vom aufrufenden Code separat angehängt."""
+    """Orchestriert die Leaks & Gerüchte-Tracker-Folienserie: Cover + 1
+    Fakt-Folie. event_type ist "new" (neuer Tracker eröffnet) oder
+    "resolved" (Tracker als bestätigt/dementiert abgeschlossen) —
+    bestimmt Badge-Text, Akzentfarbe und welcher Zeitleisten-Text gezeigt
+    wird. Der Badge-Text macht IMMER explizit sichtbar, ob es sich um ein
+    komplett neues Leak/Gerücht handelt oder um ein Update zu einem
+    bereits laufenden Tracker — auch ohne den Zeitleisten-Kontext von der
+    Website. Die feste Outro-Folie wird wie überall vom aufrufenden Code
+    separat angehängt."""
     os.makedirs(output_dir, exist_ok=True)
     paths = []
 
@@ -1167,16 +1171,16 @@ def generate_rumor_slides(tracker, event_type, output_dir, run_id):
     latest_text = (tracker.get("timeline") or [{}])[0].get("text", tracker.get("summary", ""))
 
     if event_type == "new":
-        badge_text, badge_color = "NEUES GERÜCHT", VIOLET
-        sub_label = "LOADOUT GERÜCHTE-TRACKER"
+        badge_text, badge_color = "NEUES LEAK / GERÜCHT", VIOLET
+        sub_label = "LOADOUT LEAKS & GERÜCHTE"
         fact_label, accent = "WAS GERADE AUFGETAUCHT IST", CYAN
     else:
         resolution = tracker.get("resolution")
         if resolution == "bestaetigt":
-            badge_text, badge_color, accent = "GERÜCHT BESTÄTIGT", CYAN, CYAN
+            badge_text, badge_color, accent = "UPDATE: BESTÄTIGT", CYAN, CYAN
         else:
-            badge_text, badge_color, accent = "GERÜCHT DEMENTIERT", BREAKING_RED, BREAKING_RED
-        sub_label = "LOADOUT GERÜCHTE-TRACKER · ABGESCHLOSSEN"
+            badge_text, badge_color, accent = "UPDATE: DEMENTIERT", BREAKING_RED, BREAKING_RED
+        sub_label = "LOADOUT LEAKS & GERÜCHTE · UPDATE"
         fact_label = "DER FINALE STAND"
 
     cover = make_rumor_cover_slide(image_bytes, tracker["title"], badge_text, badge_color, sub_label)
