@@ -1,5 +1,5 @@
 """
-LOADOUT-NEWS — Der lebende Gerüchte-Tracker
+LOADOUT-NEWS — Der lebende Leaks & Gerüchte-Tracker
 ================================================
 Richtung 3 der Alleinstellungsmerkmale: Statt für jedes neue Detail zu einem
 laufenden Leak/Gerücht einen weiteren Einzelartikel zu schreiben, pflegt
