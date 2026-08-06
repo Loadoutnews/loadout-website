@@ -33,6 +33,16 @@
   .rumor-section-head h2 { font-size:15px; letter-spacing:.02em; color:var(--muted, #8D90AC); }
   .rumor-section-head .rule { flex:1; height:1px; background:var(--line, #22263a); }
   .rumor-empty { color:var(--muted, #8D90AC); font-size:14px; padding:24px 0; }
+  /* Logo-Wortmarke im eigenen Nav: exakt dieselben Farben wie auf der
+     Startseite, aber HART gesetzt (inline, höchste Spezifität) statt sich
+     auf ererbte .logo-text-Regeln zu verlassen — auf der Startseite steckt
+     das Logo in einem <div onclick=...>, hier (eigene statische Seiten,
+     kein SPA-Router) in einem echten <a href>-Link. Ein <a> ohne explizite
+     Farbe kann vom Browser/Stylesheet eine eigene Link-Farbe bekommen, die
+     sich an Kind-Elemente ohne eigene Farbregel vererbt (z. B. -NEWS) und
+     dadurch genau das gemeldete "Logo in anderen Farben" verursacht hat.
+     Deshalb hier alles explizit statt implizit. */
+  .rumor-logo-link { text-decoration:none; color:var(--text, #E9E8F5); }
 </style>
 <title>Gerüchte-Tracker — LOADOUT-NEWS</title>
 <meta name="description" content="Alle laufenden Gaming-Gerüchte und Leaks im Überblick, mit Glaubwürdigkeits-Einschätzung — dauerhaft aktualisiert statt in Einzelartikeln verstreut.">
@@ -47,7 +57,7 @@
 <body>
 <div class="nav-wrap">
   <nav>
-    <a href="index.html" class="logo-lockup" style="text-decoration:none;">
+    <a href="index.html" class="logo-lockup rumor-logo-link">
       <svg class="logo-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
           <linearGradient id="navMarkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -63,7 +73,9 @@
         <rect x="76" y="36" width="12" height="44" rx="5" fill="url(#navMarkGradient)"/>
       </svg>
       <div>
-        <div class="logo-text display">LOAD<span>OUT</span><small class="mono">-NEWS</small></div>
+        <div class="logo-text display">
+          <span style="color:var(--text, #E9E8F5);">LOAD</span><span style="color:var(--magenta, #FF4D8D);">OUT</span><small class="mono" style="color:var(--muted, #8D90AC); font-weight:500;">-NEWS</small>
+        </div>
       </div>
     </a>
     <div class="nav-right">
@@ -89,6 +101,19 @@
   <div class="rule"></div>
 </div>
 
+<a href="geruechte/halo-studios-entlassungswelle-nach-campaign-evolved.html" class="rumor-list-card">
+  <div class="rumor-list-art" style="background-image:url('https://assetsio.gnwcdn.com/halo-campaign-evolved-master-chief-back.jpeg?width=690&quality=85&format=jpg&auto=webp');"></div>
+  <div class="rumor-list-body">
+    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+      <span class="badge industrie">Industrie</span>
+      <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:999px; background:rgba(124,92,252,0.15); border:1px solid rgba(124,92,252,0.4); color:#7C5CFC; font-weight:700; font-size:13px;"><span class="rumor-live-dot" style="width:7px; height:7px; border-radius:50%; background:#7C5CFC;"></span>Läuft noch</span>
+      <span class="rumor-credibility-badge" style="display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; background:#7C5CFC22; border:1px solid #7C5CFC66; color:#7C5CFC; font-weight:700; font-size:11px; white-space:nowrap;"><span style="width:7px; height:7px; border-radius:50%; background:#7C5CFC;"></span>Sehr wahrscheinlich · 80%</span>
+    </div>
+    <h3>Halo Studios Entlassungswelle nach Campaign Evolved — Stand der Gerüchte</h3>
+    <p style="color:var(--muted); font-size:13.5px; line-height:1.55; margin-bottom:8px;">Nur wenige Tage nach dem Release von Halo: Campaign Evolved sollen bei Halo Studios (ehemals 343 Industries) erneut Stellen abgebaut worden sein. Mehrere Bet…</p>
+    <div class="rumor-list-meta">Zuletzt aktualisiert: 06. August 2026 · 1 Eintrag</div>
+  </div>
+</a>
 <a href="geruechte/rockstar-ignoriert-gta-5-star-bei-gta-6-casting.html" class="rumor-list-card">
   <div class="rumor-list-art" style="background-image:url('https://assets-prd.ignimgs.com/2026/08/05/gta-steve-haines-1785966835318.jpg?width=1280&amp;format=jpg&amp;auto=webp&amp;quality=80');"></div>
   <div class="rumor-list-body">
