@@ -891,6 +891,7 @@ function persistInterests(){
   try {
     localStorage.setItem('loadout_interestGames', JSON.stringify([...interestGames]));
     localStorage.setItem('loadout_interestCategories', JSON.stringify([...interestCategories]));
+    localStorage.setItem('loadout_interestRumors', String(interestRumors));
   } catch(e) {}
 }
 
