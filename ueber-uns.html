@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Über uns — LOADOUT-NEWS</title>
-<meta name="description" content="Wie LOADOUT-NEWS funktioniert: KI-gestützte Recherche, redaktionelle Kuratierung und Transparenz darüber, wie unsere Artikel entstehen.">
+<meta name="description" content="Wie LOADOUT-NEWS funktioniert: KI-gestützte Recherche, redaktionelle Kuratierung und Transparenz darüber, wie unsere Artikel, Breaking News und unser Leaks & Gerüchte-Tracker entstehen.">
 <style>
   :root{
     --bg:#0A0C16; --surface:#12162A; --line:#262C4A; --text:#E9E8F5;
@@ -47,6 +47,16 @@
   }
   .process-text h3{ font-size:14.5px; margin-bottom:4px; color:var(--text); }
   .process-text p{ margin-bottom:0; }
+  .format-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:12px;
+    padding:16px 18px; margin-bottom:14px;
+  }
+  .format-card h3{ font-size:14px; color:var(--text); margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+  .format-card p{ margin-bottom:0; font-size:13.5px; }
+  .format-badge{
+    display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:0.03em;
+    padding:2px 8px; border-radius:999px; text-transform:uppercase;
+  }
   .contact-box{
     background:var(--surface); border:1px solid var(--line); border-radius:12px;
     padding:20px 22px; margin-top:20px;
@@ -97,9 +107,40 @@
     PC Gamer, Eurogamer, GameSpot, Polygon und spezialisierte Portale für die grossen
     Franchises wie GTA, Minecraft, Fortnite, Call of Duty, Valorant und FIFA/EA Sports FC).
     Daraus entstehen eigenständig geschriebene, deutschsprachige Artikel, ein
-    Release-Kalender für kommende Spiele und ein Update-Kalender für angekündigte
-    Patches und Seasons.
+    Release-Kalender für kommende Spiele, ein Update-Kalender für angekündigte
+    Patches und Seasons sowie unser <a href="geruechte.html">Leaks &amp; Gerüchte-Tracker</a>
+    für laufende, noch unbestätigte Themen.
   </p>
+
+  <h2>Unsere Content-Formate im Überblick</h2>
+  <p>Nicht jeder Artikel entsteht auf dieselbe Art — vier Formate, klar unterscheidbar:</p>
+
+  <div class="format-card">
+    <h3><span class="format-badge" style="background:rgba(124,92,252,0.18); color:var(--violet);">Standard</span> Reguläre Artikel</h3>
+    <p>Basieren auf einer oder mehreren Presse-/Fachmedien-Quellen, eigenständig recherchiert und auf Deutsch neu formuliert — mit sichtbarem Link zur Originalquelle.</p>
+  </div>
+
+  <div class="format-card">
+    <h3><span class="format-badge" style="background:rgba(255,77,141,0.18); color:var(--magenta);">Original</span> LOADOUT-Original</h3>
+    <p>Eigenständige Recherche-Artikel, für die eine KI mehrere unabhängige Quellen (Charts, Streaming-Statistiken, Community-Diskussionen, Presseberichte) auswertet und zu einem eigenen Stück mit redaktioneller Einschätzung zusammenführt — keine Umformulierung einer einzelnen Meldung.</p>
+  </div>
+
+  <div class="format-card">
+    <h3><span class="format-badge" style="background:rgba(255,59,48,0.18); color:#FF3B30;">Eilmeldung</span> Breaking News</h3>
+    <p>Für wirklich zeitkritische Ereignisse (überraschende Terminverschiebungen, grosse Leaks, Plattform-Störungen). Bewusst selten und mit hoher Hürde, damit "Breaking News" bei uns etwas Besonderes bleibt.</p>
+  </div>
+
+  <div class="format-card">
+    <h3><span class="format-badge" style="background:rgba(52,217,201,0.18); color:var(--cyan);">Laufend</span> Leaks &amp; Gerüchte-Tracker</h3>
+    <p>
+      Statt für jedes neue Detail zu einem Gerücht einen weiteren Artikel zu schreiben, führen wir
+      pro Thema EINE dauerhafte Seite, die bei neuen Infos automatisch weitergeführt wird — inklusive
+      einer eigenen, KI-gestützten Glaubwürdigkeits-Einschätzung (von "Unbestätigt" bis "Bestätigt"
+      oder "Dementiert"), die sich mit jedem neuen Stand anpassen kann. Wichtig: Auch eine hohe
+      Glaubwürdigkeits-Einstufung ist keine Garantie — es bleibt ein Gerücht, bis es offiziell
+      bestätigt ist. Mehr dazu in unseren <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a>.
+    </p>
+  </div>
 
   <h2>Wie unsere Artikel entstehen</h2>
 
@@ -123,7 +164,7 @@
     <div class="process-num">3</div>
     <div class="process-text">
       <h3>Kuratieren</h3>
-      <p>Nicht jede Meldung schafft es auf die Seite. Themen werden nach Relevanz ausgewählt, Duplikate (dieselbe Meldung aus mehreren Quellen) automatisch erkannt und herausgefiltert, und jeder Artikel bekommt eine Einordnung, wie bedeutend das Thema wirklich ist (unser "Hype-Meter").</p>
+      <p>Nicht jede Meldung schafft es auf die Seite. Themen werden nach Relevanz ausgewählt, Duplikate (dieselbe Meldung aus mehreren Quellen, oder ein Thema, das bereits als Artikel oder Gerücht läuft) automatisch erkannt und herausgefiltert, und jeder Artikel bekommt eine Einordnung, wie bedeutend das Thema wirklich ist (unser "Hype-Meter").</p>
     </div>
   </div>
 
@@ -134,6 +175,15 @@
       <p>Fertige Artikel werden automatisch veröffentlicht und über unsere Social-Media-Kanäle geteilt. Jeder Artikel verlinkt transparent auf seine Originalquelle, damit du dir bei Bedarf selbst ein Bild machen kannst.</p>
     </div>
   </div>
+
+  <h2>Personalisierung</h2>
+  <p>
+    Auf Wunsch kannst du unter "Meine Interessen" festlegen, zu welchen Spielen und Kategorien du
+    Push-Benachrichtigungen erhalten möchtest — inklusive eines eigenen Schalters für unseren
+    Leaks &amp; Gerüchte-Tracker, falls du lieber nur bestätigte News statt unbestätigter Gerüchte
+    per Benachrichtigung bekommen willst. Details dazu (welche Daten dabei wie gespeichert werden)
+    findest du in unserer <a href="datenschutz.html">Datenschutzerklärung</a>.
+  </p>
 
   <h2>Wer steckt dahinter</h2>
   <p>
@@ -149,6 +199,7 @@
     <li>Eigenständig formulierte Artikel — keine reinen Übersetzungen oder Kopien einer einzelnen Quelle</li>
     <li>Ein sichtbarer Link zur Originalquelle bei jedem Artikel</li>
     <li>Eine klar gekennzeichnete redaktionelle Einschätzung, wo wir Position beziehen, statt nur zusammenzufassen</li>
+    <li>Klar erkennbare Kennzeichnung, wenn ein Thema noch unbestätigtes Gerücht statt bestätigte News ist</li>
     <li>Klar als Werbung gekennzeichnete Affiliate-Links, falls vorhanden</li>
     <li>Trotz sorgfältiger Erstellung: keine Garantie auf 100%ige Fehlerfreiheit — wie bei jeder Redaktion können sich Fehler einschleichen</li>
   </ul>
