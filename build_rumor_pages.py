@@ -1,5 +1,5 @@
 """
-LOADOUT-NEWS — Gerüchte-Tracker: Seiten-Generator
+LOADOUT-NEWS — Leaks & Gerüchte-Tracker: Seiten-Generator
 ======================================================
 Erzeugt aus rumors.json (siehe rumor_tracker.py):
 
@@ -413,7 +413,7 @@ def build_index_page(trackers):
 
     intro = """
 <div class="section-head">
-  <h2 class="mono">🔍 Der lebende Gerüchte-Tracker</h2>
+  <h2 class="mono">🔍 Der lebende Leaks & Gerüchte-Tracker</h2>
   <div class="rule"></div>
 </div>
 <p style="color:var(--muted); font-size:14px; line-height:1.65; margin-bottom:8px; max-width:640px;">
@@ -445,7 +445,7 @@ def build_index_page(trackers):
 {js_block}"""
 
     return page_shell(
-        title="Gerüchte-Tracker — LOADOUT-NEWS",
+        title="Leaks & Gerüchte-Tracker — LOADOUT-NEWS",
         description="Alle laufenden Gaming-Gerüchte und Leaks im Überblick, filterbar nach Spiel, Kategorie und Status, mit Glaubwürdigkeits-Einschätzung.",
         canonical=f"{SITE_URL}/geruechte.html",
         root="",
@@ -499,11 +499,11 @@ def build_tracker_page(t):
         game_filter_link = (
             f'<a href="../geruechte.html?game={t["game"]}" class="chip" '
             f'style="text-decoration:none; display:inline-flex; margin-bottom:18px;">'
-            f'Alle {html.escape(GAMES[t["game"]])}-Gerüchte ansehen →</a><br>'
+            f'Alle Leaks & Gerüchte zu {html.escape(GAMES[t["game"]])} ansehen →</a><br>'
         )
 
     body = f"""
-<a href="../geruechte.html" class="back-btn mono" style="text-decoration:none; display:inline-flex; margin-bottom:12px;">← ZU ALLEN GERÜCHTEN</a><br>
+<a href="../geruechte.html" class="back-btn mono" style="text-decoration:none; display:inline-flex; margin-bottom:12px;">← ZU ALLEN LEAKS & GERÜCHTEN</a><br>
 {game_filter_link}
 <div class="detail-art" style="background:url('{img}') center/cover; height:280px; border-radius:16px;"></div>
 <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:18px 0 10px;">
