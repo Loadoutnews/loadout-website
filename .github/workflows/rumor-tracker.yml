@@ -1,4 +1,4 @@
-name: Rumor Tracker
+name: Leaks & Rumor Tracker
 on:
   workflow_dispatch:
   # Ausgelöst über cron-job.org (alle 3-4 Stunden empfohlen — Gerüchte
