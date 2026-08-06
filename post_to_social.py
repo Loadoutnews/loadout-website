@@ -31,6 +31,18 @@ Artikel als EINEN gesammelten Post pro Lauf — nicht einen Post pro Artikel:
 Merkt sich in social-posted.json, was schon gepostet wurde, damit nichts
 doppelt gepostet wird.
 
+ZUSÄTZLICH (siehe main_rumors() unten): postet auch für den Gerüchte-
+Tracker (rumors.json, siehe rumor_tracker.py) — aber bewusst NUR bei zwei
+Ereignissen pro Tracker, nicht bei jedem einzelnen Zeitleisten-Update:
+  1. Ein neuer Tracker wird eröffnet
+  2. Ein Tracker wird als "abgeschlossen" markiert (bestätigt/dementiert)
+Alles dazwischen bleibt bewusst nur auf der Website sichtbar — der ganze
+Sinn des Trackers ist ja gerade, NICHT für jedes Detail einen weiteren
+Social-Media-Post rauszuhauen. Läuft als separater Aufruf
+(`python post_to_social.py --rumors`), getriggert vom eigenen
+rumor-tracker.yml-Workflow, NICHT vom normalen post-social.yml — dieselben
+Zugangsdaten/Secrets werden wiederverwendet, keine neuen nötig.
+
 Setup (als GitHub Secrets hinterlegen):
     DISCORD_WEBHOOK_URL
     BLUESKY_HANDLE
@@ -48,7 +60,8 @@ Setup (als GitHub Secrets hinterlegen):
     PUSH_SECRET
 
 Ausführen:
-    python post_to_social.py
+    python post_to_social.py            # normale Artikel (articles.json)
+    python post_to_social.py --rumors   # Gerüchte-Tracker (rumors.json)
 """
 
 import datetime
@@ -64,6 +77,9 @@ from push_helper import send_push_notification
 SITE_URL = "https://loadout-news.com"
 ARTICLES_FILE = "articles.json"
 POSTED_FILE = "social-posted.json"
+
+RUMORS_FILE = "rumors.json"
+RUMOR_POSTED_FILE = "rumor-social-posted.json"
 
 CATS = {"pc": "PC", "konsole": "Konsolen", "hardware": "Hardware", "industrie": "Industrie"}
 
@@ -102,6 +118,11 @@ GAME_HASHTAGS = {
     "fifa": ["EASportsFC", "FIFA"],
 }
 
+# Zusätzliche Hashtags speziell für Gerüchte-Tracker-Posts — signalisiert
+# klar den Inhalt (Leak/Gerücht statt bestätigter News) und erschließt ein
+# Publikum, das gezielt nach Leaks sucht.
+RUMOR_HASHTAGS_EXTRA = ["geruecht", "leak", "gamingleaks"]
+
 
 def generate_hashtags(articles, max_tags=12):
     """Baut eine Hashtag-Liste aus den Themen der aktuellen Artikel-Auswahl —
@@ -122,6 +143,17 @@ def generate_hashtags(articles, max_tags=12):
     for t in GENERAL_HASHTAGS:
         add(t)
 
+    return tags[:max_tags]
+
+
+def generate_rumor_hashtags(tracker, max_tags=12):
+    """Wie generate_hashtags, aber für einen einzelnen Gerüchte-Tracker
+    (der dieselben cat/game-Felder wie ein Artikel trägt) plus den
+    Gerüchte-spezifischen Zusatz-Hashtags."""
+    tags = generate_hashtags([tracker], max_tags=max_tags)
+    for t in RUMOR_HASHTAGS_EXTRA:
+        if t.lower() not in [x.lower() for x in tags]:
+            tags.append(t)
     return tags[:max_tags]
 
 
@@ -172,6 +204,48 @@ def post_discord_batch(articles, is_breaking=False):
     resp = requests.post(webhook_url, json=payload, timeout=10)
     ok = resp.status_code in (200, 204)
     print(f"  Discord: {'✓ 1 Post mit ' + str(len(embeds)) + ' Vorschauen' if ok else '! Fehler ' + str(resp.status_code)}")
+    return ok
+
+
+def post_discord_rumor(tracker, event_type):
+    """Eigener, einzelner Discord-Post für ein Gerüchte-Tracker-Ereignis
+    (neu eröffnet oder abgeschlossen) — kein Batch, da diese Ereignisse
+    einzeln und selten genug sind."""
+    webhook_url = env("DISCORD_WEBHOOK_URL")
+    if not webhook_url:
+        return False
+
+    url = f"{SITE_URL}/geruechte/{tracker['id']}.html"
+    latest_text = (tracker.get("timeline") or [{}])[0].get("text", tracker.get("summary", ""))
+
+    if event_type == "new":
+        content = "🔍 **Neuer Gerüchte-Tracker bei LOADOUT-NEWS!**"
+        color = 0x7C5CFC
+        description = latest_text[:300]
+    else:
+        resolution = tracker.get("resolution")
+        if resolution == "bestaetigt":
+            content = "✅ **Gerücht bestätigt!**"
+            color = 0x34D9C9
+        else:
+            content = "❌ **Gerücht dementiert.**"
+            color = 0xFF3B30
+        description = (tracker.get("summary", "") or latest_text)[:300]
+
+    embed = {
+        "title": tracker["title"][:250],
+        "description": description,
+        "url": url,
+        "color": color,
+        "footer": {"text": "LOADOUT-NEWS · Gerüchte-Tracker"},
+    }
+    if tracker.get("image"):
+        embed["thumbnail"] = {"url": tracker["image"]}
+
+    payload = {"content": content, "embeds": [embed]}
+    resp = requests.post(webhook_url, json=payload, timeout=10)
+    ok = resp.status_code in (200, 204)
+    print(f"  Discord (Gerücht): {'✓ gepostet' if ok else '! Fehler ' + str(resp.status_code)}")
     return ok
 
 
@@ -297,6 +371,108 @@ def post_bluesky_batch(articles, is_breaking=False):
     )
     ok = resp.status_code == 200
     print(f"  Bluesky: {'✓ 1 Post mit ' + str(len(images)) + ' Bildern' if ok else '! Fehler ' + str(resp.status_code) + ' ' + resp.text[:200]}")
+    return ok
+
+
+def post_bluesky_rumor(tracker, event_type):
+    """Wie post_bluesky_batch, aber für ein einzelnes Gerüchte-Tracker-
+    Ereignis (kein Batch, kein is_breaking-Ast)."""
+    handle = env("BLUESKY_HANDLE")
+    app_password = env("BLUESKY_APP_PASSWORD")
+    if not handle or not app_password:
+        return False
+
+    try:
+        session_resp = requests.post(
+            "https://bsky.social/xrpc/com.atproto.server.createSession",
+            json={"identifier": handle, "password": app_password},
+            timeout=10,
+        )
+        session_resp.raise_for_status()
+        session = session_resp.json()
+        access_jwt = session["accessJwt"]
+        did = session["did"]
+    except Exception as e:
+        print(f"  Bluesky (Gerücht): ! Login fehlgeschlagen: {e}", file=sys.stderr)
+        return False
+
+    headers = {"Authorization": f"Bearer {access_jwt}", "Content-Type": "application/json"}
+    MAX_BLUESKY_CHARS = 300
+
+    url = f"{SITE_URL}/geruechte/{tracker['id']}.html"
+    hashtags = generate_rumor_hashtags(tracker, max_tags=3)
+    hashtag_line = " ".join(f"#{t}" for t in hashtags)
+    footer = f"👉 {url}"
+    if hashtag_line:
+        footer += f"\n{hashtag_line}"
+
+    if event_type == "new":
+        headline = f"🔍 Neuer Gerüchte-Tracker: {tracker['title']}"
+    else:
+        resolution = tracker.get("resolution")
+        headline = (f"✅ Bestätigt: {tracker['title']}" if resolution == "bestaetigt"
+                    else f"❌ Dementiert: {tracker['title']}")
+
+    budget = MAX_BLUESKY_CHARS - len(footer) - 1
+    if len(headline) > budget:
+        headline = headline[:max(budget - 1, 0)].rstrip() + "…"
+    text = f"{headline}\n{footer}"
+
+    facets = []
+    if url in text:
+        char_start = text.rindex(url)
+        byte_start = len(text[:char_start].encode("utf-8"))
+        byte_end = byte_start + len(url.encode("utf-8"))
+        facets.append({
+            "index": {"byteStart": byte_start, "byteEnd": byte_end},
+            "features": [{"$type": "app.bsky.richtext.facet#link", "uri": url}],
+        })
+    for t in hashtags:
+        tag_str = f"#{t}"
+        if tag_str not in text:
+            continue
+        char_start = text.rindex(tag_str)
+        byte_start = len(text[:char_start].encode("utf-8"))
+        byte_end = byte_start + len(tag_str.encode("utf-8"))
+        facets.append({
+            "index": {"byteStart": byte_start, "byteEnd": byte_end},
+            "features": [{"$type": "app.bsky.richtext.facet#tag", "tag": t}],
+        })
+
+    images = []
+    if tracker.get("image"):
+        try:
+            img_resp = requests.get(tracker["image"], timeout=10)
+            if img_resp.status_code == 200:
+                upload_resp = requests.post(
+                    "https://bsky.social/xrpc/com.atproto.repo.uploadBlob",
+                    headers={"Authorization": f"Bearer {access_jwt}", "Content-Type": img_resp.headers.get("Content-Type", "image/jpeg")},
+                    data=img_resp.content,
+                    timeout=15,
+                )
+                if upload_resp.status_code == 200:
+                    images.append({"image": upload_resp.json()["blob"], "alt": tracker["title"][:200]})
+        except Exception:
+            pass
+
+    record = {
+        "$type": "app.bsky.feed.post",
+        "text": text,
+        "createdAt": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
+    }
+    if facets:
+        record["facets"] = facets
+    if images:
+        record["embed"] = {"$type": "app.bsky.embed.images", "images": images}
+
+    resp = requests.post(
+        "https://bsky.social/xrpc/com.atproto.repo.createRecord",
+        headers=headers,
+        json={"repo": did, "collection": "app.bsky.feed.post", "record": record},
+        timeout=10,
+    )
+    ok = resp.status_code == 200
+    print(f"  Bluesky (Gerücht): {'✓ gepostet' if ok else '! Fehler ' + str(resp.status_code) + ' ' + resp.text[:200]}")
     return ok
 
 
@@ -693,6 +869,114 @@ def post_instagram_breaking(article):
     return True
 
 
+def post_instagram_rumor(tracker, event_type):
+    """Eigenständiger Instagram-Post für ein Gerüchte-Tracker-Ereignis
+    (neu eröffnet oder abgeschlossen) — nutzt generate_rumor_slides()
+    (siehe generate_instagram_slides.py): eigene, "ermittlerische" Optik,
+    bewusst kurz (2 Folien wie Breaking News)."""
+    api_key = env("BUFFER_API_KEY")
+    channel_id = env("BUFFER_INSTAGRAM_CHANNEL_ID")
+    if not api_key or not channel_id:
+        return False
+
+    if not tracker.get("image"):
+        print("  Instagram (Gerücht): ! Tracker hat kein Bild — übersprungen.")
+        return False
+
+    if not os.path.exists(OUTRO_SLIDE_PATH):
+        print(f"  Instagram (Gerücht): ! Feste Outro-Folie ({OUTRO_SLIDE_PATH}) fehlt im Repo — übersprungen.", file=sys.stderr)
+        return False
+
+    try:
+        import generate_instagram_slides as gis
+    except ImportError as e:
+        print(f"  Instagram (Gerücht): ! generate_instagram_slides.py konnte nicht geladen werden: {e}", file=sys.stderr)
+        return False
+
+    run_id = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d%H%M%S") + f"-rumor-{event_type}"
+
+    try:
+        slide_paths = gis.generate_rumor_slides(tracker, event_type, SLIDE_OUTPUT_DIR, run_id)
+    except Exception as e:
+        print(f"  Instagram (Gerücht): ! Folien-Generierung fehlgeschlagen: {e}", file=sys.stderr)
+        return False
+
+    all_local_paths = slide_paths + [OUTRO_SLIDE_PATH]
+
+    if not git_commit_and_push(slide_paths, f"Gerüchte-Tracker-Folien ({run_id})"):
+        return False
+
+    image_urls = [raw_github_url(p) for p in all_local_paths]
+    assets = [{"image": {"url": url}} for url in image_urls]
+
+    hashtags = generate_rumor_hashtags(tracker, max_tags=15)
+    hashtag_block = " ".join(f"#{t}" for t in hashtags)
+
+    if event_type == "new":
+        intro_line = "🔍 NEUER GERÜCHTE-TRACKER"
+    else:
+        resolution = tracker.get("resolution")
+        intro_line = "✅ GERÜCHT BESTÄTIGT" if resolution == "bestaetigt" else "❌ GERÜCHT DEMENTIERT"
+
+    latest_text = (tracker.get("timeline") or [{}])[0].get("text", tracker.get("summary", ""))
+    caption_lines = [
+        f"{intro_line}\n",
+        tracker["title"],
+        latest_text[:300],
+        f"\n👉 Den kompletten, laufend aktualisierten Stand gibt's über den Link in unserer Bio: {SITE_URL}\n\n{hashtag_block}",
+    ]
+    caption = "\n".join(caption_lines)
+    if len(caption) > 2200:
+        caption = caption[:2197] + "..."
+
+    due_at = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=2)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+    variables = {
+        "input": {
+            "text": caption,
+            "channelId": channel_id,
+            "schedulingType": "automatic",
+            "mode": "customScheduled",
+            "dueAt": due_at,
+            "assets": assets,
+            "metadata": {
+                "instagram": {
+                    "type": "post",
+                    "shouldShareToFeed": True,
+                },
+            },
+        }
+    }
+
+    try:
+        resp = requests.post(
+            "https://api.buffer.com",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={"query": BUFFER_CREATE_POST_QUERY, "variables": variables},
+            timeout=30,
+        )
+    except Exception as e:
+        print(f"  Instagram (Gerücht): ! Unerwarteter Fehler: {e}", file=sys.stderr)
+        return False
+
+    if resp.status_code != 200:
+        print(f"  Instagram (Gerücht): ! Fehler ({resp.status_code}): {resp.text[:500]}", file=sys.stderr)
+        return False
+
+    data = resp.json()
+    if data.get("errors"):
+        print(f"  Instagram (Gerücht): ! GraphQL-Fehler: {data['errors']}", file=sys.stderr)
+        return False
+
+    result = (data.get("data") or {}).get("createPost") or {}
+    if result.get("message"):
+        print(f"  Instagram (Gerücht): ! {result['message']}", file=sys.stderr)
+        return False
+
+    print(f"  Instagram (Gerücht): ✓ 1 Post mit {len(assets)} Bild(ern) eingeplant (in ~2 Min.)")
+    return True
+
+
 # --- Tumblr -------------------------------------------------------------------
 # Ein einziger Post im "Neuen Post Format" (NPF) von Tumblr, der pro Artikel
 # einen Text- und einen Bild-Block enthält — erscheint als durchlaufender
@@ -749,6 +1033,62 @@ def post_tumblr_batch(articles):
     )
     ok = resp.status_code in (200, 201)
     print(f"  Tumblr: {'✓ 1 Post mit ' + str(len(articles)) + ' Artikeln' if ok else '! Fehler ' + str(resp.status_code) + ' ' + resp.text[:200]}")
+    return ok
+
+
+def post_tumblr_rumor(tracker, event_type):
+    consumer_key = env("TUMBLR_CONSUMER_KEY")
+    consumer_secret = env("TUMBLR_CONSUMER_SECRET")
+    oauth_token = env("TUMBLR_OAUTH_TOKEN")
+    oauth_token_secret = env("TUMBLR_OAUTH_TOKEN_SECRET")
+    blog_name = env("TUMBLR_BLOG_NAME")
+    if not all([consumer_key, consumer_secret, oauth_token, oauth_token_secret, blog_name]):
+        return False
+
+    try:
+        from requests_oauthlib import OAuth1
+    except ImportError:
+        print("  Tumblr (Gerücht): ! Bibliothek 'requests-oauthlib' fehlt.", file=sys.stderr)
+        return False
+
+    auth = OAuth1(consumer_key, consumer_secret, oauth_token, oauth_token_secret)
+    url = f"{SITE_URL}/geruechte/{tracker['id']}.html"
+
+    if event_type == "new":
+        heading = "🔍 Neuer Gerüchte-Tracker bei LOADOUT-NEWS"
+    else:
+        resolution = tracker.get("resolution")
+        heading = "✅ Gerücht bestätigt" if resolution == "bestaetigt" else "❌ Gerücht dementiert"
+
+    latest_text = (tracker.get("timeline") or [{}])[0].get("text", tracker.get("summary", ""))
+
+    content_blocks = [{"type": "text", "text": heading, "subtype": "heading1"}]
+    content_blocks.append({"type": "text", "text": tracker["title"]})
+    content_blocks.append({"type": "text", "text": latest_text})
+    if tracker.get("image"):
+        content_blocks.append({"type": "image", "media": [{"url": tracker["image"]}]})
+
+    link_line = f"👉 Zum laufenden Tracker: {url}"
+    url_start = link_line.index(url)
+    url_end = url_start + len(url)
+    content_blocks.append({
+        "type": "text",
+        "text": link_line,
+        "formatting": [{"start": url_start, "end": url_end, "type": "link", "url": url}],
+    })
+
+    hashtags = generate_rumor_hashtags(tracker, max_tags=20)
+    tags = ",".join(hashtags + ["loadoutnews"])
+    payload = {"content": content_blocks, "tags": tags}
+
+    resp = requests.post(
+        f"https://api.tumblr.com/v2/blog/{blog_name}/posts",
+        auth=auth,
+        json=payload,
+        timeout=15,
+    )
+    ok = resp.status_code in (200, 201)
+    print(f"  Tumblr (Gerücht): {'✓ gepostet' if ok else '! Fehler ' + str(resp.status_code) + ' ' + resp.text[:200]}")
     return ok
 
 
@@ -831,6 +1171,130 @@ def post_reddit_batch(articles):
     else:
         print(f"  Reddit (Zernio): ! Fehler ({resp.status_code}): {resp.text[:500]}", file=sys.stderr)
     return ok
+
+
+def post_reddit_rumor(tracker, event_type):
+    api_key = env("ZERNIO_API_KEY")
+    account_id = env("ZERNIO_REDDIT_ACCOUNT_ID")
+    subreddit_name = env("REDDIT_SUBREDDIT")
+    if not api_key or not account_id or not subreddit_name:
+        return False
+
+    if not tracker.get("image"):
+        print("  Reddit (Gerücht): ! Tracker hat kein Bild — übersprungen.")
+        return False
+
+    url = f"{SITE_URL}/geruechte/{tracker['id']}.html"
+    if event_type == "new":
+        title = f"🔍 Neuer Gerüchte-Tracker: {tracker['title']}"
+    else:
+        resolution = tracker.get("resolution")
+        title = (f"✅ Bestätigt: {tracker['title']}" if resolution == "bestaetigt"
+                 else f"❌ Dementiert: {tracker['title']}")
+    title = title[:290]
+
+    latest_text = (tracker.get("timeline") or [{}])[0].get("text", tracker.get("summary", ""))
+    content = title + "\n\n" + latest_text + f"\n\nLaufender Tracker: {url}"
+
+    payload = {
+        "content": content,
+        "mediaItems": [{"type": "image", "url": tracker["image"]}],
+        "platforms": [{
+            "platform": "reddit",
+            "accountId": account_id,
+            "platformSpecificData": {"subreddit": subreddit_name},
+        }],
+        "publishNow": True,
+    }
+
+    try:
+        resp = requests.post(
+            ZERNIO_CREATE_POST_URL,
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json=payload,
+            timeout=30,
+        )
+    except Exception as e:
+        print(f"  Reddit (Gerücht): ! Unerwarteter Fehler: {e}", file=sys.stderr)
+        return False
+
+    ok = resp.status_code in (200, 201)
+    if ok:
+        print(f"  Reddit (Gerücht): ✓ gepostet in r/{subreddit_name}")
+    else:
+        print(f"  Reddit (Gerücht): ! Fehler ({resp.status_code}): {resp.text[:500]}", file=sys.stderr)
+    return ok
+
+
+# --- Gerüchte-Tracker: Orchestrierung ----------------------------------------
+
+def post_rumor_event(tracker, event_type):
+    """Postet ein einzelnes Gerüchte-Tracker-Ereignis auf allen Plattformen
+    + eine eigene Push-Benachrichtigung. event_type ist "new" oder
+    "resolved"."""
+    print(f"  → {tracker['title']} [{event_type}]")
+    post_discord_rumor(tracker, event_type)
+    post_bluesky_rumor(tracker, event_type)
+    post_instagram_rumor(tracker, event_type)
+    post_tumblr_rumor(tracker, event_type)
+    post_reddit_rumor(tracker, event_type)
+
+    if event_type == "new":
+        push_title = "🔍 Neuer Gerüchte-Tracker"
+    else:
+        resolution = tracker.get("resolution")
+        push_title = "✅ Gerücht bestätigt" if resolution == "bestaetigt" else "❌ Gerücht dementiert"
+
+    # Dieselbe "Folge nur deinen Spielen"-Filterung wie bei normalen
+    # Artikeln (siehe main()) — wer in seinen Präferenzen dieses Spiel/
+    # diese Kategorie ausgewählt hat, bekommt die Benachrichtigung; wer
+    # keine Präferenzen gesetzt hat, bekommt sie ohnehin.
+    send_push_notification(
+        title=push_title,
+        body=tracker["title"][:120],
+        url=f"/geruechte/{tracker['id']}.html",
+        games=[tracker["game"]] if tracker.get("game") else [],
+        categories=[tracker["cat"]] if tracker.get("cat") else [],
+    )
+
+
+def main_rumors():
+    """Prüft rumors.json auf zwei Arten von Ereignissen, die noch nicht
+    gepostet wurden: ein neu eröffneter Tracker, oder ein gerade
+    abgeschlossener Tracker. ALLES dazwischen (die einzelnen Zeitleisten-
+    Updates) wird bewusst NIE gepostet — nur diese zwei Meilensteine pro
+    Tracker. Nutzt rumor-social-posted.json als eigene Merkliste,
+    unabhängig von social-posted.json (das ist für articles.json)."""
+    trackers = load_json(RUMORS_FILE, [])
+    if not trackers:
+        print("Keine Gerüchte-Tracker vorhanden.")
+        return
+
+    posted_events = set(load_json(RUMOR_POSTED_FILE, []))
+    any_posted = False
+
+    for t in trackers:
+        new_key = f"{t['id']}:new"
+        if new_key not in posted_events:
+            print(f"→ Neuer Tracker erkannt: {t['title']}")
+            post_rumor_event(t, "new")
+            posted_events.add(new_key)
+            any_posted = True
+
+        if t.get("status") == "abgeschlossen":
+            resolved_key = f"{t['id']}:resolved"
+            if resolved_key not in posted_events:
+                print(f"→ Tracker abgeschlossen: {t['title']}")
+                post_rumor_event(t, "resolved")
+                posted_events.add(resolved_key)
+                any_posted = True
+
+    if not any_posted:
+        print("Keine neuen Gerüchte-Ereignisse seit dem letzten Lauf.")
+        return
+
+    save_json(RUMOR_POSTED_FILE, sorted(posted_events))
+    print(f"✓ Fertig. {len(posted_events)} Gerüchte-Ereignisse insgesamt als gepostet markiert.")
 
 
 def main():
@@ -921,4 +1385,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if "--rumors" in sys.argv:
+        main_rumors()
+    else:
+        main()
