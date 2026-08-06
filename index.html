@@ -73,6 +73,9 @@
       <button class="xp-badge" id="hypeInfoBtn" onclick="showHypeInfo()" title="Was ist der Hype-Meter?">
         <span>🔥</span><span>Hype-Meter</span>
       </button>
+      <button class="xp-badge" id="interestsToggle" onclick="openInterestsModal()" title="Meine Interessen festlegen">
+        <span>🎯</span><span id="interestsCount">Meine Interessen</span>
+      </button>
       <button class="xp-badge" id="savedToggle" onclick="toggleSavedView()" title="Gemerkte Artikel anzeigen">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
         <span id="savedCount">0 gemerkt</span>
@@ -417,6 +420,37 @@
     <div id="infoModalBody" style="font-size:13.5px; color:var(--muted); line-height:1.65;"></div>
     <div class="cookie-actions" style="margin-top:18px;">
       <button class="cookie-btn primary" onclick="closeInfoModal()" style="width:100%;">Verstanden</button>
+    </div>
+  </div>
+</div>
+
+<!-- "Meine Interessen": eigener, jederzeit erreichbarer Bereich (Nav-Button
+     oben, nicht nur einmalig im Push-Banner), über den festgelegt werden
+     kann, für welche Franchises und Kategorien Push-Benachrichtigungen
+     ankommen sollen. Ohne Auswahl (Standard) kommt weiterhin alles — die
+     Filterung ist rein optional und jederzeit änderbar. -->
+<div id="interestsModal" class="cookie-modal">
+  <div class="cookie-modal-box">
+    <h3 class="display">🎯 Meine Interessen</h3>
+    <p style="font-size:13px; color:var(--muted); margin-top:6px; margin-bottom:16px; line-height:1.55;">
+      Wähle aus, zu welchen Titeln und Kategorien du Push-Benachrichtigungen bekommen möchtest.
+      Ohne Auswahl erhältst du weiterhin alle Meldungen. Breaking News erreichen dich in jedem
+      Fall immer, unabhängig von dieser Auswahl.
+    </p>
+
+    <div class="section-head" style="margin: 4px 0 10px;">
+      <h2 class="mono" style="font-size:11px; color:var(--muted);">Große Titel</h2>
+    </div>
+    <div class="chips" id="interestGameChips" style="margin-bottom:18px;"></div>
+
+    <div class="section-head" style="margin: 4px 0 10px;">
+      <h2 class="mono" style="font-size:11px; color:var(--muted);">Kategorien</h2>
+    </div>
+    <div class="chips" id="interestCatChips" style="margin-bottom:6px;"></div>
+
+    <div class="cookie-actions" style="margin-top:18px;">
+      <button class="cookie-btn ghost" onclick="closeInterestsModal()">Abbrechen</button>
+      <button class="cookie-btn primary" onclick="saveInterests()">Auswahl speichern</button>
     </div>
   </div>
 </div>
@@ -811,6 +845,12 @@ function loadPersistedState(){
   try {
     JSON.parse(localStorage.getItem('loadout_readIds') || '[]').forEach(id => readIds.add(id));
   } catch(e) { /* siehe oben */ }
+  try {
+    JSON.parse(localStorage.getItem('loadout_interestGames') || '[]').forEach(k => interestGames.add(k));
+  } catch(e) { /* siehe oben */ }
+  try {
+    JSON.parse(localStorage.getItem('loadout_interestCategories') || '[]').forEach(k => interestCategories.add(k));
+  } catch(e) { /* siehe oben */ }
 }
 
 function persistSavedIds(){
@@ -819,6 +859,94 @@ function persistSavedIds(){
 
 function persistReadIds(){
   try { localStorage.setItem('loadout_readIds', JSON.stringify([...readIds])); } catch(e) {}
+}
+
+// --- "Meine Interessen" (Push-Präferenzen nach Franchise/Kategorie) ------
+// Eigener, jederzeit über den Nav-Button erreichbarer Bereich — bewusst
+// NICHT nur einmalig im Push-Banner integriert, damit die Auswahl später
+// jederzeit geändert werden kann. Leere Auswahl (Standard) bedeutet laut
+// Backend-Logik (api/send-push.js) weiterhin "alles bekommen".
+const interestGames = new Set();
+const interestCategories = new Set();
+
+function persistInterests(){
+  try {
+    localStorage.setItem('loadout_interestGames', JSON.stringify([...interestGames]));
+    localStorage.setItem('loadout_interestCategories', JSON.stringify([...interestCategories]));
+  } catch(e) {}
+}
+
+function updateInterestsBadge(){
+  const total = interestGames.size + interestCategories.size;
+  document.getElementById('interestsCount').textContent = total > 0 ? `Interessen (${total})` : 'Meine Interessen';
+}
+
+function renderInterestsModal(){
+  const gameChips = document.getElementById('interestGameChips');
+  gameChips.innerHTML = Object.entries(GAMES).map(([key, v]) =>
+    `<button class="chip ${interestGames.has(key)?'active':''}" onclick="toggleInterestGame('${key}')">${v.label}</button>`
+  ).join('');
+
+  const catChips = document.getElementById('interestCatChips');
+  catChips.innerHTML = Object.keys(CATS).map(key =>
+    `<button class="chip ${interestCategories.has(key)?'active':''}" onclick="toggleInterestCategory('${key}')">${catLabel(key)}</button>`
+  ).join('');
+}
+
+function toggleInterestGame(key){
+  if(interestGames.has(key)) interestGames.delete(key); else interestGames.add(key);
+  renderInterestsModal();
+}
+
+function toggleInterestCategory(key){
+  if(interestCategories.has(key)) interestCategories.delete(key); else interestCategories.add(key);
+  renderInterestsModal();
+}
+
+function openInterestsModal(){
+  renderInterestsModal();
+  document.getElementById('interestsModal').classList.add('visible');
+}
+
+function closeInterestsModal(){
+  document.getElementById('interestsModal').classList.remove('visible');
+}
+
+async function saveInterests(){
+  persistInterests();
+  updateInterestsBadge();
+  document.getElementById('interestsModal').classList.remove('visible');
+  showToast('✓ Interessen gespeichert');
+
+  // Falls bereits ein aktives Push-Abo besteht, die neuen Präferenzen
+  // direkt ans Backend nachreichen — ohne dass dafür eine erneute
+  // Browser-Berechtigungsabfrage nötig ist.
+  await syncPushPreferencesIfSubscribed();
+}
+
+// Sendet die aktuellen Präferenzen ans Backend, falls im Browser bereits
+// eine aktive Push-Subscription existiert (d. h. Push wurde schon einmal
+// aktiviert). Läuft still im Hintergrund — kein Toast bei Erfolg/Fehler,
+// da das Speichern der Interessen selbst schon bestätigt wurde.
+async function syncPushPreferencesIfSubscribed(){
+  try {
+    if(!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+    if(typeof Notification === "undefined" || Notification.permission !== "granted") return;
+    const registration = await navigator.serviceWorker.ready;
+    const subscription = await registration.pushManager.getSubscription();
+    if(!subscription) return;
+    await fetch("/api/push-subscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        subscription,
+        preferences: { games: [...interestGames], categories: [...interestCategories] },
+      }),
+    });
+  } catch(e) {
+    // Nachreichen fehlgeschlagen — kein Problem, die lokale Auswahl bleibt
+    // trotzdem gespeichert und wird beim nächsten enablePush()/Sync erneut versucht.
+  }
 }
 
 function renderChips(){
@@ -1816,10 +1944,16 @@ async function enablePush(){
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
     });
+    // Präferenzen (falls über "Meine Interessen" schon vorher festgelegt)
+    // direkt mit ausliefern — leere Auswahl bedeutet laut Backend weiterhin
+    // "alles bekommen", ist also ein sicherer Standard.
     await fetch("/api/push-subscribe", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(subscription),
+      body: JSON.stringify({
+        subscription,
+        preferences: { games: [...interestGames], categories: [...interestCategories] },
+      }),
     });
     document.getElementById("pushPrompt").classList.remove("visible");
     showToast("🔔 Push-Benachrichtigungen aktiviert!");
@@ -1947,6 +2081,7 @@ renderTicker();
 renderTrendingWidget();
 updateSavedCount();
 updateXpBadge();
+updateInterestsBadge();
 initCookieBanner();
 
 // Versucht, automatisch generierte Artikel aus articles.json nachzuladen.
