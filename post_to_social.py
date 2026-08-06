@@ -31,9 +31,9 @@ Artikel als EINEN gesammelten Post pro Lauf — nicht einen Post pro Artikel:
 Merkt sich in social-posted.json, was schon gepostet wurde, damit nichts
 doppelt gepostet wird.
 
-ZUSÄTZLICH (siehe main_rumors() unten): postet auch für den Gerüchte-
-Tracker (rumors.json, siehe rumor_tracker.py) — aber bewusst NUR bei zwei
-Ereignissen pro Tracker, nicht bei jedem einzelnen Zeitleisten-Update:
+ZUSÄTZLICH (siehe main_rumors() unten): postet auch für den Leaks &
+Gerüchte-Tracker (rumors.json, siehe rumor_tracker.py) — aber bewusst NUR
+bei zwei Ereignissen pro Tracker, nicht bei jedem einzelnen Zeitleisten-Update:
   1. Ein neuer Tracker wird eröffnet
   2. Ein Tracker wird als "abgeschlossen" markiert (bestätigt/dementiert)
 Alles dazwischen bleibt bewusst nur auf der Website sichtbar — der ganze
@@ -61,7 +61,7 @@ Setup (als GitHub Secrets hinterlegen):
 
 Ausführen:
     python post_to_social.py            # normale Artikel (articles.json)
-    python post_to_social.py --rumors   # Gerüchte-Tracker (rumors.json)
+    python post_to_social.py --rumors   # Leaks & Gerüchte-Tracker (rumors.json)
 """
 
 import datetime
@@ -118,7 +118,7 @@ GAME_HASHTAGS = {
     "fifa": ["EASportsFC", "FIFA"],
 }
 
-# Zusätzliche Hashtags speziell für Gerüchte-Tracker-Posts — signalisiert
+# Zusätzliche Hashtags speziell für Leaks & Gerüchte-Tracker-Posts — signalisiert
 # klar den Inhalt (Leak/Gerücht statt bestätigter News) und erschließt ein
 # Publikum, das gezielt nach Leaks sucht.
 RUMOR_HASHTAGS_EXTRA = ["geruecht", "leak", "gamingleaks"]
@@ -147,7 +147,7 @@ def generate_hashtags(articles, max_tags=12):
 
 
 def generate_rumor_hashtags(tracker, max_tags=12):
-    """Wie generate_hashtags, aber für einen einzelnen Gerüchte-Tracker
+    """Wie generate_hashtags, aber für einen einzelnen Leaks & Gerüchte-Tracker
     (der dieselben cat/game-Felder wie ein Artikel trägt) plus den
     Gerüchte-spezifischen Zusatz-Hashtags."""
     tags = generate_hashtags([tracker], max_tags=max_tags)
@@ -208,9 +208,11 @@ def post_discord_batch(articles, is_breaking=False):
 
 
 def post_discord_rumor(tracker, event_type):
-    """Eigener, einzelner Discord-Post für ein Gerüchte-Tracker-Ereignis
-    (neu eröffnet oder abgeschlossen) — kein Batch, da diese Ereignisse
-    einzeln und selten genug sind."""
+    """Eigener, einzelner Discord-Post für ein Leaks & Gerüchte-Tracker-
+    Ereignis (neu eröffnet oder abgeschlossen) — kein Batch, da diese
+    Ereignisse einzeln und selten genug sind. Der Text macht IMMER
+    explizit sichtbar, ob es ein komplett neues Leak/Gerücht ist oder ein
+    Update zu einem bereits laufenden Tracker."""
     webhook_url = env("DISCORD_WEBHOOK_URL")
     if not webhook_url:
         return False
@@ -219,16 +221,16 @@ def post_discord_rumor(tracker, event_type):
     latest_text = (tracker.get("timeline") or [{}])[0].get("text", tracker.get("summary", ""))
 
     if event_type == "new":
-        content = "🔍 **Neuer Gerüchte-Tracker bei LOADOUT-NEWS!**"
+        content = "🆕 **Neues Leak/Gerücht bei LOADOUT-NEWS!**"
         color = 0x7C5CFC
         description = latest_text[:300]
     else:
         resolution = tracker.get("resolution")
         if resolution == "bestaetigt":
-            content = "✅ **Gerücht bestätigt!**"
+            content = "🔄 **Update: Gerücht bestätigt!**"
             color = 0x34D9C9
         else:
-            content = "❌ **Gerücht dementiert.**"
+            content = "🔄 **Update: Gerücht dementiert.**"
             color = 0xFF3B30
         description = (tracker.get("summary", "") or latest_text)[:300]
 
@@ -237,7 +239,7 @@ def post_discord_rumor(tracker, event_type):
         "description": description,
         "url": url,
         "color": color,
-        "footer": {"text": "LOADOUT-NEWS · Gerüchte-Tracker"},
+        "footer": {"text": "LOADOUT-NEWS · Leaks & Gerüchte"},
     }
     if tracker.get("image"):
         embed["thumbnail"] = {"url": tracker["image"]}
@@ -375,8 +377,8 @@ def post_bluesky_batch(articles, is_breaking=False):
 
 
 def post_bluesky_rumor(tracker, event_type):
-    """Wie post_bluesky_batch, aber für ein einzelnes Gerüchte-Tracker-
-    Ereignis (kein Batch, kein is_breaking-Ast)."""
+    """Wie post_bluesky_batch, aber für ein einzelnes Leaks & Gerüchte-
+    Tracker-Ereignis (kein Batch, kein is_breaking-Ast)."""
     handle = env("BLUESKY_HANDLE")
     app_password = env("BLUESKY_APP_PASSWORD")
     if not handle or not app_password:
@@ -407,11 +409,11 @@ def post_bluesky_rumor(tracker, event_type):
         footer += f"\n{hashtag_line}"
 
     if event_type == "new":
-        headline = f"🔍 Neuer Gerüchte-Tracker: {tracker['title']}"
+        headline = f"🆕 Neues Leak/Gerücht: {tracker['title']}"
     else:
         resolution = tracker.get("resolution")
-        headline = (f"✅ Bestätigt: {tracker['title']}" if resolution == "bestaetigt"
-                    else f"❌ Dementiert: {tracker['title']}")
+        headline = (f"🔄 Update (bestätigt): {tracker['title']}" if resolution == "bestaetigt"
+                    else f"🔄 Update (dementiert): {tracker['title']}")
 
     budget = MAX_BLUESKY_CHARS - len(footer) - 1
     if len(headline) > budget:
@@ -870,10 +872,12 @@ def post_instagram_breaking(article):
 
 
 def post_instagram_rumor(tracker, event_type):
-    """Eigenständiger Instagram-Post für ein Gerüchte-Tracker-Ereignis
-    (neu eröffnet oder abgeschlossen) — nutzt generate_rumor_slides()
+    """Eigenständiger Instagram-Post für ein Leaks & Gerüchte-Tracker-
+    Ereignis (neu eröffnet oder abgeschlossen) — nutzt generate_rumor_slides()
     (siehe generate_instagram_slides.py): eigene, "ermittlerische" Optik,
-    bewusst kurz (2 Folien wie Breaking News)."""
+    bewusst kurz (2 Folien wie Breaking News). Die Bildunterschrift macht
+    IMMER explizit sichtbar, ob es ein komplett neues Leak/Gerücht ist
+    oder ein Update zu einem bereits laufenden Tracker."""
     api_key = env("BUFFER_API_KEY")
     channel_id = env("BUFFER_INSTAGRAM_CHANNEL_ID")
     if not api_key or not channel_id:
@@ -903,7 +907,7 @@ def post_instagram_rumor(tracker, event_type):
 
     all_local_paths = slide_paths + [OUTRO_SLIDE_PATH]
 
-    if not git_commit_and_push(slide_paths, f"Gerüchte-Tracker-Folien ({run_id})"):
+    if not git_commit_and_push(slide_paths, f"Leaks & Gerüchte-Tracker-Folien ({run_id})"):
         return False
 
     image_urls = [raw_github_url(p) for p in all_local_paths]
@@ -913,10 +917,10 @@ def post_instagram_rumor(tracker, event_type):
     hashtag_block = " ".join(f"#{t}" for t in hashtags)
 
     if event_type == "new":
-        intro_line = "🔍 NEUER GERÜCHTE-TRACKER"
+        intro_line = "🆕 NEUES LEAK / GERÜCHT"
     else:
         resolution = tracker.get("resolution")
-        intro_line = "✅ GERÜCHT BESTÄTIGT" if resolution == "bestaetigt" else "❌ GERÜCHT DEMENTIERT"
+        intro_line = "🔄 UPDATE: BESTÄTIGT" if resolution == "bestaetigt" else "🔄 UPDATE: DEMENTIERT"
 
     latest_text = (tracker.get("timeline") or [{}])[0].get("text", tracker.get("summary", ""))
     caption_lines = [
@@ -1055,10 +1059,10 @@ def post_tumblr_rumor(tracker, event_type):
     url = f"{SITE_URL}/geruechte/{tracker['id']}.html"
 
     if event_type == "new":
-        heading = "🔍 Neuer Gerüchte-Tracker bei LOADOUT-NEWS"
+        heading = "🆕 Neues Leak/Gerücht bei LOADOUT-NEWS"
     else:
         resolution = tracker.get("resolution")
-        heading = "✅ Gerücht bestätigt" if resolution == "bestaetigt" else "❌ Gerücht dementiert"
+        heading = "🔄 Update: Gerücht bestätigt" if resolution == "bestaetigt" else "🔄 Update: Gerücht dementiert"
 
     latest_text = (tracker.get("timeline") or [{}])[0].get("text", tracker.get("summary", ""))
 
@@ -1186,11 +1190,11 @@ def post_reddit_rumor(tracker, event_type):
 
     url = f"{SITE_URL}/geruechte/{tracker['id']}.html"
     if event_type == "new":
-        title = f"🔍 Neuer Gerüchte-Tracker: {tracker['title']}"
+        title = f"🆕 Neues Leak/Gerücht: {tracker['title']}"
     else:
         resolution = tracker.get("resolution")
-        title = (f"✅ Bestätigt: {tracker['title']}" if resolution == "bestaetigt"
-                 else f"❌ Dementiert: {tracker['title']}")
+        title = (f"🔄 Update (bestätigt): {tracker['title']}" if resolution == "bestaetigt"
+                 else f"🔄 Update (dementiert): {tracker['title']}")
     title = title[:290]
 
     latest_text = (tracker.get("timeline") or [{}])[0].get("text", tracker.get("summary", ""))
@@ -1226,12 +1230,14 @@ def post_reddit_rumor(tracker, event_type):
     return ok
 
 
-# --- Gerüchte-Tracker: Orchestrierung ----------------------------------------
+# --- Leaks & Gerüchte-Tracker: Orchestrierung --------------------------------
 
 def post_rumor_event(tracker, event_type):
-    """Postet ein einzelnes Gerüchte-Tracker-Ereignis auf allen Plattformen
-    + eine eigene Push-Benachrichtigung. event_type ist "new" oder
-    "resolved"."""
+    """Postet ein einzelnes Leaks & Gerüchte-Tracker-Ereignis auf allen
+    Plattformen + eine eigene Push-Benachrichtigung. event_type ist "new"
+    oder "resolved". Der Text macht auf JEDER Plattform IMMER explizit
+    sichtbar, ob es sich um ein komplett neues Leak/Gerücht handelt oder
+    um ein Update zu einem bereits laufenden Tracker."""
     print(f"  → {tracker['title']} [{event_type}]")
     post_discord_rumor(tracker, event_type)
     post_bluesky_rumor(tracker, event_type)
@@ -1240,21 +1246,31 @@ def post_rumor_event(tracker, event_type):
     post_reddit_rumor(tracker, event_type)
 
     if event_type == "new":
-        push_title = "🔍 Neuer Gerüchte-Tracker"
+        push_title = "🆕 Neues Leak/Gerücht"
     else:
         resolution = tracker.get("resolution")
-        push_title = "✅ Gerücht bestätigt" if resolution == "bestaetigt" else "❌ Gerücht dementiert"
+        push_title = "🔄 Update: Gerücht bestätigt" if resolution == "bestaetigt" else "🔄 Update: Gerücht dementiert"
 
-    # Dieselbe "Folge nur deinen Spielen"-Filterung wie bei normalen
-    # Artikeln (siehe main()) — wer in seinen Präferenzen dieses Spiel/
-    # diese Kategorie ausgewählt hat, bekommt die Benachrichtigung; wer
-    # keine Präferenzen gesetzt hat, bekommt sie ohnehin.
+    # Zwei unabhängige Filter-Ebenen:
+    # 1) "Folge nur deinen Spielen" (games/categories) — wie bei normalen
+    #    Artikeln, siehe main().
+    # 2) content_type="rumors" — NEU: eigener Ein/Aus-Schalter speziell für
+    #    Leaks & Gerüchte in "Meine Interessen" (siehe index.html). Jemand
+    #    kann z. B. GTA-News abonniert haben, aber trotzdem NUR bestätigte
+    #    News wollen, keine unbestätigten Leaks — dafür braucht es diesen
+    #    zusätzlichen, vom Spiel/Kategorie-Filter unabhängigen Schalter.
+    #    WICHTIG: api/send-push.js und push_helper.py müssen dieses Feld
+    #    noch auswerten (siehe Hinweis an Marcel) — wird hier bereits
+    #    mitgeschickt, damit das Backend es aufgreifen kann, sobald es so
+    #    weit ist; bis dahin wird der Parameter von einer älteren
+    #    push_helper.py-Version einfach ignoriert (kein Bruch).
     send_push_notification(
         title=push_title,
         body=tracker["title"][:120],
         url=f"/geruechte/{tracker['id']}.html",
         games=[tracker["game"]] if tracker.get("game") else [],
         categories=[tracker["cat"]] if tracker.get("cat") else [],
+        content_type="rumors",
     )
 
 
@@ -1267,7 +1283,7 @@ def main_rumors():
     unabhängig von social-posted.json (das ist für articles.json)."""
     trackers = load_json(RUMORS_FILE, [])
     if not trackers:
-        print("Keine Gerüchte-Tracker vorhanden.")
+        print("Keine Leaks & Gerüchte-Tracker vorhanden.")
         return
 
     posted_events = set(load_json(RUMOR_POSTED_FILE, []))
