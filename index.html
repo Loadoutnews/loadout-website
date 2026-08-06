@@ -910,6 +910,9 @@ function renderInterestsModal(){
   catChips.innerHTML = Object.keys(CATS).map(key =>
     `<button class="chip ${interestCategories.has(key)?'active':''}" onclick="toggleInterestCategory('${key}')">${catLabel(key)}</button>`
   ).join('');
+  
+  const rumorsToggle = document.getElementById('interestRumorsToggle');
+  if(rumorsToggle) rumorsToggle.checked = interestRumors;
 }
 
 function toggleInterestGame(key){
