@@ -1,67 +1,51 @@
 name: Rumor Tracker
-
-# Läuft periodisch (alle 4 Stunden) UND lässt sich manuell auslösen.
-# Modelliert nach breaking-news-check.yml: ruft build_rumor_pages.py DIREKT
-# im selben Workflow-Lauf auf (nicht über einen Cross-Workflow-Trigger) —
-# GitHub blockiert automatische Folge-Workflows bei einem Push mit dem
-# Standard-GITHUB_TOKEN bewusst, siehe bestehende breaking-news-check.yml.
-#
-# HINWEIS: Checkout-/Setup-Python-/Git-Config-Schritte sind an eure
-# bestehenden Workflows (z. B. breaking-news-check.yml) angepasst — bitte
-# mit dem tatsächlichen Runner-Setup (Python-Version, evtl. eigener
-# requirements.txt-Pfad) abgleichen, falls es dort Abweichungen gibt.
-
 on:
-  schedule:
-    - cron: "17 */4 * * *"  # alle 4 Stunden, bewusst NICHT zur vollen Stunde (weniger Kollisionen mit anderen Cron-Läufen)
-  workflow_dispatch: {}
+  workflow_dispatch:
+  # Ausgelöst über cron-job.org (alle 3-4 Stunden empfohlen — Gerüchte
+  # brauchen nicht die stündliche Taktung von Breaking News, aber deutlich
+  # häufiger als der 19-Uhr-Hauptlauf) — genau wie die anderen Pipelines,
+  # siehe README/Setup-Hinweise.
 
 jobs:
-  track-rumors:
+  track:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run rumor tracker
+      - name: Auf neue/laufende Gerüchte prüfen und Tracker aktualisieren
+        run: python rumor_tracker.py
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python rumor_tracker.py
 
-      - name: Build rumor tracker pages
+      - name: Gerüchte-Tracker-Seiten bauen
         run: python build_rumor_pages.py
 
-      - name: Commit and push page updates
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add rumors.json rumor-checked.json rumor-state.json geruechte.html geruechte/ sitemap.xml
-          git diff --staged --quiet && echo "Keine Änderungen." || (git commit -m "Gerüchte-Tracker: automatisches Update" && git push)
-
-      # Postet NUR bei zwei Ereignissen pro Tracker (neu eröffnet /
-      # abgeschlossen), siehe post_to_social.py: main_rumors(). Läuft nach
-      # dem Seiten-Build, damit geruechte/<id>.html schon live ist, wenn
-      # die Social-Posts darauf verlinken. Committet bei Bedarf selbst
-      # (Instagram-Karussell-Folien, siehe git_commit_and_push in
-      # post_to_social.py) UND am Ende rumor-social-posted.json — daher
-      # der separate, zweite Commit-Schritt danach.
-      - name: Post rumor tracker events to social media
+      # WICHTIG: post_to_social.py wird HIER, im selben Workflow-Lauf,
+      # direkt aufgerufen — nicht über den separaten "Post to Social
+      # Media"-Workflow (siehe breaking-news-check.yml: ein automatischer
+      # git push mit dem Standard-GITHUB_TOKEN löst laut GitHub bewusst
+      # KEINEN anderen Workflow aus). Läuft mit --rumors, damit NUR die
+      # beiden Gerüchte-Ereignisse (neuer Tracker / abgeschlossen) geprüft
+      # werden, nicht der normale articles.json-Pfad. Postet nur wirklich
+      # etwas, wenn rumor_tracker.py auch tatsächlich einen neuen Tracker
+      # eröffnet oder einen bestehenden abgeschlossen hat — sonst findet
+      # post_to_social.py --rumors einfach nichts Neues und beendet sich
+      # sofort ohne etwas zu tun.
+      - name: Social-Media-Post auslösen (falls ein Gerüchte-Ereignis entstanden ist)
+        run: python post_to_social.py --rumors
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
           BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
           BUFFER_INSTAGRAM_CHANNEL_ID: ${{ secrets.BUFFER_INSTAGRAM_CHANNEL_ID }}
+          PUSH_SECRET: ${{ secrets.PUSH_SECRET }}
           TUMBLR_CONSUMER_KEY: ${{ secrets.TUMBLR_CONSUMER_KEY }}
           TUMBLR_CONSUMER_SECRET: ${{ secrets.TUMBLR_CONSUMER_SECRET }}
           TUMBLR_OAUTH_TOKEN: ${{ secrets.TUMBLR_OAUTH_TOKEN }}
@@ -70,13 +54,11 @@ jobs:
           ZERNIO_API_KEY: ${{ secrets.ZERNIO_API_KEY }}
           ZERNIO_REDDIT_ACCOUNT_ID: ${{ secrets.ZERNIO_REDDIT_ACCOUNT_ID }}
           REDDIT_SUBREDDIT: ${{ secrets.REDDIT_SUBREDDIT }}
-          PUSH_SECRET: ${{ secrets.PUSH_SECRET }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-        run: python post_to_social.py --rumors
 
-      - name: Commit rumor social-posted state
+      - name: Restliche Änderungen committen
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add rumor-social-posted.json
-          git diff --staged --quiet && echo "Keine Änderungen." || (git commit -m "Gerüchte-Tracker: Social-Posting-Status aktualisiert" && git push)
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add rumors.json rumor-checked.json rumor-state.json rumor-social-posted.json geruechte.html geruechte/ sitemap.xml
+          git diff --staged --quiet || git commit -m "Gerüchte-Tracker-Prüfung"
+          git push
