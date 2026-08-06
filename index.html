@@ -451,12 +451,21 @@
     </div>
     <div class="chips" id="interestCatChips" style="margin-bottom:6px;"></div>
 
+    <div class="section-head" style="margin: 18px 0 10px;">
+      <h2 class="mono" style="font-size:11px; color:var(--muted);">Leaks & Gerüchte</h2>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0 14px;">
+      <span style="font-size:13px; color:var(--text);">Push-Benachrichtigungen zu Leaks &amp; Gerüchten</span>
+      <label class="toggle"><input type="checkbox" id="interestRumorsToggle" checked><span class="toggle-slider"></span></label>
+    </div>
+
     <div class="cookie-actions" style="margin-top:18px;">
       <button class="cookie-btn ghost" onclick="closeInterestsModal()">Abbrechen</button>
       <button class="cookie-btn primary" onclick="saveInterests()">Auswahl speichern</button>
     </div>
   </div>
 </div>
+
 
 <script>
 const CATS = {
