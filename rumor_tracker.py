@@ -55,6 +55,15 @@ MAX_NEW_TRACKERS_PER_RUN = 1   # neue Tracker sind teuer (volle Recherche) — p
 MAX_NEW_TRACKERS_PER_DAY = 2   # zusätzliche Tages-Obergrenze, damit die Gerüchte-Seite nicht zuwuchert
 MAX_UPDATES_PER_RUN = 3        # wie viele bestehende Tracker pro Lauf maximal ein Update bekommen
 
+# Wie weit zurück die Prüfung gegen bereits veröffentlichte REGULÄRE Artikel
+# (news_pipeline.py) schaut, um zu verhindern, dass dasselbe Thema
+# gleichzeitig als Gerüchte-Tracker UND als normaler Artikel läuft — siehe
+# classify_and_match(covered_article_titles=...) und main() unten. Etwas
+# grosszügiger als RECENT_DEDUP_DAYS (breaking_news_check.py), da ein
+# Thema, das schon vor einer Woche final als News lief, immer noch klar
+# "schon abgedeckt" ist.
+ARTICLE_DEDUP_DAYS = 7
+
 VALID_CATS = {"pc", "konsole", "hardware", "industrie"}
 VALID_GAMES = {"gta", "minecraft", "fortnite", "cod", "valorant", "fifa"}
 VALID_CREDIBILITY = {"unbestaetigt", "wahrscheinlich", "sehr_wahrscheinlich", "bestaetigt", "dementiert"}
@@ -89,6 +98,33 @@ def get_today_state():
     if state.get("date") != today:
         state = {"date": today, "count": 0}
     return state
+
+
+GERMAN_MONTHS = {
+    "Januar": 1, "Februar": 2, "März": 3, "April": 4, "Mai": 5, "Juni": 6,
+    "Juli": 7, "August": 8, "September": 9, "Oktober": 10, "November": 11, "Dezember": 12,
+}
+
+
+def _parse_article_date(article):
+    """Wandelt das deutsche Datumsformat der REGULÄREN Artikel (z. B. "05.
+    August 2026", siehe news_pipeline.py) in ein vergleichbares
+    datetime.date um — für das zeitliche Fenster von ARTICLE_DEDUP_DAYS.
+    Gibt None zurück, wenn das Format nicht erkannt wird; solche Artikel
+    werden dann sicherheitshalber TROTZDEM in die Cross-Pipeline-Prüfung
+    aufgenommen (siehe main()), statt sie stillschweigend zu ignorieren."""
+    date_str = article.get("date", "")
+    match = re.match(r"(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)\s*(\d{4})", date_str.strip())
+    if not match:
+        return None
+    day, month_name, year = match.groups()
+    month = GERMAN_MONTHS.get(month_name)
+    if not month:
+        return None
+    try:
+        return datetime.date(int(year), month, int(day))
+    except ValueError:
+        return None
 
 
 def slugify(text):
@@ -145,11 +181,18 @@ Tracker sein:
 {npl.RELEVANCE_CRITERIA}"""
 
 
-def classify_and_match(entries, active_trackers):
+def classify_and_match(entries, active_trackers, covered_article_titles=None):
     """EIN günstiger Haiku-Aufruf für den ganzen Batch: welche Kandidaten
     sind wirklich unbestätigte Gerüchte/Leaks zu einem relevanten Thema —
     und falls ja, setzen sie ein bereits laufendes Tracker-Thema fort
-    ("update") oder eröffnen ein komplett neues ("new")?"""
+    ("update") oder eröffnen ein komplett neues ("new")?
+
+    covered_article_titles: Titel bereits veröffentlichter REGULÄRER
+    Artikel (aus news_pipeline.py, zeitlich begrenzt auf die letzten Tage,
+    siehe main()) — verhindert, dass ein Thema, das schon als bestätigter
+    News-Artikel läuft, zusätzlich (und unnötig) einen eigenen Gerüchte-
+    Tracker bekommt. Beide Pipelines laufen unabhängig voneinander und
+    teilen sich sonst keine gemeinsame "das haben wir schon"-Liste."""
     if not entries:
         return []
 
@@ -165,10 +208,20 @@ def classify_and_match(entries, active_trackers):
     else:
         trackers_block = "(noch keine laufenden Gerüchte-Tracker)"
 
+    covered_article_titles = [t for t in (covered_article_titles or []) if t]
+    if covered_article_titles:
+        covered_block = "\n".join(f"- {t}" for t in covered_article_titles[-40:])
+    else:
+        covered_block = "(keine)"
+
     prompt = f"""{RUMOR_CRITERIA}
 
 Aktuell laufende Gerüchte-Tracker (id + worum es geht):
 {trackers_block}
+
+Bereits als REGULÄRER, bestätigter News-Artikel veröffentlichte Themen \
+(NICHT Gerüchte-Tracker — diese Themen sind schon als echte News abgedeckt):
+{covered_block}
 
 Neue RSS-Kandidaten (nummeriert, 0-basiert):
 {candidates_block}
@@ -176,11 +229,15 @@ Neue RSS-Kandidaten (nummeriert, 0-basiert):
 Prüfe JEDEN Kandidaten:
 1. Ist es wirklich ein GERÜCHT/LEAK (keine offizielle Bestätigung) zu einem \
 relevanten Thema (siehe Kriterien oben)? Falls nein: action "skip".
-2. Falls ja: Setzt er ein BEREITS LAUFENDES Gerücht aus der Liste oben fort \
+2. Behandelt der Kandidat inhaltlich dasselbe Thema wie eines der bereits \
+als regulärer Artikel veröffentlichten Themen oben? Dann ist es keine \
+offene Frage mehr, sondern schon berichtete News — action "skip".
+3. Setzt er ein BEREITS LAUFENDES Gerücht aus der Tracker-Liste oben fort \
 (gleiches Thema, z. B. neue Details zum selben Leak)? Dann action "update" \
 mit der passenden tracker_id aus der Liste oben.
-3. Ist es ein komplett NEUES Gerücht ohne bestehenden Tracker: action "new".
-4. Behandeln mehrere Kandidaten in dieser Liste dasselbe NEUE Gerücht: nur \
+4. Ist es ein komplett NEUES Gerücht ohne bestehenden Tracker UND ohne \
+bereits veröffentlichten Artikel dazu: action "new".
+5. Behandeln mehrere Kandidaten in dieser Liste dasselbe NEUE Gerücht: nur \
 der ERSTE bekommt "new", alle weiteren "skip" (kein Tracker existiert für \
 sie noch, aber das erste "new" deckt das Thema bereits ab).
 
@@ -506,6 +563,21 @@ def main():
     active_trackers = [t for t in trackers if t.get("status") == "aktiv"]
     all_tracker_ids = {t["id"] for t in trackers}
 
+    # Cross-Pipeline-Dedup (siehe classify_and_match: covered_article_titles):
+    # lädt die zeitlich jüngsten Titel bereits veröffentlichter REGULÄRER
+    # Artikel (articles.json + archive.json, dieselben Dateien wie
+    # news_pipeline.py) — verhindert, dass ein Thema gleichzeitig als
+    # Gerüchte-Tracker UND als normaler, bestätigter Artikel läuft. Beide
+    # Pipelines laufen sonst komplett unabhängig voneinander.
+    regular_articles = load_json(npl.ARTICLES_FILE, [])
+    regular_archive = load_json(npl.ARCHIVE_FILE, [])
+    cutoff = datetime.date.today() - datetime.timedelta(days=ARTICLE_DEDUP_DAYS)
+    covered_article_titles = [
+        a.get("source_title", a.get("title", ""))
+        for a in (regular_articles + regular_archive)
+        if (_parse_article_date(a) is None) or (_parse_article_date(a) >= cutoff)
+    ]
+
     print("→ Lese RSS-Feeds für Gerüchte-Prüfung...")
     raw_entries = npl.fetch_raw_entries()
 
@@ -515,8 +587,9 @@ def main():
         return
 
     print(f"→ {len(candidate_pool)} neue Meldung(en) werden auf Gerüchte-Relevanz geprüft "
-          f"(gegen {len(active_trackers)} laufende Tracker)...")
-    decisions = classify_and_match(candidate_pool, active_trackers)
+          f"(gegen {len(active_trackers)} laufende Tracker, {len(covered_article_titles)} "
+          f"kürzlich veröffentlichte reguläre Artikel)...")
+    decisions = classify_and_match(candidate_pool, active_trackers, covered_article_titles)
 
     checked_links |= {e["link"] for e in candidate_pool}
     save_json(CHECKED_FILE, sorted(checked_links))
