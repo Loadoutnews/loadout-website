@@ -4,11 +4,10 @@ LOADOUT — Statischer Seiten-Generator
 Erzeugt für jeden Artikel in articles.json eine eigene, echte HTML-Seite
 unter /artikel/{id}.html — mit korrekten Meta-Tags, Open-Graph-Daten und
 schema.org-Strukturdaten. Das ist die Voraussetzung dafür, dass:
-
-  - Google einzelne Artikel indexieren kann (nicht nur die Startseite)
-  - Ein Artikel-Link in WhatsApp/Twitter/Discord eine echte Vorschau zeigt
-  - Nutzer:innen einen Artikel direkt teilen/verlinken können
-  - Der Zurück-Button im Browser korrekt funktioniert
+- Google einzelne Artikel indexieren kann (nicht nur die Startseite)
+- Ein Artikel-Link in WhatsApp/Twitter/Discord eine echte Vorschau zeigt
+- Nutzer:innen einen Artikel direkt teilen/verlinken können
+- Der Zurück-Button im Browser korrekt funktioniert
 
 Ausführen:
     python build_pages.py
@@ -17,7 +16,7 @@ Voraussetzung: articles.json muss im selben Ordner liegen (wird von
 news_pipeline.py erzeugt/aktualisiert).
 
 Ergebnis:
-    /artikel/<id>.html   (eine Datei pro Artikel)
+    /artikel/<id>.html (eine Datei pro Artikel)
     sitemap.xml
     robots.txt
     ads.txt (Platzhalter, siehe README)
@@ -39,6 +38,7 @@ CATS = {
     "hardware": "Hardware",
     "industrie": "Industrie",
 }
+
 GAMES = {
     "gta": "GTA",
     "minecraft": "Minecraft",
@@ -55,6 +55,10 @@ GERMAN_MONTHS = {
 
 
 def parse_german_date_to_iso(date_str):
+    """Artikel speichern ihr Datum als lesbaren deutschen Text (z. B. "17.
+    Juli 2026") — für schema.org-Strukturdaten wird aber ein maschinen-
+    lesbares ISO-Format (YYYY-MM-DD) verlangt. Gibt None zurück, falls das
+    Datum nicht im erwarteten Format vorliegt, statt abzustürzen."""
     if not date_str:
         return None
     match = re.match(r"(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)\s*(\d{4})", date_str.strip())
@@ -77,12 +81,24 @@ def article_image(article):
 
 
 def related_articles(current, all_articles, count=3):
+    """Findet inhaltlich passende andere Artikel für die "Das könnte dich
+    auch interessieren"-Sektion — wichtig für SEO (interne Verlinkung
+    zwischen Artikeln hilft Suchmaschinen, den Seiten-Zusammenhang zu
+    verstehen) UND fürs Halten von Besucher:innen auf der Seite.
+
+    Priorität: zuerst dasselbe große Franchise (a['game']) — das ist die
+    engste inhaltliche Nähe — dann dieselbe Kategorie, jeweils die
+    neuesten zuerst. Der aktuelle Artikel selbst wird ausgeschlossen."""
     others = [a for a in all_articles if a["id"] != current["id"]]
+
     same_game = []
     if current.get("game"):
         same_game = [a for a in others if a.get("game") == current["game"]]
+
     same_cat = [a for a in others if a["cat"] == current["cat"] and a not in same_game]
+
     combined = same_game + same_cat
+    # Duplikate entfernen (falls ein Artikel aus irgendeinem Grund doppelt vorkäme)
     seen_ids = set()
     result = []
     for a in combined:
@@ -125,10 +141,7 @@ def render_article_page(a, all_articles):
     cat_label = CATS.get(a["cat"], a["cat"])
     game_label = GAMES.get(a.get("game"), "") if a.get("game") else ""
     badge_label = cat_label + (f" · {game_label}" if game_label else "")
-    original_badge_html = (
-        '<span class="badge badge-original">✦ LOADOUT-Original</span>'
-        if a.get("content_type") == "analysis" else ""
-    )
+
     body_html = "\n".join(f'<p class="body">{html.escape(p)}</p>' for p in a["body"])
     if a.get("editorial_take"):
         body_html += f'''
@@ -137,12 +150,19 @@ def render_article_page(a, all_articles):
           <p>{html.escape(a["editorial_take"])}</p>
         </div>
         '''
+
     image = article_image(a)
     canonical = f"{SITE_URL}/artikel/{a['id']}.html"
     title = html.escape(a["title"])
     teaser = html.escape(a["teaser"])
+
     related_html = render_related_articles_html(related_articles(a, all_articles))
 
+    # schema.org NewsArticle — hilft Suchmaschinen, den Artikel korrekt
+    # einzuordnen (Autor, Bild, Datum) und kann zu Rich-Snippets führen.
+    # datePublished/dateModified fehlten bisher — ein wichtiges Feld für
+    # NewsArticle-Strukturdaten, das Google explizit für die Einordnung als
+    # "echte", aktuelle Nachrichtenseite berücksichtigt.
     date_iso = parse_german_date_to_iso(a.get("date"))
     json_ld = {
         "@context": "https://schema.org",
@@ -210,70 +230,76 @@ def render_article_page(a, all_articles):
 </div>
 
 <main>
+
   <div class="ad-slot ad-header">
     <span class="ad-tag mono">Anzeige</span>
     <ins class="adsbygoogle" data-placement="leaderboard" style="display:block; width:100%; min-height:90px;"></ins>
   </div>
 
   <div class="page-layout">
-    <div class="content-col">
-      <div class="detail active" style="display:block;">
-        <a href="../index.html" class="back-btn mono" style="text-decoration:none; display:inline-flex;">← ZURÜCK ZUM FEED</a>
-        <div class="detail-art" style="background:url('{image}') center/cover;"></div>
-        <span class="badge {a['cat']}">{badge_label}</span>
-        {original_badge_html}
-        <h1 class="display">{title}</h1>
-        <div class="byline">
-          <div class="avatar"></div>
-          <span>Redaktion LOADOUT · KI-unterstützt recherchiert, Fakten gegengeprüft</span>
-        </div>
-        <div class="detail-meta">
-          <div class="hype">
-            <span class="hype-label mono">Hype-Meter</span>
-            <div class="hype-bar"><div class="hype-fill" style="width:{a['hype']}%"></div></div>
-            <span class="hype-pct mono">{a['hype']}%</span>
-          </div>
-          <span class="mono" style="color:var(--muted); font-size:12px;">{html.escape(a['date'])} · {html.escape(a['platform'])} · <span id="viewCount"></span></span>
-        </div>
-        {body_html}
-        <a href="{a['source']}" class="source-link" target="_blank" rel="noopener">Zur Originalquelle ({html.escape(a['sourceLabel'])}) →</a>
+  <div class="content-col">
 
-        <div class="reaction-bar">
-          <button class="reaction-btn" id="likeBtn" onclick="react('like')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>
-            <span id="likeCount">0</span>
-          </button>
-          <button class="reaction-btn" id="dislikeBtn" onclick="react('dislike')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 14V2M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L13 22h0a3.13 3.13 0 0 1-3-3.88Z"/></svg>
-            <span id="dislikeCount">0</span>
-          </button>
-        </div>
-
-        {related_html}
-
-        <div class="comments-section">
-          <h3 class="mono">💬 Was denkst du dazu?</h3>
-          <p class="comments-hint">Lass uns gerne wissen, was du zu dieser Meldung meinst — sei dabei fair und respektvoll.</p>
-          <div class="comment-form">
-            <input type="text" id="commentName" placeholder="Name (optional)" maxlength="40">
-            <textarea id="commentText" placeholder="Deine Meinung..." maxlength="500" rows="3"></textarea>
-            <input type="text" id="commentWebsite" name="website" class="honeypot" tabindex="-1" autocomplete="off">
-            <button class="cookie-btn primary" onclick="submitComment()">Kommentar absenden</button>
-          </div>
-          <div id="commentsList"></div>
-        </div>
+  <div class="detail active" style="display:block;">
+    <a href="../index.html" class="back-btn mono" style="text-decoration:none; display:inline-flex;">← ZURÜCK ZUM FEED</a>
+    <div class="detail-art" style="background:url('{image}') center/cover;"></div>
+    <span class="badge {a['cat']}">{badge_label}</span>
+    <h1 class="display">{title}</h1>
+    <div class="byline">
+      <div class="avatar"></div>
+      <span>Redaktion LOADOUT · KI-unterstützt recherchiert, Fakten gegengeprüft</span>
+    </div>
+    <div class="detail-meta">
+      <div class="hype">
+        <span class="hype-label mono">Hype-Meter</span>
+        <div class="hype-bar"><div class="hype-fill" style="width:{a['hype']}%"></div></div>
+        <span class="hype-pct mono">{a['hype']}%</span>
       </div>
+      <span class="mono" style="color:var(--muted); font-size:12px;">{html.escape(a['date'])} · {html.escape(a['platform'])} · <span id="viewCount"></span></span>
+    </div>
+    {body_html}
+    <a href="{a['source']}" class="source-link" target="_blank" rel="noopener">Zur Originalquelle ({html.escape(a['sourceLabel'])}) →</a>
+
+    <div class="reaction-bar">
+      <button class="reaction-btn" id="likeBtn" onclick="react('like')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+        <span id="likeCount">0</span>
+      </button>
+      <button class="reaction-btn" id="dislikeBtn" onclick="react('dislike')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 14V2M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L13 22h0a3.13 3.13 0 0 1-3-3.88Z"/></svg>
+        <span id="dislikeCount">0</span>
+      </button>
     </div>
 
-    <aside class="sidebar">
-      <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×250</div>
-    </aside>
+    {related_html}
+
+    <div class="comments-section">
+      <h3 class="mono">💬 Was denkst du dazu?</h3>
+      <p class="comments-hint">Lass uns gerne wissen, was du zu dieser Meldung meinst — sei dabei fair und respektvoll.</p>
+
+      <div class="comment-form">
+        <input type="text" id="commentName" placeholder="Name (optional)" maxlength="40">
+        <textarea id="commentText" placeholder="Deine Meinung..." maxlength="500" rows="3"></textarea>
+        <input type="text" id="commentWebsite" name="website" class="honeypot" tabindex="-1" autocomplete="off">
+        <button class="cookie-btn primary" onclick="submitComment()">Kommentar absenden</button>
+      </div>
+
+      <div id="commentsList"></div>
+    </div>
+  </div>
+
+  </div>
+
+  <aside class="sidebar">
+    <div class="ad-slot ad-sidebar"><span class="ad-tag mono">Anzeige</span>Werbeplatz · 300×250</div>
+  </aside>
+
   </div>
 
   <div class="ad-slot ad-footer">
     <span class="ad-tag mono">Anzeige</span>
     <ins class="adsbygoogle" data-placement="leaderboard" style="display:block; width:100%; min-height:90px;"></ins>
   </div>
+
 </main>
 
 <footer>
@@ -291,6 +317,7 @@ def render_article_page(a, all_articles):
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 9.6c-1.2-2.4-3.7-4.6-6.3-5.3C4.1 3.9 3.2 4.4 3.2 5.8c0 2.9 1.5 6.5 3.9 8-1 .1-1.9.5-1.9 1.6 0 1.4 1.7 2.2 3.4 1.6 1-.4 2.4-1.4 3.4-3.1 1 1.7 2.4 2.7 3.4 3.1 1.7.6 3.4-.2 3.4-1.6 0-1.1-.9-1.5-1.9-1.6 2.4-1.5 3.9-5.1 3.9-8 0-1.4-.9-1.9-2.5-1.5-2.6.7-5.1 2.9-6.3 5.3z"/></svg>
     </a>
   </div>
+
   <div class="footer-links mono">
     <a href="../index.html">Zur Startseite</a>
     <a href="../ueber-uns.html">Über uns</a>
@@ -337,236 +364,247 @@ def render_article_page(a, all_articles):
 </div>
 
 <script>
-  let cookieConsent = null;
-  let consentDetails = {{ analytics: false, marketing: false }};
+// --- Cookie-Consent (dieselbe Logik/Speicherung wie auf der Startseite,
+// damit eine einmal getroffene Wahl seitenübergreifend gilt) -----------
+let cookieConsent = null;
+let consentDetails = {{ analytics: false, marketing: false }};
+try {{
+  cookieConsent = localStorage.getItem('loadout_cookieConsent');
+  const storedDetails = localStorage.getItem('loadout_consentDetails');
+  if(storedDetails) consentDetails = JSON.parse(storedDetails);
+}} catch(e) {{}}
+
+function persistConsent(){{
   try {{
-    cookieConsent = localStorage.getItem('loadout_cookieConsent');
-    const storedDetails = localStorage.getItem('loadout_consentDetails');
-    if(storedDetails) consentDetails = JSON.parse(storedDetails);
+    localStorage.setItem('loadout_cookieConsent', cookieConsent);
+    localStorage.setItem('loadout_consentDetails', JSON.stringify(consentDetails));
   }} catch(e) {{}}
+}}
 
-  function persistConsent(){{
-    try {{
-      localStorage.setItem('loadout_cookieConsent', cookieConsent);
-      localStorage.setItem('loadout_consentDetails', JSON.stringify(consentDetails));
-    }} catch(e) {{}}
-  }}
-
-  function initCookieBanner(){{
-    if(cookieConsent === null){{
-      document.getElementById('cookieBanner').classList.add('visible');
-    }} else {{
-      applyConsent();
-    }}
-  }}
-
-  function setCookieConsent(acceptAll){{
-    cookieConsent = acceptAll ? 'all' : 'necessary';
-    consentDetails = acceptAll ? {{ analytics: true, marketing: true }} : {{ analytics: false, marketing: false }};
-    persistConsent();
-    document.getElementById('cookieBanner').classList.remove('visible');
+function initCookieBanner(){{
+  if(cookieConsent === null){{
+    document.getElementById('cookieBanner').classList.add('visible');
+  }} else {{
     applyConsent();
   }}
+}}
 
-  function showCookieDetails(){{
-    document.getElementById('consentAnalytics').checked = consentDetails.analytics;
-    document.getElementById('consentMarketing').checked = consentDetails.marketing;
-    document.getElementById('cookieDetailModal').classList.add('visible');
-  }}
+function setCookieConsent(acceptAll){{
+  cookieConsent = acceptAll ? 'all' : 'necessary';
+  consentDetails = acceptAll ? {{ analytics: true, marketing: true }} : {{ analytics: false, marketing: false }};
+  persistConsent();
+  document.getElementById('cookieBanner').classList.remove('visible');
+  applyConsent();
+}}
 
-  function closeCookieDetails(){{
-    document.getElementById('cookieDetailModal').classList.remove('visible');
-  }}
+function showCookieDetails(){{
+  document.getElementById('consentAnalytics').checked = consentDetails.analytics;
+  document.getElementById('consentMarketing').checked = consentDetails.marketing;
+  document.getElementById('cookieDetailModal').classList.add('visible');
+}}
 
-  function saveCookieDetails(){{
-    const analytics = document.getElementById('consentAnalytics').checked;
-    const marketing = document.getElementById('consentMarketing').checked;
-    cookieConsent = (analytics || marketing) ? 'custom' : 'necessary';
-    consentDetails = {{ analytics, marketing }};
-    persistConsent();
-    document.getElementById('cookieDetailModal').classList.remove('visible');
-    document.getElementById('cookieBanner').classList.remove('visible');
-    applyConsent();
-  }}
+function closeCookieDetails(){{
+  document.getElementById('cookieDetailModal').classList.remove('visible');
+}}
 
-  function openCookieSettings(){{
-    showCookieDetails();
-  }}
+function saveCookieDetails(){{
+  const analytics = document.getElementById('consentAnalytics').checked;
+  const marketing = document.getElementById('consentMarketing').checked;
+  cookieConsent = (analytics || marketing) ? 'custom' : 'necessary';
+  consentDetails = {{ analytics, marketing }};
+  persistConsent();
+  document.getElementById('cookieDetailModal').classList.remove('visible');
+  document.getElementById('cookieBanner').classList.remove('visible');
+  applyConsent();
+}}
 
-  const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
-  let analyticsLoaded = false;
+function openCookieSettings(){{
+  showCookieDetails();
+}}
 
-  function loadGoogleAnalytics(){{
-    if(analyticsLoaded || !GA_MEASUREMENT_ID || GA_MEASUREMENT_ID.includes('XXXX')) return;
-    analyticsLoaded = true;
-    const script = document.createElement('script');
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${{GA_MEASUREMENT_ID}}`;
-    script.async = true;
-    document.head.appendChild(script);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){{ window.dataLayer.push(arguments); }};
-    window.gtag('js', new Date());
-    window.gtag('config', GA_MEASUREMENT_ID);
-  }}
+// --- Google Analytics (GA4) — dieselbe Mess-ID wie in index.html ------
+const GA_MEASUREMENT_ID = 'G-KEXXPVPCR3';
+let analyticsLoaded = false;
 
-  const ADSENSE_CLIENT_ID = 'ca-pub-8080055429345245';
-  const AD_PLACEMENTS = {{
-    leaderboard: {{ slot: 'HIER_SLOT_ID_LEADERBOARD', format: 'horizontal' }},
-  }};
-  let adsenseLoaded = false;
+function loadGoogleAnalytics(){{
+  if(analyticsLoaded || !GA_MEASUREMENT_ID || GA_MEASUREMENT_ID.includes('XXXX')) return;
+  analyticsLoaded = true;
+  const script = document.createElement('script');
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${{GA_MEASUREMENT_ID}}`;
+  script.async = true;
+  document.head.appendChild(script);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){{ window.dataLayer.push(arguments); }};
+  window.gtag('js', new Date());
+  window.gtag('config', GA_MEASUREMENT_ID);
+}}
 
-  function loadAdSense(){{
-    if(adsenseLoaded || !ADSENSE_CLIENT_ID || ADSENSE_CLIENT_ID.includes('XXXX')) return;
-    adsenseLoaded = true;
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${{ADSENSE_CLIENT_ID}}`;
-    script.crossOrigin = 'anonymous';
-    script.onload = initAdSlots;
-    document.head.appendChild(script);
-  }}
+// --- Google AdSense — dieselben IDs wie in index.html eintragen -------
+const ADSENSE_CLIENT_ID = 'ca-pub-8080055429345245';
+const AD_PLACEMENTS = {{
+  leaderboard: {{ slot: 'HIER_SLOT_ID_LEADERBOARD', format: 'horizontal' }},
+}};
+let adsenseLoaded = false;
 
-  function initAdSlots(){{
-    if(!adsenseLoaded) return;
-    document.querySelectorAll('ins.adsbygoogle:not([data-ads-initialized])').forEach(ins => {{
-      const config = AD_PLACEMENTS[ins.dataset.placement];
-      if(!config || !config.slot || config.slot.includes('HIER_')) return;
-      ins.setAttribute('data-ad-client', ADSENSE_CLIENT_ID);
-      ins.setAttribute('data-ad-slot', config.slot);
-      ins.setAttribute('data-ad-format', config.format);
-      ins.setAttribute('data-full-width-responsive', 'true');
-      ins.setAttribute('data-ads-initialized', 'true');
-      try {{ (window.adsbygoogle = window.adsbygoogle || []).push({{}}); }} catch(e) {{}}
-    }});
-  }}
+function loadAdSense(){{
+  if(adsenseLoaded || !ADSENSE_CLIENT_ID || ADSENSE_CLIENT_ID.includes('XXXX')) return;
+  adsenseLoaded = true;
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${{ADSENSE_CLIENT_ID}}`;
+  script.crossOrigin = 'anonymous';
+  script.onload = initAdSlots;
+  document.head.appendChild(script);
+}}
 
-  function applyConsent(){{
-    if(consentDetails.analytics) loadGoogleAnalytics();
-    if(consentDetails.marketing) loadAdSense();
-  }}
+function initAdSlots(){{
+  if(!adsenseLoaded) return;
+  document.querySelectorAll('ins.adsbygoogle:not([data-ads-initialized])').forEach(ins => {{
+    const config = AD_PLACEMENTS[ins.dataset.placement];
+    if(!config || !config.slot || config.slot.includes('HIER_')) return;
+    ins.setAttribute('data-ad-client', ADSENSE_CLIENT_ID);
+    ins.setAttribute('data-ad-slot', config.slot);
+    ins.setAttribute('data-ad-format', config.format);
+    ins.setAttribute('data-full-width-responsive', 'true');
+    ins.setAttribute('data-ads-initialized', 'true');
+    try {{ (window.adsbygoogle = window.adsbygoogle || []).push({{}}); }} catch(e) {{}}
+  }});
+}}
 
-  initCookieBanner();
+function applyConsent(){{
+  if(consentDetails.analytics) loadGoogleAnalytics();
+  if(consentDetails.marketing) loadAdSense();
+}}
 
-  if("serviceWorker" in navigator){{
-    window.addEventListener("load", () => {{
-      navigator.serviceWorker.register("/sw.js").catch(() => {{}});
-    }});
-  }}
+initCookieBanner();
+
+// PWA: Service Worker registrieren (funktioniert von jeder Seite aus,
+// Pfad ist absolut).
+if("serviceWorker" in navigator){{
+  window.addEventListener("load", () => {{
+    navigator.serviceWorker.register("/sw.js").catch(() => {{}});
+  }});
+}}
 </script>
 
 <script>
-  fetch('/api/track-view', {{
+// Zählt einen echten Seitenaufruf für diesen Artikel — auch wenn jemand
+// direkt über einen geteilten Link oder eine Google-Suche hierher kommt,
+// nicht nur über die Startseite.
+fetch('/api/track-view', {{
+  method: 'POST',
+  headers: {{ 'Content-Type': 'application/json' }},
+  body: JSON.stringify({{ articleId: '{a['id']}' }})
+}})
+  .then(res => res.json())
+  .then(data => {{
+    const el = document.getElementById('viewCount');
+    if(el && data.views) el.textContent = '👁 ' + data.views.toLocaleString('de-CH') + (data.views === 1 ? ' Aufruf' : ' Aufrufe');
+  }})
+  .catch(() => {{}});
+</script>
+
+<script>
+// --- Reaktionen (Like/Dislike) -----------------------------------------
+const ARTICLE_ID = '{a['id']}';
+let myReactions = {{}};
+try {{ myReactions = JSON.parse(localStorage.getItem('loadout_reactions') || '{{}}'); }} catch(e) {{}}
+
+function updateReactionButtons(){{
+  const mine = myReactions[ARTICLE_ID];
+  document.getElementById('likeBtn').classList.toggle('active', mine === 'like');
+  document.getElementById('dislikeBtn').classList.toggle('active', mine === 'dislike');
+}}
+
+fetch(`/api/react?articleId=${{encodeURIComponent(ARTICLE_ID)}}`)
+  .then(res => res.json())
+  .then(data => {{
+    document.getElementById('likeCount').textContent = data.likes || 0;
+    document.getElementById('dislikeCount').textContent = data.dislikes || 0;
+    updateReactionButtons();
+  }})
+  .catch(() => {{}});
+
+function react(type){{
+  if(myReactions[ARTICLE_ID]) return;
+  fetch('/api/react', {{
     method: 'POST',
     headers: {{ 'Content-Type': 'application/json' }},
-    body: JSON.stringify({{ articleId: '{a['id']}' }})
+    body: JSON.stringify({{ articleId: ARTICLE_ID, type }})
   }})
     .then(res => res.json())
     .then(data => {{
-      const el = document.getElementById('viewCount');
-      if(el && data.views) el.textContent = '👁 ' + data.views.toLocaleString('de-CH') + (data.views === 1 ? ' Aufruf' : ' Aufrufe');
-    }})
-    .catch(() => {{}});
-</script>
-
-<script>
-  const ARTICLE_ID = '{a['id']}';
-  let myReactions = {{}};
-  try {{ myReactions = JSON.parse(localStorage.getItem('loadout_reactions') || '{{}}'); }} catch(e) {{}}
-
-  function updateReactionButtons(){{
-    const mine = myReactions[ARTICLE_ID];
-    document.getElementById('likeBtn').classList.toggle('active', mine === 'like');
-    document.getElementById('dislikeBtn').classList.toggle('active', mine === 'dislike');
-  }}
-
-  fetch(`/api/react?articleId=${{encodeURIComponent(ARTICLE_ID)}}`)
-    .then(res => res.json())
-    .then(data => {{
-      document.getElementById('likeCount').textContent = data.likes || 0;
-      document.getElementById('dislikeCount').textContent = data.dislikes || 0;
+      document.getElementById(type === 'like' ? 'likeCount' : 'dislikeCount').textContent = data.count;
+      myReactions[ARTICLE_ID] = type;
+      try {{ localStorage.setItem('loadout_reactions', JSON.stringify(myReactions)); }} catch(e) {{}}
       updateReactionButtons();
     }})
     .catch(() => {{}});
+}}
 
-  function react(type){{
-    if(myReactions[ARTICLE_ID]) return;
-    fetch('/api/react', {{
-      method: 'POST',
-      headers: {{ 'Content-Type': 'application/json' }},
-      body: JSON.stringify({{ articleId: ARTICLE_ID, type }})
+// --- Kommentare -----------------------------------------------------------
+function loadComments(){{
+  fetch(`/api/comments?articleId=${{encodeURIComponent(ARTICLE_ID)}}`)
+    .then(res => res.json())
+    .then(data => renderComments(data.comments || []))
+    .catch(() => {{ document.getElementById('commentsList').innerHTML = '<p class="comments-empty">Kommentare konnten nicht geladen werden.</p>'; }});
+}}
+
+function renderComments(comments){{
+  const list = document.getElementById('commentsList');
+  if(!comments.length){{
+    list.innerHTML = '<p class="comments-empty">Noch keine Kommentare — sei die/der Erste!</p>';
+    return;
+  }}
+  const sorted = [...comments].reverse();
+  list.innerHTML = '';
+  sorted.forEach(c => {{
+    const item = document.createElement('div');
+    item.className = 'comment-item';
+    const head = document.createElement('div');
+    head.className = 'comment-head';
+    const name = document.createElement('span');
+    name.className = 'comment-name';
+    name.textContent = c.name || 'Anonym';
+    const date = document.createElement('span');
+    date.className = 'comment-date mono';
+    try {{
+      const d = new Date(c.timestamp);
+      date.textContent = d.toLocaleDateString('de-CH', {{ day: '2-digit', month: '2-digit', year: 'numeric' }}) + ' · ' + d.toLocaleTimeString('de-CH', {{ hour: '2-digit', minute: '2-digit' }});
+    }} catch(e) {{}}
+    head.appendChild(name);
+    head.appendChild(date);
+    const text = document.createElement('div');
+    text.className = 'comment-text';
+    text.textContent = c.text || '';
+    item.appendChild(head);
+    item.appendChild(text);
+    list.appendChild(item);
+  }});
+}}
+
+function submitComment(){{
+  const nameEl = document.getElementById('commentName');
+  const textEl = document.getElementById('commentText');
+  const websiteEl = document.getElementById('commentWebsite');
+  const text = textEl.value.trim();
+  if(!text) return;
+
+  fetch('/api/comments', {{
+    method: 'POST',
+    headers: {{ 'Content-Type': 'application/json' }},
+    body: JSON.stringify({{ articleId: ARTICLE_ID, name: nameEl.value.trim(), text, website: websiteEl.value }})
+  }})
+    .then(res => res.ok ? res.json() : null)
+    .then(data => {{
+      if(!data) return;
+      textEl.value = '';
+      loadComments();
     }})
-      .then(res => res.json())
-      .then(data => {{
-        document.getElementById(type === 'like' ? 'likeCount' : 'dislikeCount').textContent = data.count;
-        myReactions[ARTICLE_ID] = type;
-        try {{ localStorage.setItem('loadout_reactions', JSON.stringify(myReactions)); }} catch(e) {{}}
-        updateReactionButtons();
-      }})
-      .catch(() => {{}});
-  }}
+    .catch(() => {{}});
+}}
 
-  function loadComments(){{
-    fetch(`/api/comments?articleId=${{encodeURIComponent(ARTICLE_ID)}}`)
-      .then(res => res.json())
-      .then(data => renderComments(data.comments || []))
-      .catch(() => {{ document.getElementById('commentsList').innerHTML = '<p class="comments-empty">Kommentare konnten nicht geladen werden.</p>'; }});
-  }}
-
-  function renderComments(comments){{
-    const list = document.getElementById('commentsList');
-    if(!comments.length){{
-      list.innerHTML = '<p class="comments-empty">Noch keine Kommentare — sei die/der Erste!</p>';
-      return;
-    }}
-    const sorted = [...comments].reverse();
-    list.innerHTML = '';
-    sorted.forEach(c => {{
-      const item = document.createElement('div');
-      item.className = 'comment-item';
-      const head = document.createElement('div');
-      head.className = 'comment-head';
-      const name = document.createElement('span');
-      name.className = 'comment-name';
-      name.textContent = c.name || 'Anonym';
-      const date = document.createElement('span');
-      date.className = 'comment-date mono';
-      try {{
-        const d = new Date(c.timestamp);
-        date.textContent = d.toLocaleDateString('de-CH', {{ day: '2-digit', month: '2-digit', year: 'numeric' }}) + ' · ' + d.toLocaleTimeString('de-CH', {{ hour: '2-digit', minute: '2-digit' }});
-      }} catch(e) {{}}
-      head.appendChild(name);
-      head.appendChild(date);
-      const text = document.createElement('div');
-      text.className = 'comment-text';
-      text.textContent = c.text || '';
-      item.appendChild(head);
-      item.appendChild(text);
-      list.appendChild(item);
-    }});
-  }}
-
-  function submitComment(){{
-    const nameEl = document.getElementById('commentName');
-    const textEl = document.getElementById('commentText');
-    const websiteEl = document.getElementById('commentWebsite');
-    const text = textEl.value.trim();
-    if(!text) return;
-
-    fetch('/api/comments', {{
-      method: 'POST',
-      headers: {{ 'Content-Type': 'application/json' }},
-      body: JSON.stringify({{ articleId: ARTICLE_ID, name: nameEl.value.trim(), text, website: websiteEl.value }})
-    }})
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {{
-        if(!data) return;
-        textEl.value = '';
-        loadComments();
-      }})
-      .catch(() => {{}});
-  }}
-
-  loadComments();
+loadComments();
 </script>
 
 </body>
@@ -574,10 +612,15 @@ def render_article_page(a, all_articles):
 """
 
 
-ARCHIVE_FILE = "archive.json"     # unbegrenztes Archiv, siehe news_pipeline.py
+ARCHIVE_FILE = "archive.json"  # unbegrenztes Archiv, siehe news_pipeline.py
+RUMORS_FILE = "rumors.json"    # siehe rumor_tracker.py / build_rumor_pages.py
 
 
 def build():
+    # Seiten werden aus dem KOMPLETTEN Archiv erzeugt (nicht nur aus der für
+    # die Startseite gekürzten articles.json) — so bleibt jeder je
+    # geschriebene Artikel über seine eigene URL erreichbar und in der
+    # Sitemap gelistet, auch wenn er von der Startseite verschwunden ist.
     source_file = ARCHIVE_FILE if os.path.exists(ARCHIVE_FILE) else ARTICLES_FILE
     if not os.path.exists(source_file):
         print(f"! Weder {ARCHIVE_FILE} noch {ARTICLES_FILE} gefunden — nichts zu bauen.")
@@ -588,12 +631,38 @@ def build():
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+    # Impressum, Datenschutz und Nutzungsbedingungen bewusst NICHT in der
+    # Sitemap — alle drei sind im <head> mit <meta name="robots"
+    # content="noindex"> markiert (reine Pflichtseiten ohne redaktionellen
+    # Mehrwert für die Google-Suche). Sie in der Sitemap zu listen würde
+    # Google widersprüchliche Signale geben ("bitte indexieren" vs. "bitte
+    # nicht indexieren").
     urls = [f"{SITE_URL}/index.html", f"{SITE_URL}/archiv.html",
             f"{SITE_URL}/app.html", f"{SITE_URL}/ueber-uns.html"]
 
+    # Release- und Update-Kalender nur eintragen, wenn sie schon existieren
+    # (beim allerersten Lauf, bevor die jeweiligen Skripte einmal gelaufen
+    # sind, gäbe es sonst einen toten Link in der Sitemap).
     for optional_page in ["releases.html", "updates.html"]:
         if os.path.exists(optional_page):
             urls.append(f"{SITE_URL}/{optional_page}")
+
+    # Gerüchte-Tracker-URLs ergänzen (siehe rumor_tracker.py /
+    # build_rumor_pages.py). Der Rumor-Tracker-Workflow läuft alle 4h
+    # unabhängig vom 19-Uhr-Hauptlauf hier und trägt seine URLs bei jedem
+    # eigenen Lauf bereits selbst in sitemap.xml nach (siehe
+    # build_rumor_pages.py: update_sitemap) — trotzdem hier zusätzlich
+    # direkt mit einbezogen, damit sitemap.xml auch dann vollständig ist,
+    # wenn NUR build_pages.py läuft (dieser Lauf überschreibt sitemap.xml
+    # sonst komplett neu und würde die Gerüchte-URLs sonst bis zum nächsten
+    # Rumor-Tracker-Lauf wieder verlieren).
+    if os.path.exists(RUMORS_FILE):
+        with open(RUMORS_FILE, "r", encoding="utf-8") as f:
+            rumors = json.load(f)
+        if rumors:
+            urls.append(f"{SITE_URL}/geruechte.html")
+            for t in rumors:
+                urls.append(f"{SITE_URL}/geruechte/{t['id']}.html")
 
     for a in articles:
         page = render_article_page(a, articles)
@@ -602,6 +671,9 @@ def build():
             f.write(page)
         urls.append(f"{SITE_URL}/artikel/{a['id']}.html")
 
+    # sitemap.xml — mit Aktualisierungsdatum (lastmod), damit Google
+    # erkennen kann, dass die Sitemap bei jedem Pipeline-Lauf frisch ist,
+    # was erneutes, zügigeres Crawlen begünstigt.
     today_iso = datetime.date.today().isoformat()
     sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
@@ -611,6 +683,9 @@ def build():
     with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write("\n".join(sitemap))
 
+    # archiv-index.json — eine schlanke Version des Archivs (ohne den
+    # vollständigen Artikeltext) für die durchsuchbare Archiv-Seite, damit
+    # sie auch bei tausenden Artikeln noch schnell lädt.
     archive_index = [
         {
             "id": a["id"], "title": a["title"], "teaser": a["teaser"],
@@ -622,6 +697,7 @@ def build():
     with open("archiv-index.json", "w", encoding="utf-8") as f:
         json.dump(archive_index, f, ensure_ascii=False, indent=2)
 
+    # robots.txt
     robots = f"""User-agent: *
 Allow: /
 
@@ -630,6 +706,8 @@ Sitemap: {SITE_URL}/sitemap.xml
     with open("robots.txt", "w", encoding="utf-8") as f:
         f.write(robots)
 
+    # ads.txt — Platzhalter; die echte Zeile bekommst du von deinem
+    # Anzeigennetzwerk (z. B. Google AdSense) nach der Kontoeröffnung.
     if not os.path.exists("ads.txt"):
         with open("ads.txt", "w", encoding="utf-8") as f:
             f.write(
