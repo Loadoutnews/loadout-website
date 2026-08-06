@@ -1,0 +1,49 @@
+name: Rumor Tracker
+
+# Läuft periodisch (alle 4 Stunden) UND lässt sich manuell auslösen.
+# Modelliert nach breaking-news-check.yml: ruft build_rumor_pages.py DIREKT
+# im selben Workflow-Lauf auf (nicht über einen Cross-Workflow-Trigger) —
+# GitHub blockiert automatische Folge-Workflows bei einem Push mit dem
+# Standard-GITHUB_TOKEN bewusst, siehe bestehende breaking-news-check.yml.
+#
+# HINWEIS: Checkout-/Setup-Python-/Git-Config-Schritte sind an eure
+# bestehenden Workflows (z. B. breaking-news-check.yml) angepasst — bitte
+# mit dem tatsächlichen Runner-Setup (Python-Version, evtl. eigener
+# requirements.txt-Pfad) abgleichen, falls es dort Abweichungen gibt.
+
+on:
+  schedule:
+    - cron: "17 */4 * * *"  # alle 4 Stunden, bewusst NICHT zur vollen Stunde (weniger Kollisionen mit anderen Cron-Läufen)
+  workflow_dispatch: {}
+
+jobs:
+  track-rumors:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run rumor tracker
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python rumor_tracker.py
+
+      - name: Build rumor tracker pages
+        run: python build_rumor_pages.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add rumors.json rumor-checked.json rumor-state.json geruechte.html geruechte/ sitemap.xml
+          git diff --staged --quiet && echo "Keine Änderungen." || (git commit -m "Gerüchte-Tracker: automatisches Update" && git push)
