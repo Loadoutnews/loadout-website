@@ -39,9 +39,6 @@ GAMES = {
     "cod": "Call of Duty", "valorant": "Valorant / LoL", "fifa": "FIFA / EA Sports FC",
 }
 
-# Dieselbe Zuordnung wie in rumor_tracker.py (CREDIBILITY_META) — bewusst
-# hier dupliziert statt importiert, damit dieses Skript unabhängig von der
-# Pipeline (die z. B. den Anthropic-Client instanziiert) lauffähig bleibt.
 CREDIBILITY_META = {
     "unbestaetigt":        {"label": "Unbestätigt",        "color": "#8D90AC"},
     "wahrscheinlich":      {"label": "Wahrscheinlich",      "color": "#FFB74D"},
@@ -61,7 +58,6 @@ GERMAN_MONTHS = {
 
 
 def parse_german_date(date_str):
-    """Für Sortierung/schema.org — dieselbe Logik wie in build_pages.py."""
     if not date_str:
         return None
     match = re.match(r"(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)\s*(\d{4})", date_str.strip())
@@ -147,11 +143,21 @@ SHARED_HEAD = """<meta charset="UTF-8">
   .rumor-section-head h2 { font-size:15px; letter-spacing:.02em; color:var(--muted, #8D90AC); }
   .rumor-section-head .rule { flex:1; height:1px; background:var(--line, #22263a); }
   .rumor-empty { color:var(--muted, #8D90AC); font-size:14px; padding:24px 0; }
+  /* Logo-Wortmarke im eigenen Nav: exakt dieselben Farben wie auf der
+     Startseite, aber HART gesetzt (inline, höchste Spezifität) statt sich
+     auf ererbte .logo-text-Regeln zu verlassen — auf der Startseite steckt
+     das Logo in einem <div onclick=...>, hier (eigene statische Seiten,
+     kein SPA-Router) in einem echten <a href>-Link. Ein <a> ohne explizite
+     Farbe kann vom Browser/Stylesheet eine eigene Link-Farbe bekommen, die
+     sich an Kind-Elemente ohne eigene Farbregel vererbt (z. B. -NEWS) und
+     dadurch genau das gemeldete "Logo in anderen Farben" verursacht hat.
+     Deshalb hier alles explizit statt implizit. */
+  .rumor-logo-link { text-decoration:none; color:var(--text, #E9E8F5); }
 </style>"""
 
 NAV_HTML = """<div class="nav-wrap">
   <nav>
-    <a href="{root}index.html" class="logo-lockup" style="text-decoration:none;">
+    <a href="{root}index.html" class="logo-lockup rumor-logo-link">
       <svg class="logo-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
           <linearGradient id="navMarkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -167,7 +173,9 @@ NAV_HTML = """<div class="nav-wrap">
         <rect x="76" y="36" width="12" height="44" rx="5" fill="url(#navMarkGradient)"/>
       </svg>
       <div>
-        <div class="logo-text display">LOAD<span>OUT</span><small class="mono">-NEWS</small></div>
+        <div class="logo-text display">
+          <span style="color:var(--text, #E9E8F5);">LOAD</span><span style="color:var(--magenta, #FF4D8D);">OUT</span><small class="mono" style="color:var(--muted, #8D90AC); font-weight:500;">-NEWS</small>
+        </div>
       </div>
     </a>
     <div class="nav-right">
@@ -229,7 +237,6 @@ def render_tracker_card(t):
     cat_label = CATS.get(t["cat"], t["cat"])
     game_label = GAMES.get(t.get("game"), "") if t.get("game") else ""
     badge_line = cat_label + (f" · {game_label}" if game_label else "")
-    last_entry = (t.get("timeline") or [{}])[0]
     excerpt = t.get("summary", "")
     if len(excerpt) > 160:
         excerpt = excerpt[:157].rstrip() + "…"
@@ -379,11 +386,6 @@ def build_tracker_page(t):
 
 
 def update_sitemap(urls_to_add):
-    """Ergänzt die bestehende sitemap.xml um die Gerüchte-URLs, ohne die
-    von build_pages.py verwaltete Datei sonst anzutasten. Existiert noch
-    keine sitemap.xml, wird eine minimale eigene angelegt (build_pages.py
-    überschreibt sie beim nächsten Lauf ohnehin vollständig neu, dann
-    inklusive dieser URLs, falls es künftig direkt integriert wird)."""
     today_iso = datetime.date.today().isoformat()
 
     if os.path.exists(SITEMAP_FILE):
