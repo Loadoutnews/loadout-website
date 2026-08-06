@@ -28,10 +28,18 @@
   h2{ font-size:15px; text-transform:uppercase; letter-spacing:0.05em; margin:34px 0 12px; color:var(--violet); }
   p{ font-size:14.5px; color:#C7C7DA; margin-bottom:10px; }
   a{ color:var(--violet); }
+  ul{ margin:10px 0 10px 20px; }
+  li{ font-size:14.5px; color:#C7C7DA; margin-bottom:8px; }
   .notice{
     background:rgba(124,92,252,0.08); border:1px solid rgba(124,92,252,0.3);
     border-radius:12px; padding:16px 20px; font-size:13px; color:var(--muted); margin-bottom:30px;
   }
+  .highlight-box{
+    background:linear-gradient(160deg, rgba(124,92,252,0.1), rgba(255,77,141,0.06));
+    border:1px solid rgba(124,92,252,0.3); border-left:3px solid var(--violet);
+    border-radius:12px; padding:16px 20px; margin:14px 0 20px;
+  }
+  .highlight-box p{ color:var(--text); margin-bottom:0; font-size:14px; }
   footer{ border-top:1px solid var(--line); text-align:center; padding:24px; font-size:12px; color:var(--muted); }
   footer a{ color:var(--muted); margin:0 8px; }
   .social-icons{ display:flex; gap:14px; justify-content:center; margin:20px 0 4px; }
@@ -62,7 +70,7 @@
 
 <main>
   <h1>Nutzungsbedingungen</h1>
-  <p class="subtitle">Stand: Juli 2026</p>
+  <p class="subtitle">Stand: August 2026</p>
 
   <div class="notice">
     Diese Seite ersetzt keine Rechtsberatung. Bei Fragen zu einzelnen Punkten wende dich an eine
@@ -81,8 +89,28 @@
     LOADOUT-NEWS veröffentlicht Gaming-News, Release- und Update-Kalender sowie redaktionelle
     Einschätzungen. Ein Teil der Inhalte wird KI-gestützt erstellt und redaktionell kuratiert. Trotz
     sorgfältiger Erstellung kann keine Gewähr für Richtigkeit, Vollständigkeit oder Aktualität der
-    veröffentlichten Inhalte übernommen werden.
+    veröffentlichten Inhalte übernommen werden. Auf der Seite finden sich dabei unterschiedliche
+    Content-Formate:
   </p>
+  <ul>
+    <li><b style="color:var(--text);">Reguläre Artikel</b> — auf Basis einer oder mehrerer Presse-/Fachmedienquellen eigenständig verfasst</li>
+    <li><b style="color:var(--text);">LOADOUT-Original</b> — eigenständige Recherche-/Analyse-Artikel über mehrere Quellen hinweg, inklusive eigener redaktioneller Einschätzung</li>
+    <li><b style="color:var(--text);">Breaking News</b> — Eilmeldungen zu zeitkritischen Ereignissen, mit Fokus auf schnelle Verfügbarkeit</li>
+  </ul>
+
+  <div class="highlight-box">
+    <p>
+      <b>Leaks &amp; Gerüchte-Tracker:</b> Unser Bereich „Leaks &amp; Gerüchte" (loadout-news.com/geruechte)
+      dokumentiert ausdrücklich <b>unbestätigte</b> Gerüchte und Leaks samt einer redaktionellen
+      Glaubwürdigkeits-Einschätzung (z. B. „Unbestätigt", „Wahrscheinlich", „Bestätigt", „Dementiert").
+      Diese Einschätzung ist eine eigene, KI-unterstützte redaktionelle Bewertung und stellt
+      <b>keine</b> Tatsachenbehauptung und keine Garantie für das tatsächliche Eintreffen des
+      jeweiligen Gerüchts dar — auch ein als „wahrscheinlich" oder „sehr wahrscheinlich" eingestuftes
+      Gerücht kann sich im Nachhinein als falsch herausstellen. Erst ein Eintrag mit dem Status
+      „Bestätigt" gibt eine offizielle Bestätigung wieder; alle anderen Einträge sind als das zu
+      verstehen, was sie sind: Gerüchte.
+    </p>
+  </div>
 
   <h2>3. Nutzergenerierte Inhalte (Kommentare, Bewertungen, Feedback)</h2>
   <p>
@@ -95,23 +123,30 @@
   <h2>4. Newsletter, Push-Benachrichtigungen &amp; Social Media</h2>
   <p>
     Newsletter und Push-Benachrichtigungen sind freiwillige Zusatzdienste, die jederzeit
-    abbestellt bzw. deaktiviert werden können. Inhalte von LOADOUT-NEWS werden zudem automatisiert
-    auf Discord, Bluesky, Reddit, Tumblr und Instagram geteilt; für die Nutzung dieser Drittplattformen gelten
-    zusätzlich deren eigene Nutzungsbedingungen.
+    abbestellt bzw. deaktiviert werden können. Bei Push-Benachrichtigungen kannst du zusätzlich
+    festlegen, zu welchen Spielen/Kategorien und ob du gesondert zu unserem Leaks &amp;
+    Gerüchte-Tracker benachrichtigt werden möchtest. Inhalte von LOADOUT-NEWS werden zudem
+    automatisiert auf Discord, Bluesky, Reddit, Tumblr und Instagram geteilt; für die Nutzung dieser
+    Drittplattformen gelten zusätzlich deren eigene Nutzungsbedingungen.
   </p>
 
-  <h2>5. Werbung</h2>
+  <h2>5. Werbung, Affiliate- und Partnerlinks</h2>
   <p>
-    Diese Seite finanziert sich unter anderem über Werbeanzeigen (z. B. Google AdSense), die je
-    nach deiner Cookie-Einwilligung eingeblendet werden. Details dazu in der
+    Diese Seite finanziert sich unter anderem über Werbeanzeigen (z. B. Google AdSense, sobald aktiv
+    geschaltet) sowie über klar als „Werbung" gekennzeichnete Affiliate-/Partnerlinks (aktuell u. a.
+    zu Kinguin, Keysworld und Smava, vermittelt über das Partnernetzwerk Awin). Kommt über einen
+    solchen Link ein Kauf zustande, erhalten wir dafür ggf. eine Provision — für dich entstehen dadurch
+    keine zusätzlichen Kosten. Details zur technischen Umsetzung findest du in der
     <a href="datenschutz.html">Datenschutzerklärung</a>.
   </p>
 
   <h2>6. Haftungsausschluss</h2>
   <p>
     Für Inhalte externer, verlinkter Websites (z. B. Originalquellen von Artikeln, Store-Seiten im
-    Release-Kalender) übernehmen wir keine Verantwortung. Es gilt das Recht der jeweiligen
-    Anbieter dieser Seiten.
+    Release-Kalender, Partnerangebote) übernehmen wir keine Verantwortung. Es gilt das Recht der
+    jeweiligen Anbieter dieser Seiten. Für die im Leaks &amp; Gerüchte-Tracker dokumentierten,
+    ausdrücklich als unbestätigt gekennzeichneten Inhalte gilt ergänzend Abschnitt 2 dieser
+    Nutzungsbedingungen.
   </p>
 
   <h2>7. Änderungen</h2>
