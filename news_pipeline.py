@@ -794,6 +794,11 @@ Artikel zusammen — kein reines Aneinanderreihen von Zitaten.
 zeigen...") — ohne wörtliche Zitate zu übernehmen.
 - Sei ehrlich, wenn Datenlage/Quellenlage für einen Aspekt dünn ist, \
 statt Sicherheit vorzutäuschen, die nicht da ist.
+- WICHTIG: "body" ist das Herzstück des Artikels und darf NIEMALS leer \
+sein — schreibe MINDESTENS 3, besser 4-5 ausführliche Absätze mit \
+echtem, substantiellem Fließtext, der deine Recherche zu einem \
+eigenständigen Artikel zusammenführt. Ein Analyse-Artikel ohne \
+ausführlichen Fließtext ist wertlos, egal wie gut Titel oder Teaser sind.
 - Antworte AUSSCHLIESSLICH mit einem validen JSON-Objekt, keine \
 Erklärungen, kein Markdown, keine Code-Fences.
 - WICHTIG für gültiges JSON: Verwende in allen Textfeldern NIEMALS gerade \
@@ -807,7 +812,10 @@ passenden Bild für diesen Artikel (z. B. offizielles Spiel-Artwork, ein \
 Screenshot, ein Pressebild) — nicht irgendein Diagramm oder Chart-Ausschnitt, \
 sondern ein Bild, das jemand auf den ersten Blick mit dem Thema/Spiel \
 verbindet. Achte darauf, dass die URL wirklich direkt auf eine Bilddatei \
-zeigt (endet meist auf .jpg/.png/.webp), nicht auf eine normale Webseite.
+zeigt (endet meist auf .jpg/.png/.webp), nicht auf eine normale Webseite. \
+Trage die gefundene URL in "image_url" ein — findest du wirklich keine \
+passende, setze "image_url" auf null, statt eine unpassende Chart-/ \
+Diagramm-URL einzutragen.
 
 JSON-Format:
 {{
@@ -815,7 +823,12 @@ JSON-Format:
   "game": "gta" | "minecraft" | "fortnite" | "cod" | "valorant" | "fifa" | null,
   "genre": "action" | "adventure" | "rpg" | "strategie" | "simulation" | "shooter" | "sport" | "rennspiel" | "horror" | "puzzle" | null,
   "title": "Deutscher, catchy Titel wie eine ECHTE News-Schlagzeile (max. 90 Zeichen) — muss neugierig machen und eine konkrete, eigenständig herausgearbeitete Erkenntnis/News transportieren, NICHT einfach nur das Format benennen (schlecht: 'Verkaufszahlen-Analyse: GTA 6'; gut: 'GTA 6 stellt schon vor Release einen Rekord auf, den kein Spiel zuvor schaffte')",
-  "primary_source_label": "<Name dieser Quelle, z. B. 'SteamDB' oder 'IGN'>"
+  "teaser": "1-2 Sätze Anreißer, der die zentrale Erkenntnis des Artikels auf den Punkt bringt (max. 200 Zeichen)",
+  "body": ["Absatz 1", "Absatz 2", "Absatz 3", "ggf. weitere Absätze — der vollständige, ausführliche Artikeltext, der deine Multi-Quellen-Recherche zu einem eigenständigen Stück zusammenführt. NIEMALS eine leere Liste."],
+  "editorial_take": "2-3 Sätze EIGENE redaktionelle Einschätzung/Meinung von LOADOUT — nicht nur zusammenfassen, sondern klar Position beziehen (z. B. 'Wir finden...', 'Aus unserer Sicht...'). Basierend auf deiner Recherche, aber als eigene Stimme formuliert.",
+  "hype": <Zahl 0-100, wie aufregend/relevant dieses Thema für Gaming-Fans ist>,
+  "image_url": "<direkte URL zu einem thematisch passenden Bild, siehe Hinweis oben, oder null>",
+  "primary_source_label": "<Name deiner wichtigsten Quelle, z. B. 'SteamDB' oder 'IGN'>"
 }}
 
 Setze "game" nur, wenn der Artikel eindeutig zu einem dieser sechs großen \
@@ -860,6 +873,18 @@ def write_analysis_article(topic):
         context_end = min(len(raw_text), error_pos + 150)
         print(f"  ! Konnte Analyse-Artikel nicht parsen: {topic['working_title']} — {e.msg} (Position {error_pos})", file=sys.stderr)
         print(f"    Kontext: ...{raw_text[context_start:error_pos]}▶▶▶HIER◀◀◀{raw_text[error_pos:context_end]}...", file=sys.stderr)
+        return None
+
+    # Absicherung: ein Analyse-Artikel ohne echten Fließtext ist wertlos
+    # (siehe Bug-Report: leeres "body" landete unbemerkt als leere
+    # Artikelseite auf der Website). Statt so etwas zu veröffentlichen,
+    # gilt der Versuch als fehlgeschlagen — try_write_analysis_article
+    # probiert dann automatisch ein neues Thema, statt einen kaputten
+    # Artikel durchzulassen (dieselbe Philosophie wie beim bewussten
+    # Verzicht auf einen Duplikat-Fallback weiter oben).
+    body = data.get("body") or []
+    if not body or not any((p or "").strip() for p in body):
+        print(f"  ! Modell lieferte leeren Fließtext für Analyse-Artikel: {topic['working_title']} — verworfen.", file=sys.stderr)
         return None
 
     VALID_CATS = {"pc", "konsole", "hardware", "industrie"}
@@ -911,7 +936,7 @@ def write_analysis_article(topic):
         "genre": genre,
         "title": data.get("title", topic["working_title"]),
         "teaser": data.get("teaser", ""),
-        "body": data.get("body", []),
+        "body": body,
         "editorial_take": data.get("editorial_take", ""),
         # Für die Dedup-Prüfung künftiger Läufe — bei Analyse-Artikeln das
         # Arbeits-Thema selbst, da es (anders als bei RSS-Artikeln) keinen
@@ -945,6 +970,12 @@ def try_write_analysis_article(recent_source_titles, max_attempts=8):
     - Bereits abgelehnte eigene Vorschläge aus diesem Lauf werden der KI
       explizit mitgeteilt, damit sie wirklich etwas anderes probiert,
       statt denselben Vorschlag nur leicht umzuformulieren
+
+    Dieselbe Robustheits-Logik (mehr Versuche statt einen kaputten
+    Artikel durchzulassen) gilt jetzt auch für leeren Fließtext, siehe
+    write_analysis_article: liefert das Modell ein leeres "body"-Feld,
+    zählt das hier genauso als Fehlschlag wie ein Duplikat, und der
+    nächste Versuch startet automatisch.
 
     Gibt None zurück NUR im (bei dieser Robustheit extrem unwahrscheinlichen)
     Fall, dass wirklich alle Versuche fehlschlagen — dann füllt die normale
