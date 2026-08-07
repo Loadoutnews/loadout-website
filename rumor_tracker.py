@@ -47,6 +47,7 @@ CLASSIFY_MODEL = npl.DEDUP_MODEL  # günstiges Haiku-Modell für die Vorprüfung
 WRITE_MODEL = npl.MODEL
 
 RUMORS_FILE = "rumors.json"
+PENDING_RESOLUTIONS_FILE = "pending-resolutions.json"  # von news_pipeline.py / breaking_news_check.py weitergereichte Bestätigungen/Dementis, siehe process_pending_resolutions()
 CHECKED_FILE = "rumor-checked.json"   # Merkliste: welche Feed-Links wurden schon geprüft
 STATE_FILE = "rumor-state.json"       # Tages-Zähler fürs Limit neuer Tracker
 
@@ -581,8 +582,72 @@ Original-Link: {entry['link']}"""
     return True
 
 
+def process_pending_resolutions(trackers):
+    """Verarbeitet Themen, die news_pipeline.py oder breaking_news_check.py
+    als Bestätigung/Dementi eines laufenden Trackers erkannt und HIER zur
+    Bearbeitung übergeben haben (siehe dort:
+    route_to_rumor_tracker_if_resolves), STATT sie selbst als eigenen
+    Artikel bzw. eigene Breaking-News-Eilmeldung zu veröffentlichen.
+
+    Nutzt für die eigentliche Einordnung dieselbe, bereits getestete
+    apply_update()-Logik wie ein normal im eigenen RSS-Scan gefundenes
+    Update — der einzige Unterschied ist die Herkunft des Kandidaten.
+    Das ist der Grund, warum diese Weiterreichung technisch überhaupt so
+    einfach funktioniert: die andere Pipeline muss nur "das gehört zu
+    Tracker X" erkennen, die eigentliche, KI-recherchierte Bewertung
+    (bestätigt/dementiert/nur ein weiteres Update) passiert exakt wie
+    gewohnt hier.
+
+    Läuft GANZ AM ANFANG von main(), noch vor dem eigenen RSS-Scan —
+    damit ein wartendes Update nicht unnötig eine ganze Lauf-Periode
+    liegen bleibt, nur weil der eigene Scan zufällig zuerst dran wäre."""
+    pending = load_json(PENDING_RESOLUTIONS_FILE, [])
+    if not pending:
+        return 0
+
+    processed = 0
+    for item in pending:
+        tracker = next((t for t in trackers if t["id"] == item.get("tracker_id")), None)
+        entry = item.get("entry") or {}
+        if not tracker:
+            print(f"  ⚠ Weitergereichtes Update (von {item.get('flagged_by', '?')}) für unbekannten/"
+                  f"bereits gelöschten Tracker '{item.get('tracker_id')}' übersprungen: {entry.get('title', '?')[:60]}",
+                  file=sys.stderr)
+            continue
+        if tracker.get("status") != "aktiv":
+            print(f"  ℹ Weitergereichtes Update für bereits abgeschlossenen Tracker "
+                  f"'{tracker['topic_name']}' übersprungen (zwischenzeitlich schon geschlossen).")
+            continue
+        print(f"  ↻ Verarbeite von {item.get('flagged_by', '?')} weitergereichtes Update für "
+              f"'{tracker['topic_name']}': {entry.get('title', '?')[:60]}")
+        if apply_update(tracker, entry):
+            processed += 1
+        else:
+            print("    ⚠ Verarbeitung fehlgeschlagen — Update geht verloren (kein Retry vorgesehen, "
+                  "die andere Pipeline erkennt eine echte Bestätigung i. d. R. ohnehin erneut).")
+
+    # Warteschlange in jedem Fall leeren — auch nicht verarbeitete Einträge
+    # (unbekannter Tracker, bereits geschlossen, Verarbeitung fehlgeschlagen)
+    # werden nicht endlos wieder vorgelegt.
+    save_json(PENDING_RESOLUTIONS_FILE, [])
+    return processed
+
+
 def main():
     trackers = load_json(RUMORS_FILE, [])
+
+    # GANZ ZUERST: von den anderen beiden Pipelines weitergereichte
+    # Bestätigungen/Dementis verarbeiten (siehe process_pending_resolutions
+    # oben) — und SOFORT speichern, nicht erst am Ende von main(). Weiter
+    # unten gibt es mehrere frühe "return"-Stellen (z. B. wenn es gerade
+    # keine neuen RSS-Kandidaten gibt); ohne dieses sofortige Speichern
+    # würde eine hier verarbeitete Tracker-Schliessung sonst verloren
+    # gehen, falls main() danach vorzeitig endet.
+    pending_processed = process_pending_resolutions(trackers)
+    if pending_processed:
+        save_json(RUMORS_FILE, trackers)
+        print(f"✓ {pending_processed} weitergereichte(s) Update(s) aus anderen Pipelines verarbeitet und gespeichert.")
+
     checked_links = set(load_json(CHECKED_FILE, []))
     state = get_today_state()
 
