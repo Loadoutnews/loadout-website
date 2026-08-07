@@ -1,5 +1,30 @@
 [
   {
+    "id": "id-software-nach-dem-xbox-kahlschlag",
+    "topic_name": "id Software nach dem Xbox-Kahlschlag",
+    "title": "id Software nach dem Xbox-Kahlschlag — Stand der Gerüchte",
+    "cat": "industrie",
+    "game": null,
+    "summary": "Nach den jüngsten Massenentlassungen bei Xbox steht die Zukunft von Doom-Studio id Software zur Debatte: Mitarbeiter und ehemalige Angestellte sprechen von ausgeblutet wirkenden Abteilungen und halten es für kaum noch möglich, ein Spiel im Umfang von Doom: The Dark Ages erneut zu stemmen. Studio-Co-Direktor Hugo Martin widerspricht dieser Darstellung öffentlich und behauptet, das Team sei so groß wie zur Zeit von Doom (2016). Mehrere unabhängige Berichte stützen zumindest den Umfang der Kürzungen, die genaue Zukunft des Studios bleibt aber offen.",
+    "status": "aktiv",
+    "resolution": null,
+    "credibility_category": "wahrscheinlich",
+    "credibility_pct": 62,
+    "image": "https://kotaku.com/app/uploads/2025/08/DOOM-MAIN-1200x675.jpg",
+    "created_date": "07. August 2026",
+    "updated_date": "07. August 2026",
+    "timeline": [
+      {
+        "date": "07. August 2026",
+        "text": "Auslöser des Trackers ist ein Kotaku-Bericht, in dem id-Software-Veteran Chris Hays Xbox vorwirft, Kunst grundsätzlich nicht zu verstehen, und erklärt, ganze Abteilungen des Studios seien nach den Entlassungen ausgeblutet worden. Laut mehreren Quellen wurden rund 136 der 185 Stellen bei id Software gestrichen, was durch eine offizielle WARN-Meldung aus Texas bestätigt wurde. Hugo Martin widersprach der Darstellung öffentlich, wonach das Studio auf nur noch 50 Mitarbeiter geschrumpft sei, doch weitere Berichte deuten darauf hin, dass insbesondere das id-Tech-Engine-Team fast komplett verschwunden ist.",
+        "credibility_category": "wahrscheinlich",
+        "credibility_pct": 62,
+        "source": "Kotaku",
+        "source_url": "https://kotaku.com/id-software-dev-says-xbox-doesnt-understand-art-and-that-after-layoffs-it-is-impossible-to-make-big-games-like-doom-the-dark-ages-2000722563"
+      }
+    ]
+  },
+  {
     "id": "layoffs-bei-crossfire-entwickler-that-s-no-moon",
     "topic_name": "Layoffs bei Crossfire-Entwickler That's No Moon",
     "title": "Layoffs bei Crossfire-Entwickler That's No Moon — Stand der Gerüchte",
