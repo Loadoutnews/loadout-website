@@ -36,7 +36,11 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add pending-resolutions.json
+          # Existiert nur, wenn news_pipeline.py tatsächlich etwas
+          # weitergereicht hat (Normalfall: Datei existiert nicht) — ein
+          # "git add" mit festem Dateinamen auf eine fehlende Datei würde
+          # sonst den ganzen Schritt mit einem Pathspec-Fehler abbrechen.
+          if [ -f pending-resolutions.json ]; then git add pending-resolutions.json; fi
           git diff --staged --quiet || (git commit -m "Update-Übergabe an Gerüchte-Tracker" && git push)
 
       - run: python build_pages.py
