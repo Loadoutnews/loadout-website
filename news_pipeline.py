@@ -64,6 +64,7 @@ MAX_ARTICLES_TOTAL = 60     # wie viele Artikel maximal in articles.json stehen 
 ARTICLES_FILE = "articles.json"
 ARCHIVE_FILE = "archive.json"
 RUMORS_FILE = "rumors.json"  # siehe rumor_tracker.py — für Cross-Pipeline-Dedup, siehe main()
+PENDING_RESOLUTIONS_FILE = "pending-resolutions.json"  # Übergabe an rumor_tracker.py, siehe route_to_rumor_tracker_if_resolves()
 
 # Wie weit die Duplikat-Prüfung gegen bereits veröffentlichte Artikel im
 # Archiv zurückschaut (siehe recent_source_titles in main()). Zeitbasiert
@@ -1174,6 +1175,99 @@ Nummern, keine Erklärung, kein Markdown. Beispiel: [2]. Falls keine
     return kept
 
 
+def route_to_rumor_tracker_if_resolves(candidates, active_trackers):
+    """Prüft, ob einer der (an dieser Stelle bereits als offiziell/
+    bestätigt geltenden — Gerüchte wurden ja schon vorher über Kriterium C
+    in filter_candidates_combined aussortiert) Kandidaten inhaltlich zu
+    einem AKTIVEN Leaks & Gerüchte-Tracker gehört — z. B. weil er die
+    offizielle Bestätigung oder das offizielle Dementi eines dort
+    laufenden Themas ist.
+
+    Trifft das zu, wird der Kandidat NICHT hier als eigener Artikel
+    geschrieben, sondern über pending-resolutions.json an
+    rumor_tracker.py übergeben — das recherchiert die tatsächliche
+    Einordnung (bestätigt/dementiert/nur ein weiteres Update) über
+    dieselbe, bereits getestete apply_update()-Logik und schliesst den
+    Tracker entsprechend. So bekommt jedes Thema garantiert nur EINE
+    Veröffentlichung (keine doppelte Berichterstattung über dasselbe
+    Ereignis), UND kein Tracker bleibt fälschlich offen, während seine
+    eigene Auflösung längst als separater Artikel gelaufen ist.
+
+    Fail-closed wie die anderen kritischen Cross-Pipeline-Prüfungen —
+    ABER anders herum als dort: bei einem Fehlschlag wird NICHTS geroutet
+    (Kandidaten bleiben ganz normal im Pool und werden wie gewohnt
+    geschrieben). Ein einmal verpasstes Routing bedeutet höchstens, dass
+    der betroffene Tracker etwas später als eigentlich möglich schliesst
+    (er wird es bei einem der nächsten eigenen Läufe ohnehin selbst
+    erkennen) — das ist ein deutlich kleineres Problem als ein
+    fälschlich unterdrückter, eigentlich relevanter Artikel."""
+    if not candidates or not active_trackers:
+        return candidates, []
+
+    trackers_block = "\n".join(
+        f"- id={t['id']}: {t['topic_name']} — {t.get('summary', '')[:200]}"
+        for t in active_trackers
+    )
+    candidates_block = "\n".join(f"{i}: {e['title']}" for i, e in enumerate(candidates))
+
+    prompt = f"""Aktuell laufende Leaks & Gerüchte-Tracker (id + worum es geht):
+{trackers_block}
+
+Neue Kandidaten (nummeriert, 0-basiert):
+{candidates_block}
+
+Welche Kandidaten behandeln inhaltlich DASSELBE Thema wie einer der oben
+genannten laufenden Tracker (auch bei komplett unterschiedlichem
+Wortlaut — es zählt der inhaltliche Kern)? Das gilt unabhängig davon, ob
+der Kandidat das jeweilige Gerücht bestätigt, dementiert oder nur ein
+weiteres Detail dazu liefert — jede inhaltliche Überschneidung zählt.
+
+Antworte AUSSCHLIESSLICH mit einem validen JSON-Array von Objekten, keine
+Erklärung, kein Markdown:
+[{{"index": <Nummer>, "tracker_id": "<passende id von oben>"}}]
+
+Beispiel: [{{"index": 2, "tracker_id": "gta-6-pc-version"}}]. Falls keine
+Überschneidung: []."""
+
+    try:
+        response = client.messages.create(
+            model=DEDUP_MODEL,
+            max_tokens=400,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text_blocks = [b.text for b in response.content if b.type == "text"]
+        if not text_blocks:
+            print("  ⚠ Gerüchte-Tracker-Überschneidungsprüfung: keine Antwort — kein Routing, Kandidaten bleiben normal im Pool.", file=sys.stderr)
+            return candidates, []
+        raw = text_blocks[-1].strip()
+        raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        first_bracket = raw.find("[")
+        if first_bracket > 0:
+            raw = raw[first_bracket:]
+        matches = json.loads(raw, strict=False)
+    except Exception as e:
+        print(f"  ⚠ Gerüchte-Tracker-Überschneidungsprüfung fehlgeschlagen ({e}) — kein Routing, Kandidaten bleiben normal im Pool.", file=sys.stderr)
+        return candidates, []
+
+    active_ids = {t["id"] for t in active_trackers}
+    matched_indices = set()
+    routed = []
+    for m in matches:
+        if not isinstance(m, dict):
+            continue
+        idx = m.get("index")
+        tracker_id = m.get("tracker_id")
+        if not isinstance(idx, int) or not (0 <= idx < len(candidates)) or tracker_id not in active_ids:
+            continue
+        matched_indices.add(idx)
+        routed.append({"tracker_id": tracker_id, "entry": candidates[idx]})
+
+    remaining = [c for i, c in enumerate(candidates) if i not in matched_indices]
+    if routed:
+        print(f"  {len(routed)} Kandidat(en) an den Leaks & Gerüchte-Tracker weitergereicht statt als eigener Artikel geschrieben.")
+    return remaining, routed
+
+
 def main():
     existing = []
     if os.path.exists(ARTICLES_FILE):
@@ -1218,19 +1312,19 @@ def main():
         for a in (recent_from_archive + existing)
     ]
 
-    # Cross-Pipeline-Dedup: Themen, die gerade als GERÜCHTE-TRACKER laufen
-    # (siehe rumor_tracker.py), werden hier mit in die Duplikat-Prüfung
-    # aufgenommen — verhindert, dass ein noch unbestätigtes Gerücht
-    # zusätzlich einen vollständigen, "bestätigt klingenden" regulären
-    # Artikel bekommt, während der Tracker dasselbe Thema noch als offen
-    # führt. Nur AKTIVE Tracker zählen — ein bereits abgeschlossener
-    # Tracker (bestätigt/dementiert) soll die reguläre Berichterstattung
-    # über die tatsächliche Bestätigung nicht blockieren.
+    # Cross-Pipeline: aktive Gerüchte-Tracker werden HIER geladen (für die
+    # Weiterreichungs-Prüfung weiter unten), aber NICHT mehr blind in
+    # recent_source_titles gemischt — das hätte eine echte Bestätigung/
+    # ein echtes Dementi bisher einfach still verworfen (weder als Artikel
+    # geschrieben NOCH an den Tracker weitergereicht). Siehe
+    # route_to_rumor_tracker_if_resolves() weiter unten für die saubere
+    # Lösung: passende Kandidaten werden aktiv an rumor_tracker.py
+    # übergeben statt nur stumm zu verschwinden.
+    active_trackers_full = []
     if os.path.exists(RUMORS_FILE):
         with open(RUMORS_FILE, "r", encoding="utf-8") as f:
             rumor_trackers = json.load(f)
-        active_rumor_titles = [t.get("topic_name", "") for t in rumor_trackers if t.get("status") == "aktiv"]
-        recent_source_titles += active_rumor_titles
+        active_trackers_full = [t for t in rumor_trackers if t.get("status") == "aktiv"]
 
     written = []
 
@@ -1266,6 +1360,26 @@ def main():
         if a.get("content_type") == "breaking"
     ]
     new_raw = filter_against_recent_breaking(new_raw, recent_breaking_titles)
+
+    # NEU: Kandidaten, die inhaltlich einen AKTIVEN Gerüchte-Tracker
+    # bestätigen/dementieren/fortführen, werden NICHT hier als eigener
+    # Artikel geschrieben, sondern an rumor_tracker.py weitergereicht —
+    # siehe route_to_rumor_tracker_if_resolves() oben.
+    new_raw, routed_to_tracker = route_to_rumor_tracker_if_resolves(new_raw, active_trackers_full)
+    if routed_to_tracker:
+        pending = []
+        if os.path.exists(PENDING_RESOLUTIONS_FILE):
+            with open(PENDING_RESOLUTIONS_FILE, "r", encoding="utf-8") as f:
+                pending = json.load(f)
+        for item in routed_to_tracker:
+            pending.append({
+                "tracker_id": item["tracker_id"],
+                "entry": item["entry"],
+                "flagged_by": "news_pipeline",
+                "flagged_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            })
+        with open(PENDING_RESOLUTIONS_FILE, "w", encoding="utf-8") as f:
+            json.dump(pending, f, ensure_ascii=False, indent=2)
 
     skipped = before_count - len(new_raw)
     if skipped:
