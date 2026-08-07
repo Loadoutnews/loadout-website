@@ -47,6 +47,8 @@ WRITE_MODEL = npl.MODEL
 
 ARTICLES_FILE = "articles.json"
 ARCHIVE_FILE = "archive.json"
+RUMORS_FILE = "rumors.json"  # für die Weiterreichungs-Prüfung, siehe route_to_rumor_tracker_if_resolves()
+PENDING_RESOLUTIONS_FILE = "pending-resolutions.json"  # Übergabe an rumor_tracker.py
 CHECKED_FILE = "breaking-checked.json"  # Merkliste: welche Feed-Links wurden schon klassifiziert (egal ob Breaking oder nicht)
 STATE_FILE = "breaking-state.json"  # Tages-Zähler fürs Limit
 
@@ -456,6 +458,86 @@ Beispiel: {{"duplicates": [1], "irrelevant": []}}. Falls beide Listen leer sind:
     return kept
 
 
+def route_to_rumor_tracker_if_resolves(candidates, active_trackers):
+    """Wie news_pipeline.py: route_to_rumor_tracker_if_resolves() —
+    verhindert, dass die offizielle Bestätigung/das offizielle Dementi
+    eines laufenden Leaks & Gerüchte-Trackers als EIGENE Breaking-News-
+    Eilmeldung erscheint, während der zugehörige Tracker fälschlich offen
+    bleibt. Passende Kandidaten werden stattdessen über
+    pending-resolutions.json an rumor_tracker.py übergeben, das die
+    Auflösung recherchiert und den Tracker korrekt schliesst.
+
+    Fail-closed-Charakter wie bei filter_breaking_duplicates_strict: bei
+    einem Fehlschlag wird NICHTS geroutet, die Kandidaten bleiben normal
+    im Pool und werden ganz regulär als Breaking News behandelt — ein
+    verpasstes Routing bedeutet höchstens ein etwas später schliessendes
+    Tracker, kein Duplikat-Risiko."""
+    if not candidates or not active_trackers:
+        return candidates, []
+
+    trackers_block = "\n".join(
+        f"- id={t['id']}: {t['topic_name']} — {t.get('summary', '')[:200]}"
+        for t in active_trackers
+    )
+    candidates_block = "\n".join(f"{i}: {e['title']}" for i, e in enumerate(candidates))
+
+    prompt = f"""Aktuell laufende Leaks & Gerüchte-Tracker (id + worum es geht):
+{trackers_block}
+
+Neue Breaking-News-Kandidaten (nummeriert, 0-basiert):
+{candidates_block}
+
+Welche Kandidaten behandeln inhaltlich DASSELBE Thema wie einer der oben
+genannten laufenden Tracker (auch bei komplett unterschiedlichem
+Wortlaut)? Das gilt unabhängig davon, ob der Kandidat das jeweilige
+Gerücht bestätigt oder dementiert.
+
+Antworte AUSSCHLIESSLICH mit einem validen JSON-Array von Objekten, keine
+Erklärung, kein Markdown:
+[{{"index": <Nummer>, "tracker_id": "<passende id von oben>"}}]
+
+Beispiel: [{{"index": 0, "tracker_id": "gta-6-pc-version"}}]. Falls keine
+Überschneidung: []."""
+
+    try:
+        response = npl.client.messages.create(
+            model=CLASSIFY_MODEL,
+            max_tokens=400,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text_blocks = [b.text for b in response.content if b.type == "text"]
+        if not text_blocks:
+            print("  ⚠ Gerüchte-Tracker-Überschneidungsprüfung: keine Antwort — kein Routing.", file=sys.stderr)
+            return candidates, []
+        raw = text_blocks[-1].strip()
+        raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        first_bracket = raw.find("[")
+        if first_bracket > 0:
+            raw = raw[first_bracket:]
+        matches = json.loads(raw, strict=False)
+    except Exception as e:
+        print(f"  ⚠ Gerüchte-Tracker-Überschneidungsprüfung fehlgeschlagen ({e}) — kein Routing.", file=sys.stderr)
+        return candidates, []
+
+    active_ids = {t["id"] for t in active_trackers}
+    matched_indices = set()
+    routed = []
+    for m in matches:
+        if not isinstance(m, dict):
+            continue
+        idx = m.get("index")
+        tracker_id = m.get("tracker_id")
+        if not isinstance(idx, int) or not (0 <= idx < len(candidates)) or tracker_id not in active_ids:
+            continue
+        matched_indices.add(idx)
+        routed.append({"tracker_id": tracker_id, "entry": candidates[idx]})
+
+    remaining = [c for i, c in enumerate(candidates) if i not in matched_indices]
+    if routed:
+        print(f"  {len(routed)} Kandidat(en) an den Leaks & Gerüchte-Tracker weitergereicht statt als Breaking News zu erscheinen.")
+    return remaining, routed
+
+
 def main():
     checked_links = set(load_json(CHECKED_FILE, []))
     state = get_today_state()
@@ -535,8 +617,34 @@ def main():
     breaking_candidates = npl.filter_duplicate_topics(breaking_candidates, recent_titles)  # günstige Textprüfung zuerst
     breaking_candidates = filter_breaking_duplicates_strict(breaking_candidates, recent_titles)  # fail-closed statt fail-open, siehe Funktionsdoku oben
 
+    # NEU: Kandidaten, die inhaltlich einen AKTIVEN Leaks & Gerüchte-
+    # Tracker bestätigen/dementieren, werden NICHT als eigene Breaking-
+    # News-Eilmeldung veröffentlicht, sondern an rumor_tracker.py
+    # weitergereicht — siehe route_to_rumor_tracker_if_resolves() oben.
+    active_trackers_full = []
+    if os.path.exists(RUMORS_FILE):
+        with open(RUMORS_FILE, "r", encoding="utf-8") as f:
+            rumor_trackers = json.load(f)
+        active_trackers_full = [t for t in rumor_trackers if t.get("status") == "aktiv"]
+
+    breaking_candidates, routed_to_tracker = route_to_rumor_tracker_if_resolves(breaking_candidates, active_trackers_full)
+    if routed_to_tracker:
+        pending = []
+        if os.path.exists(PENDING_RESOLUTIONS_FILE):
+            with open(PENDING_RESOLUTIONS_FILE, "r", encoding="utf-8") as f:
+                pending = json.load(f)
+        for item in routed_to_tracker:
+            pending.append({
+                "tracker_id": item["tracker_id"],
+                "entry": item["entry"],
+                "flagged_by": "breaking_news_check",
+                "flagged_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            })
+        with open(PENDING_RESOLUTIONS_FILE, "w", encoding="utf-8") as f:
+            json.dump(pending, f, ensure_ascii=False, indent=2)
+
     if not breaking_candidates:
-        print("→ Alle Breaking-Kandidaten waren entweder bereits abgedeckt oder nicht relevant genug — nichts zu tun.")
+        print("→ Alle Breaking-Kandidaten waren entweder bereits abgedeckt, an den Gerüchte-Tracker weitergereicht oder nicht relevant genug — nichts zu tun.")
         return
 
     written = []
