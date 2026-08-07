@@ -59,6 +59,6 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add rumors.json rumor-checked.json rumor-state.json rumor-social-posted.json geruechte.html geruechte/ sitemap.xml
+          git add rumors.json rumor-checked.json rumor-state.json rumor-social-posted.json geruechte.html geruechte/ sitemap.xml pending-resolutions.json
           git diff --staged --quiet || git commit -m "Gerüchte-Tracker-Prüfung"
           git push
