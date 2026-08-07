@@ -371,6 +371,85 @@ Original-Link: {entry['link']}"""
     }
 
 
+def filter_breaking_duplicates_strict(candidates, recent_titles):
+    """Wie news_pipeline.filter_candidates_combined (Duplikat- UND
+    Relevanz-Prüfung in einem KI-Aufruf), aber mit einem entscheidenden
+    Unterschied bei Fehlern: Schlägt der API-Aufruf aus irgendeinem Grund
+    fehl (Netzwerk-Hänger, Rate-Limit, unparsebare Antwort), werden ALLE
+    Kandidaten dieses Laufs verworfen — NICHT wie im Rest der Pipeline
+    unverändert durchgelassen.
+
+    Grund für die bewusst andere Philosophie: Bei der regulären Pipeline
+    (news_pipeline.py: filter_candidates_combined) ist "im Zweifel nicht
+    zu streng filtern" richtig, weil ein verpasster Filter-Fehlschlag dort
+    höchstens einen einzelnen weniger relevanten Artikel unter vielen
+    bedeutet. Bei Breaking News ist das Risiko-Verhältnis umgekehrt: ein
+    durch einen API-Fehler nicht erkanntes Duplikat wird SOFORT und
+    prominent als Eilmeldung gepostet — das kostet Glaubwürdigkeit. Ein
+    fälschlich übersprungenes, echtes Breaking-Thema kostet dagegen nur
+    ein paar Stunden Vorsprung, da es ganz normal über die reguläre
+    19-Uhr-Pipeline nachgeliefert wird."""
+    if not candidates:
+        return []
+
+    recent = [t for t in recent_titles if t][-40:]
+    candidates_block = "\n".join(f"{i}: {e['title']}" for i, e in enumerate(candidates))
+    recent_block = "\n".join(f"- {t}" for t in recent) if recent else "(keine)"
+
+    prompt = f"""Bereits kürzlich veröffentlichte Themen (inkl. heutiger Breaking-News):
+{recent_block}
+
+Neue Breaking-News-Kandidaten (nummeriert, 0-basiert):
+{candidates_block}
+
+Prüfe JEDEN Kandidaten auf ZWEI unabhängige Kriterien:
+
+(A) DUPLIKAT: Behandelt der Kandidat inhaltlich dasselbe Thema wie eines
+der bereits veröffentlichten Themen oben (auch bei komplett
+unterschiedlichem Wortlaut — es zählt der inhaltliche Kern)?
+
+(B) IRRELEVANT: Erfüllt der Kandidat KEINES der folgenden Relevanz-
+Kriterien (schon eines reicht, um NICHT irrelevant zu sein)?
+{npl.RELEVANCE_CRITERIA}
+
+Bei Breaking News ist absolute Vorsicht wichtiger als Vollständigkeit —
+sei im Zweifelsfall EHER zu streng als zu lax.
+
+Antworte AUSSCHLIESSLICH mit einem validen JSON-Objekt, keine Erklärung,
+kein Markdown:
+{{"duplicates": [<Nummern>], "irrelevant": [<Nummern>]}}
+
+Beispiel: {{"duplicates": [1], "irrelevant": []}}. Falls beide Listen leer sind: {{"duplicates": [], "irrelevant": []}}."""
+
+    try:
+        response = npl.client.messages.create(
+            model=CLASSIFY_MODEL,
+            max_tokens=500,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text_blocks = [b.text for b in response.content if b.type == "text"]
+        if not text_blocks:
+            print("  ⚠ Breaking-Duplikat-Prüfung: keine Antwort erhalten — sicherheitshalber ALLE Kandidaten dieses Laufs verworfen.", file=sys.stderr)
+            return []
+        raw = text_blocks[-1].strip()
+        raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        first_brace = raw.find("{")
+        if first_brace > 0:
+            raw = raw[first_brace:]
+        data = json.loads(raw, strict=False)
+        reject_indices = set(data.get("duplicates", [])) | set(data.get("irrelevant", []))
+    except Exception as e:
+        print(f"  ⚠ Breaking-Duplikat-Prüfung fehlgeschlagen ({e}) — sicherheitshalber ALLE Kandidaten dieses Laufs verworfen "
+              f"(kein Risiko für doppelte Breaking-News, lieber eine Stunde später über die reguläre Pipeline).", file=sys.stderr)
+        return []
+
+    kept = [c for i, c in enumerate(candidates) if i not in reject_indices]
+    removed = len(candidates) - len(kept)
+    if removed:
+        print(f"  {removed} Breaking-Kandidat(en) als Duplikat/irrelevant erkannt und verworfen.")
+    return kept
+
+
 def main():
     checked_links = set(load_json(CHECKED_FILE, []))
     state = get_today_state()
@@ -448,7 +527,7 @@ def main():
     recent_titles = [a.get("source_title", a.get("title", "")) for a in (recent_from_archive + existing)]
 
     breaking_candidates = npl.filter_duplicate_topics(breaking_candidates, recent_titles)  # günstige Textprüfung zuerst
-    breaking_candidates = npl.filter_candidates_combined(breaking_candidates, recent_titles)
+    breaking_candidates = filter_breaking_duplicates_strict(breaking_candidates, recent_titles)  # fail-closed statt fail-open, siehe Funktionsdoku oben
 
     if not breaking_candidates:
         print("→ Alle Breaking-Kandidaten waren entweder bereits abgedeckt oder nicht relevant genug — nichts zu tun.")
