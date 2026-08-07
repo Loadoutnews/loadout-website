@@ -1072,6 +1072,79 @@ def try_write_analysis_article(recent_source_titles, max_attempts=8):
     return None
 
 
+def filter_against_recent_breaking(candidates, recent_breaking_titles):
+    """Eigenständige, GEZIELT fail-closed Prüfung: verhindert, dass ein
+    Thema, das schon als Breaking-News-Eilmeldung lief (siehe
+    breaking_news_check.py), Stunden später nochmal als ganz normaler
+    Artikel über diese reguläre Pipeline erscheint.
+
+    Läuft ZUSÄTZLICH zur normalen Duplikat-/Relevanz-Prüfung
+    (filter_candidates_combined, die bewusst fail-open bleibt) — nur für
+    diesen einen, besonders peinlichen Spezialfall (Redundanz zur eigenen
+    Eilmeldung) gilt eine andere Philosophie: Schlägt diese Prüfung fehl
+    (API-Fehler, kaputte Antwort), werden ALLE betroffenen Kandidaten
+    sicherheitshalber verworfen statt durchgelassen. Der Preis eines
+    fälschlich verworfenen Kandidaten ist gering (pro Lauf gibt es genug
+    andere Kandidaten), der Preis eines übersehenen erneuten Postens
+    desselben Themas dagegen hoch — dieselbe Abwägung wie bei
+    breaking_news_check.py: filter_breaking_duplicates_strict.
+
+    Wird nur wirklich aktiv, wenn es überhaupt kürzlich veröffentlichte
+    Breaking News gibt (siehe Aufruf in main()) — an den meisten Tagen
+    (0-1 Breaking News) läuft dieser zusätzliche API-Aufruf also gar
+    nicht erst."""
+    if not candidates or not recent_breaking_titles:
+        return candidates
+
+    recent_block = "\n".join(f"- {t}" for t in recent_breaking_titles[-20:])
+    candidates_block = "\n".join(f"{i}: {e['title']}" for i, e in enumerate(candidates))
+
+    prompt = f"""Bereits als BREAKING-NEWS-EILMELDUNG veröffentlichte Themen:
+{recent_block}
+
+Neue Kandidaten (nummeriert, 0-basiert):
+{candidates_block}
+
+Welche Kandidaten behandeln inhaltlich DASSELBE Thema wie eine der oben
+genannten Breaking-News-Meldungen (auch bei komplett unterschiedlichem
+Wortlaut — es zählt der inhaltliche Kern, nicht die Formulierung)? Sei im
+Zweifel EHER zu streng als zu lax — ein Thema, das schon als Eilmeldung
+lief, darf NICHT nochmal als regulärer Artikel erscheinen.
+
+Antworte AUSSCHLIESSLICH mit einem validen JSON-Array der betroffenen
+Nummern, keine Erklärung, kein Markdown. Beispiel: [2]. Falls keine
+Überschneidung: []."""
+
+    try:
+        response = client.messages.create(
+            model=DEDUP_MODEL,
+            max_tokens=300,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text_blocks = [b.text for b in response.content if b.type == "text"]
+        if not text_blocks:
+            print("  ⚠ Breaking-News-Überschneidungsprüfung: keine Antwort erhalten — "
+                  "sicherheitshalber ALLE Kandidaten dieses Laufs verworfen.", file=sys.stderr)
+            return []
+        raw = text_blocks[-1].strip()
+        raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        first_bracket = raw.find("[")
+        if first_bracket > 0:
+            raw = raw[first_bracket:]
+        duplicate_indices = set(json.loads(raw, strict=False))
+    except Exception as e:
+        print(f"  ⚠ Breaking-News-Überschneidungsprüfung fehlgeschlagen ({e}) — "
+              f"sicherheitshalber ALLE Kandidaten dieses Laufs verworfen (kein Risiko, "
+              f"dass eine bereits gepostete Breaking News nochmal erscheint).", file=sys.stderr)
+        return []
+
+    kept = [c for i, c in enumerate(candidates) if i not in duplicate_indices]
+    removed = len(candidates) - len(kept)
+    if removed:
+        print(f"  {removed} Kandidat(en) wegen Überschneidung mit einer Breaking-News-Meldung verworfen.")
+    return kept
+
+
 def main():
     existing = []
     if os.path.exists(ARTICLES_FILE):
@@ -1152,6 +1225,19 @@ def main():
     # Aufrufe — spart Tokens/Kosten, prüft aber inhaltlich exakt dieselben
     # zwei Kriterien wie zuvor.
     new_raw = filter_candidates_combined(new_raw, recent_source_titles)
+
+    # NEU, gezielt fail-closed: verhindert speziell, dass ein Thema, das
+    # heute schon als Breaking News lief, Stunden später hier nochmal als
+    # regulärer Artikel erscheint (siehe filter_against_recent_breaking
+    # oben — anders als die Prüfung darüber bleibt DIESE bei einem
+    # Fehlschlag lieber zu streng als zu lax).
+    recent_breaking_titles = [
+        a.get("source_title", a.get("title", ""))
+        for a in (recent_from_archive + existing)
+        if a.get("content_type") == "breaking"
+    ]
+    new_raw = filter_against_recent_breaking(new_raw, recent_breaking_titles)
+
     skipped = before_count - len(new_raw)
     if skipped:
         print(f"  {skipped} Meldung(en) insgesamt aussortiert (Duplikat oder zu klein/nischig)")
