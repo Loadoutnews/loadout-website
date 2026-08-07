@@ -180,14 +180,23 @@ def filter_duplicate_topics(entries, already_covered_titles):
 
 
 def filter_candidates_combined(entries, recent_titles, max_recent=40, max_batch=12):
-    """Kombiniert semantic_duplicate_filter UND filter_by_relevance in
-    EINEM einzigen KI-Aufruf statt zwei separaten — spart die doppelten
-    Anweisungs-/Kandidatenlisten-Tokens und einen kompletten Aufruf pro
-    Lauf ein, bei GENAU denselben beiden Prüfungen wie zuvor (inhaltliche
-    Duplikat-Erkennung + Relevanz-Kriterien), nur zusammengefasst
-    abgefragt. Wird für die Haupt-Kandidatenliste aus den RSS-Feeds
-    genutzt (dort laufen beide Prüfungen ohnehin immer nacheinander auf
-    derselben Liste — ideal zum Zusammenlegen).
+    """Kombiniert semantic_duplicate_filter, filter_by_relevance UND eine
+    Gerücht/Leak-Erkennung in EINEM einzigen KI-Aufruf statt mehrerer
+    separater — spart Tokens/Aufrufe, prüft aber drei unabhängige
+    Kriterien: inhaltliche Duplikat-Erkennung, Relevanz UND (neu) ob der
+    Kandidat selbst ein unbestätigtes Gerücht/Leak ist.
+
+    WICHTIG (Abgrenzung zum Leaks & Gerüchte-Tracker, siehe
+    rumor_tracker.py): Damit die drei Content-Formate (regulärer Artikel,
+    Breaking News, Leaks & Gerüchte-Tracker) sich gegenseitig NICHT
+    überschneiden, darf dieser reguläre Feed KEINE Meldungen als normalen,
+    selbstbewusst formulierten Artikel veröffentlichen, die selbst noch
+    unbestätigte Gerüchte/Leaks sind — solche Themen gehören exklusiv in
+    den Tracker (der sie ohnehin unabhängig davon erkennt und aufgreift,
+    siehe rumor_tracker.py: RUMOR_CRITERIA). Eine Meldung, die eine
+    offizielle Bestätigung, einen offiziellen Trailer/Release oder eine
+    offizielle Pressemitteilung wiedergibt, ist dagegen KEIN Gerücht in
+    diesem Sinne und bleibt hier völlig normal zulässig.
 
     max_batch bewusst knapp bemessen (12 statt früher 40): Pro Lauf werden
     ohnehin nur MAX_ARTICLES_PER_RUN Artikel geschrieben (davon einer ein
@@ -221,7 +230,7 @@ def filter_candidates_combined(entries, recent_titles, max_recent=40, max_batch=
 Neue Kandidaten (nummeriert, 0-basiert):
 {candidates_block}
 
-Prüfe JEDEN Kandidaten auf ZWEI unabhängige Kriterien:
+Prüfe JEDEN Kandidaten auf DREI unabhängige Kriterien:
 
 (A) DUPLIKAT: Behandelt der Kandidat inhaltlich dasselbe Thema wie eines
 der bereits veröffentlichten Themen ODER wie ein ANDERER Kandidat in
@@ -233,12 +242,22 @@ alle bis auf den ERSTEN als Duplikat zählen.
 Kriterien (schon eines reicht, um NICHT irrelevant zu sein)?
 {RELEVANCE_CRITERIA}
 
+(C) GERÜCHT/LEAK: Ist der Kandidat SELBST ein unbestätigtes Gerücht oder
+Leak — beruft er sich auf "Insider", "geleakte Dateien/Dokumente",
+"Datamining", anonyme oder unbestätigte Quellen, "Berichten zufolge"
+OHNE offizielle Bestätigung? Solche Themen gehören NICHT in den
+regulären Artikel-Feed, dafür gibt es einen eigenen Bereich. Gibt eine
+Meldung dagegen eine offizielle Ankündigung, einen offiziellen Trailer
+oder eine offizielle Pressemitteilung wieder, ist sie KEIN Gerücht in
+diesem Sinne, selbst wenn im Titel Wörter wie "enthüllt" oder
+"bestätigt" vorkommen.
+
 Antworte AUSSCHLIESSLICH mit einem validen JSON-Objekt, keine Erklärung,
 kein Markdown:
-{{"duplicates": [<Nummern, die Kriterium A erfüllen>], "irrelevant": [<Nummern, die Kriterium B erfüllen, also KEIN Relevanz-Kriterium>]}}
+{{"duplicates": [<Nummern, die Kriterium A erfüllen>], "irrelevant": [<Nummern, die Kriterium B erfüllen, also KEIN Relevanz-Kriterium>], "rumors": [<Nummern, die Kriterium C erfüllen>]}}
 
-Beispiel: {{"duplicates": [2, 5], "irrelevant": [1, 7]}}. Falls eine der
-beiden Listen leer ist: []."""
+Beispiel: {{"duplicates": [2, 5], "irrelevant": [1, 7], "rumors": [3]}}.
+Falls eine der Listen leer ist: []."""
 
     try:
         response = client.messages.create(
@@ -248,7 +267,7 @@ beiden Listen leer ist: []."""
         )
         text_blocks = [b.text for b in response.content if b.type == "text"]
         if not text_blocks:
-            print("  ⚠ Kombinierte Duplikat-/Relevanz-Prüfung: keine Antwort erhalten — lasse alle Kandidaten durch.", file=sys.stderr)
+            print("  ⚠ Kombinierte Duplikat-/Relevanz-/Gerücht-Prüfung: keine Antwort erhalten — lasse alle Kandidaten durch.", file=sys.stderr)
             return entries
         raw = text_blocks[-1].strip()
         raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
@@ -256,20 +275,22 @@ beiden Listen leer ist: []."""
         if first_brace > 0:
             raw = raw[first_brace:]
         data = json.loads(raw, strict=False)
-        reject_indices = set(data.get("duplicates", [])) | set(data.get("irrelevant", []))
+        reject_indices = set(data.get("duplicates", [])) | set(data.get("irrelevant", [])) | set(data.get("rumors", []))
     except Exception as e:
-        print(f"  ⚠ Kombinierte Duplikat-/Relevanz-Prüfung fehlgeschlagen ({e}) — lasse alle Kandidaten durch (im Zweifel nicht zu streng filtern).", file=sys.stderr)
+        print(f"  ⚠ Kombinierte Duplikat-/Relevanz-/Gerücht-Prüfung fehlgeschlagen ({e}) — lasse alle Kandidaten durch (im Zweifel nicht zu streng filtern).", file=sys.stderr)
         return entries
 
     kept = [e for i, e in enumerate(to_check) if i not in reject_indices]
-    duplicate_count = len(set(data.get("duplicates", [])) - set()) if "data" in dir() else 0
     try:
         dup_n = len(set(data.get("duplicates", [])))
         irr_n = len(set(data.get("irrelevant", [])))
+        rum_n = len(set(data.get("rumors", [])))
         if dup_n:
             print(f"  {dup_n} Meldung(en) als inhaltliches Duplikat aussortiert")
         if irr_n:
             print(f"  {irr_n} Meldung(en) als zu klein/nischig aussortiert (kein Relevanz-Kriterium erfüllt)")
+        if rum_n:
+            print(f"  {rum_n} Meldung(en) als unbestätigtes Gerücht/Leak aussortiert (gehört in den Leaks & Gerüchte-Tracker, nicht hierher)")
     except Exception:
         pass
     return auto_pass + kept
@@ -516,9 +537,16 @@ def fetch_og_image(url, timeout=8, max_bytes=200_000):
 FEED_FETCH_TIMEOUT = 15  # Sekunden — siehe fetch_raw_entries() unten
 
 
-def fetch_raw_entries():
+def fetch_raw_entries(feeds=None):
     """Liest alle konfigurierten RSS-Feeds und gibt eine flache Liste aller
     Einträge zurück (Titel, Link, Zusammenfassung, Quelle, Prioritäts-Flag).
+
+    feeds: optionale, abweichende Feed-Liste (Standard: das globale FEEDS
+    oben). Damit kann z. B. rumor_tracker.py zusätzlich eigene,
+    spezialisierte Leak-Quellen abfragen (siehe RUMOR_SPECIALIZED_FEEDS
+    dort), ohne dass diese die reguläre Artikel- oder Breaking-News-
+    Pipeline mit zusätzlichem, für sie meist irrelevantem Kandidaten-
+    Volumen belasten.
 
     WICHTIG: feedparser.parse(url) — direkt mit einer URL aufgerufen — setzt
     KEINEN eigenen Timeout. Antwortet ein einzelner Feed langsam oder gar
@@ -531,9 +559,10 @@ def fetch_raw_entries():
     bei anderen Fehlern) und erst der bereits geladene Inhalt an feedparser
     übergeben — feedparser selbst parst dann nur noch lokal im Speicher,
     ohne eigene Netzwerk-Anfrage."""
+    feeds = feeds if feeds is not None else FEEDS
     entries = []
     headers = {"User-Agent": "Mozilla/5.0 (compatible; LoadoutNewsBot/1.0; +https://loadout-news.com)"}
-    for feed_cfg in FEEDS:
+    for feed_cfg in feeds:
         try:
             resp = requests.get(feed_cfg["url"], timeout=FEED_FETCH_TIMEOUT, headers=headers)
             resp.raise_for_status()
