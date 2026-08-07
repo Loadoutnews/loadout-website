@@ -64,6 +64,32 @@ MAX_UPDATES_PER_RUN = 3        # wie viele bestehende Tracker pro Lauf maximal e
 # "schon abgedeckt" ist.
 ARTICLE_DEDUP_DAYS = 7
 
+# --- Spezialisierte Leak-/Gerüchte-Quellen (NUR für diese Pipeline) --------
+# Zusätzlich zu den allgemeinen Gaming-News-Feeds (news_pipeline.py: FEEDS,
+# über npl.fetch_raw_entries() bereits mitgenutzt) durchsucht der Tracker
+# EIGENE, auf Leaks/Gerüchte spezialisierte Quellen — deutlich ergiebiger
+# für diesen Zweck als die allgemeinen News-Seiten, die Leaks nur nebenbei
+# mitnehmen. Bewusst NICHT ins gemeinsame FEEDS übernommen: würde die
+# reguläre Artikel- und Breaking-News-Pipeline unnötig mit Kandidaten
+# belasten, die dort ohnehin meist als Gerücht aussortiert würden (siehe
+# news_pipeline.py: filter_candidates_combined, Kriterium C).
+#
+#   - Insider Gaming (insider-gaming.com): von Tom Henderson betriebene,
+#     dezidierte Leak-Journalismus-Seite — hat selbst ein "Leaks vs.
+#     offizielle News"-Trennungssystem für die eigene Leserschaft, genau
+#     das Thema, um das es hier geht.
+#   - r/GamingLeaksAndRumours (Reddit, ~592k Mitglieder): die mit Abstand
+#     größte dedizierte Leak-Community, wo bekannte Insider (Tez2,
+#     NateTheHate, Shinobi602 u. a.) meist zuerst posten. Nutzt Reddits
+#     eingebautes RSS (".rss"-Endung) — Reddit kann bei Feed-Abrufen ohne
+#     "echten" Browser-User-Agent gelegentlich blocken; der gemeinsame
+#     User-Agent-Header in fetch_raw_entries() deckt das i. d. R. ab,
+#     sollte aber beim ersten Live-Lauf beobachtet werden.
+RUMOR_SPECIALIZED_FEEDS = [
+    {"url": "https://insider-gaming.com/feed/", "priority": False},
+    {"url": "https://www.reddit.com/r/GamingLeaksAndRumours/.rss", "priority": False},
+]
+
 VALID_CATS = {"pc", "konsole", "hardware", "industrie"}
 VALID_GAMES = {"gta", "minecraft", "fortnite", "cod", "valorant", "fifa"}
 VALID_CREDIBILITY = {"unbestaetigt", "wahrscheinlich", "sehr_wahrscheinlich", "bestaetigt", "dementiert"}
@@ -578,8 +604,22 @@ def main():
         if (_parse_article_date(a) is None) or (_parse_article_date(a) >= cutoff)
     ]
 
-    print("→ Lese RSS-Feeds für Gerüchte-Prüfung...")
-    raw_entries = npl.fetch_raw_entries()
+    print("→ Lese RSS-Feeds für Gerüchte-Prüfung (allgemeine Quellen + spezialisierte Leak-Quellen)...")
+    general_entries = npl.fetch_raw_entries()
+    specialized_entries = npl.fetch_raw_entries(RUMOR_SPECIALIZED_FEEDS)
+
+    # Nach Link entdoppeln — falls z. B. dieselbe Meldung sowohl über einen
+    # allgemeinen Feed als auch über Insider Gaming/Reddit hereinkommt, wird
+    # sie hier nur einmal gezählt (die eigentliche inhaltliche Duplikat-
+    # Prüfung gegen bereits laufende Tracker passiert ohnehin separat weiter
+    # unten in classify_and_match).
+    seen_links = set()
+    raw_entries = []
+    for e in general_entries + specialized_entries:
+        if e["link"] in seen_links:
+            continue
+        seen_links.add(e["link"])
+        raw_entries.append(e)
 
     candidate_pool = [e for e in raw_entries if e["link"] not in checked_links][:CHECK_BATCH_SIZE]
     if not candidate_pool:
