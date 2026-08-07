@@ -1691,7 +1691,8 @@ function renderGrid(){
           ${originalBadgeHtml(a)}
           <h3>${a.title}</h3>
           <p>${a.teaser}</p>
-          <div class="meta"><span class="mono">${a.date}</span><span class="mono">${a.platform}${a.views ? ' · 👁 ' + a.views.toLocaleString('de-CH') : ''}</span></div>
+          <div class="meta"><span class="mono">${a.date}</span><span class="mono">🔥 ${a.hype}% · ${a.platform}${a.views ? ' · 👁 ' + a.views.toLocaleString('de-CH') : ''}</span></div>
+
         </div>
       </a>
       <button class="save-btn ${savedIds.has(a.id)?'saved':''}" data-save-id="${a.id}" onclick="toggleSave(event, '${a.id}')" title="Für später merken">
