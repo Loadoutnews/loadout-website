@@ -89,30 +89,36 @@ Nur MINDESTENS eines dieser eng gefassten Kriterien reicht:
    Fortnite, Call of Duty, Valorant/LoL, FIFA) oder eines vergleichbar \
    riesigen AAA-Titels — NICHT: Gerüchte über eine mögliche Verschiebung, \
    NICHT: kleinere Terminänderungen bei mittelgrossen Spielen
-2. Ein soeben aufgetauchter, grosser Leak zu einem der 6 Haupt-Franchises \
-   mit greifbaren neuen Fakten (z. B. konkretes Datum, Gameplay-Material) \
-   — NICHT: vage Gerüchte, NICHT: "Insider glaubt..."-Spekulation ohne \
-   belastbare Quelle
-3. Eine GERADE JETZT laufende, grossflächige Server-/Plattform-Störung \
+2. Eine GERADE JETZT laufende, grossflächige Server-/Plattform-Störung \
    (PSN, Xbox Live, Steam), die zum Zeitpunkt der Meldung noch aktuell ist \
    — NICHT: eine bereits behobene, vergangene Störung
-4. Eine SOEBEN bekannt gewordene, wirklich überraschende \
+3. Eine SOEBEN bekannt gewordene, wirklich überraschende \
    Unternehmensmeldung (plötzliche Studio-Schliessung, Übernahme eines \
    grossen Publishers, überraschender Rücktritt einer sehr bekannten \
    Führungsperson) — NICHT: übliche Quartalszahlen, NICHT: normale \
    Personalveränderungen
-5. Eine akute Sicherheitswarnung (aktiver Hack, laufendes Datenleck) bei \
+4. Eine akute Sicherheitswarnung (aktiver Hack, laufendes Datenleck) bei \
    einer der grossen Plattformen/einem der Haupt-Franchises, bei der \
    schnelles Handeln für betroffene Nutzer:innen wirklich einen Unterschied \
    macht
 
-Explizit KEINE Breaking News, selbst wenn interessant/relevant:
+Explizit KEINE Breaking News, selbst wenn interessant/relevant/aufsehenerregend:
 - Ein neuer Trailer, auch zu einem grossen Spiel
 - Ein regulärer, angekündigter Patch oder ein DLC-Release
 - Verkaufszahlen, Chart-Platzierungen, Auszeichnungen
 - Allgemeine Branchen-Analysen oder Meinungsstücke
 - Alles, was schon vor Stunden/Tagen bekannt war und nur neu \
-  zusammengefasst wird"""
+  zusammengefasst wird
+- WICHTIG, EXPLIZITER AUSSCHLUSS: JEDER Leak oder JEDES Gerücht, ganz \
+  gleich wie aktuell, aufsehenerregend oder mit wie vielen "greifbaren" \
+  Details — auch nicht, wenn eine grosse Fachpresse-Quelle darüber \
+  berichtet. Ein Leak ist per Definition NICHT offiziell bestätigt, egal \
+  wie plausibel er wirkt. Dafür gibt es den eigenen, dauerhaften \
+  "Leaks & Gerüchte-Tracker" (siehe rumor_tracker.py) — der begleitet \
+  genau solche Themen fortlaufend mit einer eigenen Glaubwürdigkeits- \
+  Einschätzung, statt sie als vermeintlich bestätigte Eilmeldung \
+  misszuverstehen. Diese Trennung ist bewusst und darf nicht aufgeweicht \
+  werden, auch nicht bei einem besonders "sicher wirkenden" Leak."""
 
 
 def load_json(path, default):
