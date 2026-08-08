@@ -1,5 +1,55 @@
 [
   {
+    "id": "2e33bf1b47",
+    "title": "Black Myth: Wukong knackt 30 Millionen verkaufte Exemplare – schneller als Elden Ring",
+    "teaser": "Chinas erstes AAA-Spiel überholt FromSoftwares Kult-Hit in der Verkaufsgeschwindigkeit und beweist: Blockbuster-Games kommen längst nicht mehr nur aus dem Westen.",
+    "cat": "industrie",
+    "game": null,
+    "genre": "action",
+    "date": "08. August 2026",
+    "hype": 78
+  },
+  {
+    "id": "5691eb2115",
+    "title": "Kassensturz bei Take-Two: GTA-Online-Spieler pumpen mehr Geld ins Spiel, während GTA-5-Verkäufe stocken",
+    "teaser": "Take-Two meldet in den Quartalszahlen sinkende GTA-5-Verkäufe, doch Shark-Card-Käufe in GTA Online boomen wie nie zuvor.",
+    "cat": "industrie",
+    "game": "gta",
+    "genre": "action",
+    "date": "08. August 2026",
+    "hype": 78
+  },
+  {
+    "id": "c800b0d1ec",
+    "title": "Miserabler PC-Port: Marvel Tokon: Fighting Souls startet mit gemischten Steam-Reviews",
+    "teaser": "Der neue Marvel-Prügler von Arc System Works überzeugt auf der PS5, sorgt auf Steam aber für Frust: PSN-Zwang, Linux-Blockade und Performance-Probleme drücken die Wertung.",
+    "cat": "pc",
+    "game": null,
+    "genre": "action",
+    "date": "08. August 2026",
+    "hype": 58
+  },
+  {
+    "id": "58b35db175",
+    "title": "Red Dead Redemption 2 knackt 87 Millionen verkaufte Exemplare – trotz Rockstars Funkstille",
+    "teaser": "Sieben Jahre nach Release verkauft sich Red Dead Redemption 2 immer noch prächtig. Take-Two vermeldet neue Zahlen – doch das Tempo lässt spürbar nach.",
+    "cat": "industrie",
+    "game": "gta",
+    "genre": null,
+    "date": "08. August 2026",
+    "hype": 62
+  },
+  {
+    "id": "8275c4d843",
+    "title": "Final Fantasy XIV: Square Enix bringt Notfall-Update gegen Ladezeiten auf Switch 2",
+    "teaser": "Square Enix hat über Nacht ein Emergency-Patch für die Switch-2-Version von Final Fantasy XIV ausgerollt. Erste Spielerberichte zeigen deutlich kürzere Ladezeiten.",
+    "cat": "konsole",
+    "game": null,
+    "genre": "rpg",
+    "date": "08. August 2026",
+    "hype": 55
+  },
+  {
     "id": "d697d3e2cb",
     "title": "Marvel Tokon: Fighting Souls entthront Palworld – Sonys Prügel-Überraschung stürmt an die Steam-Spitze",
     "teaser": "Sonys neuer 4v4-Marvel-Fighter schnellt trotz PSN-Zwang und mauen Reviews direkt auf Platz 1 der Steam-Charts und verdrängt damit Palworld sowie frische Blockbuster wie Gears of War: E-Day.",
