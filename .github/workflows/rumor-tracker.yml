@@ -6,6 +6,19 @@ on:
   # häufiger als der 19-Uhr-Hauptlauf) — genau wie die anderen Pipelines,
   # siehe README/Setup-Hinweise.
 
+# WICHTIG: dieselbe Concurrency-Gruppe wie in breaking-news-check.yml und
+# news-pipeline.yml (Schritt "Gerüchte-Tracker-Übergabe ... committen").
+# Alle drei Workflows pushen unabhängig voneinander direkt auf main — ohne
+# gemeinsame Gruppe können zwei davon gleichzeitig laufen und sich beim
+# Push gegenseitig blockieren ("cannot lock ref ... expected X but is at
+# Y"). Mit derselben Gruppe reiht GitHub sie stattdessen einfach hintereinander
+# ein (cancel-in-progress: false — warten statt abbrechen, damit kein Lauf
+# verloren geht), was Kollisionen von vornherein verhindert statt sie nur
+# hinterher aufzuräumen.
+concurrency:
+  group: loadout-main-writer
+  cancel-in-progress: false
+
 jobs:
   track:
     runs-on: ubuntu-latest
@@ -67,5 +80,31 @@ jobs:
           # Datei bricht sonst den ganzen Schritt mit einem Pathspec-Fehler
           # ab. Deshalb hier per Existenz-Check absichern.
           if [ -f pending-resolutions.json ]; then git add pending-resolutions.json; fi
-          git diff --staged --quiet || git commit -m "Gerüchte-Tracker-Prüfung"
-          git push
+
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen."
+            exit 0
+          fi
+          git commit -m "Gerüchte-Tracker-Prüfung"
+
+          # Zusätzlich zur Concurrency-Gruppe oben (die die meisten
+          # Kollisionen von vornherein verhindert): falls main sich TROTZDEM
+          # zwischen Checkout und Push weiterbewegt hat (z. B. weil während
+          # der Websuche/KI-Recherche ein anderer, nicht in derselben Gruppe
+          # laufender Prozess gepusht hat), wird hier automatisch der
+          # aktuelle Stand geholt, der eigene Commit sauber draufgesetzt und
+          # erneut versucht — bis zu 5x, mit kurzer, zufälliger Pause dazwischen.
+          for attempt in 1 2 3 4 5; do
+            if git push; then
+              echo "Push erfolgreich (Versuch $attempt)."
+              exit 0
+            fi
+            if [ "$attempt" -eq 5 ]; then
+              echo "Push nach 5 Versuchen weiterhin fehlgeschlagen." >&2
+              exit 1
+            fi
+            echo "Push fehlgeschlagen — hole aktuellen Stand und versuche erneut (Versuch $attempt)..."
+            git fetch origin main
+            git rebase origin/main
+            sleep $((RANDOM % 6 + 2))
+          done
