@@ -2,6 +2,15 @@ name: Update News
 on:
   workflow_dispatch:         # manuell startbar über den "Run workflow"-Button
 
+# Dieselbe Concurrency-Gruppe wie breaking-news-check.yml und
+# rumor-tracker.yml — siehe dort für die Begründung. Betrifft hier
+# insbesondere den direkten Push-Schritt weiter unten (der PR-Schritt
+# selbst schreibt auf einen eigenen Branch, nicht auf main, ist von dieser
+# Race-Bedingung also nicht betroffen).
+concurrency:
+  group: loadout-main-writer
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -41,7 +50,30 @@ jobs:
           # "git add" mit festem Dateinamen auf eine fehlende Datei würde
           # sonst den ganzen Schritt mit einem Pathspec-Fehler abbrechen.
           if [ -f pending-resolutions.json ]; then git add pending-resolutions.json; fi
-          git diff --staged --quiet || (git commit -m "Update-Übergabe an Gerüchte-Tracker" && git push)
+
+          if git diff --staged --quiet; then
+            echo "Keine Übergabe an den Gerüchte-Tracker in diesem Lauf."
+            exit 0
+          fi
+          git commit -m "Update-Übergabe an Gerüchte-Tracker"
+
+          # Retry mit Rebase, falls main sich zwischen Checkout und Push
+          # bereits weiterbewegt hat (z. B. durch breaking-news-check.yml
+          # oder rumor-tracker.yml) — siehe dieselbe Logik dort für Details.
+          for attempt in 1 2 3 4 5; do
+            if git push; then
+              echo "Push erfolgreich (Versuch $attempt)."
+              exit 0
+            fi
+            if [ "$attempt" -eq 5 ]; then
+              echo "Push nach 5 Versuchen weiterhin fehlgeschlagen." >&2
+              exit 1
+            fi
+            echo "Push fehlgeschlagen — hole aktuellen Stand und versuche erneut (Versuch $attempt)..."
+            git fetch origin main
+            git rebase origin/main
+            sleep $((RANDOM % 6 + 2))
+          done
 
       - run: python build_pages.py
       - uses: peter-evans/create-pull-request@v6
