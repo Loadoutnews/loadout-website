@@ -3,6 +3,9 @@ on:
   workflow_dispatch:
   # Ausgelöst über cron-job.org (stündlich empfohlen) — genau wie die
   # anderen Pipelines, siehe README/Setup-Hinweise.
+concurrency:
+  group: loadout-main-writer
+  cancel-in-progress: false
 
 jobs:
   check:
