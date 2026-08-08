@@ -50,7 +50,7 @@ jobs:
           ZERNIO_REDDIT_ACCOUNT_ID: ${{ secrets.ZERNIO_REDDIT_ACCOUNT_ID }}
           REDDIT_SUBREDDIT: ${{ secrets.REDDIT_SUBREDDIT }}
 
-            - name: Restliche Änderungen committen
+      - name: Restliche Änderungen committen
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
