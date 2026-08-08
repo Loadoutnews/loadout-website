@@ -5,15 +5,31 @@
     "title": "id Software nach dem Xbox-Kahlschlag — Stand der Gerüchte",
     "cat": "industrie",
     "game": null,
-    "summary": "Nach den jüngsten Massenentlassungen bei Xbox steht die Zukunft von Doom-Studio id Software zur Debatte: Mitarbeiter und ehemalige Angestellte sprechen von ausgeblutet wirkenden Abteilungen und halten es für kaum noch möglich, ein Spiel im Umfang von Doom: The Dark Ages erneut zu stemmen. Studio-Co-Direktor Hugo Martin widerspricht dieser Darstellung öffentlich und behauptet, das Team sei so groß wie zur Zeit von Doom (2016). Mehrere unabhängige Berichte stützen zumindest den Umfang der Kürzungen, die genaue Zukunft des Studios bleibt aber offen.",
+    "summary": "Nach den jüngsten Massenentlassungen bei Xbox bleibt die Zukunft von Doom-Studio id Software weiter höchst umstritten. Im Zentrum steht nun ein ausführliches, öffentlich gegebenes Interview des id-Software-Veteranen Chris Hays (Lead Services Programmer, seit rund 16 Jahren im Studio) im Podcast 'Well Played', in dem er Xbox scharf angreift: Das Unternehmen verstehe grundsätzlich weder Kunst noch Videospiele noch das eigene Geschäftsmodell. Hays schildert, dass ganze Abteilungen und Disziplinen komplett weggefallen seien – etwa Skybox-Artists, das Infrastruktur-Team und Teile des Engine-Teams – und bringt es auf den Punkt: 'Wir sind nicht mehr dasselbe id, wir sind das halbe id.' Er stellt zudem offen die Wortwahl von Xbox/Studio-Leitung in Frage, wonach die Belegschaft nur 'fast' gleich groß geblieben sei. Studio-Co-Direktor Hugo Martin widerspricht weiterhin öffentlich und wird nun direkt mit der Aussage zitiert, das Team sei so groß wie zur Zeit von Doom (2016) und id Tech sei weiterhin quicklebendig. Mehrere unabhängige Berichte stützen den Umfang der Kürzungen (rund 136 von 185 bzw. rund die Hälfte der Stellen gestrichen), die genaue Zukunft des Studios bleibt aber offen – die Aussagen stehen sich weiterhin unvereinbar gegenüber. Eine thematisch nur locker verknüpfte Zusatzmeldung sorgt weiterhin für Aufmerksamkeit: Doom-2016-Komponist Mick Gordon will den legendären Soundtrack erstmals live in Konzertform performen, inklusive seiner selbstgebauten 'Doom Machine', beim RADAR Festival 2027 in Großbritannien – ohne direkten Bezug zur Personalfrage, aber mit verstärktem nostalgischen Blick auf die Ära, auf die sich Hugo Martin in seiner Verteidigung beruft.",
     "status": "aktiv",
     "resolution": null,
     "credibility_category": "wahrscheinlich",
-    "credibility_pct": 62,
+    "credibility_pct": 65,
     "image": "https://kotaku.com/app/uploads/2025/08/DOOM-MAIN-1200x675.jpg",
     "created_date": "07. August 2026",
-    "updated_date": "07. August 2026",
+    "updated_date": "08. August 2026",
     "timeline": [
+      {
+        "date": "08. August 2026",
+        "text": "(08. August 2026, Wahrscheinlich 65%): GamesRadar+ greift ein ausführliches Podcast-Interview ('Well Played') mit id-Software-Veteran Chris Hays auf, in dem dieser namentlich und auf der Aufnahme festgehalten wird: Xbox verstehe fundamental weder Kunst noch Spiele noch das eigene Geschäftsmodell. Hays konkretisiert die Kahlschlag-Vorwürfe mit Beispielen (Skybox-Artists, Infrastruktur-Team, Engine-Team) und bringt es mit dem Satz 'we're not the same iD, we're half the same iD' auf den Punkt. Erstmals wird dabei auch Hugo Martins Gegendarstellung wortwörtlich zitiert ('We're the size we were when we made Doom 2016 and id Tech is very much alive and well'), wodurch der direkte Widerspruch zwischen beiden Darstellungen noch deutlicher sichtbar wird, ohne dass eine Seite eindeutig bestätigt oder widerlegt wird.",
+        "credibility_category": "wahrscheinlich",
+        "credibility_pct": 65,
+        "source": "Latest from GamesRadar+",
+        "source_url": "https://www.gamesradar.com/games/fps/doom-developer-slams-xbox-after-layoffs-hit-id-software-they-fundamentally-dont-understand-art-they-dont-understand-games/"
+      },
+      {
+        "date": "08. August 2026",
+        "text": "(08. August 2026, Unbestätigt/Themenrandnotiz): Doom-2016-Komponist Mick Gordon kündigt an, den preisgekrönten Soundtrack des Spiels erstmals live in Konzertform aufzuführen – mit seiner eigens gebauten 'Doom Machine' als Headliner beim RADAR Festival 2027 in Manchester, UK. Die Meldung steht in keinem direkten Zusammenhang mit den Entlassungen bei id Software oder der Personalfrage, verstärkt aber medial die nostalgische Bezugnahme auf die Doom-2016-Ära, die auch Hugo Martin in seiner Verteidigung des aktuellen Studio-Umfangs heranzieht.",
+        "credibility_category": "wahrscheinlich",
+        "credibility_pct": 60,
+        "source": "IGN Articles",
+        "source_url": "https://www.ign.com/articles/doom-2016-composer-mick-gordon-is-performing-the-games-soundtrack-live-in-concert-for-the-very-first-time"
+      },
       {
         "date": "07. August 2026",
         "text": "Auslöser des Trackers ist ein Kotaku-Bericht, in dem id-Software-Veteran Chris Hays Xbox vorwirft, Kunst grundsätzlich nicht zu verstehen, und erklärt, ganze Abteilungen des Studios seien nach den Entlassungen ausgeblutet worden. Laut mehreren Quellen wurden rund 136 der 185 Stellen bei id Software gestrichen, was durch eine offizielle WARN-Meldung aus Texas bestätigt wurde. Hugo Martin widersprach der Darstellung öffentlich, wonach das Studio auf nur noch 50 Mitarbeiter geschrumpft sei, doch weitere Berichte deuten darauf hin, dass insbesondere das id-Tech-Engine-Team fast komplett verschwunden ist.",
@@ -80,15 +96,47 @@
     "title": "Rockstar ignoriert GTA-5-Star bei GTA 6-Casting — Stand der Gerüchte",
     "cat": "industrie",
     "game": "gta",
-    "summary": "Der Schauspieler Robert Bogue, der in GTA 5 den FIB-Agenten Steve Haines verkörperte, behauptet, sich für mehr als 60 Rollen in GTA 6 beworben zu haben, davon aber keine einzige bekommen und nie eine Rückmeldung von Rockstar Games erhalten zu haben. Die Aussage stammt ursprünglich aus einem Instagram-Interview mit dem türkischen Creator Anderson Burak und wurde von Bogue anschließend privat als korrekt bestätigt. Inzwischen hat auch Kotaku ausführlich über den Fall berichtet und zusätzliche Zitate veröffentlicht, in denen Bogue seine Enttäuschung mit dem Vergleich beschreibt, es fühle sich an, als habe man sich verliebt, nur um dann plötzlich verlassen zu werden. Mehrere große Gaming-Portale wie IGN, Kotaku und GTA Boom haben die Geschichte aufgegriffen, beziehen sich dabei aber weiterhin auf dieselbe Ursprungsquelle, das Instagram-Interview mit Burak. Kotaku und andere Outlets weisen zudem ausdrücklich darauf hin, dass Bogue selbst eine Ausnahme von der vermuteten inoffiziellen Regel gegen die Wiederverwendung früherer Sprecher darstellt, da er zuvor bereits Red Harlow in Red Dead Revolver und Troy in der GTA-IV-Erweiterung The Ballad of Gay Tony gesprochen hat. Rockstar selbst hat sich bislang nicht offiziell zu den Vorwürfen oder den genauen Hintergründen der Absage geäußert.",
+    "summary": "Der Schauspieler Robert Bogue, der in GTA 5 den FIB-Agenten Steve Haines verkörperte, behauptet, sich für mehr als 60 Rollen in GTA 6 beworben zu haben, davon aber keine einzige bekommen und nie eine Rückmeldung von Rockstar Games erhalten zu haben. Die Aussage stammt ursprünglich aus einem Instagram-Interview mit dem türkischen Creator Anderson Burak und wurde von Bogue anschließend privat als korrekt bestätigt. Inzwischen hat auch Kotaku ausführlich über den Fall berichtet und zusätzliche Zitate veröffentlicht, in denen Bogue seine Enttäuschung mit dem Vergleich beschreibt, es fühle sich an, als habe man sich verliebt, nur um dann plötzlich verlassen zu werden. Mehrere große Gaming-Portale wie IGN, Kotaku, TechRadar, Dexerto und GTA Boom haben die Geschichte aufgegriffen, beziehen sich dabei aber weiterhin auf dieselbe Ursprungsquelle, das Instagram-Interview mit Burak. Kotaku und andere Outlets weisen zudem ausdrücklich darauf hin, dass Bogue selbst eine Ausnahme von der vermuteten inoffiziellen Regel gegen die Wiederverwendung früherer Sprecher darstellt, da er zuvor bereits Red Harlow in Red Dead Revolver und Troy in der GTA-IV-Erweiterung The Ballad of Gay Tony gesprochen hat. Rockstar selbst hat sich bislang nicht offiziell zu den Vorwürfen oder den genauen Hintergründen der Absage geäußert. Mehrere unabhängig davon veröffentlichte Meldungen, unter anderem von RockstarINTEL, bestätigen lediglich die bereits bekannte Ankündigung eines dritten Trailers beziehungsweise eines 'Extended Look' zu GTA 6, der am 27. August 2026 zunächst exklusiv auf Netflix und wenige Stunden später auf YouTube erscheinen soll. Ebenfalls thematisch losgelöst von der Casting-Kontroverse sind gleich zwei neue IGN-Interviews mit Take-Two-CEO Strauss Zelnick: Im ersten schließt er einen späteren physischen Disc-Release von GTA 6 nicht aus und betont, die Entscheidung gegen eine Disc-Version zum Launch habe nichts mit der Angst vor Leaks zu tun gehabt. Im zweiten, neuesten Interview verteidigt Zelnick ausführlich die Preisgestaltung der Standard- und Ultimate Edition von GTA 6 mit dem Argument, die Preise für Videospiele seien nicht mit der Inflation mitgewachsen. Auch diese Meldung liefert weder eine Bestätigung noch ein Dementi zu Bogues Aussagen und behandelt ausschließlich Themen rund um Preisgestaltung und Marketing des Spiels. Der Gesamtstand des Gerüchts bleibt somit unverändert: eine glaubwürdig untermauerte, aber weiterhin ausschließlich auf Bogues eigenen Aussagen basierende Geschichte ohne offizielle Stellungnahme von Rockstar zur Casting-Frage.",
     "status": "aktiv",
     "resolution": null,
     "credibility_category": "sehr_wahrscheinlich",
     "credibility_pct": 75,
     "image": "https://assets-prd.ignimgs.com/2026/08/05/gta-steve-haines-1785966835318.jpg?width=1280&amp;format=jpg&amp;auto=webp&amp;quality=80",
     "created_date": "06. August 2026",
-    "updated_date": "06. August 2026",
+    "updated_date": "08. August 2026",
     "timeline": [
+      {
+        "date": "08. August 2026",
+        "text": "(08. August 2026, Sehr wahrscheinlich 75%): Ein weiteres IGN-Interview mit Take-Two-CEO Strauss Zelnick dreht sich diesmal ausschließlich um die Preisgestaltung von GTA 6. Zelnick verteidigt darin die Preise der Standard- und Ultimate Edition mit dem Argument, die Preise für Videospiele seien nicht mit der Inflation mitgewachsen, und betont, Rockstar habe die Preispunkte richtig gesetzt. Der Bericht enthält keinerlei Bezug zu Robert Bogue oder dessen Casting-Vorwürfen. Für den laufenden Gerüchte-Tracker ergibt sich daher erneut keine neue Bestätigung oder Widerlegung; der zuletzt erreichte Glaubwürdigkeitsstand bleibt unverändert, da weiterhin keine offizielle Stellungnahme von Rockstar zu Bogues Aussagen vorliegt.",
+        "credibility_category": "sehr_wahrscheinlich",
+        "credibility_pct": 75,
+        "source": "IGN Articles",
+        "source_url": "https://www.ign.com/articles/pricing-has-not-kept-pace-with-inflation-take-two-boss-insists-rockstar-got-gta-6-standard-and-ultimate-edition-price-points-right"
+      },
+      {
+        "date": "08. August 2026",
+        "text": "(08. August 2026, unverändert): Ein neues IGN-Interview mit Take-Two-CEO Strauss Zelnick dreht sich ausschließlich um die Frage, ob GTA 6 zu einem späteren Zeitpunkt doch noch als physische Disc erscheinen könnte, sowie um Preisgestaltung und die Klarstellung, dass der Verzicht auf eine Disc-Version zum Launch nichts mit der Sorge vor Leaks zu tun habe. Der Bericht enthält keinerlei Bezug zu Robert Bogue oder dessen Casting-Vorwürfen. Für den laufenden Gerüchte-Tracker ergibt sich daher erneut keine neue Bestätigung oder Widerlegung; der zuletzt erreichte Glaubwürdigkeitsstand bleibt unverändert, da weiterhin keine offizielle Stellungnahme von Rockstar zu Bogues Aussagen vorliegt.",
+        "credibility_category": "sehr_wahrscheinlich",
+        "credibility_pct": 75,
+        "source": "IGN Articles",
+        "source_url": "https://www.ign.com/articles/take-two-ceo-strauss-zelnick-wont-rule-out-gta-6-on-disc-at-some-point-insists-decision-had-nothing-to-do-with-concern-over-leaks"
+      },
+      {
+        "date": "08. August 2026",
+        "text": "(08. August 2026, Sehr wahrscheinlich 75%): Eine weitere Meldung von RockstarINTEL bestätigt erneut die Ankündigung des dritten GTA-6-Trailers beziehungsweise 'Extended Look', der am 27. August 2026 zunächst exklusiv auf Netflix und rund sechs Stunden später auf Rockstars YouTube-Kanal erscheinen soll, begleitet von neuem Artwork mit Jason und Lucia. Die Meldung, die sich inhaltlich mit Berichten von Variety, Kotaku und Netflix selbst deckt, behandelt ausschließlich Marketing- und Release-Aspekte des Spiels und enthält weiterhin keinerlei Bezug zu Robert Bogue oder dessen Casting-Vorwürfen. Für den laufenden Gerüchte-Tracker ergibt sich somit erneut keine neue Bestätigung oder Widerlegung; der zuletzt erreichte Glaubwürdigkeitsstand bleibt unverändert, da weiterhin keine offizielle Stellungnahme von Rockstar zu Bogues Aussagen vorliegt.",
+        "credibility_category": "sehr_wahrscheinlich",
+        "credibility_pct": 75,
+        "source": "RockstarINTEL",
+        "source_url": "https://rockstarintel.com/new-gta-6-gameplay-trailer-announced-by-rockstar-and-netflix-gets-it-first/"
+      },
+      {
+        "date": "08. August 2026",
+        "text": "(08. August 2026, unverändert): Eine neue Meldung von RockstarINTEL behandelt frisch veröffentlichtes GTA-6-Artwork mit Jason und Lucia sowie die Ankündigung eines dritten Trailers, der als exklusive Netflix-Vorschau am 27. August 2026 debütieren soll. Der Bericht bezieht sich ausschließlich auf Marketing- und Release-Aspekte des Spiels und enthält keinen Bezug zu Robert Bogue oder dessen Casting-Vorwürfen. Damit ergibt sich für den laufenden Gerüchte-Tracker keine neue Bestätigung oder Widerlegung; der zuletzt erreichte Glaubwürdigkeitsstand bleibt unverändert bestehen, da weiterhin keine offizielle Stellungnahme von Rockstar zu Bogues Aussagen vorliegt.",
+        "credibility_category": "sehr_wahrscheinlich",
+        "credibility_pct": 75,
+        "source": "RockstarINTEL",
+        "source_url": "https://rockstarintel.com/new-gta-6-artwork-released-ahead-of-trailer-3/"
+      },
       {
         "date": "06. August 2026",
         "text": "Kotaku hat nun einen eigenen, ausführlichen Bericht zu dem Fall veröffentlicht, in dem zusätzliche Zitate von Bogue auftauchen. So beschreibt der Schauspieler seine Enttäuschung mit den Worten, es fühle sich an, als habe man sich verliebt, nur um dann plötzlich verlassen zu werden, und betont, es gebe definitiv Enttäuschung und Verbitterung. Kotaku hebt außerdem hervor, dass Bogue selbst eine Ausnahme von der von ihm vermuteten Rockstar-Regel gegen wiederkehrende Sprecher darstellt, da er zuvor bereits Red Harlow in Red Dead Revolver und Troy in The Ballad of Gay Tony verkörpert hatte. Eine offizielle Stellungnahme von Rockstar Games liegt weiterhin nicht vor; die Berichterstattung bleibt somit auf Bogues eigene Aussagen gestützt, wird aber durch die wachsende, übereinstimmende Zahl seriöser Quellen wie Kotaku und IGN zusätzlich untermauert.",
