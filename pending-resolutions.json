@@ -76,5 +76,18 @@
     },
     "flagged_by": "news_pipeline",
     "flagged_at": "2026-08-08T17:02:35.399483+00:00"
+  },
+  {
+    "tracker_id": "id-software-nach-dem-xbox-kahlschlag",
+    "entry": {
+      "title": "Doom developer slams Xbox after layoffs hit id Software: \"They fundamentally don't understand art. They don't understand games\"",
+      "link": "https://www.gamesradar.com/games/fps/doom-developer-slams-xbox-after-layoffs-hit-id-software-they-fundamentally-dont-understand-art-they-dont-understand-games/",
+      "summary": "\"We're not the same iD, we're half the same iD.\"",
+      "source": "Latest from GamesRadar+",
+      "priority": false,
+      "image": "https://cdn.mos.cms.futurecdn.net/3XWA3EbMASFrqQYUVrjPre-1280-80.jpg"
+    },
+    "flagged_by": "breaking_news_check",
+    "flagged_at": "2026-08-08T18:01:09.648795+00:00"
   }
 ]
