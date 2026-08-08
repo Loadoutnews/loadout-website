@@ -1,5 +1,26 @@
 [
   {
+    "id": "8275c4d843",
+    "cat": "konsole",
+    "game": null,
+    "genre": "rpg",
+    "title": "Final Fantasy XIV: Square Enix bringt Notfall-Update gegen Ladezeiten auf Switch 2",
+    "teaser": "Square Enix hat über Nacht ein Emergency-Patch für die Switch-2-Version von Final Fantasy XIV ausgerollt. Erste Spielerberichte zeigen deutlich kürzere Ladezeiten.",
+    "body": [
+      "Square Enix hat über Nacht eine Notfall-Wartung für die Switch-2-Version von Final Fantasy XIV durchgeführt. Der Patch behebt vor allem einen Bug, durch den Spieler-Bildschirme bei Kampfphasen-Übergängen in Instanzen oder beim Wiederbeleben von K.O.-gegangenen Mitspielern dauerhaft schwarz blieben. Zusätzlich wurden Probleme mit der Touch-Steuerung auf der Switch 2 sowie einige weitere, nicht plattformspezifische Fehler adressiert.",
+      "Erste Rückmeldungen aus der Community deuten darauf hin, dass der Fix funktioniert: Spielerinnen und Spieler berichten von merklich verkürzten Ladezeiten, unter anderem bei Wiederbelebungen und in der Zone Crescent Isle. Square Enix hatte die Ladezeit-Probleme bereits kurz nach dem Switch-2-Launch am 4. August offiziell bestätigt und als Ursache Verzögerungen bei Datenverarbeitung und Cache-Leerung in überfüllten Bereichen genannt. Ob das Update tatsächlich alle Ursachen dauerhaft löst, muss sich erst über die kommenden Tage im breiteren Spielerfeedback bestätigen."
+    ],
+    "editorial_take": "",
+    "source_title": "Square Enix Deploys An Emergency Update To Fix Final Fantasy 14 Loading Times On The Switch 2",
+    "date": "08. August 2026",
+    "platform": "Kotaku",
+    "hype": 55,
+    "source": "https://kotaku.com/final-fantasy-14-switch-2-loading-times-hotfix-2000722495",
+    "sourceLabel": "Kotaku",
+    "image": "https://kotaku.com/app/uploads/2024/06/3dca14566eb14a4ecfd328797b998000-1200x675.jpg",
+    "content_type": "breaking"
+  },
+  {
     "id": "d697d3e2cb",
     "cat": "pc",
     "game": null,
