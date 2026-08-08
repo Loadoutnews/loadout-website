@@ -1,5 +1,94 @@
 [
   {
+    "id": "2e33bf1b47",
+    "cat": "industrie",
+    "game": null,
+    "genre": "action",
+    "title": "Black Myth: Wukong knackt 30 Millionen verkaufte Exemplare – schneller als Elden Ring",
+    "teaser": "Chinas erstes AAA-Spiel überholt FromSoftwares Kult-Hit in der Verkaufsgeschwindigkeit und beweist: Blockbuster-Games kommen längst nicht mehr nur aus dem Westen.",
+    "body": [
+      "Es ist eine Zahl, die selbst hartgesottene Branchenkenner aufhorchen lässt: Black Myth: Wukong hat laut einem aktuellen Bericht der Kommunistischen Jugendliga Chinas die Marke von 30 Millionen verkauften Exemplaren überschritten. Besonders bemerkenswert ist dabei nicht nur die schiere Größenordnung, sondern das Tempo. Mehrere Quellen bestätigen übereinstimmend, dass Elden Ring über drei Jahre brauchte, um dieselbe Schwelle zu erreichen, während Cyberpunk 2077 für 35 Millionen verkaufte Einheiten fast fünf Jahre benötigte. Black Myth: Wukong hingegen erreichte die 30-Millionen-Marke innerhalb von etwa 21 Monaten seit dem Launch im August 2024.",
+      "Die Verkaufsverteilung zeigt zudem, dass es sich keineswegs nur um ein rein chinesisches Phänomen handelt. Laut dem Bericht stammt über die Hälfte der Verkäufe aus internationalen Märkten außerhalb Chinas, während der Rest auf den heimischen Markt entfällt. Steam bleibt dabei die dominante Plattform, gefolgt von der PlayStation 5, während die Xbox-Version erst ein Jahr nach dem ursprünglichen Release im August 2025 nachgereicht wurde. Schon der Launch selbst war ein Rekordereignis: Innerhalb von nur 83 Stunden nach Veröffentlichung verkaufte sich die zehnmillionste Kopie, und binnen eines Monats waren es bereits 20 Millionen Einheiten – Zahlen, die laut Analysten selbst Elden Ring und Hogwarts Legacy im selben Zeitraum in den Schatten stellten.",
+      "Wichtig für die Einordnung: Game Science selbst hat die 30-Millionen-Zahl bislang nicht offiziell bestätigt. Das Studio erklärte lediglich, man habe in China wie international Ergebnisse erzielt, die die eigenen Erwartungen übertroffen hätten, ohne eine konkrete Zahl zu nennen. Auch in Community-Diskussionen, etwa auf ResetEra, wird darauf hingewiesen, dass Interviews mit Game-Science-Vertretern nahelegen, intern würden andere Zahlen kursieren als die von der chinesischen Jugendorganisation veröffentlichten. Die Quelle der Zahl – ein politisches Gremium und nicht der Publisher selbst – sollte man also mit einer gesunden Portion Vorsicht behandeln, auch wenn mehrere unabhängige Fachmedien den Trend und die grobe Größenordnung bestätigen.",
+      "Ökonomisch ist der Erfolg trotzdem kaum zu bestreiten: Mit einem Entwicklungsbudget von rund 70 Millionen US-Dollar erwirtschaftete das Spiel bereits bei rund 18 Millionen verkauften Exemplaren etwa eine Milliarde Dollar Umsatz. Damit katapultierte sich das zuvor kaum bekannte Studio Game Science laut Marktforschern von Gamalytic auf Platz zwölf der größten Publisher auf Steam, direkt hinter etablierten Größen wie Valve, Electronic Arts und Ubisoft. Der Erfolg strahlte zudem spürbar auf den gesamten chinesischen Games-Markt aus: Laut einem Bericht der China Audio-Video and Digital Publishing Association trug Wukong maßgeblich dazu bei, dass die Umsätze der Branche in China im dritten Quartal 2024 auf ein Rekordhoch von 91,8 Milliarden Yuan stiegen.",
+      "Die vielleicht größte Auswirkung zeigt sich aber jenseits der reinen Verkaufszahlen: Der Erfolg von Black Myth: Wukong hat eine regelrechte Investitionswelle in chinesische AAA-Studios ausgelöst. Entwickler von Phantom Blade Zero berichteten öffentlich, sie hätten nach dem Release von Wukong Investoren regelrecht abweisen müssen, weil so viele Geldgeber auf den fahrenden Zug aufspringen wollten. Auch Titel wie Wuchang: Fallen Feathers oder Lost Soul Aside profitieren von diesem neuen Vertrauen internationaler wie chinesischer Investoren in Vollpreis-Singleplayer-Produktionen aus China. Ein Branchenvertreter von S-Game brachte es sinngemäß auf den Punkt: Wukong habe allen gezeigt, dass ein chinesisches Studio tatsächlich das Potenzial hat, 30 Millionen Einheiten zu verkaufen – eine Vorstellung, die vor 2024 für die meisten im Westen schlicht undenkbar gewesen wäre."
+    ],
+    "editorial_take": "Aus unserer Sicht ist das eigentliche Novum nicht die nackte Verkaufszahl, sondern was sie über die Zukunft der Branche aussagt: Das jahrzehntelange Narrativ, wonach hochbudgetierte Singleplayer-Blockbuster fast ausschließlich aus Japan, den USA oder Europa kommen, ist damit endgültig widerlegt. Gleichzeitig mahnen wir zur Vorsicht bei der Quelle – eine politische Jugendorganisation ist kein neutraler Branchenanalyst, und Game Science selbst bleibt auffällig zurückhaltend mit eigenen Zahlen. Unabhängig von der letzten Kommastelle bleibt aber unbestreitbar: Wukong hat eine ganze Studiolandschaft in China in Bewegung gesetzt, und das dürfte für Spieler weltweit in den kommenden Jahren mehr echte Konkurrenz und mehr spannende neue IPs bedeuten.",
+    "source_title": "Black Myth: Wukong kreuzt 30-Millionen-Marke - ein chinesisches Spiel verändert die Spielindustrie",
+    "date": "08. August 2026",
+    "platform": "LOADOUT-Analyse",
+    "hype": 78,
+    "source": "https://loadout-news.com",
+    "sourceLabel": "WCCFtech / Bericht der Kommunistischen Jugendliga Chinas",
+    "image": "https://cdn.akamai.steamstatic.com/steam/apps/2358720/header.jpg",
+    "content_type": "analysis",
+    "analysis_format": "verkaufszahlen"
+  },
+  {
+    "id": "5691eb2115",
+    "cat": "industrie",
+    "game": "gta",
+    "genre": "action",
+    "title": "Kassensturz bei Take-Two: GTA-Online-Spieler pumpen mehr Geld ins Spiel, während GTA-5-Verkäufe stocken",
+    "teaser": "Take-Two meldet in den Quartalszahlen sinkende GTA-5-Verkäufe, doch Shark-Card-Käufe in GTA Online boomen wie nie zuvor.",
+    "body": [
+      "Ein Blick in die frischen Quartalszahlen von Take-Two Interactive zeigt ein interessantes Bild: Während sich die physischen und digitalen Verkäufe von GTA 5 spürbar verlangsamen, greifen Spieler:innen in GTA Online tiefer denn je in die Tasche. Rockstar Games' Mutterkonzern hat am Freitagmorgen seine Zahlen für das erste Fiskalquartal 2027 präsentiert – und dabei auch gleich verraten, wie gut GTA 6 bereits vor dem eigentlichen Release performt.",
+      "Laut den Angaben von Take-Two hat GTA 5 die von Analysten erwartete Marke von 235 Millionen verkauften Exemplaren bislang nicht geknackt. <cite index=\"1-8,1-9\">Take-Two Interactive habe bekanntgegeben, dass Grand Theft Auto V die erwartete Marke von 235 Millionen Exemplaren nicht überschritten hat und im Mai 230 Millionen erreichte, nachdem es zuvor fast jedes Quartal rund 5 Millionen Einheiten verkauft hatte.</cite> Trotzdem bleibt der Titel enorm relevant: <cite index=\"1-10\">Das Spiel zählt weiterhin monatlich zu den meistheruntergeladenen PS5-Titeln.</cite> Gleichzeitig zieht die Ausgabefreude in GTA Online an. <cite index=\"3-1\">GTA Online verzeichnete eine höher als erwartete wiederkehrende Ausgabenbereitschaft, was bedeutet, dass sowohl Shark Cards als auch GTA+-Abos stärker gekauft wurden als kalkuliert.</cite> Das ist bemerkenswert, denn GTA Online existiert inzwischen seit über zehn Jahren und wird trotzdem munter weiter monetarisiert.",
+      "Der große Elefant im Raum bei diesem Earnings Call war aber natürlich GTA 6. CEO Strauss Zelnick sprach von einem außergewöhnlichen Vorbestell-Start und wollte trotz Nachfrage keine konkreten Zahlen nennen. <cite index=\"9-4,9-5\">Zelnick sagte, das Spiel habe einen exzellenten Start bei den Vorbestellungen hingelegt, könne aber keine genauen Verkaufszahlen nennen, betonte jedoch, das Niveau der Vorbestellungen sei beispiellos und erstaunlich.</cite> Besonders pikant: Die Vorbestellungen waren im abgefragten Quartal gerade einmal fünf Tage lang geöffnet, <cite index=\"9-2,9-3\">die Zahlen stammen aus dem Zeitraum vom 1. April bis 30. Juni, wobei Vorbestellungen nur an fünf Tagen dieses Quartals überhaupt möglich waren</cite> – was die Dimension der Nachfrage umso eindrucksvoller macht. Unabhängige Marktforscher untermauern den Hype: Laut Newzoo wurden allein <cite index=\"9-7\">in der letzten Juniwoche rund 180 Millionen US-Dollar an digitalen Vorbestellungen in den USA und den fünf größten europäischen Märkten umgesetzt, was den bislang stärksten je gemessenen Vorbestell-Auftakt markierte</cite>. Auffällig ist jedoch, dass Take-Two trotz dieser Superlative seine Jahresprognose nicht nach oben korrigiert hat, was an der Wall Street durchaus für Stirnrunzeln sorgte, da der Analystenkonsens deutlich höher lag als die bestätigte Take-Two-eigene Spanne.",
+      "Die Fachpresse ist sich einig, dass hier ein historischer Umbruch stattfindet: Take-Two ist nach der jüngsten EA-Übernahme ohnehin gerade zum größten börsennotierten Spielepublisher der Welt aufgestiegen, und GTA 6 dürfte diesen Status weiter zementieren. Mehrere internationale Medien greifen zudem Zelnicks Aussagen zur Preisgestaltung auf – er verteidigte den Standardpreis von 79,99 US-Dollar sowie die Ultimate Edition für 99,99 US-Dollar und bekräftigte, Rockstar habe bei der Preisfindung ins Schwarze getroffen. In der Community wiederum wird kontrovers diskutiert, ob es fair ist, dass ein zehn Jahre altes Spiel wie GTA 5 weiterhin über Mikrotransaktionen so viel Geld einspielt, während gleichzeitig für den lang ersehnten Nachfolger schon jetzt Rekordsummen fließen, ohne dass überhaupt ein Release-Datum für die PC-Version feststeht."
+    ],
+    "editorial_take": "Für uns bei LOADOUT ist das ein klassisches Beispiel dafür, wie Rockstar und Take-Two ihre Cashcows bis zum letzten Tropfen auspressen, bevor der nächste große Wurf kommt – GTA Online liefert nach über zehn Jahren immer noch verlässlich Rekordumsätze, während GTA 5 als Vollpreisprodukt langsam ausläuft. Dass Take-Two trotz angeblich beispielloser GTA-6-Vorbestellungen seine Jahresprognose nicht anhebt, wirkt zudem auffällig vorsichtig und lässt uns vermuten, dass man sich bewusst noch keine Karten in die Hand legen will, bevor der große Trailer am 27. August die eigentliche Hype-Welle erst richtig lostritt.",
+    "source_title": "GTA Online Players Are Spending More Money As GTA V Sales Slow",
+    "date": "08. August 2026",
+    "platform": "RockstarINTEL",
+    "hype": 78,
+    "source": "https://rockstarintel.com/gta-online-players-are-spending-more-money-as-gta-v-sales-slow/",
+    "sourceLabel": "RockstarINTEL",
+    "image": "https://rockstarintel.com/wp-content/uploads/2026/07/5f5061e36f8a5f543cc6bdfb867382fb80ae1297-scaled.jpg"
+  },
+  {
+    "id": "c800b0d1ec",
+    "cat": "pc",
+    "game": null,
+    "genre": "action",
+    "title": "Miserabler PC-Port: Marvel Tokon: Fighting Souls startet mit gemischten Steam-Reviews",
+    "teaser": "Der neue Marvel-Prügler von Arc System Works überzeugt auf der PS5, sorgt auf Steam aber für Frust: PSN-Zwang, Linux-Blockade und Performance-Probleme drücken die Wertung.",
+    "body": [
+      "Eigentlich sollte der Launch von Marvel Tokon: Fighting Souls ein Fest für Fighting-Game-Fans werden. Arc System Works, gefeiert für Guilty Gear und Dragon Ball FighterZ, wagt sich erstmals an das Marvel-Universum und liefert einen waschechten 4v4-Team-Prügler mit Ikonen wie Iron Man, Deadpool oder Ghost Rider. Doch statt Jubel gibt es auf Steam nach dem Release am 6. August erstmal einen Dämpfer: Das Spiel steht bei einer gemischten Wertung, bei der laut mehreren Auswertungen nur etwa 40 bis 43 Prozent der Reviews positiv ausfallen.",
+      "Der Ärger der PC-Community entzündet sich dabei kaum am eigentlichen Spiel selbst, sondern an der technischen Umsetzung. <cite index=\"2-3,2-4\">Reviews berichten von schlechter Performance und diversen technischen Problemen, dazu kommt, dass das Spiel auf Linux-Systemen aktuell überhaupt nicht spielbar ist.</cite> Damit fällt auch der Steam Deck als Plattform komplett weg, was besonders bitter ist, weil <cite index=\"2-6\">frühere Arc-System-Works-Titel wie Dragon Ball FighterZ trotz Easy Anti Cheat noch unter Linux liefen.</cite> Hinzu kommt ein Punkt, der schon vor dem Release für Diskussionen sorgte: <cite index=\"9-1\">Die umstrittene Pflicht, sich mit einem PlayStation-Network-Konto anzumelden, trug maßgeblich dazu bei, dass das Spiel mit einer gemischten Steam-Wertung von teils nur 43 Prozent Zustimmung startete.</cite> Diese Kontoverpflichtung sorgt zudem dafür, dass Spieler:innen in etlichen Ländern das Spiel gar nicht erst kaufen oder starten können, weil dort kein PlayStation-Netzwerk verfügbar ist.",
+      "Interessant ist, dass die Kritik fast ausschließlich die PC-Fassung trifft. <cite index=\"6-1,6-2\">Die Kritikpunkte sind breit gefächert, beziehen sich aber größtenteils auf Performance-Probleme statt auf das Kernspiel selbst, das auf der PS5 hervorragend läuft.</cite> Genau diese Diskrepanz sorgt in der Community für Frust, wie ein vielzitierter Steam-Review es zusammenfasst: Ein so unterhaltsames Spiel werde durch die Sony-Vorgaben regelrecht ruiniert, der PC-Port fühle sich miserabel an, Grafikeinstellungen würden nicht korrekt angezeigt und Netcode sowie schwache Performance sorgten für spürbare Rollback-Aussetzer im Online-Modus. Auch Fachmedien ziehen Parallelen zu einem früheren Sony-Fauxpas: Bereits bei Helldivers 2 hatte eine nachträglich eingeführte PSN-Pflicht 2024 für einen Sturm der Entrüstung gesorgt, den Sony nach massivem Gegenwind wieder zurücknehmen musste. Arc System Works selbst hat die Probleme öffentlich eingeräumt und erklärt, man untersuche die gemeldeten Performance-Schwierigkeiten aktiv – konkrete Lösungen stehen aber noch aus. Manche Spielerinnen und Spieler auf der PS5 wird zudem empfohlen, Crossplay vorübergehend zu deaktivieren, da instabile PC-Verbindungen sich negativ auf das Rollback-Netcode-Erlebnis der Konsolenspieler auswirken können."
+    ],
+    "editorial_take": "Aus unserer Sicht ist das ein handgemachtes Problem, das Sony sich selbst eingebrockt hat: Ein technisch offenbar starkes Fighting Game wird durch Kontozwang und eine lieblose PC-Portierung ausgebremst, obwohl die PlayStation-Fassung tadellos läuft. Dass Sony nach dem Helldivers-2-Debakel erneut auf eine verpflichtende PSN-Anmeldung setzt, wirkt fast schon fahrlässig und dürfte gerade im ohnehin PC-affinen Fighting-Game-Umfeld nachhaltig Vertrauen kosten. Wer auf ein sauberes PC-Erlebnis wartet, sollte aktuell lieber noch ein paar Patches abwarten oder direkt zur PS5-Version greifen.",
+    "source_title": "Marvel Tokon Stumbles to Mixed Steam Reviews as 'Miserable' PC Port Complaints Prompt Response From Arc System Works",
+    "date": "08. August 2026",
+    "platform": "IGN Articles",
+    "hype": 58,
+    "source": "https://www.ign.com/articles/marvel-tokon-stumbles-to-mixed-steam-reviews-as-miserable-pc-port-complaints-prompt-response-from-arc-system-works",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/07/31/marveltokonfightingsoulslaunchtrailer-ign-blogroll1-1785510581223.jpg"
+  },
+  {
+    "id": "58b35db175",
+    "cat": "industrie",
+    "game": "gta",
+    "genre": null,
+    "title": "Red Dead Redemption 2 knackt 87 Millionen verkaufte Exemplare – trotz Rockstars Funkstille",
+    "teaser": "Sieben Jahre nach Release verkauft sich Red Dead Redemption 2 immer noch prächtig. Take-Two vermeldet neue Zahlen – doch das Tempo lässt spürbar nach.",
+    "body": [
+      "Rockstar Games hätte sich wohl kaum ein besseres Alterswerk wünschen können: Laut den aktuellen Quartalszahlen von Take-Two Interactive hat Red Dead Redemption 2 mittlerweile die Marke von über 87 Millionen verkauften Exemplaren geknackt. Zum Vergleich: Im Mai lag der Wert noch bei 85 Millionen. Damit bleibt der Wildwest-Blockbuster von 2018 weiterhin das dritterfolgreichste Videospiel aller Zeiten, hinter GTA V und Minecraft, und hat mittlerweile Nintendos Wii Sports endgültig hinter sich gelassen.",
+      "Ganz ohne Bremsspuren geht es aber nicht mehr: Zwischen Mai und Juli wurden rund 2 Millionen Einheiten verkauft. Das liegt spürbar unter dem Durchschnitt der vergangenen Jahre, in denen das Spiel meist rund 3 Millionen Exemplare pro Quartal absetzte. Die Zahlen wurden im Rahmen von Take-Twos Q1-Bericht für das Geschäftsjahr 2027 veröffentlicht, jenem Call, bei dem der Publisher nach der jüngst abgeschlossenen EA-Übernahme offiziell zum größten börsennotierten Videospielunternehmen der Welt aufgestiegen ist. Auch GTA V legte weiter zu und steht inzwischen bei 230 Millionen verkauften Kopien, während die gesamte Red-Dead-Reihe die Schwelle von 117 Millionen Einheiten überschritten hat.",
+      "Bemerkenswert ist vor allem, wie Red Dead Redemption 2 diese Zahlen erreicht – praktisch ganz ohne Zutun von Rockstar selbst. Andere Fachmedien wie RDR2.org weisen darauf hin, dass das Spiel bis heute keine richtige Next-Gen-Fassung erhalten hat: Auf der PS5 läuft weiterhin nur die Kompatibilitätsversion für PS4, eine Story-Erweiterung gab es nie, und Red Dead Online wurde faktisch eingestellt, während GTA Online parallel Jahr für Jahr neue Inhalte bekommt. In der Community sorgt genau das seit Jahren für Frust: Unter Hashtags wie SaveRedDeadOnline beklagten sich Spieler:innen immer wieder darüber, dass Rockstar sein zweites Zugpferd offenbar bewusst verhungern lässt, um alle Ressourcen auf GTA Online und inzwischen vor allem auf GTA 6 zu konzentrieren, das am 19. November 2026 erscheinen soll."
+    ],
+    "editorial_take": "Für uns ist das die Definition von verschenktem Potenzial: Ein Spiel, das rein aus Mundpropaganda fast 90 Millionen Mal über die Ladentheke geht, würde bei jedem anderen Studio sofort ein Next-Gen-Update, DLC und ein liebevoll gepflegtes Online-Modus bekommen. Dass Rockstar RDR2 stattdessen seit Jahren links liegen lässt und komplett auf GTA setzt, zeigt, wie sehr Geschäftslogik über Fanliebe siegt. Die 87 Millionen sind ein verdientes Denkmal für ein Meisterwerk – aber auch ein bitterer Beweis dafür, wie wenig Rockstar davon zurückgeben muss, um trotzdem zu kassieren.",
+    "source_title": "Red Dead Redemption 2 Has Now Sold 87 Million Copies As Sales Slow",
+    "date": "08. August 2026",
+    "platform": "RockstarINTEL",
+    "hype": 62,
+    "source": "https://rockstarintel.com/red-dead-redemption-2-has-now-sold-87-million-copies/",
+    "sourceLabel": "RockstarINTEL",
+    "image": "https://rockstarintel.com/wp-content/uploads/2020/04/RDR_XBOX_1920X1080-WIRE.jpg"
+  },
+  {
     "id": "8275c4d843",
     "cat": "konsole",
     "game": null,
@@ -1209,89 +1298,5 @@
     "source": "https://www.ign.com/articles/how-a-skyrim-username-error-left-an-innocent-man-to-serve-18-months-in-jail",
     "sourceLabel": "IGN Articles",
     "image": "https://assets-prd.ignimgs.com/2023/05/01/skyrimspecialedition-1280-1510795773755-1626181651526-1682920471357.jpg"
-  },
-  {
-    "id": "b059b0656c",
-    "cat": "industrie",
-    "game": null,
-    "genre": "rpg",
-    "title": "The Elder Scrolls Online: Xbox-Kahlschlag zwingt ZeniMax zu Content-Verschiebung bis 2027",
-    "teaser": "Nach massiven Entlassungen bei ZeniMax Online Studios verschieben sich zentrale ESO-Inhalte wie der Klassen-Rework und ein neues Trial ins Jahr 2027.",
-    "body": [
-      "Es ist die Nachricht, vor der viele Elder-Scrolls-Online-Fans seit Wochen Angst hatten: ZeniMax Online Studios muss seinen Content-Fahrplan gehörig zusammenstreichen. Studioleiter Nick Giacomini bestätigte in einem Community-Update, dass gleich drei große Vorhaben aus 2026 nach hinten rutschen – der PvE-Trial Crimson Veldt, das lang ersehnte Class-and-Combat-Refresh sowie Update 52 mit neuer PvP-Zone, das nun erst im Januar 2027 erscheinen soll. Besonders bitter für viele Spieler:innen: <cite index=\"12-7\">Der Overhaul der Warden-Klasse, den Fans schon lange gefordert hatten, kommt jetzt erst 2027</cite>.",
-      "Hintergrund des Ganzen ist die jüngste Entlassungswelle bei Xbox, die auch ZeniMax hart getroffen hat. <cite index=\"10-3\">Die Kürzungen im Rahmen von Xbox' großem Umbau trafen den Entwickler ZeniMax Online Studios sehr hart und kosteten 213 Mitarbeitenden den Job</cite>, darunter auch Führungspersonal. <cite index=\"11-2\">Unter den mehr als 200 entlassenen Personen war auch Giacominis Vorgänger Joseph Burba</cite>. Offiziell versucht Giacomini, die Verzögerungen eher als bewusste Qualitätsentscheidung darzustellen statt als reine Notlösung: <cite index=\"1-15\">Man wolle den Teams die nötige Zeit geben, die Dinge richtig zu machen, statt eine zuvor angekündigte Deadline mit Gewalt zu erreichen</cite>. Immerhin gibt es auch positive Nachrichten – Update 51 verspätet sich nur um eine Woche und Season 2 mit neuen Solo-Dungeons startet planmäßig am 21. Oktober, während ältere Inhalte wie das Greymoor-Kapitel für alle kostenlos werden.",
-      "In der Fachpresse und Community herrscht eine gemischte, aber überwiegend nüchterne Stimmung. Kotaku beschreibt die Situation pointiert als deutlich härter als den ohnehin schon befürchteten schleppenden Content-Nachschub, während PC Gamer anmerkt, dass ZeniMax mit dem Begriff „Runway“ ausgerechnet dieselbe Formulierung nutzt, die Xbox <cite index=\"2-3\">beim Aus für Compulsion und Double Fine verwendet hatte</cite> – ein Detail, das viele als bezeichnend empfinden. Auch ehemalige Entwickler melden sich zu Wort: <cite index=\"3-4\">Der frühere Senior Encounter Designer Morgan Goin erklärte öffentlich, das Studio könne das bisherige Update-Tempo schlicht nicht mehr halten</cite>. In den offiziellen Foren reagieren Spieler:innen gespalten zwischen Verständnis und Frust: <cite index=\"12-1\">Ein Nutzer schrieb, es sei zwar enttäuschend, aber man habe angesichts der Entlassungen mit solchen Konsequenzen gerechnet</cite>. Immerhin gibt es auch beruhigende Signale aus dem Studio selbst: Bei einem europäischen Community-Treffen berichteten Devs, dass das verbliebene Team wieder etwa die Größe aus der erfolgreichen Wrothgar- und Summerset-Ära erreicht hat."
-    ],
-    "editorial_take": "Aus unserer Sicht zeigt dieser Fall exemplarisch, wie sehr Microsofts Sparkurs bei Xbox mittlerweile auch etablierte Live-Service-Erfolge wie ESO trifft – ein Spiel, das seit über zehn Jahren treue Abonnent:innen hat und eigentlich als Cashcow gelten sollte. Dass ZeniMax die Verzögerungen als bewusste Qualitätsentscheidung verkauft, wirkt angesichts von über 200 Entlassungen wenig glaubwürdig und eher wie Schadensbegrenzung. Trotzdem: Solange das Studio weiterhin neue Inhalte liefert und nicht in den reinen Wartungsmodus wechselt, bleibt Hoffnung – aber die Geduld der Community dürfte 2027 auf eine harte Probe gestellt werden.",
-    "source_title": "The Elder Scrolls Online Content Delayed to 2027 Following Xbox Layoffs",
-    "date": "30. July 2026",
-    "platform": "IGN Articles",
-    "hype": 55,
-    "source": "https://www.ign.com/articles/the-elder-scrolls-online-content-delayed-to-2027-following-xbox-layoffs",
-    "sourceLabel": "IGN Articles",
-    "image": "https://assets-prd.ignimgs.com/2025/07/09/blogroll-esov2-1752053529913.png"
-  },
-  {
-    "id": "ba6e32ce04",
-    "cat": "konsole",
-    "game": null,
-    "genre": "rennspiel",
-    "title": "Star Wars: Galactic Racer überrascht mit Roguelike-Tiefe statt reinem Arcade-Trubel",
-    "teaser": "IGN ist von der Kampagne des neuen Star-Wars-Rennspiels geflasht: Statt simplem Boost-Gedrifte erwartet Fans ein waschechter Run-basierter Roguelike-Trip durch den Outer Rim.",
-    "body": [
-      "Wer bei einem Star-Wars-Rennspiel bloß an schnelle Runden und Podracer-Nostalgie gedacht hat, wird von Star Wars: Galactic Racer eines Besseren belehrt. IGN durfte die Kampagne bereits anspielen und zeigt sich überrascht davon, wie viel strategische Tiefe hinter dem rasanten Tempo steckt. Statt klassischer Rennstrecken-Abfolge wartet ein waschechtes Roguelike-Gerüst: Jeder Durchlauf ist ein Lauf durch die unterirdische Galactic League, bei dem man nach einer Niederlage komplett von vorn beginnt.",
-      "Entwickelt wird das Spiel von Fuse Games – einem Studio, das von ehemaligen Burnout-Köpfen gegründet wurde – und erscheint am 6. Oktober 2026 für PS5, Xbox Series X|S und PC. In der Story übernimmt man die Rolle von Shade, einem Piloten mit persönlicher Rechnung gegen den herrschenden Champion Kestar Bool, der seine Machtposition in der Liga schamlos ausnutzt. Auf dem Weg durch verschiedene Rennformate – von klassischen Runden über Kopf-an-Kopf-Duelle bis zu brutalen Eliminator-Rennen, bei denen regelmäßig der Letzte rausfliegt – sammelt man Galactic Credits, mit denen sich Fahrzeugteile, Fähigkeiten und Upgrades kaufen lassen. Genau dieses Belohnungssystem sorgt laut mehreren Vorschauen für den Sog, den man sonst eher aus Kartenspiel-Rogulikes kennt.",
-      "Andere Fachmedien bestätigen den positiven Ersteindruck von IGN. <cite index=\"2-1,2-2,2-3,2-4\">Galactic Racer wird als das Rennspiel beschrieben, das Star-Wars-Fans seit Racer Revenge auf der PS2 im Jahr 2002 vermisst haben, mit echter struktureller Tiefe unter der Arcade-Oberfläche.</cite> Auch Xbox Wire und Game Informer loben die überraschend filmreife Inszenierung der Kampagne sowie die Belohnungs-Spirale des Runs. Nicht jeder ist jedoch restlos begeistert: TheGamer kritisiert, dass die legendären Podracer aus den Prequels in der Story-Kampagne komplett fehlen und stattdessen nur im separaten Arcade-Modus sowie in Nachstellungen klassischer Szenen wie dem Boonta-Eve-Classic-Rennen auftauchen – für Fans des Original-Genreklassikers ein spürbarer Wermutstropfen, auch wenn die neuen Fahrzeugklassen wie Skim-Speeder mit cleveren Mechaniken überzeugen können."
-    ],
-    "editorial_take": "Uns gefällt, dass Fuse Games nicht einfach ein weiteres Arcade-Racer-Einerlei mit Star-Wars-Lack abliefert, sondern mit dem Roguelike-Ansatz tatsächlich frischen Wind ins Rennspiel-Genre bringt. Dass die Podracer dabei aus der Hauptkampagne ausgeklammert wurden, verstehen wir aus Fan-Sicht nicht ganz – gerade sie sind schließlich das emotionale Herzstück der Marke. Trotzdem: Wenn die Community-Stimmen aus den bisherigen Previews stimmen, könnte hier im Oktober ein echter Überraschungshit für Genrefans lauern.",
-    "source_title": "I Expected Star Wars: Galactic Racer to Feel Dangerous, but Was Surprised by the Depth of Its Roguelike Campaign",
-    "date": "30. July 2026",
-    "platform": "IGN Articles",
-    "hype": 78,
-    "source": "https://www.ign.com/articles/star-wars-galactic-racer-campaign-preview",
-    "sourceLabel": "IGN Articles",
-    "image": "https://assets-prd.ignimgs.com/2026/07/28/starwars-galacticracer-preview-blogroll-2-1785227369793.jpg"
-  },
-  {
-    "id": "b936c03ab3",
-    "cat": "konsole",
-    "game": "gta",
-    "genre": "action",
-    "title": "GTA Online: Cayo Summer Special schickt Spieler zurück zu den Klassiker-Heists",
-    "teaser": "Neue Event-Woche vom 30. Juli bis 5. August boostet Fleeca, Pacific Standard & Co. – und wirft ein Schlaglicht auf den Cayo-Perico-Nerf-Streit.",
-    "body": [
-      "Rockstar hat den wöchentlichen Reset in GTA Online eingeläutet, und diesmal dreht sich einiges um die alten Bekannten unter den Raubzügen. Vom 30. Juli bis zum 5. August läuft die neue Event-Woche mit dem Beinamen Cayo Summer Special, in der klassische Heists wie Fleeca und Pacific Standard mit satten Bonuszahlungen locken sollen. Wer sich einloggt, bekommt zudem drei kostenlose Kleidungsstücke geschenkt: die Tropical Bangles, die Tropical Glow Necklace und den Pacific Standard Sweater.",
-      "Konkret gibt es für die erste wöchentliche Absolvierung von Fleeca Heist und Pacific Standard Heist die doppelte Bezahlung in GTA$, während die Community Mission Series sogar mit dreifachem Bonus auf Geld und RP lockt. Auch A Superyacht Life Missions, Motor Wars auf Cayo Perico und die Shipwreck-Aktivitäten werfen diese Woche doppelt so viel ab. Dazu kommen die üblichen Rotationen: Ein neuer wöchentlicher Herausforderung verspricht für zwei gewonnene Adversary-Modes zusätzliches Bargeld und ein Shirt, Rabatte von bis zu 60 Prozent locken auf Fahrzeuge und Immobilien, und wer in der LS Car Meet Series viermal in Folge unter die Top 5 fährt, kann sich den Karin Boor kostenlos sichern. Wichtig für Sammler: Es ist die letzte Chance für Besitzer der Elitist-Tier-Belohnungen aus dem Fine-Art-Collector-Programm, ihre Boni bis zum 5. August abzuholen.",
-      "Spannend wird die Aktion vor allem im Kontext der jüngsten Kontroverse um GTA Onlines Wirtschaft. Erst Mitte Juli hatte Rockstar mit dem Kortz Center Heist Update die Auszahlungen gleich mehrerer Raubzüge spürbar gekürzt – besonders hart traf es ausgerechnet Cayo Perico, lange Zeit der beliebteste Solo-Goldesel des Spiels. Die Community reagierte mit deutlicher Kritik, Spieler beklagten in sozialen Netzwerken und auf Reddit die versteckten Kürzungen, woraufhin Rockstar nachbesserte und unter anderem beim Doomsday Heist die Erstabschluss-Boni nachträglich anhob. Dass die aktuelle Event-Woche nun ausgerechnet Fleeca und Pacific Standard in den Fokus rückt, wirkt wie ein weiterer Versuch, die durch den Nerf verärgerte Spielerschaft zurück zu den älteren Heists zu locken, statt sie ausschließlich auf Cayo Perico grinden zu lassen."
-    ],
-    "editorial_take": "Aus unserer Sicht ist die Cayo Summer Special weniger ein spontanes Sommer-Special als vielmehr ein cleveres Pflaster auf die frische Wunde, die der Kortz-Center-Nerf gerissen hat. Rockstar lenkt die Community geschickt zurück zu den Klassiker-Heists, während Cayo Perico weiterhin unter dem Payout-Cut leidet – wer also eh gerade auf der Suche nach einem neuen Money-Grind ist, sollte diese Woche nutzen. Langfristig bleibt aber abzuwarten, ob Rockstar der lauten Kritik nachgibt oder die Kürzungen zum neuen Normalzustand macht.",
-    "source_title": "GTA Online Event Week: Cayo Summer Special (July 30th-August 5th)",
-    "date": "30. July 2026",
-    "platform": "RockstarINTEL",
-    "hype": 42,
-    "source": "https://rockstarintel.com/gta-online-event-week-cayo-summer-special-july-30th-august-5th/",
-    "sourceLabel": "RockstarINTEL",
-    "image": "https://rockstarintel.com/wp-content/uploads/2025/07/17c09c2e167260461edfe7bcef7a91c4337b0c26-scaled.jpg"
-  },
-  {
-    "id": "a2f4ac1e83",
-    "cat": "pc",
-    "game": null,
-    "genre": "shooter",
-    "title": "The Defiant: Neuer Shooter erzählt vergessenes Kapitel des Zweiten Weltkriegs",
-    "teaser": "Ein chinesisches Entwicklerstudio wagt sich an ein Thema, das im Gaming bisher kaum vorkam: den Krieg Chinas gegen Japan. IGN hat schon angespielt.",
-    "body": [
-      "Normandie, Stalingrad, der Pazifik – wenn es um Zweiten-Weltkriegs-Shooter geht, kennt die Gaming-Branche seit Jahrzehnten vor allem die immer gleichen Schauplätze. The Defiant bricht mit dieser Routine und schickt Spieler:innen stattdessen mitten hinein in den Zweiten Chinesisch-Japanischen Krieg, jenen brutalen Konflikt, der zwischen den 1930er- und 1940er-Jahren Millionen Menschenleben forderte und in westlichen Medien bislang kaum eine Rolle spielte. Entwickelt wird der storygetriebene Ego-Shooter vom chinesischen Studio Hoothanes, veröffentlicht von 4Divinity.",
-      "In The Defiant schlüpfen Spieler:innen in die Rolle eines Widerstandskämpfers, der sich durch <cite index=\"1-8\">shadowy Straßen und kriegsversehrte Dörfer bewegt, begleitet von einem treuen Gefährten, der der Reise emotionale Tiefe verleiht</cite>. Das Gameplay setzt dabei nicht nur auf klassisches Ballern: Laut Publisher-Angaben verbindet der Titel <cite index=\"8-2,8-3\">eine Mischung aus Schleichpassagen, Action und Spionage-Elementen und begleitet einen Widerstandskämpfer auf seiner Reise durch das kriegszerrüttete China</cite>. Historisch verbürgte Waffen wie das Hanyang-Gewehr oder die Mauser-Pistole sollen für Authentizität sorgen. Ursprünglich war der Titel nur für PC via Steam angekündigt, mittlerweile hat man <cite index=\"1-4\">auch PlayStation 5 und Xbox Series als Plattformen bestätigt</cite>, ein konkretes Erscheinungsdatum steht aber weiterhin aus.",
-      "In der Fachpresse und Community sorgt das ungewöhnliche Setting für einiges an Gesprächsstoff. Mehrere Branchenmedien ordnen The Defiant als Teil einer wachsenden Welle chinesischer AAA-Ambitionen ein, angestoßen durch den Überraschungserfolg von Black Myth: Wukong, und sehen in dem Titel sogar einen möglichen Herausforderer für etablierte Reihen wie Call of Duty und Battlefield. In Foren wie ResetEra ist das Echo gemischt: Viele Fans freuen sich, endlich eine im Gaming kaum erzählte Perspektive auf den Zweiten Weltkrieg zu bekommen, andere äußern Sorge, wie das Studio mit der politisch heiklen Thematik umgeht, etwa mit Blick auf die Darstellung von nationalistischen und kommunistischen Kräften. Manche Nutzer erinnerten sich zudem daran, dass ähnliche Ankündigungen in der Vergangenheit auf Social Media bereits für Verwirrung gesorgt hatten, weil einigen schlicht nicht bewusst war, dass Japan auch in China Kriegspartei war."
-    ],
-    "editorial_take": "Wir finden es längst überfällig, dass sich ein AAA-Shooter endlich an den Zweiten Chinesisch-Japanischen Krieg wagt, statt zum x-ten Mal Omaha Beach nachzubauen. Ob The Defiant dem heiklen historischen Stoff gerecht wird oder eher auf Hollywood-Pathos setzt, lässt sich anhand der bisherigen Trailer noch nicht seriös beurteilen. Spannend zu beobachten wird aber, ob das Studio den Spagat zwischen packendem Popcorn-Shooter und respektvoller historischer Einordnung schafft – gerade weil das Thema in China selbst politisch aufgeladen ist.",
-    "source_title": "The Defiant is a Story-Driven Shooter that Explores a Rarely Seen Side of WW2 | IGN Preview",
-    "date": "30. July 2026",
-    "platform": "IGN Articles",
-    "hype": 58,
-    "source": "https://www.ign.com/articles/the-defiant-is-a-story-driven-shooter-that-explores-a-rarely-seen-side-of-ww2-ign-preview",
-    "sourceLabel": "IGN Articles",
-    "image": "https://assets-prd.ignimgs.com/2026/07/28/thedefiant-vdp-blogroll-1785210909802.jpg"
   }
 ]
