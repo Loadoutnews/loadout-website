@@ -50,11 +50,31 @@ jobs:
           ZERNIO_REDDIT_ACCOUNT_ID: ${{ secrets.ZERNIO_REDDIT_ACCOUNT_ID }}
           REDDIT_SUBREDDIT: ${{ secrets.REDDIT_SUBREDDIT }}
 
-      - name: Restliche Änderungen committen
+            - name: Restliche Änderungen committen
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add articles.json archive.json breaking-checked.json breaking-state.json social-posted.json
           if [ -f pending-resolutions.json ]; then git add pending-resolutions.json; fi
-          git diff --staged --quiet || git commit -m "Breaking-News-Prüfung"
-          git push
+
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen."
+            exit 0
+          fi
+          git commit -m "Breaking-News-Prüfung"
+
+          for attempt in 1 2 3 4 5; do
+            if git push; then
+              echo "Push erfolgreich (Versuch $attempt)."
+              exit 0
+            fi
+            if [ "$attempt" -eq 5 ]; then
+              echo "Push nach 5 Versuchen weiterhin fehlgeschlagen." >&2
+              exit 1
+            fi
+            echo "Push fehlgeschlagen — hole aktuellen Stand und versuche erneut (Versuch $attempt)..."
+            git fetch origin main
+            git rebase origin/main
+            sleep $((RANDOM % 6 + 2))
+          done
+
