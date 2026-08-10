@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "tracker_id": "id-software-nach-dem-xbox-kahlschlag",
+    "entry": {
+      "title": "Blizzard Reportedly Leads Xbox as 'Top-Performing' Studio Thanks to Overwatch and Diablo",
+      "link": "https://www.ign.com/articles/blizzard-reportedly-leads-xbox-as-top-performing-studio-thanks-to-overwatch-and-diablo",
+      "summary": "Blizzard Entertainment is reportedly Microsoft's golden child after Overwatch and Diablo 4: Lord of Hatred helped it become the \"top-performing\" Xbox studio.",
+      "source": "IGN Articles",
+      "priority": false,
+      "image": "https://assets-prd.ignimgs.com/2025/04/30/mercy-overwatch-1745971996331.png"
+    },
+    "flagged_by": "news_pipeline",
+    "flagged_at": "2026-08-10T17:05:55.376843+00:00"
+  }
+]
