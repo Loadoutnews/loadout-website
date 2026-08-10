@@ -1,5 +1,26 @@
 [
   {
+    "id": "a7df0376c3",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "title": "Datenleck bei Steam-Hardware-Kunden: Valves Logistikpartner CEVA gehackt",
+    "teaser": "Valve informiert europäische Käufer von Steam Machine, Steam Controller und Steam Deck per E-Mail über einen Cyberangriff auf Versandpartner CEVA Logistics.",
+    "body": [
+      "Valve verschickt aktuell E-Mails an Steam-Hardware-Kunden in Europa: Der Versanddienstleister CEVA Logistics wurde zwischen dem 29. Juli und 1. August 2026 Opfer eines Cyberangriffs. Wie mehrere Quellen übereinstimmend berichten, teilte Valve mit, dass es am 7. August davon erfuhr, dass Kundendaten wahrscheinlich kompromittiert wurden. Betroffen sind laut Valve Name, Adresse, Telefonnummer, E-Mail sowie Art und Preis des bestellten Produkts – da CEVA diese Informationen bis zu 90 Tage nach Bestellung speichert, könnten alle europäischen Käufer von Steam Deck, Steam Controller oder Steam Machine seit Ende April betroffen sein.",
+      "Zahlungsdaten, Passwörter und Steam-Guard-Codes sind laut Valve nicht betroffen, ein Ändern des Steam-Passworts sei nicht nötig. Unbestätigt bzw. noch unklar ist die genaue Anzahl betroffener Nutzer sowie der vollständige Umfang des Angriffs – Valve selbst spricht davon, weiterhin Druck auf CEVA für Details auszuüben. Laut Berichten des niederländischen Senders NOS waren zudem bereits die Händler Bol und De Bijenkorf am 1. August informiert worden, was auf einen breiteren Angriff auf insgesamt acht europäische CEVA-Warenlager hindeutet."
+    ],
+    "editorial_take": "",
+    "source_title": "Valve User Data Leaks In Cyber Attack On European Supplier",
+    "date": "10. August 2026",
+    "platform": "Kotaku",
+    "hype": 55,
+    "source": "https://kotaku.com/steam-machine-and-controller-user-data-leaks-after-valves-european-supplier-gets-hit-with-cyber-attack-2000722955",
+    "sourceLabel": "Kotaku",
+    "image": "https://kotaku.com/app/uploads/2026/06/steam-machine-scalpers.jpg",
+    "content_type": "breaking"
+  },
+  {
     "id": "9d71865204",
     "cat": "pc",
     "game": null,
@@ -1281,26 +1302,5 @@
     "source": "https://rockstarintel.com/another-gta-online-update-released-to-fix-kortz-center-heist-update-glitches/",
     "sourceLabel": "RockstarINTEL",
     "image": "https://rockstarintel.com/wp-content/uploads/2026/07/9eb73b855f09c7217063a04013de4029f0c7699c-scaled.jpg"
-  },
-  {
-    "id": "5cad91ae41",
-    "cat": "industrie",
-    "game": null,
-    "genre": null,
-    "title": "Azeroth trifft auf den Pen-and-Paper-Tisch: D&D und World of Warcraft tun sich offiziell zusammen",
-    "teaser": "Wizards of the Coast enthüllt „Dungeons & Dragons: World of Warcraft“ – mit jeder spielbaren WoW-Rasse und -Klasse als Startschuss der neuen Universes-Beyond-Reihe.",
-    "body": [
-      "Was lange als Gerücht durch die Foren spukte, ist jetzt amtlich: Auf der Gen Con 2026 hat Wizards of the Coast das Crossover-Sourcebook „Dungeons & Dragons: World of Warcraft“ vorgestellt, und es ist alles andere als ein kleines Nebenprojekt. Der über 250 Seiten starke Wälzer bringt elf neue Spezies mit auf den Spieltisch – von Pandaren über Dracthyr bis hin zu Tauren, Trollen, Erdenen und Man'ari-Eredar. Selbst Elfen bekommen mit fünf verschiedenen Ausprägungen ihr eigenes WoW-Update.",
-      "Auf der Klassenseite legt das Buch neun Unterklassen nach, sechs davon komplett neu, drei überarbeitet – darunter absolute WoW-Ikonen wie der Todesritter, der Dämonenjäger und der Schattenpriester. Dazu kommen 26 magische Gegenstände, rund 30 Boss-Statblocks, 60 neue Zaubersprüche sowie Regeln für Reittiere, Begleiter und Berufe. Wer will, kann laut den Entwickler:innen praktisch jede Rasse-Klasse-Kombination nachbauen, die auch im MMO möglich wäre. Als Sahnehäubchen gibt's mit dem Icecrown-Citadel-Kartenpaket sogar ein digitales High-Level-Abenteuer, das Gruppen von Stufe 16 bis 20 gegen legendäre Bosse wie den Lichkönig persönlich schickt.",
-      "Für D&D bedeutet das mehr als nur ein hübsches Setting: Es ist der offizielle Startschuss der neuen Produktlinie „Universes Beyond“, die – ganz bewusst – dem Erfolgsmodell von Magic: The Gathering folgt, wo ähnliche Lizenz-Crossover zum Milliardengeschäft wurden. Fachmedien wie Wargamer und ScreenRant betonen, dass dies das erste Mal seit rund 20 Jahren ist, dass Warcraft wieder am Pen-and-Paper-Tisch landet, nachdem ein früherer Versuch aus dem Jahr 2003 nie über das 3.5E-Regelwerk hinauswuchs. In der Community ist die Stimmung gemischt-euphorisch: Viele freuen sich auf das schiere Ausmaß des Materials, kritisieren in Foren wie EN World aber, dass das große Abenteuer nur digital per Download-Code erhältlich ist statt als gedrucktes Heft – ein Modell, das bei traditionellen Tischrunden nicht überall gut ankommt. Wizards selbst betont derweil, dass Universes Beyond kein Ersatz für klassische D&D-Settings sein soll, sondern parallel zu Comebacks von Dark Sun, Dragonlance und Greyhawk laufen wird."
-    ],
-    "editorial_take": "Wir finden die Idee grundsätzlich clever: WoW und D&D teilen sich seit Jahrzehnten dieselbe Fantasy-DNA, da ist ein Crossover fast überfällig. Skeptisch macht uns aber, dass Wizards hier ganz offensichtlich das Magic-Universes-Beyond-Playbook kopiert – wenn aus dem einmaligen Ausflug nach Azeroth eine Dauer-Lizenzflut wird, könnte das klassische D&D-Feeling schnell verwässern. Der digitale Download-Zwang beim Icecrown-Abenteuer ist zudem ein unnötiger Stolperstein für eine Hobby-Community, die Printmaterial liebt.",
-    "source_title": "Dungeons & Dragons: World of Warcraft Revealed, Includes Every Playable WOW Species and Class",
-    "date": "31. July 2026",
-    "platform": "IGN Articles",
-    "hype": 72,
-    "source": "https://www.ign.com/articles/dungeons-dragons-world-of-warcraft-revealed-includes-every-playable-wow-species-and-class",
-    "sourceLabel": "IGN Articles",
-    "image": "https://assets-prd.ignimgs.com/2026/07/30/dnd-wow-343702-1785418665191.jpg"
   }
 ]

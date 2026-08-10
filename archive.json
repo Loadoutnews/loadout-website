@@ -1,5 +1,26 @@
 [
   {
+    "id": "a7df0376c3",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "title": "Datenleck bei Steam-Hardware-Kunden: Valves Logistikpartner CEVA gehackt",
+    "teaser": "Valve informiert europäische Käufer von Steam Machine, Steam Controller und Steam Deck per E-Mail über einen Cyberangriff auf Versandpartner CEVA Logistics.",
+    "body": [
+      "Valve verschickt aktuell E-Mails an Steam-Hardware-Kunden in Europa: Der Versanddienstleister CEVA Logistics wurde zwischen dem 29. Juli und 1. August 2026 Opfer eines Cyberangriffs. Wie mehrere Quellen übereinstimmend berichten, teilte Valve mit, dass es am 7. August davon erfuhr, dass Kundendaten wahrscheinlich kompromittiert wurden. Betroffen sind laut Valve Name, Adresse, Telefonnummer, E-Mail sowie Art und Preis des bestellten Produkts – da CEVA diese Informationen bis zu 90 Tage nach Bestellung speichert, könnten alle europäischen Käufer von Steam Deck, Steam Controller oder Steam Machine seit Ende April betroffen sein.",
+      "Zahlungsdaten, Passwörter und Steam-Guard-Codes sind laut Valve nicht betroffen, ein Ändern des Steam-Passworts sei nicht nötig. Unbestätigt bzw. noch unklar ist die genaue Anzahl betroffener Nutzer sowie der vollständige Umfang des Angriffs – Valve selbst spricht davon, weiterhin Druck auf CEVA für Details auszuüben. Laut Berichten des niederländischen Senders NOS waren zudem bereits die Händler Bol und De Bijenkorf am 1. August informiert worden, was auf einen breiteren Angriff auf insgesamt acht europäische CEVA-Warenlager hindeutet."
+    ],
+    "editorial_take": "",
+    "source_title": "Valve User Data Leaks In Cyber Attack On European Supplier",
+    "date": "10. August 2026",
+    "platform": "Kotaku",
+    "hype": 55,
+    "source": "https://kotaku.com/steam-machine-and-controller-user-data-leaks-after-valves-european-supplier-gets-hit-with-cyber-attack-2000722955",
+    "sourceLabel": "Kotaku",
+    "image": "https://kotaku.com/app/uploads/2026/06/steam-machine-scalpers.jpg",
+    "content_type": "breaking"
+  },
+  {
     "id": "9d71865204",
     "cat": "pc",
     "game": null,
