@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0A0C16">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../logo-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LOADOUT-NEWS">
+<style>
+  /* Komplett EIGENSTÄNDIGES CSS statt Wiederverwendung von styles.css'
+     .page-layout/.content-col-Grid (das für die Zweispalten-Ansicht mit
+     Sidebar gedacht ist) — genau das Muster, das auf datenschutz.html /
+     ueber-uns.html / nutzungsbedingungen.html bereits nachweislich auf
+     Mobilgeräten sauber funktioniert: einfaches max-width + margin:auto,
+     keine Abhängigkeit von einer fremden Stylesheet-Datei. Behebt das
+     gemeldete "muss rauszoomen, um alles zu sehen"-Problem an der Wurzel. */
+  :root{
+    --bg:#0A0C16; --surface:#12162A; --line:#262C4A; --text:#E9E8F5;
+    --muted:#8D90AC; --violet:#7C5CFC; --magenta:#FF4D8D; --cyan:#34D9C9; --amber:#FFB74D;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    line-height:1.7;
+  }
+  header{ border-bottom:1px solid var(--line); padding:20px 24px; }
+  .logo{ max-width:820px; margin:0 auto; font-size:20px; font-weight:700; display:flex; align-items:center; gap:9px; }
+  .logo-icon{ width:26px; height:26px; flex:0 0 auto; border-radius:6px; }
+  .logo a{ display:flex; align-items:center; gap:9px; color:inherit; text-decoration:none; }
+  .logo small{ font-size:11px; font-weight:600; color:var(--muted); margin-left:2px; }
+  main{ max-width:820px; margin:0 auto; padding:32px 20px 70px; }
+  .mono{ font-family:'SF Mono', 'Consolas', monospace; }
+  h1{ font-size:26px; margin-bottom:8px; }
+  .section-head{ display:flex; align-items:center; gap:10px; margin:28px 0 14px; }
+  .section-head h2{ font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); white-space:nowrap; }
+  .section-head .rule{ flex:1; height:1px; background:var(--line); }
+  .chips{ display:flex; flex-wrap:wrap; margin-bottom:6px; }
+  .chip{
+    display:inline-flex; align-items:center; padding:7px 14px; border-radius:999px;
+    border:1px solid var(--line); background:var(--surface); color:var(--muted);
+    font-size:12.5px; font-weight:600; cursor:pointer; margin:0 6px 8px 0;
+    transition:border-color .15s, color .15s; font-family:inherit;
+  }
+  .chip.active{ border-color:var(--violet); color:var(--text); background:rgba(124,92,252,0.15); }
+  .badge{ display:inline-block; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.02em; }
+  .badge.pc{ background:rgba(124,92,252,0.18); color:var(--violet); }
+  .badge.konsole{ background:rgba(255,77,141,0.18); color:var(--magenta); }
+  .badge.hardware{ background:rgba(52,217,201,0.18); color:var(--cyan); }
+  .badge.industrie{ background:rgba(255,183,77,0.18); color:var(--amber); }
+  .back-btn{ display:inline-flex; align-items:center; gap:6px; color:var(--muted); font-size:12.5px; font-weight:700; text-decoration:none; }
+  .back-btn:hover{ color:var(--text); }
+  .detail-art{ border-radius:16px; background-size:cover; background-position:center; width:100%; }
+  .editorial-box{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:18px 20px; }
+  .editorial-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--violet); margin-bottom:8px; }
+  footer{ border-top:1px solid var(--line); text-align:center; padding:24px; font-size:12px; color:var(--muted); }
+  footer a{ color:var(--muted); margin:0 8px; text-decoration:none; }
+  .social-icons{ display:flex; gap:14px; justify-content:center; margin:20px 0 4px; }
+  .social-icons a{
+    display:flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border-radius:9px;
+    background:var(--surface); border:1px solid var(--line);
+    color:var(--muted); transition:color .15s, border-color .15s, transform .15s;
+  }
+  .social-icons a:hover{ color:var(--violet); border-color:var(--violet); transform:translateY(-2px); }
+  .social-icons svg{ width:17px; height:17px; }
+  /* Gerüchte-Tracker-eigene Komponenten */
+  .rumor-list-card { display:block; text-decoration:none; color:inherit; background:var(--surface);
+    border:1px solid var(--line); border-radius:16px; overflow:hidden; margin-bottom:16px;
+    transition:border-color .15s; }
+  .rumor-list-card:hover { border-color:#39406b; }
+  .rumor-list-art { height:160px; background-size:cover; background-position:center; position:relative; }
+  .rumor-list-body { padding:18px 20px; }
+  .rumor-list-body h3 { margin:10px 0 6px; font-size:18px; }
+  .rumor-list-meta { color:var(--muted); font-size:12.5px; }
+  .rumor-timeline-item { border-left:2px solid rgba(124,92,252,0.35); padding:2px 0 22px 22px; position:relative; }
+  .rumor-timeline-item:last-child { padding-bottom:2px; }
+  .rumor-timeline-item::before { content:""; position:absolute; left:-7px; top:4px; width:12px; height:12px;
+    border-radius:50%; background:#7C5CFC; border:2px solid #0A0C16; }
+  .rumor-timeline-date { color:var(--muted); font-size:12px; margin-bottom:6px; }
+  .rumor-timeline-text { color:var(--text); font-size:15px; line-height:1.6; margin-bottom:8px; }
+  .rumor-timeline-source { font-size:12px; }
+  .rumor-timeline-source a { color:#7C5CFC; text-decoration:none; }
+  .rumor-section-head { display:flex; align-items:center; gap:10px; margin:36px 0 18px; }
+  .rumor-section-head h2 { font-size:15px; letter-spacing:.02em; color:var(--muted); }
+  .rumor-section-head .rule { flex:1; height:1px; background:var(--line); }
+  .rumor-empty { color:var(--muted); font-size:14px; padding:24px 0; }
+</style>
+<title>Dirge of Cerberus Remake — Stand der Gerüchte — LOADOUT</title>
+<meta name="description" content="Seit Monaten rätseln Final-Fantasy-Fans, ob Square Enix nach dem Abschluss der FF7-Remake-Trilogie auch den Spin-off-Shooter Dirge of Cerberus neu aufleben lässt. Genährt wurde die Hoffnung bereits du">
+<link rel="canonical" href="https://loadout-news.com/geruechte/dirge-of-cerberus-remake.html">
+<meta property="og:title" content="Dirge of Cerberus Remake — Stand der Gerüchte — LOADOUT">
+<meta property="og:description" content="Seit Monaten rätseln Final-Fantasy-Fans, ob Square Enix nach dem Abschluss der FF7-Remake-Trilogie auch den Spin-off-Shooter Dirge of Cerberus neu aufleben lässt. Genährt wurde die Hoffnung bereits du">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://loadout-news.com/geruechte/dirge-of-cerberus-remake.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Dirge of Cerberus Remake — Stand der Gerüchte", "description": "Seit Monaten rätseln Final-Fantasy-Fans, ob Square Enix nach dem Abschluss der FF7-Remake-Trilogie auch den Spin-off-Shooter Dirge of Cerberus neu aufleben lässt. Genährt wurde die Hoffnung bereits durch Aussagen von Regisseur Naoki Hamaguchi, der eine Wiederbelebung klassischer Ableger nicht ausschloss. Aktuell heizt ein Cosplay-Foto von Sänger Gackt, dem realen Vorbild für den Charakter Genesis, die Spekulationen erneut an – eine offizielle Bestätigung gibt es weiterhin nicht.", "image": ["https://assets2.ignimgs.com/2005/08/01/dirge-of-cerberus-final-fantasy-vii-20050731101428869-1189292.jpg?width=1280&amp;format=jpg&amp;auto=webp&amp;quality=80"], "author": {"@type": "Organization", "name": "LOADOUT-NEWS Redaktion", "url": "https://loadout-news.com"}, "publisher": {"@type": "Organization", "name": "LOADOUT-NEWS", "logo": {"@type": "ImageObject", "url": "https://loadout-news.com/logo-icon-192.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://loadout-news.com/geruechte/dirge-of-cerberus-remake.html"}, "datePublished": "2026-08-10", "dateModified": "2026-08-10"}</script>
+</head>
+<body>
+<header><div class="logo"><a href="../index.html">
+  <svg class="logo-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs><linearGradient id="ig" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#7C5CFC"/><stop offset="100%" stop-color="#FF4D8D"/></linearGradient></defs>
+    <rect width="120" height="120" rx="26" fill="#0A0C16"/>
+    <rect x="24" y="24" width="14" height="68" rx="6" fill="url(#ig)"/>
+    <rect x="24" y="80" width="72" height="12" rx="6" fill="url(#ig)"/>
+    <rect x="44" y="62" width="12" height="18" rx="5" fill="url(#ig)"/>
+    <rect x="60" y="50" width="12" height="30" rx="5" fill="url(#ig)"/>
+    <rect x="76" y="36" width="12" height="44" rx="5" fill="url(#ig)"/>
+  </svg>
+  LOAD<span style="color:var(--magenta);">OUT</span><small>-NEWS</small>
+</a></div></header>
+<main>
+
+<a href="../geruechte.html" class="back-btn mono" style="text-decoration:none; display:inline-flex; margin-bottom:12px;">← ZU ALLEN LEAKS & GERÜCHTEN</a><br>
+
+<div class="detail-art" style="background:url('https://assets2.ignimgs.com/2005/08/01/dirge-of-cerberus-final-fantasy-vii-20050731101428869-1189292.jpg?width=1280&amp;format=jpg&amp;auto=webp&amp;quality=80') center/cover; height:280px; border-radius:16px;"></div>
+<div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:18px 0 10px;">
+  <span class="badge industrie">Industrie</span>
+  <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:999px; background:rgba(124,92,252,0.15); border:1px solid rgba(124,92,252,0.4); color:#7C5CFC; font-weight:700; font-size:13px;"><span class="rumor-live-dot" style="width:7px; height:7px; border-radius:50%; background:#7C5CFC;"></span>Läuft noch</span>
+</div>
+<h1 class="display">Dirge of Cerberus Remake — Stand der Gerüchte</h1>
+<div style="margin:14px 0 6px;"><span class="rumor-credibility-badge" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:999px; background:#8D90AC22; border:1px solid #8D90AC66; color:#8D90AC; font-weight:700; font-size:13px; white-space:nowrap;"><span style="width:7px; height:7px; border-radius:50%; background:#8D90AC;"></span>Unbestätigt · 15%</span></div>
+<p class="mono" style="color:var(--muted); font-size:12px; margin-bottom:20px;">
+  Eröffnet am 10. August 2026 · Zuletzt aktualisiert am 10. August 2026 ·
+  1 Eintrag
+</p>
+<div class="editorial-box" style="margin-bottom:32px;">
+  <div class="editorial-label mono">🗣️ Aktueller Gesamtstand</div>
+  <p>Seit Monaten rätseln Final-Fantasy-Fans, ob Square Enix nach dem Abschluss der FF7-Remake-Trilogie auch den Spin-off-Shooter Dirge of Cerberus neu aufleben lässt. Genährt wurde die Hoffnung bereits durch Aussagen von Regisseur Naoki Hamaguchi, der eine Wiederbelebung klassischer Ableger nicht ausschloss. Aktuell heizt ein Cosplay-Foto von Sänger Gackt, dem realen Vorbild für den Charakter Genesis, die Spekulationen erneut an – eine offizielle Bestätigung gibt es weiterhin nicht.</p>
+</div>
+<div class="rumor-section-head" style="margin-top:0;">
+  <h2 class="mono">Zeitleiste (neueste zuerst)</h2>
+  <div class="rule"></div>
+</div>
+
+<div class="rumor-timeline-item">
+  <div class="rumor-timeline-date mono">10. August 2026</div>
+  <span class="rumor-credibility-badge" style="display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; background:#8D90AC22; border:1px solid #8D90AC66; color:#8D90AC; font-weight:700; font-size:11px; white-space:nowrap;"><span style="width:7px; height:7px; border-radius:50%; background:#8D90AC;"></span>Unbestätigt · 15%</span>
+  <p class="rumor-timeline-text" style="margin-top:8px;">Der japanische Rockstar Gackt, der Genesis Rhapsodos aus Crisis Core und Dirge of Cerberus sowohl im Design als auch als Synchronsprecher prägte, hat ein Foto von sich im Genesis-Cosplay veröffentlicht. Fans werten den Post in sozialen Netzwerken sofort als möglichen Hinweis auf ein bevorstehendes Dirge-of-Cerberus-Remake, wie IGN berichtet.</p>
+  <div class="rumor-timeline-source"><a href="https://www.ign.com/articles/final-fantasy-fans-convinced-dirge-of-cerberus-remake-on-the-way-after-gackt-posts-photo-in-genesis-cosplay" target="_blank" rel="noopener">Quelle: IGN Articles →</a></div>
+</div>
+
+</main>
+<footer>
+  <div class="social-icons">
+    <a href="https://instagram.com/loadoutnews" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
+    </a>
+    <a href="https://reddit.com/r/LoadoutNews" target="_blank" rel="noopener" title="Reddit" aria-label="Reddit">
+      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="13" r="7"/><circle cx="9" cy="13" r="1.1" fill="#0A0C16"/><circle cx="15" cy="13" r="1.1" fill="#0A0C16"/><path d="M8.7 16.2c1 .9 5.6.9 6.6 0" stroke="#0A0C16" stroke-width="1" fill="none" stroke-linecap="round"/><circle cx="18.2" cy="8" r="1.4"/><line x1="12" y1="6" x2="12" y2="3.3" stroke="currentColor" stroke-width="1.1"/><circle cx="12" cy="2.7" r="0.9"/></svg>
+    </a>
+    <a href="https://loadout-news.tumblr.com" target="_blank" rel="noopener" title="Tumblr" aria-label="Tumblr">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.5 3v4.2h3.2v3.3h-3.2v6.1c0 1.4.7 1.9 1.8 1.9.4 0 .9-.1 1.4-.3v3.3c-.6.3-1.6.5-2.8.5-3 0-4.6-1.7-4.6-4.5v-6H8v-2.5c2.1-.1 3.2-1.5 3.4-3.9V3h3.1z"/></svg>
+    </a>
+    <a href="https://bsky.app/profile/loadout-news.bsky.social" target="_blank" rel="noopener" title="Bluesky" aria-label="Bluesky">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 9.6c-1.2-2.4-3.7-4.6-6.3-5.3C4.1 3.9 3.2 4.4 3.2 5.8c0 2.9 1.5 6.5 3.9 8-1 .1-1.9.5-1.9 1.6 0 1.4 1.7 2.2 3.4 1.6 1-.4 2.4-1.4 3.4-3.1 1 1.7 2.4 2.7 3.4 3.1 1.7.6 3.4-.2 3.4-1.6 0-1.1-.9-1.5-1.9-1.6 2.4-1.5 3.9-5.1 3.9-8 0-1.4-.9-1.9-2.5-1.5-2.6.7-5.1 2.9-6.3 5.3z"/></svg>
+    </a>
+  </div>
+  <a href="../index.html">Startseite</a>
+  <a href="../ueber-uns.html">Über uns</a>
+  <a href="../impressum.html">Impressum</a>
+  <a href="../datenschutz.html">Datenschutz</a>
+  · © 2026 LOADOUT-NEWS
+</footer>
+</body>
+</html>
