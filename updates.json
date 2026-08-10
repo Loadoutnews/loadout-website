@@ -1,36 +1,5 @@
 [
   {
-    "game": "Apex Legends",
-    "update_title": "Season 30",
-    "update_date": "2026-08-04",
-    "platforms": [
-      "PC",
-      "PS5",
-      "Xbox Series X/S",
-      "Nintendo Switch 2"
-    ],
-    "content": "Season 30 bringt laut Respawns 'Road Ahead'-Roadmap eine große Überarbeitung des Loot-Systems für schnelleren und wirkungsvolleren Machtaufbau sowie ein kompetitives Rework der Map World's Edge für Ranked und ALGS. Zusätzlich enden mit diesem Update die Unterstützung für die originale Nintendo Switch sowie zwei geplante Wildcard-Events pro Season.",
-    "hype": 70,
-    "source_url": "https://www.gamespot.com/articles/apex-legends-unveils-year-long-plan-with-two-new-characters-as-fan-complaints-mount/1100-6538151/",
-    "id": "91b67f5f95",
-    "image": "https://picsum.photos/seed/loadout-update-ApexLegendsSeason30/300/200"
-  },
-  {
-    "game": "Marvel Rivals",
-    "update_title": "Season 9.5: The Hood",
-    "update_date": "2026-08-07",
-    "platforms": [
-      "PC",
-      "PS5",
-      "Xbox Series X/S"
-    ],
-    "content": "Die Mid-Season-Aktualisierung von Season 9 führt den neuen Helden The Hood ein, der als Vanguard mit magischen Klon-Fähigkeiten ausgestattet sein soll. Das Update setzt die Ägypten-thematisierte Apocalypse-Storyline aus 'The Mystery of Thebes' fort und bringt frische Kosmetik sowie Balance-Anpassungen mit sich.",
-    "hype": 65,
-    "source_url": "https://www.marvelrivals.com/news/",
-    "id": "bf5b9e6fc5",
-    "image": "https://www.marvelrivals.com/pc/gw/20240301101352/data/share.jpg"
-  },
-  {
     "game": "Overwatch",
     "update_title": "Reign of Talon – Season 4",
     "update_date": "2026-08-11",
@@ -110,23 +79,6 @@
     "source_url": "https://www.psu.com/news/tekken-8-bob-release-date-trailer-ps5/",
     "id": "583ee2b334",
     "image": "https://picsum.photos/seed/loadout-update-Tekken8Season3DLCKmpferBob/300/200"
-  },
-  {
-    "game": "Street Fighter 6",
-    "update_title": "Year 4 DLC-Charakter: Yasmine",
-    "update_date": "2026-08-03",
-    "platforms": [
-      "PC",
-      "PS5",
-      "PS4",
-      "Xbox Series X/S",
-      "Nintendo Switch 2"
-    ],
-    "content": "Als erster Kämpfer der vierten Season-Pass-Staffel betritt die philippinische Newcomerin Yasmine mit ihrem charakteristischen Karambit-Messer und einem schnellen Eskrima-Kampfstil die Arena. Capcom bestätigte den Starttermin mit einem ersten Gameplay-Trailer, wonach Yasmine sowohl einzeln als auch über den Year-4-Charakter- bzw. Ultimate-Pass erhältlich sein wird.",
-    "hype": 58,
-    "source_url": "https://www.nintendolife.com/news/2026/06/video-street-fighter-6-gameplay-shows-off-new-dlc-fighter-out-august",
-    "id": "23e05cc2c6",
-    "image": "https://images.nintendolife.com/3fe6c49429a0e/large.jpg"
   },
   {
     "game": "Valorant",
