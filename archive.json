@@ -1,5 +1,26 @@
 [
   {
+    "id": "977141a5a9",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "title": "Datenleck bei Valve: Cyberangriff auf Steam-Logistikpartner CEVA trifft EU-Kunden",
+    "teaser": "Valve warnt europäische Käufer von Steam Machine, Steam Deck und Steam Controller: Persönliche Daten wurden bei einem Hackerangriff auf den Versanddienstleister CEVA Logistics wohl kompromittiert.",
+    "body": [
+      "Valve hat begonnen, europäische Kunden per E-Mail zu informieren, dass ihre persönlichen Daten durch einen Cyberangriff auf CEVA Logistics betroffen sein könnten. CEVA übernimmt für Valve den Versand von Steam-Hardware wie Steam Deck, Steam Machine und Steam Controller in Europa. Laut Valve fand der Angriff zwischen dem 29. Juli und dem 1. August 2026 statt; das Unternehmen erfuhr am 7. August, dass Kundendaten wahrscheinlich abgegriffen wurden. Betroffen sein sollen Name, Adresse, Telefonnummer, die mit dem Steam-Account verknüpfte E-Mail-Adresse sowie Art und Preis der bestellten Hardware. Da CEVA solche Lieferdaten bis zu 90 Tage nach einer Bestellung speichert, werden alle Kunden innerhalb dieses Zeitfensters vorsorglich benachrichtigt.",
+      "Valve betont, dass CEVA keinen Zugriff auf Steam-Passwörter, Steam-Guard-Codes oder Zahlungsinformationen hatte, diese Daten also nach aktuellem Stand nicht betroffen sind. Unbestätigt ist bislang der genaue Umfang des Angriffs sowie ein möglicher Zusammenhang mit einem früheren, größeren CEVA-Datenleck aus dem September 2025, für das die Gruppe CoinbaseCartel Verantwortung übernommen hatte. Valve erklärte, man dränge CEVA auf vollständige Aufklärung und informiere die Datenschutzbehörden der betroffenen Länder. Nutzer sollten in den kommenden Wochen mit gezielten Phishing-Versuchen per E-Mail, SMS oder Anruf rechnen, die sich auf die Hardware-Bestellung beziehen – Valve rät, solche Nachrichten grundsätzlich als Betrug zu behandeln."
+    ],
+    "editorial_take": "",
+    "source_title": "Steam user data 'may have been compromised' by a cyberattack targeting Valve's European shipping partner",
+    "date": "10. August 2026",
+    "platform": "PCGamer latest",
+    "hype": 62,
+    "source": "https://www.pcgamer.com/gaming-industry/steam-user-data-may-have-been-compromised-by-a-cyberattack-targeting-valves-european-shipping-partner/",
+    "sourceLabel": "PCGamer latest",
+    "image": "https://cdn.mos.cms.futurecdn.net/Hoqt5SEBFeLGf2w4ZMY6o3-1280-80.jpg",
+    "content_type": "breaking"
+  },
+  {
     "id": "8449b71452",
     "cat": "industrie",
     "game": null,
