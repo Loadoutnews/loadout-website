@@ -1,1 +1,28 @@
-[]
+[
+  {
+    "tracker_id": "layoffs-bei-crossfire-entwickler-that-s-no-moon",
+    "entry": {
+      "title": "Supermassive Games, makers of Until Dawn, announce mass layoffs to keep afloat",
+      "link": "https://dotesports.com/general/news/supermassive-games-layoffs-employee-cuts-industry-jobs",
+      "summary": "<div><img class=\"type:primaryImage\" src=\"https://media.dotesports.com/wp-content/uploads/2024/10/How-to-save-everyone-in-Until-Dawn.jpg\" style=\"margin-bottom: 15px;\" /></div>The horror game studio is in trouble.",
+      "source": "Dot Esports",
+      "priority": true,
+      "image": null
+    },
+    "flagged_by": "news_pipeline",
+    "flagged_at": "2026-08-11T17:03:35.360225+00:00"
+  },
+  {
+    "tracker_id": "layoffs-bei-crossfire-entwickler-that-s-no-moon",
+    "entry": {
+      "title": "Until Dawn Developer Supermassive Games Cutting Up to 75 Staff, Following Mixed Response to Directive 8020",
+      "link": "https://www.ign.com/articles/until-dawn-developer-supermassive-games-cutting-up-to-75-staff-following-mixed-response-to-directive-8020",
+      "summary": "Until Dawn developer Supermassive Games has announced layoffs impacting up to 75 staff — the studio's third round of job losses in three years.",
+      "source": "IGN Articles",
+      "priority": false,
+      "image": "https://assets-prd.ignimgs.com/2025/06/08/directive8020turningpoint-ign-blogroll-1749401739416.jpg"
+    },
+    "flagged_by": "news_pipeline",
+    "flagged_at": "2026-08-11T17:03:35.360245+00:00"
+  }
+]
