@@ -1,5 +1,30 @@
 [
   {
+    "id": "persona-1-2-remakes",
+    "topic_name": "Persona 1 & 2 Remakes",
+    "title": "Persona 1 & 2 Remakes — Stand der Gerüchte",
+    "cat": "industrie",
+    "game": null,
+    "summary": "Atlus-Produzent Kazuhisa Wada hat sich in einem Interview positiv zu moeglichen Remakes der ersten beiden Persona-Spiele geaeussert und damit alte Fan-Hoffnungen neu entfacht. Eine offizielle Bestaetigung von Atlus fuer konkrete Remake-Plaene gibt es weiterhin nicht, aktuell liegt der Fokus des Studios klar auf Persona 4 Revival und Persona 6. Die Aussage wird von zahlreichen internationalen Gaming-Medien aufgegriffen, geht aber auf ein und dasselbe Interview zurueck.",
+    "status": "aktiv",
+    "resolution": null,
+    "credibility_category": "unbestaetigt",
+    "credibility_pct": 22,
+    "image": "https://assets-prd.ignimgs.com/2026/08/10/persona-1-and-2-remakes-1786397745091.png?width=1280&amp;format=jpg&amp;auto=webp&amp;quality=80",
+    "created_date": "11. August 2026",
+    "updated_date": "11. August 2026",
+    "timeline": [
+      {
+        "date": "11. August 2026",
+        "text": "Im Interview mit GamerBraves wurde P-Studio-Produzent Kazuhisa Wada zu moeglichen Remakes von Persona 1 (Revelations: Persona) und der Persona-2-Duologie (Innocent Sin/Eternal Punishment) befragt. Wada erklaerte, er koenne aktuell nichts Konkretes zusagen, sagte aber woertlich, dass er persoenlich denke, man muesse diese Spiele irgendwann angehen. IGN, Kotaku, PC Gamer, GamesRadar und weitere Outlets griffen die Aussage rasch auf, wiesen aber uebereinstimmend darauf hin, dass es sich um eine persoenliche Einschaetzung und keine offizielle Ankuendigung von Atlus handelt.",
+        "credibility_category": "unbestaetigt",
+        "credibility_pct": 22,
+        "source": "IGN Articles",
+        "source_url": "https://www.ign.com/articles/atlus-producer-says-i-think-we-have-to-do-persona-1-and-2-remakes"
+      }
+    ]
+  },
+  {
     "id": "dirge-of-cerberus-remake",
     "topic_name": "Dirge of Cerberus Remake",
     "title": "Dirge of Cerberus Remake — Stand der Gerüchte",
