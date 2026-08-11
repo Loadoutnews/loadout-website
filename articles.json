@@ -1,5 +1,26 @@
 [
   {
+    "id": "c98a35ec03",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "title": "Datenleck bei Steam-Hardware: Cyberangriff auf Valves EU-Versandpartner CEVA",
+    "teaser": "Valve warnt europäische Käufer von Steam Deck, Machine und Controller: Persönliche Daten wurden vermutlich bei einem Hack des Logistikpartners CEVA gestohlen.",
+    "body": [
+      "Valve informiert derzeit per E-Mail Kundinnen und Kunden in Europa, die Steam-Hardware wie den Steam Deck, die Steam Machine oder den Steam Controller gekauft haben, über einen Sicherheitsvorfall bei seinem europäischen Versandpartner CEVA Logistics. Laut Valve fand der Cyberangriff zwischen dem 29. Juli und dem 1. August 2026 statt, entdeckt wurde er am 7. August. Betroffen sind demnach Name, Adresse, Postleitzahl, Stadt, Land, Telefonnummer, E-Mail-Adresse sowie Art und Preis des bestellten Produkts. Da CEVA diese Lieferdaten bis zu 90 Tage nach einer Bestellung speichert, wurden alle potenziell betroffenen Kundinnen und Kunden aus diesem Zeitraum benachrichtigt.",
+      "Valve betont ausdrücklich, dass Passwörter, Steam-Guard-Codes und Zahlungsinformationen nicht betroffen sind, da diese CEVA nie vorlagen — ein Passwortwechsel sei daher nicht nötig. Unbestätigt beziehungsweise noch unklar ist laut CEVA und Valve das genaue Ausmaß des Angriffs, da die Untersuchung noch läuft. Valve warnt Betroffene ausdrücklich davor, gefälschte Nachrichten per E-Mail, SMS oder Telefon zu erwarten, die vorgeben, von Steam, Valve oder einem Lieferdienst zu stammen und etwa angebliche Zoll- oder Versandgebühren einfordern könnten."
+    ],
+    "editorial_take": "",
+    "source_title": "\"Expect fake messages\": A load of Steam user personal info has been stolen thanks to a cyberattack on one of Valve's partners, claims report",
+    "date": "11. August 2026",
+    "platform": "Rock Paper Shotgun Latest Articles Feed",
+    "hype": 62,
+    "source": "https://www.rockpapershotgun.com/expect-fake-messages-a-load-of-steam-user-personal-info-has-been-thanks-to-a-cyberattack-on-one-of-valves-partners-claims-report",
+    "sourceLabel": "Rock Paper Shotgun Latest Articles Feed",
+    "image": "https://assetsio.gnwcdn.com/Steam-Machine-and-Steam-Controller-1.jpg?width=690&quality=85&format=jpg&auto=webp",
+    "content_type": "breaking"
+  },
+  {
     "id": "977141a5a9",
     "cat": "industrie",
     "game": null,
@@ -1286,26 +1307,5 @@
     "source": "https://www.ign.com/articles/square-enix-says-controversial-kingdom-hearts-collection-art-was-the-result-of-human-error-not-generative-ai",
     "sourceLabel": "IGN Articles",
     "image": "https://assets-prd.ignimgs.com/2026/07/31/kingdom-hearts-collection-1-3-art-ai-1785512630482.png"
-  },
-  {
-    "id": "974d5fce06",
-    "cat": "konsole",
-    "game": "minecraft",
-    "genre": null,
-    "title": "Isle Delfino ruft: Super Mario Sunshine kehrt im August auf Switch 2 zurück",
-    "teaser": "Nach über einem Jahr Wartezeit bekommt Nintendos GameCube-Klassiker endlich ein Datum: Ab 13. August könnt ihr mit FLUDD wieder Graffiti wegspritzen.",
-    "body": [
-      "Es hat gedauert, aber jetzt ist es offiziell: Super Mario Sunshine landet am 13. August 2026 im GameCube-Katalog der Nintendo Classics auf Switch 2. Damit endet eine gefühlte Ewigkeit des Wartens, denn das Spiel gehörte bereits zu den ersten Titeln, die Nintendo für die neue Retro-Bibliothek angekündigt hatte, allerdings ganz am Anfang, weit vor dem eigentlichen Switch-2-Launch.",
-      "Wer sich erinnert: Mario, Peach und eine Handvoll Toads wollten eigentlich nur Urlaub auf der tropischen Isle Delfino machen. Stattdessen wird der Klempner fälschlicherweise für Vandalismus verantwortlich gemacht und muss die Insel mit seinem sprechenden Wasserrucksack FLUDD wieder auf Vordermann bringen, während er gleichzeitig einen Doppelgänger namens Shadow Mario jagt und natürlich mal wieder eine Prinzessin retten muss. Wie bei den anderen GameCube-Titeln im Programm handelt es sich um eine emulierte Version des Originals von 2002, aufgehübscht mit schärferer Auflösung und den mittlerweile üblichen Speicherpunkten, die es Spielern erlauben, jederzeit zu speichern und zurückzuspulen. Der Haken bleibt derselbe wie bei allen GameCube-Klassikern: Ihr braucht zwingend eine Switch 2 und ein Abo der teureren Expansion-Pack-Stufe von Nintendo Switch Online.",
-      "Die Fachpresse erinnert unisono daran, dass die Wartezeit ungewöhnlich lang war. Seit der Ankündigung im April 2025 sind gerade einmal neun weitere GameCube-Spiele hinzugekommen, darunter Zelda: The Wind Waker, F-Zero GX, Luigi's Mansion und zuletzt Pokémon XD: Gale of Darkness. In den vergangenen sieben Monaten kamen laut Berichterstattung nur zwei neue Titel hinzu, weshalb viele Fans die Veröffentlichungsfrequenz als spärlich und unberechenbar beschreiben. In der Community selbst gehen die Reaktionen auseinander: Manche freuen sich sichtlich auf einen nostalgischen Sommerurlaub mit FLUDD, andere weisen genervt darauf hin, dass sie das Spiel bereits über die mittlerweile aus dem Store entfernte Sammlung Super Mario 3D All-Stars besitzen und sich fragen, warum sie jetzt erneut dafür zahlen sollen. Historisch betrachtet war Sunshine 2002 ein Kritikerliebling mit starker Metascore-Wertung, hat sich aber im Laufe der Jahre zu einem der umstrittensten 3D-Mario-Titel entwickelt, weil die wackelige Kamera und die eigenwilligen Levels ohne FLUDD bis heute für Diskussionen sorgen."
-    ],
-    "editorial_take": "Wir freuen uns riesig, wieder mit FLUDD durch Bianco Hills zu düsen, auch wenn Sunshine nie das rundeste 3D-Mario-Abenteuer war. Nintendos Salami-Taktik beim GameCube-Katalog nervt uns aber zunehmend: Wer schon 3D All-Stars besessen hat, dürfte sich zurecht fragen, warum man für dasselbe Spiel jetzt erneut ein teures Abo braucht. Trotzdem bleibt es ein Pflichttermin für alle Switch-2-Besitzer mit Expansion Pack, schon allein wegen der Nostalgie und weil endlich wieder Bewegung in die viel zu langsame Klassiker-Reihe kommt.",
-    "source_title": "GameCube Classic Super Mario Sunshine Joins Nintendo Switch Online Catalog Next Month",
-    "date": "01. August 2026",
-    "platform": "IGN Articles",
-    "hype": 62,
-    "source": "https://www.ign.com/articles/gamecube-classic-super-mario-sunshine-joins-nintendo-switch-online-catalog-next-month",
-    "sourceLabel": "IGN Articles",
-    "image": "https://assets-prd.ignimgs.com/2026/07/31/1200px-shadow-mario-artwork-super-mario-sunshine-1785490223018.jpg"
   }
 ]

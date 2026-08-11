@@ -1,5 +1,26 @@
 [
   {
+    "id": "c98a35ec03",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "title": "Datenleck bei Steam-Hardware: Cyberangriff auf Valves EU-Versandpartner CEVA",
+    "teaser": "Valve warnt europäische Käufer von Steam Deck, Machine und Controller: Persönliche Daten wurden vermutlich bei einem Hack des Logistikpartners CEVA gestohlen.",
+    "body": [
+      "Valve informiert derzeit per E-Mail Kundinnen und Kunden in Europa, die Steam-Hardware wie den Steam Deck, die Steam Machine oder den Steam Controller gekauft haben, über einen Sicherheitsvorfall bei seinem europäischen Versandpartner CEVA Logistics. Laut Valve fand der Cyberangriff zwischen dem 29. Juli und dem 1. August 2026 statt, entdeckt wurde er am 7. August. Betroffen sind demnach Name, Adresse, Postleitzahl, Stadt, Land, Telefonnummer, E-Mail-Adresse sowie Art und Preis des bestellten Produkts. Da CEVA diese Lieferdaten bis zu 90 Tage nach einer Bestellung speichert, wurden alle potenziell betroffenen Kundinnen und Kunden aus diesem Zeitraum benachrichtigt.",
+      "Valve betont ausdrücklich, dass Passwörter, Steam-Guard-Codes und Zahlungsinformationen nicht betroffen sind, da diese CEVA nie vorlagen — ein Passwortwechsel sei daher nicht nötig. Unbestätigt beziehungsweise noch unklar ist laut CEVA und Valve das genaue Ausmaß des Angriffs, da die Untersuchung noch läuft. Valve warnt Betroffene ausdrücklich davor, gefälschte Nachrichten per E-Mail, SMS oder Telefon zu erwarten, die vorgeben, von Steam, Valve oder einem Lieferdienst zu stammen und etwa angebliche Zoll- oder Versandgebühren einfordern könnten."
+    ],
+    "editorial_take": "",
+    "source_title": "\"Expect fake messages\": A load of Steam user personal info has been stolen thanks to a cyberattack on one of Valve's partners, claims report",
+    "date": "11. August 2026",
+    "platform": "Rock Paper Shotgun Latest Articles Feed",
+    "hype": 62,
+    "source": "https://www.rockpapershotgun.com/expect-fake-messages-a-load-of-steam-user-personal-info-has-been-thanks-to-a-cyberattack-on-one-of-valves-partners-claims-report",
+    "sourceLabel": "Rock Paper Shotgun Latest Articles Feed",
+    "image": "https://assetsio.gnwcdn.com/Steam-Machine-and-Steam-Controller-1.jpg?width=690&quality=85&format=jpg&auto=webp",
+    "content_type": "breaking"
+  },
+  {
     "id": "977141a5a9",
     "cat": "industrie",
     "game": null,
