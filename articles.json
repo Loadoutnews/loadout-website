@@ -1,5 +1,26 @@
 [
   {
+    "id": "4b3c05c3f1",
+    "cat": "industrie",
+    "game": null,
+    "genre": "horror",
+    "title": "Until Dawn-Studio Supermassive Games streicht bis zu 75 Stellen",
+    "teaser": "Nach durchwachsenem Erfolg von Directive 8020 leitet Supermassive Games die dritte Entlassungsrunde binnen drei Jahren ein.",
+    "body": [
+      "Supermassive Games, das britische Studio hinter Until Dawn, The Quarry und The Dark Pictures Anthology, hat einen Redundanz-Konsultationsprozess eingeleitet, der bis zu 75 Mitarbeitende betreffen könnte. In einer Stellungnahme auf X erklärte das Studio: 'We have made the difficult decision to begin a redundancy consultation process, which we anticipate will result in the loss of up to 75 of our colleagues.' Weiter hieß es, der Schritt sei notwendig, um die wirtschaftliche Tragfähigkeit des Unternehmens zu sichern. Es ist bereits die dritte Entlassungswelle innerhalb von weniger als drei Jahren: 2024 wurden rund 90 Stellen gestrichen, im Juli 2025 folgten etwa 36 weitere.",
+      "Die Kürzungen kommen weniger als drei Monate nach dem Release von Directive 8020 im Mai 2026, dem fünften Teil der Dark Pictures Anthology, der bei der Kritik nur durchwachsen ankam. Zudem hatte CEO Robert Henrysson erst im Juni seinen Rücktritt sowohl bei Supermassive als auch bei Mutterkonzern Nordisk Games angekündigt, ohne dass bislang ein Nachfolger benannt wurde. Wie viele Beschäftigte nach der aktuellen Kürzungsrunde noch bei Supermassive verbleiben, ist derzeit unbestätigt – das Studio hat sich dazu noch nicht näher geäußert."
+    ],
+    "editorial_take": "",
+    "source_title": "Until Dawn Developer Supermassive Games Cutting Up to 75 Staff, Following Mixed Response to Directive 8020",
+    "date": "11. August 2026",
+    "platform": "IGN Articles",
+    "hype": 55,
+    "source": "https://www.ign.com/articles/until-dawn-developer-supermassive-games-cutting-up-to-75-staff-following-mixed-response-to-directive-8020",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2025/06/08/directive8020turningpoint-ign-blogroll-1749401739416.jpg",
+    "content_type": "breaking"
+  },
+  {
     "id": "1edb886740",
     "cat": "pc",
     "game": null,
@@ -1287,27 +1308,5 @@
     "source": "https://www.ign.com/articles/hololive-dreams-rhythm-rpg-mechanics",
     "sourceLabel": "IGN Articles",
     "image": "https://assets-prd.ignimgs.com/2026/07/31/hololivedreams-blogroll-1785536907853.jpg"
-  },
-  {
-    "id": "cb113615a6",
-    "cat": "industrie",
-    "game": null,
-    "genre": null,
-    "title": "Palworld-Sammelkartenspiel startet durch: Scalper kassieren ab, Fans schauen in die Röhre",
-    "teaser": "Kaum ist das offizielle Palworld-Kartenspiel erschienen, treiben Wiederverkäufer die Preise auf eBay in absurde Höhen. Manche Karten kosten mehr als ein gebrauchtes Auto.",
-    "body": [
-      "Palworld wollte eigentlich nie nur ein Pokémon-Klon sein – doch beim Start des offiziellen Sammelkartenspiels wiederholt sich ausgerechnet das Drama, das die Pokémon-Fangemeinde seit Jahren nervt. Das erste Booster-Set Dawn of Palpagos, entwickelt von Bushiroad in Zusammenarbeit mit Pocketpair, ist am 30. Juli offiziell erschienen. Noch bevor überhaupt ein Laden die Packs verkauft hatte, wechselte die seltenste Karte des Sets, die goldene Cattiva Soul, für knapp 4.000 Dollar auf eBay den Besitzer.",
-      "Auch andere Chase-Karten ziehen kräftig an: Die Chillet Dragon Whisperer wurde einen Tag vor Verkaufsstart bereits für 1.400 Dollar gehandelt, mittlerweile pendelt sie sich bei rund 1.100 Dollar ein. Schon 24 Stunden nach Release hatten mehrere Karten aus dem Set die Marke von 1.000 Dollar geknackt. Dass die Nachfrage so gigantisch ist, überrascht kaum: Bushiroad hatte bereits Anfang Juli verkündet, dass weltweit 3,5 Millionen Booster-Packs des Debütsets vorbestellt wurden, ehe überhaupt ein Regal beliefert war.",
-      "In der Fachpresse und Community ist der Fall längst zum Running Gag geworden – schließlich musste sich Palworld seit seinem Release 2024 ständig den Vorwurf gefallen lassen, ein dreister Pokémon-Abklatsch zu sein. Jetzt kopiert ausgerechnet das eigene Merchandise genau jenes Problem, das Pokémon-Fans seit Jahren zur Verzweiflung treibt: leergekaufte Regale, horrende Zweitmarktpreise und Scalper, die die besten Karten längst vor offiziellem Verkaufsstart abgreifen. Beobachter verweisen darauf, dass frühe Spekulationspreise wie beim Pokémon-Set Prismatic Evolutions historisch gesehen innerhalb weniger Wochen wieder deutlich fallen, sobald mehr Nachschub in den Handel kommt – bei der Cattiva Gold Soul war bereits ein Rückgang von rund 4.000 auf unter 1.000 Dollar zu beobachten. Ob Pocketpair und Bushiroad ähnlich wie The Pokémon Company irgendwann mit massiven Nachdrucken reagieren, ist bislang offen; eine offizielle Stellungnahme zur Druckstrategie gibt es noch nicht.",
-      "Für viele echte Palworld-Fans bedeutet das aktuell vor allem eins: leer ausgehen. Wer einfach nur ein physisches Kärtchen seines Lieblings-Pals besitzen wollte, findet in Läden oft nichts mehr vor, weil Wiederverkäufer ganze Displays leerkaufen und sofort mit Aufschlag weiterverticken. Die Community reagiert entsprechend gespalten – die einen feiern den Hype als Beweis, dass Palworld jenseits des Videospiels endgültig im Merchandise-Mainstream angekommen ist, andere ärgern sich, dass ausgerechnet ein Spiel, das für seine bodenständige, chaotische Art geliebt wird, jetzt zum Spielball von Kartenspekulanten wird."
-    ],
-    "editorial_take": "Wir bei LOADOUT finden es fast schon ironisch bitter: Palworld wurde jahrelang als billige Pokémon-Kopie verspottet, und ausgerechnet beim Sprung ins Sammelkarten-Geschäft übernimmt es exakt das hässlichste Kapitel aus Pokémons Geschichte – den Scalper-Wahnsinn. Solange Bushiroad und Pocketpair keine klare Nachdruck-Strategie kommunizieren, wird sich an der Situation kurzfristig kaum etwas ändern, auch wenn erste Preisrückgänge zeigen, dass sich der Markt langsam beruhigt. Unser Rat an alle Fans: Geduld haben, nicht in Torschlusspanik verfallen und abwarten, bis sich die Preise nach ein paar Wochen auf ein realistischeres Niveau einpendeln.",
-    "source_title": "Palworld TCG Prices Skyrocket as eBay Scalpers Profit Off of Card Game Launch",
-    "date": "01. August 2026",
-    "platform": "IGN Articles",
-    "hype": 58,
-    "source": "https://www.ign.com/articles/palworld-tcg-prices-skyrocket-as-ebay-scalpers-profit-off-of-card-game-launch",
-    "sourceLabel": "IGN Articles",
-    "image": "https://assets-prd.ignimgs.com/2026/08/01/palworld-tcg-1785595517328.png"
   }
 ]

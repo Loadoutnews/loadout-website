@@ -1,5 +1,26 @@
 [
   {
+    "id": "4b3c05c3f1",
+    "cat": "industrie",
+    "game": null,
+    "genre": "horror",
+    "title": "Until Dawn-Studio Supermassive Games streicht bis zu 75 Stellen",
+    "teaser": "Nach durchwachsenem Erfolg von Directive 8020 leitet Supermassive Games die dritte Entlassungsrunde binnen drei Jahren ein.",
+    "body": [
+      "Supermassive Games, das britische Studio hinter Until Dawn, The Quarry und The Dark Pictures Anthology, hat einen Redundanz-Konsultationsprozess eingeleitet, der bis zu 75 Mitarbeitende betreffen könnte. In einer Stellungnahme auf X erklärte das Studio: 'We have made the difficult decision to begin a redundancy consultation process, which we anticipate will result in the loss of up to 75 of our colleagues.' Weiter hieß es, der Schritt sei notwendig, um die wirtschaftliche Tragfähigkeit des Unternehmens zu sichern. Es ist bereits die dritte Entlassungswelle innerhalb von weniger als drei Jahren: 2024 wurden rund 90 Stellen gestrichen, im Juli 2025 folgten etwa 36 weitere.",
+      "Die Kürzungen kommen weniger als drei Monate nach dem Release von Directive 8020 im Mai 2026, dem fünften Teil der Dark Pictures Anthology, der bei der Kritik nur durchwachsen ankam. Zudem hatte CEO Robert Henrysson erst im Juni seinen Rücktritt sowohl bei Supermassive als auch bei Mutterkonzern Nordisk Games angekündigt, ohne dass bislang ein Nachfolger benannt wurde. Wie viele Beschäftigte nach der aktuellen Kürzungsrunde noch bei Supermassive verbleiben, ist derzeit unbestätigt – das Studio hat sich dazu noch nicht näher geäußert."
+    ],
+    "editorial_take": "",
+    "source_title": "Until Dawn Developer Supermassive Games Cutting Up to 75 Staff, Following Mixed Response to Directive 8020",
+    "date": "11. August 2026",
+    "platform": "IGN Articles",
+    "hype": 55,
+    "source": "https://www.ign.com/articles/until-dawn-developer-supermassive-games-cutting-up-to-75-staff-following-mixed-response-to-directive-8020",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2025/06/08/directive8020turningpoint-ign-blogroll-1749401739416.jpg",
+    "content_type": "breaking"
+  },
+  {
     "id": "1edb886740",
     "cat": "pc",
     "game": null,
