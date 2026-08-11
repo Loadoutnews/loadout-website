@@ -1,5 +1,65 @@
 [
   {
+    "id": "1edb886740",
+    "title": "896 Prozent mehr Zuschauer: Wie Tarkov über Nacht zur Nummer 3 auf Twitch wurde",
+    "teaser": "Ein verspäteter Season-Start, ein Bezahl-Streit um Reset-Währung und eine clever getimte Drops-Kampagne: Tarkov schießt auf Twitch-Platz 3 – aber nicht ganz freiwillig organisch.",
+    "cat": "pc",
+    "game": null,
+    "genre": "shooter",
+    "date": "11. August 2026",
+    "hype": 78
+  },
+  {
+    "id": "0574678de6",
+    "title": "VCT EMEA verlässt Berlin: Grand Finals und riesiges Fan Fest in Barcelona",
+    "teaser": "Erstmals in der Geschichte der Liga zieht die VCT EMEA aus Berlin aus – die Stage-2-Finals samt kostenlosem Fan Fest steigen im August in Barcelona.",
+    "cat": "industrie",
+    "game": "valorant",
+    "genre": null,
+    "date": "11. August 2026",
+    "hype": 68
+  },
+  {
+    "id": "a15fded079",
+    "title": "Krallen statt Kanten: Sony enthüllt limitierte Wolverine-PS5 samt Cover-Sets",
+    "teaser": "Zum Launch von Marvel's Wolverine bringt Sony eine gelb-schwarze PS5-Sonderedition samt DualSense und Cover-Plates – doch nicht alle Fans jubeln.",
+    "cat": "hardware",
+    "game": null,
+    "genre": "action",
+    "date": "11. August 2026",
+    "hype": 62
+  },
+  {
+    "id": "199f0df033",
+    "title": "Forza Horizon 6: Mascot Party bringt neue Zeitfahr-Strecke im Stadion – aber nur für vier Wochen",
+    "teaser": "Playground Games öffnet mit Series 4 erstmals das Horizon-Stadion für eine limitierte Zeitfahr-Challenge samt neuen Autos, Props und JDM-Feeling.",
+    "cat": "konsole",
+    "game": null,
+    "genre": "rennspiel",
+    "date": "11. August 2026",
+    "hype": 58
+  },
+  {
+    "id": "c98a35ec03",
+    "title": "Datenleck bei Steam-Hardware: Cyberangriff auf Valves EU-Versandpartner CEVA",
+    "teaser": "Valve warnt europäische Käufer von Steam Deck, Machine und Controller: Persönliche Daten wurden vermutlich bei einem Hack des Logistikpartners CEVA gestohlen.",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "date": "11. August 2026",
+    "hype": 62
+  },
+  {
+    "id": "977141a5a9",
+    "title": "Datenleck bei Valve: Cyberangriff auf Steam-Logistikpartner CEVA trifft EU-Kunden",
+    "teaser": "Valve warnt europäische Käufer von Steam Machine, Steam Deck und Steam Controller: Persönliche Daten wurden bei einem Hackerangriff auf den Versanddienstleister CEVA Logistics wohl kompromittiert.",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "date": "10. August 2026",
+    "hype": 62
+  },
+  {
     "id": "8449b71452",
     "title": "EWC 2026: Diese vier Teams jagen den CS2-Thron vor dem Finale in der Accor Arena",
     "teaser": "Vor dem CS2-Showdown der Esports World Cup 2026 in Paris zeigen Qualifier-Dramen und der Gruppen-Draw, wer wirklich Titel-Kandidat ist – und wer nur mitfeiern darf.",
