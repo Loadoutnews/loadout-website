@@ -1,19 +1,60 @@
 [
   {
+    "id": "supermassive-games-entlassungswelle",
+    "topic_name": "Supermassive Games: Entlassungswelle",
+    "title": "Supermassive Games: Entlassungswelle — Stand der Gerüchte",
+    "cat": "industrie",
+    "game": null,
+    "summary": "Das britische Horror-Studio Supermassive Games (u. a. \"Until Dawn\", \"The Dark Pictures Anthology\", \"Little Nightmares III\") hat per offizieller Mitteilung ein sogenanntes Redundancy-Consultation-Verfahren gestartet, an dessen Ende bis zu 75 Mitarbeitende ihren Job verlieren könnten. Es ist bereits die dritte Entlassungsrunde des Studios innerhalb von rund zweieinhalb Jahren, nach rund 90 Kündigungen im Februar 2024 und etwa 36 im Juli 2025. Offiziell bestätigt ist bislang nur der Beginn des Konsultationsprozesses und die Obergrenze von 75 Stellen – wie viele Jobs am Ende tatsächlich wegfallen und welche Teams bzw. Projekte konkret betroffen sind, ist noch offen.",
+    "status": "aktiv",
+    "resolution": null,
+    "credibility_category": "sehr_wahrscheinlich",
+    "credibility_pct": 85,
+    "image": "https://assetsio.gnwcdn.com/little-nightmares-3-header.jpg?width=690&quality=85&format=jpg&auto=webp",
+    "created_date": "12. August 2026",
+    "updated_date": "12. August 2026",
+    "timeline": [
+      {
+        "date": "12. August 2026",
+        "text": "Supermassive Games hat via X eine offizielle Erklärung veröffentlicht, wonach ein Redundancy-Consultation-Verfahren eingeleitet wurde, das den Verlust von bis zu 75 Stellen zur Folge haben könnte. Das Studio begründet den Schritt mit der Notwendigkeit, die Nachhaltigkeit des Unternehmens zu sichern, macht aber keine Angaben dazu, welche Abteilungen oder laufenden Projekte konkret betroffen sein werden. Die Ankündigung kommt nur wenige Monate nach dem Release von \"Directive 8020\" und dem Rücktritt von CEO Pete Samuels im Juni.",
+        "credibility_category": "sehr_wahrscheinlich",
+        "credibility_pct": 85,
+        "source": "Eurogamer.net Latest Articles Feed",
+        "source_url": "https://www.eurogamer.net/little-nightmares-3-dark-pictures-supermassive-layoffs"
+      }
+    ]
+  },
+  {
     "id": "elder-scrolls-6-untertitel-teaser-durch-xbox-chefin",
     "topic_name": "Elder Scrolls 6: Untertitel-Teaser durch Xbox-Chefin",
     "title": "Elder Scrolls 6: Untertitel-Teaser durch Xbox-Chefin — Stand der Gerüchte",
     "cat": "konsole",
     "game": null,
-    "summary": "Xbox-CEO Asha Sharma hat nach eigenen Angaben einen internen Live-Playthrough von The Elder Scrolls 6 gesehen und ihre Eindrücke auf X gepostet – inklusive eines mit acht Sternchen zensierten Zusatzes hinter dem Spieltitel, was viele Fans als Andeutung auf den bislang unbekannten Untertitel des Spiels deuten. Offiziell bestätigt ist bislang nur, dass eine spielbare Version existiert und intern gezeigt wurde; der eigentliche Untertitel bleibt reine Spekulation. Mehrere große Fachmedien haben die Aussage aufgegriffen, ordnen die Sternchen-Aktion aber selbst als vage und mit Vorsicht zu genießen ein.",
+    "summary": "Auslöser des Trackers ist ein X-Post von Xbox-CEO Asha Sharma vom 11. August 2026, in dem sie einen internen 'live playthrough' von The Elder Scrolls VI erwähnt und den Titel mit acht Sternchen ergänzt – Fans vermuten dahinter den bisher unbekannten Untertitel des Spiels. Der offizielle X-Account von Bethesda Game Studios antwortete auf Sharmas Post und bedankte sich dafür, ihr ebenfalls exakt acht Sternchen zeigen zu können, was die Theorie eines bewussten Titel-Teasers zusätzlich nährt, offiziell aber weiterhin nicht bestätigt ist. Parallel dazu wurde der Besuch von Xbox-Führungskräften bei Bethesda in Rockville von einer Gewerkschaftsprotestaktion begleitet: Mitglieder der CWA-Gewerkschaft (OneBGS) stellten die riesige aufblasbare Ratte 'Scabby' sowie 800 rote Fahnen auf, jede stellvertretend für eine seit Juli 2025 entlassene Person. Ein Kotaku-Bericht liefert nun ein Statement des technischen Produzenten und Gewerkschaftsmitglieds Nathan Hahn, der erklärte, man habe von dem bevorstehenden Besuch der Microsoft-Führung erfahren und beschlossen, die eigene Präsenz sichtbar zu machen; zudem sei den Beschäftigten laut Bericht untersagt worden, zusätzliche Protestplakate innerhalb des Büros nach außen sichtbar aufzuhängen. Diese von mehreren unabhängigen Medien (Kotaku, Aftermath, GamesRadar+, Techrights) übereinstimmend bestätigte Protestaktion untermauert, dass der Besuch und die interne Vorführung tatsächlich stattgefunden haben, sagt aber weiterhin nichts über den eigentlichen Untertitel aus, der reine Spekulation bleibt. Offiziell bestätigt ist bislang nur, dass eine spielbare Version existiert und intern gezeigt wurde; mehrere Fachmedien, darunter auch Kotaku selbst, ordnen die Sternchen-Aktion weiterhin als vage und mit Vorsicht zu genießen ein, während der Fokus der Berichterstattung zunehmend auf dem Arbeitskampf bei Bethesda/Xbox liegt.",
     "status": "aktiv",
     "resolution": null,
     "credibility_category": "wahrscheinlich",
-    "credibility_pct": 55,
+    "credibility_pct": 57,
     "image": "https://assets-prd.ignimgs.com/2026/08/11/tes6-1786479096622.jpg?width=1280&amp;format=jpg&amp;auto=webp&amp;quality=80",
     "created_date": "11. August 2026",
-    "updated_date": "11. August 2026",
+    "updated_date": "12. August 2026",
     "timeline": [
+      {
+        "date": "12. August 2026",
+        "text": "(12. August 2026, Wahrscheinlich 58%): Ein ausführlicher Kotaku-Bericht liefert neue Details zur Protestaktion, ohne den Untertitel selbst zu klären. Demnach stellten CWA-Gewerkschaftsmitglieder anlässlich von Sharmas Besuch nicht nur die aufblasbare Ratte 'Scabby' auf, sondern pflanzten laut Bericht 800 rote Fahnen für jede seit Juli 2025 entlassene Person. Technischer Produzent und Gewerkschaftsmitglied Nathan Hahn erklärte in einem Statement, man habe von dem Besuch der Microsoft-Führung erfahren und wolle die eigene Präsenz sichtbar machen, um zu zeigen, wie die Belegschaft von den Entlassungen betroffen sei; zusätzlich sei laut Bericht das Aufhängen sichtbarer Protestplakate im Büro von der Geschäftsführung untersagt worden. Der Bericht bestätigt damit den Kontext des ursprünglichen Gerüchts weiter, verschiebt den redaktionellen Fokus jedoch stärker auf den Arbeitskampf statt auf den vermeintlichen Titel-Teaser, dessen offizielle Bestätigung weiterhin aussteht.",
+        "credibility_category": "wahrscheinlich",
+        "credibility_pct": 57,
+        "source": "Kotaku",
+        "source_url": "https://kotaku.com/xbox-protests-zenimax-studios-maryland-scabby-cwa-2000723471"
+      },
+      {
+        "date": "12. August 2026",
+        "text": "(12. August 2026, Wahrscheinlich 58%): Neue Details zum Bethesda-Besuch bestätigen den Kontext des ursprünglichen Gerüchts, ohne den Untertitel selbst zu klären. Mehrere Medien berichten übereinstimmend, dass CWA-Gewerkschaftsmitglieder anlässlich von Sharmas Besuch eine riesige aufblasbare Ratte sowie hunderte rote Fahnen vor der Bethesda-Zentrale in Rockville aufstellten, um auf die Entlassung von rund 3.200 Xbox-Beschäftigten aufmerksam zu machen. Zusätzlich fällt auf, dass der offizielle X-Account von Bethesda Game Studios auf Sharmas Post antwortete und sich dafür bedankte, ihr ebenfalls exakt acht Sternchen gezeigt zu haben – ein Detail, das laut mehreren Fachmedien die Theorie eines bewussten Titel-Teasers stützt, da es unwahrscheinlich wirkt, dass beide Accounts zufällig dieselbe Zeichenanzahl verwenden. Eine offizielle Bestätigung des Untertitels selbst liegt weiterhin nicht vor.",
+        "credibility_category": "wahrscheinlich",
+        "credibility_pct": 58,
+        "source": "Eurogamer.net Latest Articles Feed",
+        "source_url": "https://www.eurogamer.net/elder-scrolls-6-giant-inflatable-rat"
+      },
       {
         "date": "11. August 2026",
         "text": "Auslöser des Trackers ist ein X-Post von Xbox-CEO Asha Sharma vom 11. August 2026, in dem sie einen \"live playthrough\" von The Elder Scrolls VI erwähnt und den Titel mit acht Sternchen ergänzt – Fans vermuten dahinter den bisher unbekannten Untertitel des Spiels. Mehrere Medien wie GameSpot, Shacknews und GamesRadar+ bestätigen den Wortlaut des Posts, betonen aber unabhängig voneinander, dass unklar sei, ob die Sternchen tatsächlich ein Hinweis auf den Titel oder nur eine zufällige Anzahl seien. Der Zeitpunkt fällt zudem mit einem Besuch von Xbox-Führungskräften bei Bethesda zusammen, der von protestierenden Mitarbeitenden wegen jüngster Entlassungen begleitet wurde.",
