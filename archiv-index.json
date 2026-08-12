@@ -1,5 +1,55 @@
 [
   {
+    "id": "c8278c1dbc",
+    "title": "Escape from Tarkov schießt auf Platz 2 der Twitch-Charts und lässt Fortnite und Dota 2 hinter sich",
+    "teaser": "Ein einziges Update reicht: Der Hardcore-Extraction-Shooter verzeichnet die stärkste Zuschauerwoche seiner Geschichte und mischt plötzlich mit den größten Namen der Plattform mit.",
+    "cat": "pc",
+    "game": null,
+    "genre": "shooter",
+    "date": "12. August 2026",
+    "hype": 82
+  },
+  {
+    "id": "b2bd5e43ae",
+    "title": "Fortnite: LEGO-Pass bekommt Mega-Verzögerung – wächst hier Sorge um den Modus?",
+    "teaser": "Der aktuelle LEGO-Fortnite-Pass läuft fast zwei Monate länger als geplant. Fans fragen sich: Steckt hinter der Verzögerung mehr als nur ein simpler Zeitplan-Wechsel?",
+    "cat": "industrie",
+    "game": "fortnite",
+    "genre": null,
+    "date": "12. August 2026",
+    "hype": 42
+  },
+  {
+    "id": "368fa5e316",
+    "title": "Kostenlose Verstärkung: Helldivers 2 landet überraschend im PlayStation Plus Katalog",
+    "teaser": "Sony schickt frische Rekruten an die Front: Helldivers 2 ist ab sofort im PS Plus Katalog, dazu gibt es ein großes Update und den lang ersehnten Warhammer 40.000 Crossover.",
+    "cat": "konsole",
+    "game": null,
+    "genre": "shooter",
+    "date": "12. August 2026",
+    "hype": 78
+  },
+  {
+    "id": "0434f05d9c",
+    "title": "Phantom Blade Zero bekommt eigene State of Play – doch alle erwarten nur eins: Disc-Wut im Chat",
+    "teaser": "Sony kündigt eine 20-minütige Gameplay-Show zum vielversprechenden Actionspiel an. Doch statt Hype fürchten viele nur eins: einen Kommentar-Sturm wegen der Disc-Abschaffung.",
+    "cat": "konsole",
+    "game": null,
+    "genre": "action",
+    "date": "12. August 2026",
+    "hype": 58
+  },
+  {
+    "id": "4b3c05c3f1",
+    "title": "Until Dawn-Studio Supermassive Games streicht bis zu 75 Stellen",
+    "teaser": "Nach durchwachsenem Erfolg von Directive 8020 leitet Supermassive Games die dritte Entlassungsrunde binnen drei Jahren ein.",
+    "cat": "industrie",
+    "game": null,
+    "genre": "horror",
+    "date": "11. August 2026",
+    "hype": 55
+  },
+  {
     "id": "1edb886740",
     "title": "896 Prozent mehr Zuschauer: Wie Tarkov über Nacht zur Nummer 3 auf Twitch wurde",
     "teaser": "Ein verspäteter Season-Start, ein Bezahl-Streit um Reset-Währung und eine clever getimte Drops-Kampagne: Tarkov schießt auf Twitch-Platz 3 – aber nicht ganz freiwillig organisch.",

@@ -1,5 +1,95 @@
 [
   {
+    "id": "c8278c1dbc",
+    "cat": "pc",
+    "game": null,
+    "genre": "shooter",
+    "title": "Escape from Tarkov schießt auf Platz 2 der Twitch-Charts und lässt Fortnite und Dota 2 hinter sich",
+    "teaser": "Ein einziges Update reicht: Der Hardcore-Extraction-Shooter verzeichnet die stärkste Zuschauerwoche seiner Geschichte und mischt plötzlich mit den größten Namen der Plattform mit.",
+    "body": [
+      "Wer in den vergangenen Tagen durch die Twitch-Startseite gescrollt ist, konnte es kaum übersehen: Escape from Tarkov taucht dort plötzlich ganz oben auf, zwischen League of Legends und den üblichen Streaming-Schwergewichten. Laut Auswertungen von Streams Charts erreichte der von Battlestate Games entwickelte Extraction-Shooter zwischen dem 3. und 10. August einen Zuschauer-Peak von über 199.000 Personen und kletterte damit auf Platz zwei der meistgesehenen Spiele auf der Plattform – noch vor Fortnite, Dota 2, Rainbow Six: Siege und Marvel Rivals. Besonders bemerkenswert: In diesem Zeitraum sammelte Tarkov laut denselben Daten mehr Watch-Time an als etablierte Twitch-Dauerbrenner wie Rust, Minecraft, Counter-Strike und GTA 5 zusammen abgebildet in ihren jeweiligen Wochenwerten.",
+      "Der Auslöser für den Boom lässt sich klar benennen. Am 3. August ging Patch 1.1.0 live, besser bekannt unter dem Namen der ersten offiziellen Season des Spiels: Kord Breach. Es handelt sich um das größte Update seit dem Release der Version 1.0 im November 2025, und laut Berichterstattung führte es unter anderem ein komplett neues Saisonsystem mit eigenständigen, alle vier bis sechs Monate zurückgesetzten Charakterprofilen ein, dazu ein Modifikator-System, einen kostenlosen Battle Pass sowie eine Überarbeitung des Nebenquest-Systems. Wer wissen wollte, wie sich das neue Season-Modell in der Praxis spielt, kam an den Streams kaum vorbei, zumal Battlestate Games ab dem 5. August zusätzlich eine Twitch-Drops-Kampagne startete, bei der Zuschauer allein durchs Zusehen exklusive Belohnungscontainer für ihre Saison-Charaktere freischalten konnten – ein bewährter Hebel, um Gelegenheitszuschauer in aktive Stream-Chats zu verwandeln.",
+      "Die nackten Zahlen zeigen das Ausmaß der Verschiebung besonders deutlich, wenn man Vorher und Nachher direkt gegenüberstellt. In der Woche vom 8. bis 14. Juli, also noch vor dem großen Patch, kam Tarkov laut Streams-Charts-Daten auf rund 1,9 Millionen Watch-Hours, einen Zuschauerdurchschnitt von 11.653 und einen Peak von 39.753 gleichzeitigen Zuschauern. In der ersten vollen Woche nach dem Kord-Breach-Release explodierten diese Werte auf 20,17 Millionen Watch-Hours – ein Plus von über 900 Prozent innerhalb von acht Tagen. Rechnet man diese Watch-Hours auf einen Durchschnittswert pro Stunde um, ergibt sich ein Sprung von rund 11.000 auf weit über 100.000 gleichzeitige Zuschauer im Wochenschnitt, während einzelne Tracking-Dienste den reinen Zuwachs bei den durchschnittlichen Zuschauerzahlen je nach Messzeitraum und Methodik auf einen Wert im hohen dreistelligen Prozentbereich taxieren. Auch auf der Spieler-Seite schlägt der Patch aus: SteamDB verzeichnete am 9. August einen Peak von 44.849 gleichzeitigen Spielern auf Steam, den höchsten Wert seit der Launch-Woche im November 2025, als das Spiel mit 47.800 Spielern seinen bis heute gültigen Allzeit-Rekord aufstellte.",
+      "Dass der Hype nicht nur auf künstlich erzeugtem Drops-Farming beruht, zeigt sich an der Community-Stimmung selbst. Mehrere Medienberichte beschreiben die Reaktionen auf die neue Season größtenteils als positiv: Der Umstieg auf ein strukturiertes Saisonmodell habe dem sonst oft zähen frühen Wipe-Chaos und dem PvP neues Leben eingehaucht, das Spieltempo wirke durch überarbeitete Aufgabenketten schneller und für Solo-Spieler weniger bestrafend. Kritik gibt es allerdings ebenfalls, etwa an Server-Warteschlangen beim Start und an technischen Altlasten, die auch das größte Update seit Jahren nicht vollständig beseitigen konnte. Angetrieben wird der Streaming-Boom zudem von einer Mischung aus etablierten Tarkov-Gesichtern wie Pestily, DesmondPilak und HyperRatTV sowie neuen Zugpferden: Laut Streams Charts avancierte der Streamer TheBurntPeanut im Zuge der Kord-Breach-Season zum meistgesehenen Tarkov-Creator auf Twitch und YouTube gleichzeitig.",
+      "Ganz neu ist das Muster für Tarkov im Grunde nicht. Schon frühere Community-Events und Twitch-Drops-Kampagnen haben das Spiel wiederholt aus dem Mittelfeld der Charts katapultiert, und in der Vergangenheit blieb die Zuschauerzahl auch nach Ende solcher Aktionen über Wochen deutlich erhöht, weil zurückkehrende Spieler länger und häufiger streamten, angetrieben von der schlichten Tatsache, dass ihr Publikum es sehen wollte. Der große Unterschied zu früheren Spitzen: Diesmal steht hinter dem Anstieg keine einmalige Promo-Aktion, sondern ein grundlegender, dauerhafter Systemwechsel mit Saisonstruktur und Battle Pass, der Battlestate Games erstmals ein Werkzeug gibt, um wiederkehrende Aufmerksamkeitsspitzen fest im Kalender zu verankern, statt auf Zufallshypes zu hoffen."
+    ],
+    "editorial_take": "Für uns ist dieser Sprung mehr als nur ein kurzer Drops-Ausschlag, denn ein derart harter, unversöhnlicher Hardcore-Shooter auf Augenhöhe mit Fortnite und Dota 2 zu sehen, zeigt, wie viel Publikum sich mit dem richtigen Content-Update wirklich mobilisieren lässt. Skeptisch bleiben wir trotzdem, ob sich das Niveau von fast 200.000 Peak-Zuschauern ohne die Drops-Kampagne halten lässt, wenn der erste Season-Rausch verflogen ist. Sollte Battlestate Games das Saisonmodell aber alle paar Monate mit ähnlicher Substanz füttern, könnte aus dem Ausreißer-Moment tatsächlich ein fester Platz unter den Top-Titeln auf Twitch werden.",
+    "source_title": "Escape from Tarkov's 320% Viewership Surge — Why August 2026 Became the Hardcore Extraction Shooter's Biggest Moment Yet",
+    "date": "12. August 2026",
+    "platform": "LOADOUT-Analyse",
+    "hype": 82,
+    "source": "https://loadout-news.com",
+    "sourceLabel": "Streams Charts",
+    "image": "https://picsum.photos/seed/loadout-analysis-EscapefromTarkovs320ViewershipSurgeWhyAugust2026BecametheHardcoreExtractionShootersBiggestMomentYet/900/500",
+    "content_type": "analysis",
+    "analysis_format": "streaming_trend"
+  },
+  {
+    "id": "b2bd5e43ae",
+    "cat": "industrie",
+    "game": "fortnite",
+    "genre": null,
+    "title": "Fortnite: LEGO-Pass bekommt Mega-Verzögerung – wächst hier Sorge um den Modus?",
+    "teaser": "Der aktuelle LEGO-Fortnite-Pass läuft fast zwei Monate länger als geplant. Fans fragen sich: Steckt hinter der Verzögerung mehr als nur ein simpler Zeitplan-Wechsel?",
+    "body": [
+      "Wer aktuell im LEGO-Modus von Fortnite unterwegs ist, kann sich freuen – zumindest kurzfristig. Der laufende Pass Soaring Skies sollte ursprünglich schon am 2. September enden, bleibt nun aber laut offizieller Bestätigung bis zum 31. Oktober 2026 verfügbar. Das bedeutet fast zwei zusätzliche Monate Zeit, um alle Belohnungen freizuschalten – gleichzeitig aber auch eine ebenso lange Wartezeit auf frischen Nachschub.",
+      "Entdeckt wurde die Änderung von der bekannten Leak-Quelle FireMonkey, die einen Hinweis in einem Werbe-Post zum LEGO-Pass-Geschenk-Token fand. Besonders bemerkenswert: Mit einer Gesamtlaufzeit von 198 Tagen wird Soaring Skies damit der mit weitem Abstand am längsten laufende LEGO-Pass in der Geschichte des Modus. Zum Vergleich: In diesem Zeitraum hätten theoretisch zwei komplette Staffeln des Fortnite-Festival-Modus stattfinden können. Der LEGO-Pass selbst kostet 1.200 V-Bucks und bietet vier Seiten mit Belohnungen wie neuen LEGO-Bauten, Minifiguren-Skins, Ladebildschirmen und Emotes.",
+      "Ganz neu ist das Phänomen nicht: Bereits der Palm-Paradise-Pass wurde in mehreren Etappen verschoben, ebenso der Ninjago-LEGO-Pass. Damit ist Soaring Skies bereits der dritte LEGO-Pass in Folge, der von Epic Games verzögert wird – eine Entwicklung, die in der Community zunehmend Sorgen auslöst. Manche Fans vermuten, Epic könnte den LEGO-Modus schrittweise zurückfahren, ähnlich wie es bei den Fortnite-Modi Ballistic, Rocket Racing und Festival Battle Stage bereits geschieht, die im Laufe des Jahres eingestellt oder komplett entfernt werden. Fachmedien wie GameRant weisen zudem darauf hin, dass die Spielerzahlen im LEGO-Modus mittlerweile deutlich unter dem einstigen Höchststand von 2,4 Millionen gleichzeitigen Nutzern liegen, aktuell sind es nur noch rund 13.600 – wenn auch damit immer noch genug, um unter die zehn meistgespielten Fortnite-Modi zu fallen. Eine offizielle Begründung für die Verzögerung hat Epic Games bislang nicht geliefert."
+    ],
+    "editorial_take": "Aus unserer Sicht ist die Häufung solcher Verzögerungen kein Zufall mehr, sondern ein deutliches Warnsignal. Wenn gleich drei LEGO-Pässe hintereinander verschoben werden und Epic parallel andere Nebenmodi wie Rocket Racing und Ballistic beerdigt, wirkt die Erklärung mehr Zeit fürs Team etwas dünn. Wir würden Fans raten, sich nicht zu sehr an den LEGO-Modus zu binden, bis Epic Games klarer kommuniziert, wie die Zukunft dieses einst gefeierten Fortnite-Ablegers tatsächlich aussieht.",
+    "source_title": "Upcoming Fortnite Battle Pass Gets Hit With Major Delay",
+    "date": "12. August 2026",
+    "platform": "GameRant - Fortnite News",
+    "hype": 42,
+    "source": "https://gamerant.com/fortnite-lego-battle-pass-delay-when/",
+    "sourceLabel": "GameRant - Fortnite News",
+    "image": "https://static0.gamerantimages.com/wordpress/wp-content/uploads/wm/2026/08/upcoming-fortnite-battle-pass-gets-hit-with-major-delay-gamerant-feature.jpg?w=1600&amp;h=900&amp;fit=crop"
+  },
+  {
+    "id": "368fa5e316",
+    "cat": "konsole",
+    "game": null,
+    "genre": "shooter",
+    "title": "Kostenlose Verstärkung: Helldivers 2 landet überraschend im PlayStation Plus Katalog",
+    "teaser": "Sony schickt frische Rekruten an die Front: Helldivers 2 ist ab sofort im PS Plus Katalog, dazu gibt es ein großes Update und den lang ersehnten Warhammer 40.000 Crossover.",
+    "body": [
+      "Für alle, die schon länger mit einem Beitritt zur Super Earth Armee geliebäugelt haben, gibt es jetzt keine Ausrede mehr: Helldivers 2 ist überraschend Teil des PlayStation Plus Game Catalogs geworden. Sony hat den Move offiziell verkündet und macht damit den gefeierten Koop-Shooter von Arrowhead Game Studios für Extra- und Premium-Abonnenten kostenlos spielbar.",
+      "Der Zeitpunkt ist alles andere als Zufall. Gleichzeitig mit der Aufnahme in den Katalog erscheint das große Update Devoid of Liberty, das die Galaktische Kriegsgeschichte in düsteres, horrorlastiges Terrain lenkt. Mutierte Illuminate-Kreaturen tauchen erstmals rund um eine mysteriöse Leere im Weltraum auf, und wer sich weiter in diese Void-Zone vorkämpft, bekommt es mit einem völlig neuen Biom und verzerrten, alptraumhaften Versionen bekannter Gegner zu tun. Dazu kommt eine längst überfällige Erhöhung der Levelgrenze auf 300, neue NPC-Kameraden mit festen Rollen wie Anführer oder Sanitäter sowie frische Emotes für die Truppe.",
+      "Das Sahnehäubchen für viele Fans ist aber der lang herbeigesehnte Crossover mit Warhammer 40.000. Die Castellan's Creed Legendary Warbond orientiert sich optisch und thematisch an den Cadian Kasrkin, den Elite-Sturmtruppen der Astra Militarum, und bringt Waffen wie das Hot-Shot Scharfschützengewehr, eine Bolt-Pistole, den Meltamine-Sprengsatz sowie das Meltagun-Stratagem ins Spiel. Für 1500 Super Credits gibt es außerdem passende Rüstungssets und Umhänge. In der Community sorgt der Drop für gemischte Reaktionen: Während manche Spieler bemängeln, dass primäre Sturmgewehre und Nahkampfwaffen fehlen, loben andere die überraschend abwechslungsreiche Ausstattung samt neuer Wurfwaffen.",
+      "Sony selbst rechnet mit deutlichem Rückenwind für die Spielerzahlen. Laut offizieller Mitteilung haben bereits mehr als 22,9 Millionen Menschen auf PS5, Xbox Series X/S und PC zu Helldivers 2 gegriffen, und man erwartet, dass die PS-Plus-Integration zahlreiche neue Rekruten anlockt, die künftig gemeinsam mit den Veteranen kämpfen. Sony-Marketingchefin Mary Yee betonte, dass die Aufnahme des Titels den Wert des Abo-Dienstes weiter stärken solle. Fachmedien verweisen zudem auf einen cleveren Nebeneffekt: Passend zur Aktion läuft aktuell eine Community-Challenge, bei der gemeinsam 500 Millionen Feinde bis zum 18. August eliminiert werden müssen, um exklusive PlayStation-Avatare freizuschalten – ein zusätzlicher Anreiz für Neueinsteiger, sofort mitzumachen."
+    ],
+    "editorial_take": "Aus unserer Sicht ist das ein cleverer Doppelschlag von Sony und Arrowhead: Statt den Warhammer-Crossover einfach nur als Kaufanreiz zu verkaufen, wird er direkt mit einem riesigen neuen Spielerpool über PS Plus verknüpft – das dürfte die Lobbys in den kommenden Wochen ordentlich füllen. Die gemischte Kritik an der Warbond-Ausstattung nehmen wir ernst, denn ein fehlendes Sturmgewehr bei einem so sehnlich erwarteten Crossover schmerzt eingefleischte Fans zurecht. Trotzdem bleibt Helldivers 2 gerade jetzt einer der besten Einstiegspunkte für Koop-Fans, die noch nie einen Fuß auf ein feindliches Schlachtfeld gesetzt haben.",
+    "source_title": "Sony Predicts Influx of New Players as Helldivers 2 Drops on the PlayStation Plus Game Catalog Alongside New Update and Warhammer 40,000 Warbond",
+    "date": "12. August 2026",
+    "platform": "IGN Articles",
+    "hype": 78,
+    "source": "https://www.ign.com/articles/sony-predicts-influx-of-new-players-as-helldivers-2-drops-on-the-playstation-plus-game-catalog-alongside-new-update-and-warhammer-40000-warbond",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/08/12/hd-again-1786537971393.jpg"
+  },
+  {
+    "id": "0434f05d9c",
+    "cat": "konsole",
+    "game": null,
+    "genre": "action",
+    "title": "Phantom Blade Zero bekommt eigene State of Play – doch alle erwarten nur eins: Disc-Wut im Chat",
+    "teaser": "Sony kündigt eine 20-minütige Gameplay-Show zum vielversprechenden Actionspiel an. Doch statt Hype fürchten viele nur eins: einen Kommentar-Sturm wegen der Disc-Abschaffung.",
+    "body": [
+      "Eigentlich sollte es eine gute Nachricht für Fans von cineastischen Action-Adventures sein: Sony und der chinesische Entwickler S-Game haben eine eigene State of Play für Phantom Blade Zero angekündigt. Am 17. August um 19 Uhr Pazifikzeit soll rund 20 Minuten neues Gameplay gezeigt werden, inklusive bisher unbekannter Charaktere und einem tieferen Blick auf die individuellen Build-Systeme der Spieler. Begleitet wurde die Ankündigung von einem elfminütigen Pre-Order-Trailer, der zugleich den offiziellen Verkaufsstart der Vorbestellungen markierte.",
+      "Das Spiel selbst verspricht düstere Wuxia-Action mit ordentlich Starpower: Kampfsportlegende Donnie Yen fungiert seit 2023 als kreativer Berater und liefert zudem Motion-Capture-Aufnahmen für den Charakter Mo Yuan. Phantom Blade Zero erscheint am 29. Oktober für PC über Steam und Epic Games Store sowie als zwölfmonatige Konsolen-Exklusivität für die PS5 – zuvor war ein früherer Termin im September angepeilt worden. Wer vorbestellt, schaltet frühzeitig ein Zubehörteil und ein Outfit frei, die Deluxe-Version bringt zusätzlich Artbook und Soundtrack mit.",
+      "Warum die Vorfreude trotzdem gedämpft ist, hat wenig mit dem Spiel selbst zu tun. Sony steckt seit Wochen in heftigem Gegenwind, weil der Konzern angekündigt hat, ab Januar 2028 keine physischen PlayStation-Disc-Spiele mehr produzieren zu wollen. Fachmedien wie Push Square berichteten sogar, dass eine ursprünglich geplante State of Play deswegen zwischenzeitlich auf der Kippe stand, weil man befürchtete, die Kommentarspalten würden von wütenden Disc-Fans überflutet statt sich mit dem eigentlichen Spiel zu beschäftigen. Sony-CFO Lin Tao äußerte sich zuletzt öffentlich zur Kritik und stellte klar, dass man den Kurs trotz starker Emotionen in der Community beibehalten werde, da die Digitalisierung längst der entscheidende Trend sei. Genau diese ungelöste Kontroverse ist es, die viele Beobachter und auch die Community jetzt schon vermuten lässt, dass der Chat zur eigentlich vielversprechenden Phantom-Blade-Zero-Show erneut zum Schauplatz der Disc-Debatte wird, statt sich um Kampfsystem und Charaktere zu drehen.",
+      "In Foren und Kommentarspalten gibt es entsprechend geteilte Reaktionen: Viele Fans freuen sich sichtlich auf das Spiel selbst und feiern die bisher gezeigten Kampf-Sequenzen und die Beteiligung von Donnie Yen, während andere in praktisch jedem Sony-Post weiterhin auf die Disc-Entscheidung verweisen und befürchten, dass Entwickler wie S-Game unverschuldet zwischen die Fronten geraten."
+    ],
+    "editorial_take": "Aus unserer Sicht ist es fast schon tragisch, dass ein derart aufwendig produziertes und optisch beeindruckendes Spiel wie Phantom Blade Zero in der öffentlichen Wahrnehmung zum Kollateralschaden einer komplett unabhängigen Konzernentscheidung wird. Sony hat sich diese Situation selbst eingebrockt, und es wirkt inzwischen fast zynisch, wie hartnäckig man an der Digital-only-Strategie festhält, während man gleichzeitig betont, die Emotionen der Community zu verstehen. Wir hoffen, dass S-Game mit seinem Spiel trotzdem die Aufmerksamkeit bekommt, die es verdient – Sonys Kommunikationsdesaster sollte nicht auf dem Rücken der Entwickler ausgetragen werden.",
+    "source_title": "Sony Announces Phantom Blade Zero State of Play and Everyone Knows How the Chat Is Going to Go",
+    "date": "12. August 2026",
+    "platform": "IGN Articles",
+    "hype": 58,
+    "source": "https://www.ign.com/articles/sony-announces-phantom-blade-zero-state-of-play-and-everyone-knows-how-the-chat-is-going-to-go",
+    "sourceLabel": "IGN Articles",
+    "image": "https://assets-prd.ignimgs.com/2026/08/12/screenshot-2026-08-12-093911-1786523978446.png"
+  },
+  {
     "id": "4b3c05c3f1",
     "cat": "industrie",
     "game": null,
