@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "tracker_id": "halo-studios-entlassungswelle-nach-campaign-evolved",
+    "entry": {
+      "title": "'Halo Studios Went Too Far in the Wrong Direction' — Co-Creator of Halo Hits Out at the Main Menu Ring in Xbox's New Remake",
+      "link": "https://www.ign.com/articles/halo-studios-went-too-far-in-the-wrong-direction-co-creator-of-halo-hits-out-at-the-main-menu-ring-in-xboxs-new-remake",
+      "summary": "One of the creators of Halo has issued a few choice words for Xbox’s latest remake of Combat Evolved, specifically the ring we see in the main menu and the lack of PvP.",
+      "source": "IGN Articles",
+      "priority": false,
+      "image": "https://assets-prd.ignimgs.com/2026/08/13/halo-1786635640788.png"
+    },
+    "flagged_by": "news_pipeline",
+    "flagged_at": "2026-08-13T17:03:18.617937+00:00"
+  }
+]
