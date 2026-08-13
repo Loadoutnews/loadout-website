@@ -1,5 +1,55 @@
 [
   {
+    "id": "4ae14297ed",
+    "title": "Elden Ring kommt endlich auf Switch 2 – und zeigt, wie brüchig Konsolen-Exklusivität geworden ist",
+    "teaser": "Nach über einem Jahr Verspätung erscheint Elden Ring am 28. August auf Switch 2. Der holprige Weg dorthin erzählt viel über das Ende klassischer Plattform-Grenzen.",
+    "cat": "konsole",
+    "game": null,
+    "genre": "rpg",
+    "date": "13. August 2026",
+    "hype": 76
+  },
+  {
+    "id": "dc635684ee",
+    "title": "NoPixel V bekommt endlich Release-Termin: GTA-RP zieht in den Rockstar Launcher",
+    "teaser": "Der legendäre GTA-RP-Server NoPixel V steht offenbar kurz vor dem Start – erstmals offiziell im Rockstar Games Launcher statt über FiveM.",
+    "cat": "pc",
+    "game": "gta",
+    "genre": null,
+    "date": "13. August 2026",
+    "hype": 68
+  },
+  {
+    "id": "b8af89d192",
+    "title": "Game of Thrones: War for Westeros zeigt erstes Gameplay – Lannister-Truppen brennen lichterloh",
+    "teaser": "IGN zeigt erste Spielszenen der Echtzeit-Strategie zu Game of Thrones: Ein Drache grillt Lannister-Soldaten. Der große Gameplay-Trailer folgt auf der Gamescom.",
+    "cat": "pc",
+    "game": null,
+    "genre": "strategie",
+    "date": "13. August 2026",
+    "hype": 62
+  },
+  {
+    "id": "8e516b471c",
+    "title": "Marvel's Wolverine: Sabretooth klaut Logan im Kampf die Kills",
+    "teaser": "In Insomniacs neuem PS5-Titel kämpft Sabretooth an Wolverines Seite – aber ausgerechnet der Erzfeind schnappt sich lieber selbst die Abschüsse.",
+    "cat": "konsole",
+    "game": null,
+    "genre": "action",
+    "date": "13. August 2026",
+    "hype": 68
+  },
+  {
+    "id": "cd2d0f2461",
+    "title": "CD Projekt bestätigt erneute Entlassungen bei Witcher-Multiplayer-Projekt Sirius",
+    "teaser": "CD Projekt hat gegenüber IGN offiziell bestätigt, dass beim Witcher-Multiplayer-Spinoff Project Sirius erneut Stellen gestrichen wurden.",
+    "cat": "industrie",
+    "game": null,
+    "genre": null,
+    "date": "12. August 2026",
+    "hype": 62
+  },
+  {
     "id": "c8278c1dbc",
     "title": "Escape from Tarkov schießt auf Platz 2 der Twitch-Charts und lässt Fortnite und Dota 2 hinter sich",
     "teaser": "Ein einziges Update reicht: Der Hardcore-Extraction-Shooter verzeichnet die stärkste Zuschauerwoche seiner Geschichte und mischt plötzlich mit den größten Namen der Plattform mit.",
